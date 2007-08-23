@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<br>
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th>COD</th>
+			<th align="left">HOSTNAME</th>
+			<th align="left">SERVIÇO</th>
+			<th align="left">USUARIO</th>
+			<th align="center">DISPONIVEL</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='right' width=40 class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{$r.id_servidor|string_format:"%05d"}</a></td>
+			<td class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{$r.hostname|lower}</a></td>
+			<td width="130" class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{$r.ip|upper}:{$r.porta}</a></td>
+			<td width="130" class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{$r.usuario|lower}</a></td>
+			<td width="100" class='{$estilo}' align="center"><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{if $r.disponivel=='t'}SIM{else}NÃO{/if}</a></td>
+		</tr>
+		{foreachelse}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>NENHUM SERVIDOR CADASTRADO.</B></td>
+		</tr>
+		{/foreach}
+	</table>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+/*
+Menu related selectors
+*/
+.jsdomenudiv {
+	background-color: #FFFFFF;
+	background-image: url(office_xp_menu_left.png);
+	background-repeat: repeat-y;
+	border: 1px solid #8A867A;
+	cursor: default;
+	padding-bottom: 1px;
+	padding-top: 1px;
+	position: absolute; /* Do not alter this line! */
+	visibility: hidden;
+	z-index: 10;
+}
+
+.jsdomenuitem {
+	background: transparent;
+	border: none;
+	color: #000000;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 27px;
+	padding-right: 15px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenuitemover {
+	/**
+	background-color: #C1D2EE;
+	border: 1px solid #316AC5;
+	*/
+	background-color: #CDE3D4;
+	border: 1px solid #31A56A;	
+	color: #000000;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	margin-left: 1px;
+	margin-right: 1px;
+	padding-bottom: 1px;
+	padding-left: 25px;
+	padding-right: 15px;
+	padding-top: 1px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenuarrow {
+	background-image: url(office_xp_arrow.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 7px;
+	position: absolute; /* Do not alter this line! */
+	margin-top: 4px;
+	
+	right: 8px;
+	width: 4px;
+}
+
+.jsdomenuarrowover {
+	background-image: url(office_xp_arrow_o.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 7px;
+	position: absolute; /* Do not alter this line! */
+	margin-top: 4px;
+	right: 8px;
+	width: 4px;
+}
+
+.jsdomenusep {
+	padding-left: 26px;
+}
+
+.jsdomenusep hr {
+	height: 0;
+}
+
+/*
+Menu bar related selectors
+*/
+.jsdomenubardiv {
+	background-color: #BCD3C4;
+	/** background-image: url(office_xp_divider.png);*/
+	background-position: left;
+	background-repeat: no-repeat;
+	border: 0px none;
+	cursor: default;
+	padding-bottom: 3px;
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 1px;
+	position: absolute; /* Do not alter this line! */
+	visibility: visible;
+}
+
+.jsdomenubardragdiv {
+	cursor: move;
+	display: inline;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 1px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 1px;
+	position: relative; /* Do not alter this line! */
+	visibility: hidden;
+	width: 9px;
+}
+
+.jsdomenubaritem {
+	background-color: #BCD3C4;
+	border: none;
+	color: #000000;
+	display: inline;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 1px;
+	padding-left: 13px;
+	padding-right: 13px;
+	padding-top: 1px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenubaritemover {
+	background-color: #CDE3D4;
+	border: 1px solid #31A56A;
+	color: #000000;
+	display: inline;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 1px;
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 1px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenubaritemclick {
+	/**
+	background-color: #EFEDDE;
+	border: 1px solid #8A867A;
+	*/
+	background-color: #DEF3E4;
+	border: 1px solid #31A56A;
+	color: #000000;
+	display: inline;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 1px;
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 1px;
+	position: relative; /* Do not alter this line! */
+}
+
+/*
+Example of selectors for icons. Change the height and width to match the actual 
+height and width of the icon image.
+*/
+.icon1 {
+	background-image: url(icon1.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 16px;
+	left: 4px;
+	position: absolute; /* Do not alter this line! */
+	width: 16px;
+}
+
+.icon2 {
+	background-image: url(icon2.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 16px;
+	left: 4px;
+	position: absolute; /* Do not alter this line! */
+	width: 16px;
+}
+
+.icon3 {
+	background-image: url(icon3.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 16px;
+	left: 4px;
+	position: absolute; /* Do not alter this line! */
+	width: 16px;
+}

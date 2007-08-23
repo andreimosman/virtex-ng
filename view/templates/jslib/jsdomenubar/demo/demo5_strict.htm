@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Demo 5 (strict mode)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="demo.css" />
+<link rel="stylesheet" type="text/css" href="../themes/classic/classic.css" />
+<script type="text/javascript" src="../jsdomenu.js"></script>
+<script type="text/javascript" src="../jsdomenubar.js"></script>
+<script type="text/javascript" src="demo5.inc.js"></script>
+</head>
+<body onload="initjsDOMenu()">
+<p>
+Every menu bar item can now have an icon before the display text. In addition, a different icon can 
+be set when the cursor is over the menu bar item, or when the cursor is clicked on the menu bar item.
+</p>
+
+<div id="staticMenuBar"></div>
+
+<p>
+Source code for creating menu bars and menus in this page:
+</p>
+
+<pre><code>function createjsDOMenu() {
+  absoluteMenu1 = new jsDOMenu(120, "absolute");
+  with (absoluteMenu1) {
+    addMenuItem(new menuItem("Item 1", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 2", "item2", "blank.htm"));
+    addMenuItem(new menuItem("Item 3", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 4", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 5", "", "blank.htm"));
+  }
+  
+  absoluteMenu1_1 = new jsDOMenu(130, "absolute");
+  with (absoluteMenu1_1) {
+    addMenuItem(new menuItem("Item 1", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 2", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 3", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 4", "", "blank.htm"));
+  }
+  
+  absoluteMenu2 = new jsDOMenu(120, "absolute");
+  with (absoluteMenu2) {
+    addMenuItem(new menuItem("Item 1", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 2", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 3", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 4", "item4", "blank.htm"));
+  }
+  
+  absoluteMenu2_1 = new jsDOMenu(150, "absolute");
+  with (absoluteMenu2_1) {
+    addMenuItem(new menuItem("Item 1", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 2", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 3", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 4", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 5", "", "blank.htm"));
+  }
+  
+  absoluteMenu3 = new jsDOMenu(140, "absolute");
+  with (absoluteMenu3) {
+    addMenuItem(new menuItem("Item 1", "item1", "blank.htm"));
+    addMenuItem(new menuItem("Item 2", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 3", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 4", "", "blank.htm"));
+  }
+  
+  absoluteMenu3_1 = new jsDOMenu(150, "absolute");
+  with (absoluteMenu3_1) {
+    addMenuItem(new menuItem("Item 1", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 2", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 3", "", "blank.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 4", "", "blank.htm"));
+    addMenuItem(new menuItem("Item 5", "", "blank.htm"));
+  }
+  
+  absoluteMenu1.items.item2.setSubMenu(absoluteMenu1_1);
+  absoluteMenu2.items.item4.setSubMenu(absoluteMenu2_1);
+  absoluteMenu3.items.item1.setSubMenu(absoluteMenu3_1);
+  
+  absoluteMenuBar = new jsDOMenuBar("static", "staticMenuBar");
+  with (absoluteMenuBar) {
+    addMenuBarItem(new menuBarItem("Item 1", absoluteMenu1, "item1"));
+    addMenuBarItem(new menuBarItem("Item 2", absoluteMenu2, "item2"));
+    addMenuBarItem(new menuBarItem("Item 3", absoluteMenu3, "item3"));
+  }
+  
+  absoluteMenuBar.items.item1.showIcon("icon1", "icon2", "icon3");
+  absoluteMenuBar.items.item2.showIcon("icon2", "icon3", "icon1");
+  absoluteMenuBar.items.item3.showIcon("icon3", "icon1", "icon2");
+}</code></pre>
+</body>
+</html>

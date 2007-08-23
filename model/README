@@ -1,0 +1,16 @@
+Classes de Persistencia e Negocios
+
+Persistencia: 
+-------------
+ - Objetos que acessam diretamente o banco de dados
+ - OPERACOES INSERT, DELETE, UPDATE e SELECT
+
+Negocios:
+---------
+ - Operacoes baseadas no contexto
+
+
+
+
+
+
