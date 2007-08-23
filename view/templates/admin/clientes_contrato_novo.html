@@ -1,0 +1,853 @@
+
+<script language="JavaScript">
+// Lista
+var planosBL=eval('{$listaBL}');
+var planosD=eval('{$listaD}');
+var planosH=eval('{$listaH}');
+
+var BLSelecionado='';
+var DSelecionado='';
+var HSelecionado='';
+
+{literal}
+
+function contratoObtemPlano(tipo,id_produto) {
+	var lista = null;
+
+	if(tipo == "BL") {
+		lista = planosBL;
+	}
+
+	if( tipo == "D") {
+		lista = planosD;
+	}
+
+	if( tipo == "H") {
+		lista = planosH;
+	}
+
+	if( lista != null ) {
+		for(i=0;i<lista.length;i++) {
+			if( lista[i].id_produto == id_produto ) {
+				return lista[i];
+			}
+		}
+	}
+
+	return null;
+}
+
+function contratoEscondeBox(tipo) {
+	if( tipo == null || tipo == undefined || tipo == "" ){
+		contratoEscondeBox("BL");
+		contratoEscondeBox("D");
+		contratoEscondeBox("H");
+	}
+	var container = document.getElementById("box"+tipo);
+	if( container != null && container != undefined ) {
+		var target = document.getElementById("boxTarget");
+		var temp   = document.getElementById("boxTemporaria");
+		container.style.visibility = "hidden";
+		temp.appendChild(container);
+	}
+}
+
+function contratoExibeBox(tipo) {
+	contratoEscondeBox("BL");
+	contratoEscondeBox("D");
+	contratoEscondeBox("H");
+	var container = document.getElementById("box"+tipo);
+	if( container != null && container != undefined ) {
+		container.style.visibility = "visible";
+		var target = document.getElementById("boxTarget");
+		target.appendChild(container);
+	}
+
+	contratoDependenciasBox(tipo);
+
+}
+
+function contratoDependenciasBox(tipo) {
+	var frm = document.contratacao;
+
+	if( tipo == "BL" ) {
+		if( frm.username.disabled || frm.username.value == "" ) {
+			desabilita(frm.id_nas);
+			desabilita(frm.id_pop);
+			desabilita(frm.selecao_redeip);
+			desabilita(frm.mac);
+		} else {
+			habilita(frm.id_nas);
+			habilita(frm.id_pop);
+			habilita(frm.selecao_redeip);
+			habilita(frm.mac);
+		}
+
+		contratoAlteraEndereco();
+	}
+
+	if( tipo == "D" ) {
+		if( frm.username.disabled || frm.username.value == "" ) {
+			desabilita(frm.foneinfo);
+		} else {
+			habilita(frm.foneinfo);
+		}
+	}
+
+	if( tipo == "H" ) {
+		if( frm.username.disabled || frm.username.value == "" ) {
+			desabilita(frm.tipo_hospedagem);
+		} else {
+			habilita(frm.tipo_hospedagem);
+		}
+		contratoAlteraTipoHospedagem();
+	}
+
+}
+
+function contratoAlteraUsername() {
+	var frm = document.contratacao;
+	contratoDependenciasBox(frm.tipo.value);
+}
+
+function contratoAlteraTipoHospedagem() {
+	var frm = document.contratacao;
+
+	if( frm.tipo_hospedagem.disabled || frm.tipo_hospedagem.value == "" || frm.tipo_hospedagem.value == "U") {
+		desabilita(frm.dominio);
+	} else {
+		habilita(frm.dominio);
+	}
+}
+
+
+function contratoPopulaProdutos(tipo) {
+	var frm=document.contratacao;
+
+	frm.id_produto.value="";
+
+	frm.id_produto.width="100 px";
+
+	for(i=frm.id_produto.options.length;i>0;--i) {
+		frm.id_produto.remove(0);
+	}
+
+	o = document.createElement("OPTION");
+	o.value = "";
+	o.innerText = "-- SELECIONE --";
+
+	frm.id_produto.appendChild(o);
+
+
+	if( frm.tipo.value == '' ) {
+		contratoEscondeBox();
+		desabilita(frm.id_produto);
+	} else {
+		habilita(frm.id_produto);
+		contratoExibeBox(tipo);
+		if( frm.tipo.value == 'BL' ) {
+			lista = planosBL;
+		}
+
+		if( frm.tipo.value == 'D' ) {
+			lista = planosD;
+		}
+
+		if( frm.tipo.value == 'H' ) {
+			lista = planosH;
+		}
+
+		for(i=0;i<lista.length;i++) {
+			o = document.createElement("OPTION");
+			o.value = lista[i].id_produto;
+			vl = lista[i].valor;
+			if( vl == 0 ) {
+				vl = "cortesia";
+			} else {
+				vl = " R$ " + vl;
+			}
+			o.innerText = lista[i].nome + " / " + vl;
+			frm.id_produto.appendChild(o);
+		}
+	}
+}
+
+function contratoAlteraTipo() {
+	var frm=document.contratacao;
+	contratoPopulaProdutos(frm.tipo.value);
+	contratoAlteraProduto();
+}
+
+function setDisabledRadio(nome,disabled) {
+	el = document.getElementsByTagName("input");
+	for(i=0;i<el.length;i++) {
+		if( el[i].type == "radio" && el[i].name == nome ) {
+			el[i].disabled = disabled;
+		}
+	}
+}
+
+function getCheckedRadio(nome) {
+	el = document.getElementsByTagName("input");
+	for(i=0;i<el.length;i++) {
+		if( el[i].type == "radio" && el[i].name == nome && el[i].checked) {
+			return el[i];
+		}
+	}
+
+	return null;
+}
+
+function habilitaRadio(nome) {
+	setDisabledRadio(nome,false);
+}
+
+function desabilitaRadio(nome) {
+	setDisabledRadio(nome,true);
+}
+
+
+function contratoHabilitaFormaPagamento() {
+	habilitaRadio("forma_pagamento");
+	contratoAlteraFormaPagamento();
+}
+
+function contratoDesabilitaFormaPagamento() {
+	desabilitaRadio("forma_pagamento");
+	contratoAlteraFormaPagamento();
+}
+
+function contratoAlteraFormaPagamentoDA() {
+	var frm=document.contratacao;
+
+	var fp = getCheckedRadio("forma_pagamento");
+	if( fp != null ) {
+		valor = fp.value;
+	} else {
+		valor = null;
+	}
+
+	frm.agencia.disabled = true;
+	frm.agencia.className="disabledFP";
+	frm.conta.disabled = true;
+	frm.conta.className="disabledFP";
+
+	if( fp != null && !fp.disabled ) {
+		if(  valor == "DA" && frm.id_forma_pagamento_DA.value != "" ) {
+			frm.agencia.disabled = false;
+			frm.agencia.className="fieldWithoutFocusFP";
+			frm.conta.disabled = false;
+			frm.conta.className="fieldWithoutFocusFP";
+		}
+	}
+}
+
+function contratoAlteraFormaPagamento() {
+	var frm=document.contratacao;
+
+	var fp = getCheckedRadio("forma_pagamento");
+	if( fp != null ) {
+		valor = fp.value;
+	} else {
+		valor = null;
+	}
+
+	frm.id_forma_pagamento_BL.disabled = true;
+	frm.id_forma_pagamento_DA.disabled = true;
+	frm.id_forma_pagamento_PC.disabled = true;
+	frm.id_forma_pagamento_MO.disabled = true;
+
+	if( fp != null && !fp.disabled ) {
+		if( frm.id_forma_pagamento_BL != undefined ) {
+			if( valor == "BL" ) {
+				frm.id_forma_pagamento_BL.disabled = false;
+			}
+		}
+
+		if( frm.id_forma_pagamento_DA != undefined ) {
+			if( valor == "DA" ) {
+				frm.id_forma_pagamento_DA.disabled = false;
+			}
+		}
+
+		if( frm.id_forma_pagamento_PC != undefined ) {
+			if( valor == "PC" ) {
+				frm.id_forma_pagamento_PC.disabled = false;
+			}
+		}
+
+		if( frm.id_forma_pagamento_MO != undefined ) {
+			if( valor == "MO" ) {
+				frm.id_forma_pagamento_MO.disabled = false;
+			}
+		}
+	}
+
+	if( frm.id_forma_pagamento_DA != undefined ) {
+		contratoAlteraFormaPagamentoDA();
+	}
+
+}
+
+function contratoAlteraProduto() {
+	var frm=document.contratacao;
+
+	desabilita(frm.data_contratacao);
+	desabilita(frm.vigencia);
+	desabilita(frm.dia_vencimento);
+	desabilita(frm.carencia);
+	desabilita(frm.desconto_promo);
+	desabilita(frm.periodo_desconto);
+	desabilita(frm.tx_instalacao);
+	desabilita(frm.comodato);
+	desabilita(frm.valor_comodato);
+
+
+	desabilita(frm.pagamento);
+	contratoDesabilitaFormaPagamento();
+
+	desabilita(frm.username);
+	contratoAlteraUsername();
+	desabilita(frm.senha);
+	desabilita(frm.confsenha);
+
+	if( frm.id_produto.value != "" ) {
+		produto = contratoObtemPlano(frm.tipo.value,frm.id_produto.value);
+
+		if( produto.valor > 0 ) {
+			// Produto pago. Habilitar campos de valores
+			habilita(frm.data_contratacao);
+			habilita(frm.vigencia);
+			habilita(frm.dia_vencimento);
+			habilita(frm.carencia);
+			habilita(frm.desconto_promo);
+			habilita(frm.periodo_desconto);
+			habilita(frm.tx_instalacao);
+			habilita(frm.comodato);
+			contratoAlteraComodato();
+
+			habilita(frm.pagamento);
+			contratoHabilitaFormaPagamento();
+
+			if( produto.desconto_promo == null || produto.desconto_promo == undefined || produto.desconto_promo == "" || produto.periodo_desconto == null || produto.periodo_desconto == undefined || produto.periodo_desconto == "") {
+				frm.desconto_promo.value = "";
+				frm.periodo_desconto.value = "";
+			} else {
+				frm.desconto_promo.value = produto.desconto_promo;
+				frm.periodo_desconto.value = produto.periodo_desconto;
+			}
+
+			if( produto.tx_instalacao == null || produto.tx_instalacao == undefined || produto.tx_instalacao == "" ) {
+				frm.tx_instalacao.value = "";
+			} else {
+				frm.tx_instalacao.value = produto.tx_instalacao;
+			}
+		}
+
+		habilita(frm.username);
+		contratoAlteraUsername();
+		habilita(frm.senha);
+		habilita(frm.confsenha);
+
+	}
+}
+
+function contratoAlteraComodato() {
+	var frm = document.contratacao;
+	if( frm.comodato.value == 't' ) {
+		habilita(frm.valor_comodato);
+	} else {
+		desabilita(frm.valor_comodato);
+	}
+}
+
+function contratoAlteraEndereco() {
+	var frm = document.contratacao;
+
+	if( frm.selecao_redeip.disabled || frm.selecao_redeip.value == "A" ) {
+		desabilita(frm.endereco_redeip);
+	} else {
+		habilita(frm.endereco_redeip);
+	}
+}
+
+
+function formOnBlurSuf(obj,sufixo) {
+	if( sufixo == null || sufixo == undefined ) {
+		sufixo = "";
+	}
+	obj.className="fieldWithoutFocus"+sufixo;
+}
+function formOnFocusSuf(obj,sufixo) {
+	if( sufixo == null || sufixo == undefined ) {
+		sufixo = "";
+	}
+	obj.className="fieldWithFocus"+sufixo;
+}
+
+
+{/literal}
+</script>
+<style>
+{literal}
+.divBoxContratacao {
+	visibility: hidden;
+}
+.boxContratacao {
+	margin-top: 2px;
+	border: solid 1px #000000;
+}
+.boxContratacao TH {
+	background: #aaccaa;
+}
+
+.fieldWithFocusFP {
+	border: solid 1px #004400;
+	margin-right: 2px;
+ 	background-color: #F3F9F3;
+ 	font-family: verdana;
+ 	color: #005500;
+ 	font-size: 8px;
+}
+
+.fieldWithoutFocusFP {
+	border: solid 1px #000000;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+ 	color: #000000;
+ 	font-family: verdana;
+ 	font-size: 8px;
+}
+
+.disabledFP {
+	border: solid 1px #DADADA;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+ 	color: #000000;
+ 	font-family: verdana;
+ 	font-size: 8px;
+}
+
+{/literal}
+</style>
+
+<form name="contratacao" action="admin-clientes.php" method="post">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="id_cliente" value="{$id_cliente}">
+{if $acao == ""}
+	<input type="hidden" name="acao" value="novo_contrato">
+	<table border=0 align="center" cellspacing=0>
+		<tr>
+			<td valign="top">
+				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+					<tr>
+						<th align="right"><label>Contrato:</label></th>
+						<th colspan=3 align="left">
+							<select name="tipo" onChange="contratoAlteraTipo()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								<option value="BL">Banda Larga</option>
+								<option value="D">Discado</option>
+								<option value="H">Hospedagem</option>
+							</select>
+						</th>
+					</tr>
+					<tr>
+						<td align="right"><label>Produto:</label></td>
+						<td colspan="3"><select name="id_produto" onChange="contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></select></td>
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Dt. Contratação:</label></td>
+						<td><input type="text" size="12" maxlength="10" name="data_contratacao" value="{$data_contratacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<td align="right" width="70"><label>Vigência:</label></td>
+						<td><input type="text" size="4" maxlength="2" name="vigencia" value="{$vigencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
+					</tr>
+					<tr>
+						<td align="right"><label>Dia Venc.:</label></td>
+						<td><input type="text" size="4" maxlength="2" name="dia_vencimento" value="{$dia_vencimento}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<td align="right"><label>Carência:</label></td>
+						<td><input type="text" size="4" maxlength="2" name="carencia" value="{$carencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>dias</label></td>
+					</tr>
+					<tr>
+						<td align="right"><label>Desconto:</label></td>
+						<td><input type="text" size="6" maxlength="6" name="desconto_promo" value="{$desconto_promo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+						<td align="right"><label>Período:</label></td>
+						<td><input type="text" size="4" maxlength="2" name="periodo_desconto" value="{$periodo_desconto}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
+					</tr>
+					<tr>
+						<td align="right" width="105"><label>Tx Instalação:</label></td>
+						<td colspan=3><input type="text" size="6" maxlength="6" name="tx_instalacao" value="{$tx_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+					</tr>
+					<tr>
+						<td align="right"><label>Comodato:</label></td>
+						<td>
+							<select name="comodato" onChange="javascript:contratoAlteraComodato()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								{foreach item=d from=$lista_boolean}
+								<option value='{$d.id}' {if $d.id == $comodato}SELECTED{/if}>{$d.nome}</option>
+								{/foreach}
+							</select>
+						</td>
+						<td align="right"><label>v.comodato:</label></td>
+						<td><input type="text" size="8" maxlength="6" name="valor_comodato" value="{$valor_comodato}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+					</tr>
+				</table>
+				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+					<tr>
+						<th align="right" width="110"><label>Cobrança:</label></th>
+						<th align="right" colspan=3>&nbsp;</th>
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Pagamento:</label></td>
+						<td colspan="3">
+							<select name="pagamento" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							{foreach key=k item=v from=$tiposPagamento}
+								<option value="{$k}" {if $k==$pagamento}SELECTED{/if}>{$v}</option>
+							{/foreach}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right"><label>Forma Pagamento:</label></td>
+						<!--td colspan="4">&nbsp;
+							<select name="forma_pagamento" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							{foreach item=v from=$formasPagamento}
+								<option id="{$v.id_forma_pagamento}">{$tiposFormaPgto[$v.tipo_cobranca]}{if $v.tipo_cobranca == "DA" || $v.tipo_cobranca == "BL"}: {$bancos[$v.codigo_banco]} - convênio {$v.convenio}{/if}</option>
+							{/foreach}
+							</select>
+						</td-->
+						<td colspan=2>
+							<table border=0 class="lista" width="100%" cellspacing=0 cellpadding=0>
+							{foreach name=registros key=tipo item=v from=$formasPagamento}
+								{if count($v)}
+									{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+									<tr>
+										<td width="10" class='{$estilo}'><label><input type="radio" name="forma_pagamento" value="{$tipo}" onClick="javascript:contratoAlteraFormaPagamento()"></td>
+										<td class='{$estilo}'>
+											<b>{$tiposFormaPgto[$tipo]}</b><br><span style="font-family: arial; font-size: 8px;">
+											{if count($v) == 1}
+												{if $tipo == "PC" || $tipo == "DA" || $tipo == "BL"}{$bancos[$v.0.codigo_banco]} - convênio {$v.0.convenio}{else}Sistema manual com exportação.{/if}
+												<input type="hidden" name="id_forma_pagamento_{$tipo}" value="{$v.0.id_forma_pagamento}">
+											{else}
+												<table border=0 cellpadding=0 cellspacing=0>
+													<tr>
+														<td>
+															<select name="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"}onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
+																<option value="">-- SELECIONE --</option>
+																{foreach item=f from=$v}
+																	<option value="{$f.id_forma_pagamento}">
+																		{if $tipo == "MO"}
+																			{$f.id_forma_pagamento}
+																		{/if}
+																		{if $tipo == "DA" || $tipo == "BL"}
+																			{$bancos[$f.codigo_banco]} - convênio {$f.convenio}
+																		{/if}
+																	</option>
+																{/foreach}
+															</select>
+														</td>
+													</tr>
+													{if $tipo == "DA"}
+													<tr>
+														<td width="100%">
+															<table border=0 cellspacing=0 cellpadding=0 width="100">
+																<tr>
+																	<td align="right"><label style="font-size: 8px">ag:</label>
+																	<td><input type="text" size="8" maxlength="4" name="agencia" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP' )"></td>
+																	<td aling="right"><label style="font-size: 8px">cc:</label>
+																	<td><input type="text" size="8" maxlength="10" name="conta" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')"></td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													{/if}
+												</table>
+											{/if}
+											</span>
+											</label>
+										</td>
+									</tr>
+								{/if}
+							{/foreach}
+							</table>
+
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td valign="top">
+				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+					<tr>
+						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Usuário:</label></th>
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Username:</label></td>
+						<td colspan=3><input type="text" size="30" maxlength="20" name="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);javascript:contratoAlteraUsername();"></td>
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Senha:</label></td>
+						<td colspan=3>
+							<label>
+								<input type="password" size="20" maxlength="20" name="senha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><br>
+								<input type="password" size="20" maxlength="20" name="confsenha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (confirme)
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" name="criar_email" value="t"></td>
+						<td><label>criar email @{$preferenciasGerais.dominio_padrao} com usuário e senha acimas.</label></td>
+					</tr>
+				</table>
+				<!-- BANDA LARGA-->
+				<div id="boxTarget"></div>
+				<div id="boxTemporaria"></div>
+				<div id="boxBL" class="divBoxContratacao">
+					<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+						<tr>
+							<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>NAS:</label></td>
+							<td colspan=3>
+								<select name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									<option value="">-- SELECIONE --</option>
+								{foreach item=v from=$listaNAS}
+									<option value="{$v.id_nas}">{$tiposNAS[$v.tipo_nas]}: {$v.nome}</option>
+								{/foreach}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>POP:</label></td>
+							<td colspan=3>
+								<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									<option value="">-- SELECIONE --</option>
+								{foreach item=v from=$listaPOP}
+									<option value="{$v.id_pop}">{$v.nome}</option>
+								{/foreach}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>Rede/IP:</label></td>
+							<td colspan=3>
+								<select name="selecao_redeip" onChange="contratoAlteraEndereco()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									<option value="A">Automática</option>
+									<option value="M">Manual</option>
+								</select>
+								<input type="text" name="endereco_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							</td>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>MAC:</label></td>
+							<td colspan=3>
+								<input type="text" name="mac" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							</td>
+					</table>
+				</div>
+				<!-- DISCADO -->
+				<div id="boxD" class="divBoxContratacao">
+					<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+						<tr>
+							<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Acesso:</label></th>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>Fone:</label></td>
+							<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						</tr>
+					</table>
+				</div>
+				<!-- HOSPEDAGEM -->
+				<div id="boxH" class="divBoxContratacao">
+					<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+						<tr>
+							<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>Tipo:</label></td>
+							<td colspan=3>
+								<select name="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									<option value="D">Domínio do Usuário</option>
+									<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
+								</select>
+							</td>
+						<tr>
+							<td align="right" width="110"><label>Criar:</label></td>
+							<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+		<tr colspan=2>
+			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
+				<input type="button" name="prosseguir" value="Cancelar" class="botao"> <input type="submit" name="submit" value="Prosseguir" class="botao">
+			</td>
+		</tr>
+	</table>
+	<script language="JavaScript">
+	contratoAlteraTipo();
+	</script>
+{/if}
+
+
+
+
+
+
+{if $acao == "novo_contrato"}
+	<!-- CONFIRMAÇÃO DO CONTRATO -->
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=4>Contratante</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
+			<td colspan=3>{$cliente.nome_razao}</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
+			<td>{$cliente.cpf_cnpj}&nbsp;</td>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG{else}Inscrição{/if}:</strong></td>
+			<td>{$cliente.rg_inscr}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Endereço:</strong></td>
+			<td>{$cliente.endereco}&nbsp;</td>
+			<td width="110" align="right"><strong>Complemento:</strong></td>
+			<td>{$cliente.complemento}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Bairro:</strong></td>
+			<td>{$cliente.bairro}&nbsp;</td>
+			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<td>{$cliente.cidade}&nbsp;</td>
+		</tr>
+	</table>
+	<br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=6>Contrato</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td>{if $tipo == "BL"}BANDA LARGA{/if}{if $tipo == "D"}DISCADO{/if}{if $tipo == "H"}HOSPEDAGEM{/if}</td>
+			<td width="110" align="right"><strong>Produto:</strong></td>
+			<td>{$produto.nome}&nbsp;</td>
+			<td width="110" align="right"><strong>Valor:</strong></td>
+			<td>{if $produto.valor}{$produto.valor|string_format:"%.2f"}{else}cortesia{/if}</td>
+		</tr>
+		{if $produto.valor}
+		<tr>
+			<td width="110" align="right"><strong>Comodato:</strong></td>
+			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
+			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
+			<td>{$tx_instalacao|string_format:"%.2f"}</td>
+			<td width="110" align="right"><strong>Comodato:</strong></td>
+			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Desconto:</strong></td>
+			<td>{$desconto_promo|string_format:"%.2f"}&nbsp;</td>
+			<td width="110" align="right"><strong>Período Desconto:</strong></td>
+			<td>{$periodo_desconto} meses</td>
+			<td width="110" align="right"><strong>Data Contratação:</strong></td>
+			<td>{$data_contratacao}</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
+			<td>{$dia_vencimento}&nbsp;</td>
+			<td width="110" align="right"><strong>Vigência:</strong></td>
+			<td>{$vigencia} meses</td>
+			<td width="110" align="right"><strong>Carência:</strong></td>
+			<td>{$carencia} dias</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Pagamento:</strong></td>
+			<td>{if $pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
+			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
+			<td colspan=3><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+		</tr>
+		{if $forma_pagamento == "DA"}
+		<tr>
+			<td width="110" align="right"><strong>Banco:</strong></td>
+			<td>{$formaPagamento.codigo_banco|string_format:"%03d"}</td>
+			<td width="110" align="right"><strong>Agencia:</strong></td>
+			<td>{$agencia}</td>
+			<td width="110" align="right"><strong>Conta:</strong></td>
+			<td>{$conta}</td>
+		</tr>
+		{/if}
+		{/if}
+	</table>
+	<br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=6>Detalhes da Conta</th>
+		</tr>
+		<tr>
+			<!--td width="110" align="right"><strong>Tipo:</strong></td>
+			<td>{if $tipo == "BL"}Banda Larga{/if}{if $tipo == "D"}Discado{/if}{if $tipo == "H"}Hospedagem{/if}</td-->
+			<td width="110" align="right"><strong>Username:</strong></td>
+			<td>{$username}</td>
+			<td width="110" align="right"><strong>Criar e-mail:</strong></td>
+			<td>{if $criar_email == "t"}{$username}@{$preferenciasGerais.dominio_padrao}{else}NÃO{/if}</td>
+		</tr>
+		{if $tipo == "BL"}
+		<tr>
+			<td width="110" align="right"><strong>Upload:</strong></td>
+			<td>{$produto.banda_upload_kbps} kbps</td>
+			<td width="110" align="right"><strong>Download:</strong></td>
+			<td>{$produto.banda_download_kbps} kbps</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>NAS:</strong></td>
+			<td>{$nas.nome} ({$tiposNAS[$nas.tipo_nas]})</td>
+			<td width="110" align="right"><strong>POP:</strong></td>
+			<td>{$pop.nome}</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Rede/IP:</strong></td>
+			<td>{if $selecao_redeip=="A"}Automática{else}{$endereco_redeip}{/if}</td>
+			<td width="110" align="right"><strong>MAC:</strong></td>
+			<td>{if $mac}{$mac}{else}Não Informado{/if}</td>
+		</tr>
+		{/if}
+
+	</table>
+	<br>
+
+
+	<!-- FATURAS QUE SERAO CADASTRADAS -->
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
+		<tr>
+			<th colspan=2 style="border-right: solid 2px #000000;">faturas</th>
+			<th colspan=5>composição dos valores</th>
+		</tr>
+		<tr>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Data</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 2px #000000; border-bottom: solid 1px #000000;">Valor(=)</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Plano(+)</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Comodato(+)</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pró-Rata (dias)</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Desconto(-)</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-bottom: solid 1px #000000;">Tx. Instalação(+)</td>
+		{foreach name=registros item=f from=$faturas}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td class='{$estilo}' aling="center" style="border-right: solid 1px #000000;">{$f.data}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{$f.valor|string_format:"%.2f"}</td>
+			<!-- COMPOSICAO DE VALORES -->
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_plano}{$f.composicao.prorata_plano|string_format:"%.2f"}{else}{if $f.composicao.valor}{$f.composicao.valor|string_format:"%.2f"}{else}-{/if}{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>
+			<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
+		</tr>
+		{/foreach}
+	</table>
+{/if}
+
+
+
+
+

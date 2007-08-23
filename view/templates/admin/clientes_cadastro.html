@@ -1,0 +1,364 @@
+<!-- CLIENTES_CADASTRO.HTML -->
+<html>
+<head>
+<title>::.. Virtex Admin - Área de Gerenciamento ..::</title>
+<script type="text/javascript" src="view/templates/jslib/form/cpf_cnpj.js"></script>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+
+<style>
+{literal}
+.fieldDisabled {
+	border: 0px;
+	margin-right: 2px;
+	background-color: #507950;
+ 	font-family: verdana;
+ 	font-size: 10px;
+}
+
+{/literal}
+</style>
+
+
+{if $extra_op=='ficha'}
+{assign var='estilo' value='fieldDisabled'}
+{else}
+{assign var='estilo' value='fieldWithoutFocus'}
+{/if}
+<script language="JavaScript">
+var id_cliente='{$id_cliente}';
+var estilo='{$estilo}';
+{literal}
+function cadatroAfterLoad() {
+	frm = document.cadastro;
+	for(i=0;i<frm.all.length;i++) {
+		if( estilo == 'fieldDisabled' && frm.all[i].name != undefined && (frm.all[i].type == "text" || frm.all[i].type == "select-one" || frm.all[i].type == "radio" || frm.all[i].type == "textarea") ) {
+			frm.all[i].disabled = "true";
+			frm.all[i].className = "fieldDisabled";
+		}
+	}
+}
+
+function cadastroVoltar() {
+	if( window.confirm('Deseja abandonar a alteração do cliente?') ) {
+		url = 'admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente='+id_cliente;
+		parent.open(url,'conteudo');
+	}
+	return false;
+}
+
+function checkForm() {
+	frm = document.cadastro;
+
+	if( frm.nome_razao.value.length == 0 ) {
+		window.alert("O campo 'nome/razão social' não pode ser deixado em branco.");
+		return false;
+	}
+
+	if( frm.tipo_pessoa.value == 'F' ) {
+		/**
+		 * Validação de Pessoa Física
+		 */
+		validacaoDoctos = isCpf(frm.cpf_cnpj.value);
+		msgErro = "CPF Inválido";
+	} else {
+		/**
+		 * Validação de Pessoa Jurídica
+		 */
+		 validacaoDoctos = isCnpj(frm.cpf_cnpj.value);
+		 msgErro = "CNPJ Inválido";
+	}
+
+	if( !validacaoDoctos ) {
+		window.alert(msgErro);
+		return false;
+	}
+
+	return true;
+}
+{/literal}
+</script>
+
+<style>
+{literal}
+
+table.mensagemErro {
+	border: dotted 1px #FF0000;
+	margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+	background-color: #FDFDEA;
+	color: #FF0000;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+{/literal}
+</style>
+
+<form action="{$smarty.server.PHP_SELF}" method="{if $extra_op}get{else}post{/if}" name="cadastro" id="cadastro" {if !$extra_op}onSubmit="return checkForm();"{/if}>
+	<input type="hidden" name="op" value="{$op}">
+	<input type="hidden" name="id_cliente" value="{$id_cliente}">
+	<input type="hidden" name="acao" value="{if !$extra_op}{$acao}{/if}">
+
+	{if $erroCodigo > 0}
+	<table width=641 cellspacing=0 cellpadding=0 class="mensagemErro" align="center">
+		<tr>
+			<td width="100%" align="center">
+			{$erroMensagem}
+			</td>
+	</table>
+	{/if}
+	<table width=641 border=0 cellspacing=0 cellpadding=0 align=center>
+		<tr>
+			<td width=320>
+
+			<table width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="77%"><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Nome/Raz&atilde;o
+						Social</font> </p></td>
+					<td width="23%"> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Pessoa</font></p></td>
+				</tr>
+				<tr>
+					<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+						<input class="{$estilo}" name="nome_razao" type="text"  id="nome_razao3" value="{$nome_razao}" size="38" maxlength="50" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"  tabindex="1">
+						</font></p></td>
+					<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+						<select class="{$estilo}" name='tipo_pessoa' tabindex="2" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+							{foreach key=id item=nome from=$lista_tp_pessoa}
+								<option value='{$id}'{if $id == $tipo_pessoa}selected{/if}>{$nome}</option>
+							{/foreach}
+						</select>
+						</font></p></td>
+				</tr>
+			</table>
+
+			</td>
+			<td rowspan=7 width=1 style="border-left: 1px dashed">&nbsp;</td>
+			<td width=320>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr  valign="bottom">
+						<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Banco<br>
+							<input class="{$estilo}" tabindex="15" name="banco" type="text"  id="banco4" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$banco}" size="17" maxlength="20">
+							</font></p></td>
+						<td > <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Ag&ecirc;ncia<br>
+							<input class="{$estilo}" tabindex="16"  name="agencia" type="text"  id="agencia4" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$agencia}" size="17" maxlength="10">
+							</font></p></td>
+						<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Conta
+							Corrente<br>
+							<input class="{$estilo}" tabindex="17" name="conta_corrente" type="text"  id="conta_corrente5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$conta_corrente}" size="16" maxlength="10">
+							</font></p></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td width=320>
+				<table width="100%" border="0" align="left" cellpadding="0" cellspacing="0" dwcopytype="CopyTableRow">
+					<tr>
+						<td><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">RG</font>
+							</p></td>
+						<td><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Expedi&ccedil;&atilde;o
+							</font> </p></td>
+						<td><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">CPF/CNPJ
+							</font> </p></td>
+					</tr>
+					<tr>
+						<td> <div align="justify">
+							<input class="{$estilo}" tabindex="3" name="rg_inscr" type="text" id="rg_inscr3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$rg_inscr}" size="17" maxlength="20">
+							</div></td>
+						<td> <div align="justify">
+							<input class="{$estilo}" tabindex="4" name="rg_expedicao" type="text" id="rg_expedicao2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$rg_expedicao}" size="17" maxlength="10">
+							</div></td>
+						<td> <div align="justify">
+							<input class="{$estilo}" tabindex="5" name="cpf_cnpj" type="text" id="cpf_cnpj2"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$cpf_cnpj}" size="16" maxlength="25">
+							</div></td>
+					</tr>
+				</table>
+			</td>
+			<td width=320>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="100%"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Contato
+							</font> <input class="{$estilo}" tabindex="17" name="contato" type="text"  id="contato5" value="{$contato}" size="59" maxlength="20" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td width=320>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr valign="bottom">
+						<td>
+							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Endere&ccedil;o</font></p></td>
+					</tr>
+					<tr>
+						<td><input class="{$estilo}" tabindex="6" name="endereco"type="text"  id="endereco4" value="{$endereco}" size="59" maxlength="50" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" width="100%"></td>
+					</tr>
+				</table>
+			</td>
+			<td width=320>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+					<tr>
+						<td rowspan="2"> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Status
+							do Contrato<br>
+							<select class="{$estilo}" name="ativo" tabindex="17" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								{foreach key=id item=nome from=$lista_status}
+									<option value='{$id}'{if $id == $ativo}selected{/if}>{$nome}</option>
+								{/foreach}
+						</select>
+						</font></p></td>
+						<td> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Data
+							de Pagamento<br>
+							<select class="{$estilo}" name='dia_pagamento' tabindex="19" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								{foreach key=id item=nome from=$lista_dia_pagamento}
+								<option value='{$id}'{if $id == $dia_pagamento}selected{/if}>{$nome}</option>
+								{/foreach}
+							</select>
+						</font></p></td>
+						<td>
+							<table>
+							<tr>
+							<td colspan="2"> <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Deseja
+							publicar informações de cobrança na Interface do Cliente?</font></td>
+							</tr>
+							<tr>
+								<td><input type="radio" tabindex="20" name="info_cobranca" value="false" class="checkbox" {if !$info_cobranca || $info_cobranca == 'f' }checked{/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Não</font></td>
+								<td><input type="radio" tabindex="20" name="info_cobranca" value="true" class="checkbox" {if $info_cobranca == 't' } checked {/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sim</font></td>
+							</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td width=320>
+				<table width="100%" border=0 cellpadding="0" cellspacing="0">
+					<tr>
+						<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Complemento</font></p></td>
+						<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Bairro<br>
+							</font></p></td>
+						<td><div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">CEP</font>
+							</div></td>
+					</tr>
+					<tr>
+						<td>
+							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+								<input class="{$estilo}" tabindex="7" name="complemento"type="text"  id="complemento2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$complemento}" size="17" maxlength="20">
+								</font>
+							</div>
+						</td>
+						<td>
+							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+								<input class="{$estilo}" tabindex="8" name="bairro" type="text"  id="bairro3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$bairro}" size="17" maxlength="15"></font>
+							</div>
+						</td>
+						<td><div align="justify">
+							<input class="{$estilo}" tabindex="9" align="right" name="cep"type="text"  id="cep5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"onKeyPress="formatar(this, '#####-###')" value="{$cep}" size="16" maxlength="9">
+							</div></td>
+					</tr>
+				</table>
+			</td>
+			<td rowspan=4 width=320><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Observações
+				</font> <textarea class="{$estilo}" name="obs" tabindex="21" cols="58" rows="10" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$obs}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td width=320>
+				<table width="100%" border=0 cellpadding="0" cellspacing="0">
+					<tr>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Cidade
+						</font></td>
+					</tr>
+					<tr>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+								<select class="{$estilo}" name="id_cidade" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								{foreach item=a from=$cidades_disponiveis}
+
+								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
+								- {$a.uf}</option>
+								{/foreach}
+
+							</select>
+							</font>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td width=320>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" dwcopytype="CopyTableRow">
+					<tr>
+						<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Tel
+							Comercial </font></p></td>
+							<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Tel
+							Residencial </font></p></td>
+							<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Celular
+							<br>
+							</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+								<input class="{$estilo}" tabindex="11" name="fone_comercial" type="text"  id="fone_comercial2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_comercial}" size="17" maxlength="15">
+								</font>
+							</div>
+						</td>
+						<td>
+							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+								<input class="{$estilo}" tabindex="12" name="fone_residencial" type="text"  id="fone_residencial2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_residencial}" size="17" maxlength="15">
+								</font>
+							</div>
+						</td>
+						<td>
+							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+								<input class="{$estilo}" tabindex="13" name="fone_celular" type="text"  id="fone_celular2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_celular}" size="16" maxlength="15">
+								</font>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td width=320>
+				<table width="100%" border=0 cellpadding="0" cellspacing="0">
+					<tr>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Email</font></td>
+					</tr>
+					<tr>
+						<td>
+							<input class="{$estilo}" tabindex="13" name="email"type="text" id="email7" value="{$email}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=3 align="center" style="border-top: 1px dashed"><br>
+			{if $id_cliente && !$extra_op}
+			<input name="button" class="botao" type="submit" tabindex="21" value="Voltar" onClick="return cadastroVoltar();">
+			{/if}
+			<input name="submit" class="botao" type="submit" tabindex="21" value="{$submit}">
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+<script language="javascript">
+{literal}
+cadatroAfterLoad();
+if( !document.cadastro.nome_razao.disabled ) {
+	document.cadastro.nome_razao.focus();
+}
+{/literal}
+</script>
+</html>

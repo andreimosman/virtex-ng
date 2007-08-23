@@ -1,0 +1,157 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<script language="JavaScript">
+{literal}
+
+function listaLinks() {
+	window.open("admin-configuracoes.php?op=preferencias&tela=links","conteudo");
+}
+
+function editarLink(id) {
+	window.open("admin-configuracoes.php?op=preferencias&tela=links&id_link=" + id,"conteudo");
+}
+
+function excluirLink(id) {
+	if( window.confirm("Deseja realmente excluir este link?") ) {
+		window.open("admin-configuracoes.php?op=preferencias&tela=links&acao=exclui&id_link=" + id,"conteudo");
+	}
+}
+
+function formLinkCancela() {
+	form = document.cadastro_link;
+
+	if( window.confirm("Deseja abandonar este registro?") ) {
+		if( form.id_link.value != '' ) {
+			listaLinks();
+		} else {
+			form.reset();
+		}
+	}
+	return false;
+}
+
+function validaCadastroLink() {
+
+	form = document.cadastro_link;
+
+	if( form.titulo_link.value == '' ) {
+		window.alert("É preciso preencher o título");
+		return(false);
+	}
+
+	if( form.url.value == '' ) {
+		window.alert("É preciso preencher a URL");
+		return(false);
+	}
+
+	return(true);
+}
+
+{/literal}
+</script>
+
+<style>
+{literal}
+.marcadoParaEdicao {
+	background: #dd6666;
+	color: #FFFFFF;
+}
+
+.form_pesquisa {
+	width: 400px;
+}
+
+.pesquisa_titulo {
+	font-family: verdana;
+	font-size: 12px;
+	font-color:
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+
+
+<form name="cadastro_link" method="post" action="admin-configuracoes.php" onSubmit="return validaCadastroLink();">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="acao" value="{if $id_link==''}cadastra{else}atualiza{/if}">
+<input type="hidden" name="id_link" value="{$id_link}">
+	<center>
+	<div class='form_pesquisa' align='center'>
+		<fieldset><legend><span class="pesquisa_titulo">{if !$id_link}Cadastrar Link{else}Alterar Link{/if}</span></legend>
+		<table cellspacing=0 cellpadding=0 align="center">
+			<tr>
+				<td align="right" width="70"><label>Título:</label>
+				<td align="left"><input type='text' size=20 name='titulo_link' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$titulo_link}"></td>
+				<td align="right" width="70"><label>URL:</label>
+				<td align="left"><input type='text' size=20 name='url' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$url}"></td>
+			</tr>
+
+			<tr>
+				<td align="right" width="70"><label>Descrição:</label>
+				<td align="left"><textarea name='descricao' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$descricao}</textarea></td>
+				<td align="right" width="70"><label>Abrir em:</label>
+				<td align="left">
+					<select name="target" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+					{foreach item=r from=$targets}
+						<option value="{$r.id}" {if $r.id == $target}SELECTED{/if}>{$r.nome}</option>
+					{/foreach}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align=center style="padding-bottom: 5px;" colspan=4>
+					<input type='button' name='Cancela' value='Cancelar' onClick='javascript:formLinkCancela()' class='botao'>
+					<input type='submit' name='Submit' value='{if !$id_link}Cadastra{else}Altera{/if}' class='botao'>
+
+				</td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	</center>
+
+	<br>
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th align="center">COD</th>
+			<th align="center">TITULO / URL</th>
+			<th>&nbsp;</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='center' width=70 class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}'>{$r.id_link|string_format:"%05d"}</td>
+			<td align='left' class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}'><b>{$r.titulo|upper}</b><br><small>{$r.url}</small></td>
+			<td class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}' width='100'>{if !$id_link}[<a href='javascript:editarLink({$r.id_link});'>editar</a>] [<a href='javascript:excluirLink({$r.id_link})'>excluir</a>]{else}{if $r.id_link == $id_link}editando...{/if}{/if}</td>
+		</tr>
+		{foreachelse}
+			<tr>
+				<td height=110 valign="middle" align="center"><B>NENHUMA LINK EXTERNO CADASTRADO ATÉ O MOMENTO.</B></td>
+			</tr>
+		{/foreach}
+	</table>
+</form>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

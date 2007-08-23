@@ -1,0 +1,8 @@
+<?
+
+	class ExcecaoView extends VirtexExcecao {
+	
+	
+	}
+
+?>

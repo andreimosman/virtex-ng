@@ -1,0 +1,59 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+
+<script language="JavaScript">
+{literal}
+
+function exibirEnderecos() {
+	if( window.confirm("A lista de endereços pode ser grande e por este motivo demorar algum tempo pra baixar. Deseja realmente exibí-la?") ) {
+		{/literal}
+		window.open("admin-configuracoes.php?op=equipamentos&tela=nas&subtela=redes&id_nas={$id_nas}&exibir_enderecos=1","conteudo");
+		{literal}
+	}
+}
+
+function ocultarEnderecos() {
+	{/literal}
+	window.open("admin-configuracoes.php?op=equipamentos&tela=nas&subtela=redes&id_nas={$id_nas}&exibir_enderecos=","conteudo");
+	{literal}
+}
+
+{/literal}
+</script>
+
+
+
+{if !$exibir_enderecos}
+	<!-- CADASTRO DE ENDEREÇOS -->
+
+
+{else}
+<table class='lista' width='350' cellpadding=0 cellspacing=0 align="center">
+	{if count($registros)}
+	<tr>
+		<th align="left">ENDEREÇO</th>
+		<th align="center">TIPO</th>
+	</th>
+	{/if}
+	{foreach name=registros item=r from=$registros}
+	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr>
+		<td class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{if $r.ipaddr}{$r.ipaddr}{else}{$r.rede}{/if}</a></td>
+		<td width="140" class='{$estilo}' align="center"><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{if $r.tipo_rede == "C"}CLIENTE{/if}{if $r.tipo_rede == "S"}SUPORTE{/if}{if $r.tipo_rede == "I"}INFRA-ESTRUTURA{/if}</a></td>
+	</tr>
+	{foreachelse}
+	<tr>
+		<td height=110 valign="middle" align="center"><B>NENHUMA REDE CADASTRADA.</B></td>
+	</tr>
+	{/foreach}
+</table>
+{/if}
+
+
+</body>
+</html>

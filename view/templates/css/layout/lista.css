@@ -1,0 +1,87 @@
+.lista {
+	border: solid 1px;
+}
+
+.lista th {
+	background: #bFd0aF;
+	font-family: verdana;
+	font-size: 12px;
+	padding-right: 6px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	font-weight: bold;
+	border-bottom: solid 1px #000000;
+}
+
+.lista td {
+	font-family: verdana;
+	font-size: 10px;
+	padding-right: 6px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+.lista a {
+	text-decoration: none;
+	color: #000000;
+}
+
+.lista a:hover {
+	text-decoration: underline;
+	color: #000000;
+}
+
+.lista .impar {
+	background: #DFF0CF;
+}
+
+.lista .par {
+	background: #FFFFFF;
+}
+
+.lista .imagem {
+	margin-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-left: 0px;
+
+	padding: 0px;
+}
+
+.nivel_0 {
+	margin-left: 0px;
+}
+
+.nivel_1 {
+	margin-left: 5px;
+}
+
+.nivel_2 {
+	margin-left: 30px;
+}
+
+.nivel_3 {
+	margin-left: 55px;
+}
+
+.nivel_4 {
+	margin-left: 80px;
+}
+
+.nivel_5 {
+	margin-left: 105px;
+}
+
+.nivel_6 {
+	margin-left: 130px;
+}
+
+.nivel_7 {
+	margin-left: 155px;
+}
+
+.nivel_8 {
+	margin-left: 180px;
+}
+

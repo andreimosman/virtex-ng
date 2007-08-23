@@ -1,0 +1,138 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+<style>
+{literal}
+.filtro_uf {
+	font-size:9px;
+	font-family: verdana;
+}
+
+.filtro_uf a {
+	text-decoration: none;
+	color: #000000;
+}
+
+.filtro_uf a:hover {
+	text-decoration: underline;
+}
+
+.form_pesquisa {
+	width: 400px;
+}
+
+.pesquisa_titulo {
+	font-family: verdana;
+	font-size: 12px;
+	font-color:
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+
+
+<br>
+<form method="get" action="admin-configuracoes.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+
+<center>
+<div class='form_pesquisa' align='center'>
+	<fieldset><legend><span class="pesquisa_titulo">Procurar Cidade</span></legend>
+	<table cellspacing=0 cellpadding=0 align="center">
+		<tr>
+			<td align="center"><input type='text' size=65 name='texto_pesquisa' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$texto_pesquisa}">
+			</td>
+		</tr>
+		<tr>
+			<td align=center style="padding-bottom: 5px;">
+				<input type='hidden' name='acao' value='{$acao}'>
+				<input type='submit' name='Submit' value='pesquisar' class='botao'>
+			</td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+</center>
+</form>
+
+
+<form method="post" action="admin-configuracoes.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="acao" value="atualiza">
+
+	<table class='filtro_uf' width="600" cellpadding=0 cellspacing=0 align="center">
+		<tr>
+			<td width="114">
+				{if !$uf && !$texto_pesquisa}
+					<b>cidades disponíveis</b>
+				{else}
+					<a href="admin-configuracoes.php?op=preferencias&tela=cidades">cidades disponíveis</a>
+				{/if}
+			</td>
+		{foreach item=r from=$lista_uf}
+			<td width="18" align="center">
+			{if $r.uf == $uf}
+				<b>{$r.uf}</b>
+			{else}
+				<a href="admin-configuracoes.php?op=preferencias&tela=cidades&uf={$r.uf}">{$r.uf|lower}</a>
+			{/if}
+
+			</td>
+		{/foreach}
+		</td>
+	</table>
+
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th align="left">COD</th>
+			<th align="left">NOME</th>
+			<th align="right">DISPONÍVEL?</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='center' width=50 class='{$estilo}'>{$r.id_cidade|string_format:"%05d"}</td>
+			<td class='{$estilo}'>{$r.cidade|upper} - {$r.uf|upper}</td>
+			<td class='{$estilo}' align="right">
+			<select name="disponivel[{$r.id_cidade}]" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				{foreach item=d from=$lista_boolean}
+				<option value='{$d.id}' {if $d.id == $r.disponivel}SELECTED{/if}>{$d.nome}</option>
+				{/foreach}
+			</select>
+			</td>
+		</tr>
+		{foreachelse}
+			{if $texto_pesquisa}
+			<tr>
+				<td height=110 valign="middle" align="center"><B>NENHUMA CIDADE ENCONTRADA COM '{$texto_pesquisa}'.</B></td>
+			</tr>
+			{/if}
+			{if !$texto_pesquisa && !$uf && !count($registros)}
+			<tr>
+				<td height=110 valign="middle" align="center"><B>NENHUMA CIDADE DISPONIBILIZADA ATÉ O MOMENTO.</B></td>
+			</tr>
+			{/if}
+		{/foreach}
+		{if count($registros)}
+		<tr>
+			<td class='{if $estilo=="par"}impar{else}par{/if}' colspan=3 align="right"><input type="submit" name="submit" value="Alterar Disponibilidade" class="botao"></td>
+		</tr>
+		{/if}
+	</table>
+</form>
+</body>
+</html>

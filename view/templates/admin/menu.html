@@ -1,0 +1,249 @@
+<script type="text/javascript" src="view/templates/jslib/jsdomenubar/jsdomenu.js"></script>
+<script type="text/javascript" src="view/templates/jslib/jsdomenubar/jsdomenubar.js"></script>
+<link rel="stylesheet" type="text/css" href="view/templates/css/menu/menu.css" />
+
+<script language="JavaScript">
+{literal}
+
+function clickLink(url) {
+	window.open(url,"conteudo");
+}
+
+function createjsDOMenu() {
+
+  /**
+   * MENU CLIENTES
+   */
+  menuClientes = new jsDOMenu(120, "absolute");
+  with (menuClientes) {
+    addMenuItem(new menuItem("Cadastro", "cadastro", "javascript:clickLink('admin-clientes.php?op=cadastro')"));
+    addMenuItem(new menuItem("Pesquisa", "pesquisa", "javascript:clickLink('admin-clientes.php?op=pesquisa')"));
+    addMenuItem(new menuItem("Relatórios", "relatorios", ""));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Eliminar", "eliminar", "javascript:clickLink('admin-clientes.php?op=eliminar')"));
+  }
+
+  menuClientesRelatorios = new jsDOMenu(150, "absolute");
+  with (menuClientesRelatorios) {
+    addMenuItem(new menuItem("Lista Geral", "", "javascript:clickLink('admin-clientes.php?op=relatorios&relatorio=lista_geral')"));
+    addMenuItem(new menuItem("Clientes por Cidade", "", "javascript:clickLink('admin-clientes.php?op=relatorios&relatorio=cliente_cidade')"));
+  }
+
+  menuClientes.items.relatorios.setSubMenu(menuClientesRelatorios);
+
+
+  /**
+   * MENU COBRANÇA
+   */
+  menuCobranca = new jsDOMenu(140, "absolute");
+  with (menuCobranca) {
+    addMenuItem(new menuItem("Bloqueios", "bloqueios", "javascript:clickLink('admin-cobranca.php?op=bloqueios')"));
+    addMenuItem(new menuItem("Retorno Banco", "retorno", "javascript:clickLink('admin-cobranca.php?op=retorno')"));
+    addMenuItem(new menuItem("Emitir Boletos", "boleto", "javascript:clickLink('admin-cobranca.php?op=boleto')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Relatórios", "relatorios", ""));
+  }
+
+  menuCobrancaRelatorios = new jsDOMenu(200, "absolute");
+  with (menuCobrancaRelatorios) {
+    addMenuItem(new menuItem("Atrasos", "atrasos", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=atrasos')"));
+    addMenuItem(new menuItem("Reagendamentos", "reagendamentos", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=reagendamentos')"));
+    addMenuItem(new menuItem("Bloqueios e Desbloqueios", "bloqueios_desbloqueios", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=bloqueios_desbloqueios')"));
+    addMenuItem(new menuItem("Emails de Cobrança", "emails_cobranca", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=emails_cobranca')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Cortesias", "cortesias", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=cortesias')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Adesões", "adesoes", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=adesoes')"));
+    addMenuItem(new menuItem("Cancelamentos", "cancelamentos", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=cancelamentos')"));
+    addMenuItem(new menuItem("Evolução (crescrimento)", "evolucao", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=evolucao')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Clientes por Produto", "cliente_produto", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=cliente_produto')"));
+    addMenuItem(new menuItem("Clientes por Tipo Produto", "cliente_tipo_produto", "javascript:clickLink('admin-cobranca.php?op=relatorios&relatorio=cliente_tipo_produto')"));
+
+  }
+
+  menuCobranca.items.relatorios.setSubMenu(menuCobrancaRelatorios);
+
+
+  /**
+   * MENU SUPORTE
+   */
+  menuSuporte = new jsDOMenu(140, "absolute");
+  with (menuSuporte) {
+    addMenuItem(new menuItem("Gráficos", "graficos", "javascript:clickLink('admin-suporte.php?op=graficos')"));
+    addMenuItem(new menuItem("Monitoramento", "monitoramento", "javascript:clickLink('admin-suporte.php?op=monitoramento')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Ferramentas", "ferramentas", ""));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Relatórios", "relatorios", ""));
+  }
+
+  menuSuporteFerramentas = new jsDOMenu(150, "absolute");
+  with (menuSuporteFerramentas) {
+    addMenuItem(new menuItem("ARP", "arp", "javascript:clickLink('admin-suporte.php?op=ferramentas&ferramenta=arp')"));
+    addMenuItem(new menuItem("Ping", "ping", "javascript:clickLink('admin-suporte.php?op=ferramentas&ferramenta=ping')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Calculadora IP", "calculadora", "javascript:clickLink('admin-suporte.php?op=ferramentas&ferramenta=ipcalc')"));
+  }
+
+  menuSuporteRelatorios = new jsDOMenu(150, "absolute");
+  with (menuSuporteRelatorios) {
+    addMenuItem(new menuItem("Clientes por Banda", "banda", "javascript:clickLink('admin-suporte.php?op=relatorios&relatorio=banda')"));
+    addMenuItem(new menuItem("Clientes sem MAC", "clientes_sem_mac", "javascript:clickLink('admin-suporte.php?op=relatorios&relatorio=clientes_sem_mac')"));
+  }
+
+  menuSuporte.items.ferramentas.setSubMenu(menuSuporteFerramentas);
+  menuSuporte.items.relatorios.setSubMenu(menuSuporteRelatorios);
+
+
+  /**
+   * MENU CONFIGURAÇÕES
+   */
+  menuConfiguracoes = new jsDOMenu(140, "absolute");
+  with (menuConfiguracoes) {
+    addMenuItem(new menuItem("Equipamentos", "equipamentos", ""));
+    addMenuItem(new menuItem("Preferencias", "preferencias", ""));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Relatórios", "relatorios", ""));
+  }
+
+  menuConfiguracoesEquipamentos = new jsDOMenu(80, "absolute");
+  with (menuConfiguracoesEquipamentos) {
+    addMenuItem(new menuItem("Servidores", "servidores","javascript:clickLink('admin-configuracoes.php?op=equipamentos&tela=servidores')"));
+    addMenuItem(new menuItem("POPs", "pops", "javascript:clickLink('admin-configuracoes.php?op=equipamentos&tela=pops')"));
+    addMenuItem(new menuItem("NAS", "nas", "javascript:clickLink('admin-configuracoes.php?op=equipamentos&tela=nas')"));
+  }
+
+  menuConfiguracoesPreferencias = new jsDOMenu(170, "absolute");
+  with (menuConfiguracoesPreferencias ) {
+    addMenuItem(new menuItem("Resumo", "resumo", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=resumo')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Preferências Gerais", "geral", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=geral')"));
+    addMenuItem(new menuItem("Preferências Provedor", "provedor", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=provedor')"));
+    addMenuItem(new menuItem("Preferências Cobrança", "cobranca", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=cobranca')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Modelos de Contrato", "modelos", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=modelos')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Cidades", "cidades", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=cidades')"));
+    addMenuItem(new menuItem("Faixas de Banda", "banda", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=banda')"));
+    addMenuItem(new menuItem("Monitoramento", "monitoramento", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=monitoramento')"));
+    addMenuItem(new menuItem("Links Externos", "links", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=links')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Registro do Software", "registro", "javascript:clickLink('admin-configuracoes.php?op=preferencias&tela=registro')"));
+  }
+
+  menuConfiguracoesRelatorios = new jsDOMenu(150, "absolute");
+  with (menuConfiguracoesRelatorios) {
+    addMenuItem(new menuItem("Carga por AP", "carga_ap", "javascript:clickLink('admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=ap')"));
+    addMenuItem(new menuItem("Carga por POP", "carga_pop", "javascript:clickLink('admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=pop')"));
+    addMenuItem(new menuItem("Carga por NAS", "carga_nas", "javascript:clickLink('admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=nas')"));
+    addMenuItem(new menuItem("Clientes por AP", "clientes_ap", "javascript:clickLink('admin-configuracoes.php?op=relatorios&relatorio=clientes_ap')"));
+  }
+
+  menuConfiguracoes.items.equipamentos.setSubMenu(menuConfiguracoesEquipamentos);
+  menuConfiguracoes.items.preferencias.setSubMenu(menuConfiguracoesPreferencias);
+  menuConfiguracoes.items.relatorios.setSubMenu(menuConfiguracoesRelatorios);
+
+
+
+  /**
+   * MENU ADMINISTRAÇÃO
+   */
+
+  menuAdministracao = new jsDOMenu(160, "absolute");
+  with (menuAdministracao) {
+    addMenuItem(new menuItem("Alterar Minha Senha", "altsenha", "javascript:clickLink('admin-administracao.php?op=altsenha')"));
+    addMenuItem(new menuItem("Administradores", "administradores", ""));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Planos", "planos", ""));
+    addMenuItem(new menuItem("Produtos", "produtos", ""));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Ferramentas", "ferramentas", ""));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Relatórios", "relatorios", ""));
+  }
+
+  menuAdministracaoAdministradores = new jsDOMenu(100, "absolute");
+  with (menuAdministracaoAdministradores) {
+    addMenuItem(new menuItem("Cadastro", "cadastro", "javascript:clickLink('admin-administracao.php?op=administradores&tela=cadastro')"));
+    addMenuItem(new menuItem("Listagem", "listagem", "javascript:clickLink('admin-administracao.php?op=administradores&tela=listagem')"));
+  }
+
+  menuAdministracaoPlanos = new jsDOMenu(100, "absolute");
+  with (menuAdministracaoPlanos) {
+    addMenuItem(new menuItem("Cadastro", "cadastro", "javascript:clickLink('admin-administracao.php?op=planos&tela=cadastro')"));
+    addMenuItem(new menuItem("Listagem", "listagem", "javascript:clickLink('admin-administracao.php?op=planos&tela=listagem')"));
+  }
+
+  menuAdministracaoProdutos = new jsDOMenu(100, "absolute");
+  with (menuAdministracaoProdutos) {
+    addMenuItem(new menuItem("Cadastro", "cadastro", "javascript:clickLink('admin-administracao.php?op=produtos&tela=cadastro')"));
+    addMenuItem(new menuItem("Listagem", "listagem", "javascript:clickLink('admin-administracao.php?op=produtos&tela=listagem')"));
+  }
+
+
+  menuAdministracaoFerramentas = new jsDOMenu(150, "absolute");
+  with (menuAdministracaoFerramentas) {
+    addMenuItem(new menuItem("Backup & Restore", "backup", "javascript:clickLink('admin-administracao.php?op=backup')"));
+  }
+
+  menuAdministracaoRelatorios = new jsDOMenu(190, "absolute");
+  with (menuAdministracaoRelatorios) {
+    addMenuItem(new menuItem("Logs dos administradores", "logs", "javascript:clickLink('admin-administracao.php?op=relatorios&relatorio=logs_admin')"));
+  }
+
+  menuAdministracao.items.administradores.setSubMenu(menuAdministracaoAdministradores);
+  menuAdministracao.items.planos.setSubMenu(menuAdministracaoPlanos);
+  menuAdministracao.items.produtos.setSubMenu(menuAdministracaoProdutos);
+  menuAdministracao.items.ferramentas.setSubMenu(menuAdministracaoFerramentas);
+  menuAdministracao.items.relatorios.setSubMenu(menuAdministracaoRelatorios);
+
+
+  /**
+   * MENU FATURAMENTO
+   */
+
+  menuFaturamento = new jsDOMenu(120, "absolute");
+  with (menuFaturamento) {
+    addMenuItem(new menuItem("Relatórios", "relatorios", ""));
+  }
+
+  menuFaturamentoRelatorios = new jsDOMenu(190, "absolute");
+  with (menuFaturamentoRelatorios) {
+    addMenuItem(new menuItem("Faturamento", "faturamento", "javascript:clickLink('admin-faturamento.php?op=relatorios&relatorio=faturamento')"));
+    addMenuItem(new menuItem("Faturamento Comparativo", "comparativo", "javascript:clickLink('admin-faturamento.php?op=relatorios&relatorio=comparativo')"));
+    addMenuItem(new menuItem("Faturamento por Produto", "porproduto", "javascript:clickLink('admin-faturamento.php?op=relatorios&relatorio=porproduto')"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Previsão de Faturamento", "previsao", "javascript:clickLink('admin-faturamento.php?op=relatorios&relatorio=previsao')"));
+  }
+
+  menuFaturamento.items.relatorios.setSubMenu(menuFaturamentoRelatorios);
+
+
+
+
+
+
+  /**
+   * BARRA DE MENUS (MENU PRINCIPAL)
+   */
+  absoluteMenuBar = new jsDOMenuBar();
+  with (absoluteMenuBar) {
+    addMenuBarItem(new menuBarItem("Clientes", menuClientes));
+    addMenuBarItem(new menuBarItem("Cobrança", menuCobranca));
+    addMenuBarItem(new menuBarItem("Suporte", menuSuporte));
+    addMenuBarItem(new menuBarItem("Configurações", menuConfiguracoes));
+    addMenuBarItem(new menuBarItem("Administração", menuAdministracao));
+    addMenuBarItem(new menuBarItem("Faturamento", menuFaturamento));
+    //moveTo(10, 110);
+  }
+}
+
+initjsDOMenu();
+
+var oMenu=document.getElementById("DOMenuBar1");
+var oContainer=document.getElementById("staticMenuBar");
+oContainer.appendChild(oMenu);
+oMenu.style.position = "relative";
+</script>
+{/literal}

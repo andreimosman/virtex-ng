@@ -1,0 +1,446 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+.disabled {
+	border: solid 1px #DADADA;
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 2px;
+}
+
+
+{/literal}
+</style>
+
+<script language="JavaScript">
+{literal}
+function voltar() {
+	if( window.confirm("Deseja abandonar este registro") ) {
+		window.open("admin-configuracoes.php?op=preferencias&tela=cobranca","conteudo");
+	}
+}
+function habilita(campo) {
+	campo.disabled=false;
+	campo.className='fieldWithoutFocus';
+
+}
+
+function desabilita(campo) {
+	campo.disabled=true;
+	campo.className='disabled';
+}
+
+{/literal}
+</script>
+
+
+{if !$subtela}
+<script language="JavaScript">
+{literal}
+function alteraEnviarEmail() {
+	frm = document.cobranca;
+
+	if( frm.enviar_email.checked ) {
+		habilita(frm.mensagem_email);
+		habilita(frm.email_remetente);
+
+		if( frm.mensagem_email.value == "" ) {
+			frm.mensagem_email.value = "Coloque aqui a mensagem que será enviada no e-mail de cobrança. Ex: \n\nPrezado usuário, existem faturas pendentes. Evite cortes no acesso. entre em contato imediatamente com o provedor.\n";
+		}
+
+	} else {
+		desabilita(frm.mensagem_email);
+		desabilita(frm.email_remetente);
+	}
+}
+{/literal}
+</script>
+<form method="post" action="admin-configuracoes.php" name="cobranca">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="subtela" value="{$subtela}">
+<input type="hidden" name="acao" value="{if !$acao}editar{else}alterar{/if}">
+	<table cellspacing=0 cellpadding=0 border=0 align="center">
+		<tr>
+			<td width="130" align="right"><label>Taxa de Juros:</label></td>
+			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="5" name="tx_juros" value="{$tx_juros}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>% a.m.</label></td>
+			<td width="130" align="right"><label>Multa:</label></td>
+			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="5" name="multa" value="{$multa}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>%</label></td>
+		</tr>
+		<tr>
+			<td width="130" align="right"><label>Dia de Vencimento:</label></td>
+			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="dia_venc" value="{$dia_venc}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td width="130" align="right"><label>Carência:</label></td>
+			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="carencia" value="{$carencia}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+		<tr>
+			<td width="130" align="right"><label>Pagamento:</label></td>
+			<td>
+				<select {if !$acao}disabled=true{/if} name="pagamento" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+				{foreach key=k item=v from=$tipos}
+					<option value="{$k}" {if $pagamento == $k}SELECTED{/if}>{$v}</option>
+				{/foreach}
+				</select>
+			</td>
+			<td width="130" align="right"><label>Path Contrato:</label></td>
+			<td><input {if !$acao}disabled=true{/if} type="text" size="40" maxlength="255" name="path_contrato" value="{$path_contrato}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+		<tr>
+			<td width="130" align="right"><label>Observações</label></td>
+			<td colspan="3"><textarea {if !$acao}disabled=true{/if} cols=83 rows=4 name="observacoes" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$observacoes}</textarea></td>
+		</td>
+		<tr>
+			<td width="130" align="right"><input {if !$acao}disabled=true{/if} type="checkbox" name="enviar_email" value="t" {if $enviar_email=='t'}checked{/if} onClick="javascript:alteraEnviarEmail();"></td>
+			<td colspan="3"><label>Enviar e-mail aos clientes que serão bloqueados.</label></td>
+		</tr>
+		<tr>
+			<td width="130" align="right"><label>email do remetente:</label></td>
+			<td colspan="3"><input {if !$acao}disabled=true{/if} type="text" size="85" maxlength="255" name="email_remetente" value="{$email_remetente}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+		<tr>
+			<td width="130" align="right"><label>Mensagem padrão:</label></td>
+			<td colspan="3"><textarea name="mensagem_email" cols=83 rows=4 {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$mensagem_email}</textarea></td>
+		</tr>
+		<tr>
+			<td colspan=4 style="border-top: dotted 1px #000000" align="center">
+				{if $acao}<input type="button" name="Voltar" value="Voltar" class="botao" onClick="javascript:voltar();"> {/if}<input type="submit" name="Submit" value="{if !$acao}Editar{else}Alterar{/if}" class='botao'>
+			</td>
+		</tr>
+	</table>
+	</form>
+	{if !$acao}
+		<!-- FORMAS DE PAGAMENTO -->
+
+
+		<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+			{if count($formas)}
+			<tr>
+				<!--th align="center">COD</th-->
+				<th align="left">TIPO</th>
+				<th align="left">BANCO</th>
+				<th align="left">AG.</th>
+				<th align="left">CONTA</th>
+				<th align="center">CARNÊ</th>
+				<th align="center">DISPONÍVEL</th>
+			</th>
+			{/if}
+			{foreach name=registros item=r from=$formas}
+			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+			<tr>
+				<!--td align='center' width=70 class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{$r.id_forma_pagamento|string_format:"%05d"}</a></td-->
+				<td width="150" align='left' class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{$tipos_forma[$r.tipo_cobranca]}</a></td>
+				<td width="190" align='left' class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{if $r.codigo_banco}{$r.codigo_banco|string_format:"%03d"}-{$bancos[$r.codigo_banco]}{else}N/A{/if}</a></td>
+				<td align='center' class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{$r.agencia|string_format:"%04d"}</a></td>
+				<td align='center' class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{$r.conta|string_format:"%08d"}</a></td>
+				<td align='center' class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{if $r.carne == 't'}SIM{else}NÃO{/if}</a></td>
+				<td align='center' class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}">{if $r.disponivel == 't'}SIM{else}NÃO{/if}</a></td>
+			</tr>
+			{foreachelse}
+				<tr>
+					<td height=110 valign="middle" align="center"><B>NENHUMA FORMA DE PAGAMENTO CADASTRADA ATÉ O MOMENTO.</B></td>
+				</tr>
+			{/foreach}
+		</table>
+	{/if}
+<script language="JavaScript">
+{if $acao}
+alteraEnviarEmail();
+{/if}
+</script>
+{else}
+	<script language="JavaScript">
+	{literal}
+
+	function alteraTipoCobranca() {
+		var frm = document.cobranca;
+
+		// window.alert("COB: " + frm.tipo_cobranca);
+
+		if( frm.tipo_cobranca.value == "PC" ) {
+			// PagContas.
+
+			// Campos estáticos para PC
+			frm.codigo_banco.value="104";
+			frm.carne.value="t";
+			desabilita(frm.codigo_banco);
+			desabilita(frm.carne);
+
+			// Campos não utilizados
+			desabilita(frm.dv_agencia);
+			desabilita(frm.dv_conta);
+			desabilita(frm.cnpj_agencia_cedente);
+			desabilita(frm.codigo_cedente);
+			desabilita(frm.operacao_cedente);
+
+			// Campos utilizados
+			habilita(frm.convenio);
+			habilita(frm.carteira);
+			habilita(frm.agencia);
+			habilita(frm.conta);
+			habilita(frm.nossonumero_inicial);
+			habilita(frm.nossonumero_final);
+			habilita(frm.disponivel);
+
+		} else if( frm.tipo_cobranca.value == "DA" ) {
+			// Débito automático
+
+			// Campos estáticos para DA
+			frm.carne.value="f";
+			desabilita(frm.carne);
+
+			// Campos utilizados
+			habilita(frm.convenio);
+			habilita(frm.carteira);
+			habilita(frm.dv_agencia);
+			habilita(frm.dv_conta);
+			habilita(frm.cnpj_agencia_cedente);
+			habilita(frm.codigo_cedente);
+			habilita(frm.operacao_cedente);
+			habilita(frm.codigo_banco);
+			habilita(frm.agencia);
+			habilita(frm.conta);
+			habilita(frm.nossonumero_inicial);
+			habilita(frm.nossonumero_final);
+			habilita(frm.disponivel);
+
+		} else if( frm.tipo_cobranca.value == "BL" ) {
+			// Boleto
+
+			// Campos utilizados
+			habilita(frm.convenio);
+			habilita(frm.carteira);
+			habilita(frm.dv_agencia);
+			habilita(frm.dv_conta);
+			habilita(frm.cnpj_agencia_cedente);
+			habilita(frm.codigo_cedente);
+			habilita(frm.operacao_cedente);
+			habilita(frm.codigo_banco);
+			habilita(frm.agencia);
+			habilita(frm.conta);
+			habilita(frm.nossonumero_inicial);
+			habilita(frm.nossonumero_final);
+			habilita(frm.carne);
+			habilita(frm.disponivel);
+
+		} else if( frm.tipo_cobranca.value == "MO" ) {
+			// Manual/Outro Sistema
+
+			// Campos estáticos para DA
+			frm.carne.value="f";
+			desabilita(frm.carne);
+
+			// Campos utilizados
+			habilita(frm.disponivel);
+			habilita(frm.nossonumero_inicial);
+			habilita(frm.nossonumero_final);
+
+			// Campos não utilizados
+			desabilita(frm.convenio);
+			desabilita(frm.carteira);
+			desabilita(frm.dv_agencia);
+			desabilita(frm.dv_conta);
+			desabilita(frm.cnpj_agencia_cedente);
+			desabilita(frm.codigo_cedente);
+			desabilita(frm.operacao_cedente);
+			desabilita(frm.codigo_banco);
+			desabilita(frm.agencia);
+			desabilita(frm.conta);
+
+
+		} else {
+			// Ainda não selecionou o tipo de cobrança
+			desabilita(frm.convenio);
+			desabilita(frm.carteira);
+			desabilita(frm.dv_agencia);
+			desabilita(frm.dv_conta);
+			desabilita(frm.cnpj_agencia_cedente);
+			desabilita(frm.codigo_cedente);
+			desabilita(frm.operacao_cedente);
+			desabilita(frm.codigo_banco);
+			desabilita(frm.agencia);
+			desabilita(frm.conta);
+			desabilita(frm.nossonumero_inicial);
+			desabilita(frm.nossonumero_final);
+			desabilita(frm.carne);
+			desabilita(frm.disponivel);
+		}
+	}
+
+	function alteracao() {
+		var frm = document.cobranca;
+		desabilita(frm.tipo_cobranca);
+		desabilita(frm.convenio);
+		desabilita(frm.carteira);
+		desabilita(frm.dv_agencia);
+		desabilita(frm.dv_conta);
+		desabilita(frm.cnpj_agencia_cedente);
+		desabilita(frm.codigo_cedente);
+		desabilita(frm.operacao_cedente);
+		desabilita(frm.codigo_banco);
+		desabilita(frm.agencia);
+		desabilita(frm.conta);
+		//desabilita(frm.nossonumero_inicial);
+		//desabilita(frm.nossonumero_final);
+		desabilita(frm.carne);
+	}
+
+	function validaFormaPagamento() {
+		var frm = document.cobranca;
+
+		if( frm.id_forma_pagamento.value != "" ) {
+			// ALTERACAO
+			return true;
+		}
+
+		if( frm.tipo_cobranca.value == "" ) {
+			window.alert("É necessário indicar o tipo de cobrança.");
+			return(false);
+
+		} else if( frm.tipo_cobranca.value == "BL" || frm.tipo_cobranca.value == "DA" || frm.tipo_cobranca.value == "PC" ) {
+			// Validaçao de BOLETO E DÉBITO AUTOMÁTICO.
+			if( frm.codigo_banco.value == "" ) {
+				window.alert("É preciso escolher um banco.");
+				return false;
+			}
+
+			if( frm.agencia.value == "" || frm.conta.value == "") {
+				window.alert("É preciso definir a agência e conta.");
+				return false;
+			}
+
+			if( frm.convenio.value == "" || frm.carteira.value == "") {
+				window.alert("É preciso definir a convênio e carteira.");
+				return false;
+			}
+
+
+		} else if( frm.tipo_cobranca.value == "MO" ) {
+			// Validação de cobrança manual/outro sistema.
+		}
+
+	}
+
+	{/literal}
+	</script>
+
+	<form method="post" action="admin-configuracoes.php" name="cobranca" onSubmit="return validaFormaPagamento();">
+	<input type="hidden" name="op" value="{$op}">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="subtela" value="{$subtela}">
+	<input type="hidden" name="acao" value="{if !$acao}editar{else}alterar{/if}">
+	<input type="hidden" name="id_forma_pagamento" value="{$id_forma_pagamento}">
+
+	<table _width="600" align="center" cellpadding=2 cellspacing=0 border=0 style="border: solid 1px #000000;">
+		<tr>
+			<td align="right"><label>Tipo de Cobrança:</label>
+			</td>
+			<td colspan=3>
+				<select name="tipo_cobranca" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" onChange="javascript:alteraTipoCobranca();">
+					<option value="">-- ESCOLHA --</option>
+				{foreach key=k item=v from=$tipos_forma}
+					<option value="{$k}" {if $tipo_cobranca == $k}SELECTED{/if}>{$v}</option>
+				{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><label>Banco:</label></td>
+			<td colspan=3>
+				<select name="codigo_banco" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+					<option value="">-- ESCOLHA --</option>
+				{foreach key=k item=v from=$bancos}
+					<option value="{$k}" {if $codigo_banco == $k}SELECTED{/if}>{$v}</option>
+				{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><label>Agência:</label></td>
+			<td><input type="text" size=10 maxlength=4 name="agencia" value="{$agencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> - <input type="text" size=2 maxlength=1 name="dv_agencia" value="{$dv_agencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="right"><label>Conta:</label></td>
+			<td><input type="text" size=10 maxlength=8 name="conta" value="{$conta}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> - <input type="text" size=2 maxlength=1 name="dv_conta" value="{$dv_conta}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		</tr>
+		<tr>
+			<td align="right"><label>Convenio:</label></td>
+			<td><input type="text" size=10 maxlength=9 name="convenio" value="{$convenio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="right"><label>Carteira:</label></td>
+			<td><input type="text" size=10 maxlength=9 name="carteira" value="{$carteira}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		</tr>
+		<tr>
+			<th colspan=4 bgcolor="#ddeedd"><label>Código Seqüencial</label></th>
+		</tr>
+		<tr>
+			<td align="right"><label>Início:</label></td>
+			<td><input type="text" size=10 maxlength=9 name="nossonumero_inicial" value="{$nossonumero_inicial}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="right"><label>Fim:</label></td>
+			<td><input type="text" size=10 maxlength=9 name="nossonumero_final" value="{$nossonumero_final}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		</tr>
+		{if $id_forma_pagamento}
+		<tr>
+			<td align="right"><label>Atual:</label></td>
+			<td colspan="3"><input type="text" class="disabled" size=10 maxlength=9 disabled=true name="nossonumero_atual" value="{$nossonumero_atual}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		</tr>
+		{/if}
+		<tr>
+			<th colspan=4 bgcolor="#ddeedd"><label>Campos dependentes do banco escolhido</label></th>
+		</tr>
+		<tr>
+			<td align="right"><label>CNPJ Ag Cedente:</label></td>
+			<td><input type="text" size=10 maxlength=4 name="cnpj_agencia_cedente" value="{$cnpj_agencia_cedente}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="right"><label>Cod. Cedente:</label></td>
+			<td><input type="text" size=10 maxlength=8 name="codigo_cedente" value="{$codigo_cedente}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		</tr>
+		<tr>
+			<td align="right"><label>OP Cedente:</label></td>
+			<td colspan=3><input type="text" size=10 maxlength=3 name="operacao_cedente" value="{$operacao_cedente}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		</tr>
+		<tr>
+			<th colspan=4 bgcolor="#ddeedd"><label>Outras Opções</label></th>
+		</tr>
+		<tr>
+			<td align="right"><label>Carnê:</label></td>
+			<td>
+				<select name="carne" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+					{foreach item=d from=$lista_boolean}
+					<option value='{$d.id}' {if $d.id == $carne}SELECTED{/if}>{$d.nome}</option>
+					{/foreach}
+				</select>
+			</td>
+			<td align="right"><label>Disponível:</label></td>
+			<td>
+				<select name="disponivel" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+					{foreach item=d from=$lista_boolean}
+					<option value='{$d.id}' {if $d.id == $disponivel}SELECTED{/if}>{$d.nome}</option>
+					{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=4 style="border-top: dotted 1px #000000;" align="center">
+				<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao"> <input type="submit" name="Submit" value="{if $id_forma_pagamento}Alterar{else}Cadastrar{/if}" class="botao">
+			</td>
+		</tr>
+	</table>
+	<script language="JavaScript">
+	{if $id_forma_pagamento}
+	alteracao();
+	{else}
+	alteraTipoCobranca();
+	{/if}
+	</script>
+{/if}
+</body>
+</html>

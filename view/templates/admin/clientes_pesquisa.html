@@ -1,0 +1,135 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+
+
+<script language='JavaScript'>
+{literal}
+function miniOpenLinkFicha(id) {
+	url = 'admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente='+id;
+	parent.open(url,'conteudo');
+	parent.document.resultwin.hide();
+	//parent.document.resultwin.unload();
+	//window.alert(parent.document.resultwin);
+
+	el = parent.document.getElementById("resultados_pesquisa");
+
+	for(i=0;i<el.all.length;i++) {
+		if(el.all[i].name == "_iframe-resultados_pesquisa" ) {
+			el.all[i].src = "about:blank";
+		}
+	}
+
+	//window.alert(el.innerHTML);
+	//el.innerHTML = '';
+	//parent.document.remove(el);
+	//el.outerHTML = ;
+
+
+	//window.alert();
+
+}
+{/literal}
+</script>
+<style>
+{literal}
+
+.form_pesquisa {
+	width: 400px;
+}
+
+.pesquisa_titulo {
+	font-family: verdana;
+	font-size: 12px;
+	font-color:
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+{/literal}
+</style>
+
+
+
+
+
+
+
+
+{if $tela != 'mini' }
+<center>
+<div class='form_pesquisa' align='center'>
+<form name='form_pesquisa' method='get' action='admin-clientes.php'>
+<input type='hidden' name='op' value='{$op}'>
+	<fieldset><legend><span class="pesquisa_titulo">Procurar Cliente</span></legend>
+	<table cellspacing=0 cellpadding=0 align="center">
+		<tr>
+			<td align="center"><input type='text' size=65 name='texto_pesquisa' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$texto_pesquisa}">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{if !$tipo_pesquisa}
+				{assign var=tipo_pesquisa value="NOME"}
+				{/if}
+				<input type='radio' name='tipo_pesquisa' value='NOME' {if $tipo_pesquisa == 'NOME'}checked{/if}><label>Nome/Razão Social</label>
+				<input type='radio' name='tipo_pesquisa' value='DOCTOS' {if $tipo_pesquisa == 'DOCTOS'}checked{/if}><label>CPF/CNPJ/RG</label>
+				<input type='radio' name='tipo_pesquisa' value='CONTA' {if $tipo_pesquisa == 'CONTA'}checked{/if}><label>Conta</label>
+				<input type='radio' name='tipo_pesquisa' value='EMAIL' {if $tipo_pesquisa == 'EMAIL'}checked{/if}><label>Email</label>
+			</td>
+		</tr>
+		<tr>
+			<td align=center style="padding-bottom: 5px;">
+				<input type='hidden' name='acao' value='{$acao}'>
+				<input type='submit' name='Submit' value='pesquisar' class='botao'>
+			</td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+</center>
+<br><br>
+{assign var=tabsize value='600'}
+{else}
+{assign var=tabsize value='100%'}
+{/if}
+	<table class='lista' width='{$tabsize}' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th>COD</th>
+			<th align="left">NOME/RAZÃO SOCIAL</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='right' width=40 class='{$estilo}'><a href="javascript:miniOpenLinkFicha('{$r.id_cliente}')">{$r.id_cliente|string_format:"%05d"}</a></td>
+			<td class='{$estilo}'><a href="javascript:miniOpenLinkFicha('{$r.id_cliente}')">{$r.nome_razao|upper}</a></td>
+		</tr>
+		{foreachelse}
+		{if $texto_pesquisa && $tipo_pesquisa}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>A PESQUISA NÃO RETORNOU REGISTROS</B></td>
+		</tr>
+		{/if}
+		{/foreach}
+	</table>
+
+<script language="JavaScript">
+{literal}
+if( document.form_pesquisa != undefined && document.form_pesquisa.texto_pesquisa != undefined ) {
+	document.form_pesquisa.texto_pesquisa.focus();
+}
+{/literal}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,746 @@
+<?
+
+	class VCAConfiguracoes extends VirtexControllerAdmin {
+
+		public function __construct() {
+			parent::__construct();
+		}
+		
+		protected function init() {
+			// Inicializações da SuperClasse
+			parent::init();
+			
+			$this->_view = VirtexViewAdmin::factory("configuracoes");
+
+		}
+		
+		
+		protected function executa() {
+		
+			switch($this->_op) {
+				case 'equipamentos':
+					$this->executaEquipamentos();
+					break;
+					
+				case 'preferencias':
+					$this->executaPreferencias();
+					break;
+					
+				case 'relatorios':
+					$this->executaRelatorios();
+					break;
+					
+				default:
+					// Do something
+			
+			}
+		
+		}
+		
+		//---------------------------------------------------//
+		//-- INICIO: EQUIPAMENTOS                          --//
+		//---------------------------------------------------//
+		
+		
+		protected function executaEquipamentos() {
+			$tela = @$_REQUEST["tela"];
+			
+			$this->_view->atribuiVisualizacao("equipamentos");
+			$this->_view->atribui("tela",$tela);
+			
+			switch( $tela ) {
+				case 'servidores':
+					$this->executaEquipamentosServidores();
+					break;
+				case 'pops':
+					$this->executaEquipamentosPOPs();
+					break;
+				case 'nas':
+					$this->executaEquipamentosNAS();
+					break;
+				
+				default:
+					// Do something
+			
+			}
+		}
+		
+		protected function executaEquipamentosServidores() {
+			$equipamentos = VirtexModelo::factory("equipamentos");
+			
+			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
+			$this->_view->atribui("subtela",$subtela);
+			
+			$id_servidor = @$_REQUEST["id_servidor"];
+			$this->_view->atribui("id_servidor",$id_servidor);
+			
+			switch($subtela) {
+				case 'listagem':
+					$registros = $equipamentos->obtemListaServidores();
+					$this->_view->atribui("registros",$registros);
+					break;
+				case 'cadastro':
+					if($id_servidor) {
+						if( !$acao ) {
+							// Pegar do banco
+							
+							$info = $equipamentos->obtemServidor($id_servidor);
+							while(list($vr,$vl)=each($info)) {
+								$this->_view->atribui($vr,$vl);
+							}
+							
+							
+							
+						} else {
+							// Processar alteração
+						}
+					} else {
+						// Cadastro
+						if( $acao ) {
+							// Cadastrar
+						}
+					}
+					break;
+			}
+		}
+		
+		protected function executaEquipamentosPOPs() {
+			$equipamentos = VirtexModelo::factory("equipamentos");
+			
+			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
+			$this->_view->atribui("subtela",$subtela);
+			
+			$id_pop = @$_REQUEST["id_pop"];
+			$this->_view->atribui("id_pop",$id_pop);
+			switch($subtela) {
+				case 'listagem':
+					$registros = $equipamentos->obtemListaPOPs();
+					$this->_view->atribui("registros",$registros);				
+				
+					break;
+
+				case 'cadastro':
+					$servidores = $equipamentos->obtemListaServidores();
+					$this->_view->atribui("servidores",$servidores);
+					if($id_pop) {
+						if( $this->_acao ) {
+							$info = @$_REQUEST;
+						} else {
+							$info = $equipamentos->obtemPop($id_pop);
+						}
+						while(list($vr,$vl)=each($info)) {
+							$this->_view->atribui($vr,$vl);
+						}
+					} 
+					break;
+			}
+			
+			
+			
+		}
+		
+		protected function executaEquipamentosNAS() {
+			$equipamentos = VirtexModelo::factory("equipamentos");
+			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
+			$this->_view->atribui("subtela",$subtela);
+
+			switch($subtela) {
+				case 'listagem':
+					$registros = $equipamentos->obtemListaNAS();
+					$this->_view->atribui("registros",$registros);				
+				
+					break;
+				case 'cadastro':
+					$servidores = $equipamentos->obtemListaServidores();
+					$this->_view->atribui("servidores",$servidores);
+					
+					$tipos = $equipamentos->obtemTiposNAS();
+					$this->_view->atribui("tipos",$tipos);
+					
+					$id_nas = @$_REQUEST["id_nas"];
+					$this->_view->atribui("id_nas",$id_nas);
+					$acao = @$_REQUEST["acao"];
+					
+					if( $id_nas ) {
+						if( !$acao ) {
+							// Exibir os dados
+							
+							$dados = $equipamentos->obtemNAS($id_nas);
+							while(list($vr,$vl)=each($dados)) {
+								$this->_view->atribui($vr,$vl);
+							}
+							
+						}
+						
+					} else {
+						// echo "CADASTRO<br>\n";
+					}
+					
+					break;
+				case 'redes':
+					$id_nas = @$_REQUEST["id_nas"];
+					$this->_view->atribui("id_nas",$id_nas);
+					$info = $equipamentos->obtemNAS($id_nas);
+					$this->_view->atribui("nome",@$info["nome"]);
+					$this->_view->atribui("tipo_nas",@$info["tipo_nas"]);
+					
+					$exibir_enderecos = @$_REQUEST["exibir_enderecos"];
+					$this->_view->atribui("exibir_enderecos",$exibir_enderecos);
+					
+					if( $exibir_enderecos ) {
+						if( $info["tipo_nas"] == "I" ) {
+							// NAS IP
+							$registros = $equipamentos->obtemRedesNAS($id_nas);
+
+						} else if( $info["tipo_nas"] == "P" ) {
+							// PPPoE
+							$registros = $equipamentos->obtemIPsNAS($id_nas);
+							$this->_view->atribui("registros",$registros);
+						} else {
+							$registros = array();
+						}
+						$this->_view->atribui("registros",$registros);
+					}
+					
+					
+					break;
+			}
+			
+			
+			
+		}
+		
+		
+		//---------------------------------------------------//
+		//-- FIM: EQUIPAMENTOS                             --//
+		//---------------------------------------------------//
+		
+		
+		
+		
+		
+		
+		
+		//---------------------------------------------------//
+		//-- INICIO: PREFERENCIAS                          --//
+		//---------------------------------------------------//
+		
+		
+		
+		protected function executaPreferencias() {
+			$tela = @$_REQUEST["tela"];
+			$this->_view->atribui("tela",$tela);
+			$this->_view->atribuiVisualizacao("preferencias");
+			
+			switch($tela) {
+				case 'geral':
+					$this->executaPreferenciasGeral();
+					break;
+				case 'provedor':
+					$this->executaPreferenciasProvedor();
+					break;
+				case 'cobranca':
+					$this->executaPreferenciasCobranca();
+					break;
+				case 'cidades':
+					$this->executaPreferenciasCidades();
+					break;
+				case 'banda':
+					$this->executaPreferenciasBanda();
+					break;
+				case 'monitoramento':
+					$this->executaPreferenciasMonitoramento();
+					break;
+				case 'links':
+					$this->executaPreferenciasLinks();
+					break;
+				case 'modelos':
+					$this->executaPreferenciasModeloContrato();
+					break;
+				default:
+					// Do Something
+					break;
+				
+			}
+		}
+		
+		protected function executaPreferenciasModeloContrato() {
+			$acao = @$_REQUEST["acao"];
+			
+			$path_upload_modelo = "var/contrato";
+			
+			$subtela = @$_REQUEST["subtela"];
+			$this->_view->atribui("subtela",$subtela);
+
+			$url = "admin-configuracoes.php?op=preferencias&tela=modelos";
+			$id_modelo_contrato = @$_REQUEST["id_modelo_contrato"];
+			
+			$this->_view->atribui("tipos",$this->preferencias->obtemTiposContrato());
+			if( !$subtela ) {
+				$modelos = $this->preferencias->obtemListaModelosContrato();
+				$this->_view->atribui("registros",$modelos);
+			} else if( $subtela == "exibir_modelo") {
+				// echo "EXIBIR MODELO: " . ;
+				if( $id_modelo_contrato ) {
+					$arqModelo = $path_upload_modelo ."/". str_pad($id_modelo_contrato,5,"0",STR_PAD_LEFT);
+					$fd = @fopen($arqModelo,"r");
+					if( !$fd ) {
+						// ERRO
+						echo "<font face='verdana' size=-1 color=red><b>Não foi possível acessar o modelo. Contate o suporte tecnico.</b></font>";
+					} else {
+						echo fread($fd,filesize($arqModelo));
+						fclose($fd);
+					}
+				}
+			
+			} else {
+				if( !$acao && $id_modelo_contrato ) {
+					$info = $this->preferencias->obtemModeloContrato($id_modelo_contrato);
+					while(list($vr,$vl)=each($info)) {
+						$this->_view->atribui($vr,$vl);
+					}
+				} else {
+					if( $acao ) {
+						if( $id_modelo_contrato ) {
+							// Alterar.
+							$this->preferencias->atualizaModeloContrato(@$_REQUEST["id_modelo_contrato"],@$_REQUEST["tipo"],@$_REQUEST["descricao"],@$_REQUEST["padrao"],@$_REQUEST["disponivel"]);
+							
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","Modelo de Contrato atualizado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");
+													
+						} else {
+
+							$tmp = @explode(".",@$_FILES["arquivo"]["name"]);
+							$ext = strtolower(@$tmp[ count($tmp) - 1 ]);
+							
+							$erro = "";
+							
+							if( $ext != "htm" && $ext != "html" ) {
+								$erro = "Arquivo inválido. Extensão do arquivo não é HTML ou HTM.";
+							} else {
+							
+								$arquivoTemporario = $_FILES["arquivo"]["tmp_name"];
+
+								$tmp = explode("/",$arquivoTemporario);
+								$arq = array_pop($tmp);
+								$tmpPath = implode("/",$tmp);
+
+								$tmp = explode("/",$_SERVER["SCRIPT_NAME"]);
+								array_pop($tmp);
+								$scriptAlvo = "http://" . $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . implode("/",$tmp) . "/smarty-test.php?tmp=" . base64_encode($arq);
+
+								$fd = fopen($scriptAlvo,"r");
+								$resposta="";
+								while(!feof($fd)) {
+									$resposta .= fgets($fd,1024);
+								}
+								fclose($fd);
+
+								if( !$resposta ) {
+									$erro = "O arquivo enviado não é um template de contrato válido.";
+								} else {
+									// Arquivo válido. Copiar, inserir, etc.
+									
+									$this->preferencias->begin();
+									
+									$id_modelo_contrato = $this->preferencias->cadastraModeloContrato(@$_REQUEST["tipo"],@$_REQUEST["descricao"],@$_REQUEST["padrao"],@$_REQUEST["disponivel"]);
+									
+									if( @move_uploaded_file($_FILES['arquivo']['tmp_name'], $path_upload_modelo ."/". str_pad($id_modelo_contrato,5,"0",STR_PAD_LEFT))) {
+										$this->_view->atribui("url",$url);
+										$this->_view->atribui("mensagem","Modelo de Contrato cadastrado com sucesso.");
+										$this->_view->atribuiVisualizacao("msgredirect");
+
+										$this->preferencias->commit();
+									} else {
+										$erro = "Ocorreu um erro na gravação do modelo. Favor acionar o suporte técnico. A informação NÃO foi gravada.";
+										$this->preferencias->rollback();
+									}
+
+								}
+							}
+							
+							if( $erro ) {
+								$this->_view->atribui("erro",$erro);
+								while(list($vr,$vl)=each($_REQUEST)) {
+									$this->_view->atribui($vr,$vl);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		protected function executaPreferenciasGeral() {
+			$acao = @$_REQUEST["acao"];
+			
+			if( !$acao ) {
+				$info = $this->preferencias->obtemPreferenciasGerais();
+
+				while(list($vr,$vl)=each($info)) {
+					$this->_view->atribui($vr,$vl);
+				}
+			} else {
+				/**
+				 * Processar alterações
+				 */
+				
+				$this->preferencias->atualizaPreferenciasGerais(
+																	@$_REQUEST["dominio_padrao"],
+																	@$_REQUEST["nome"],
+																	@$_REQUEST["radius_server"],
+																	@$_REQUEST["hosp_server"],
+																	@$_REQUEST["hosp_ns1"],
+																	@$_REQUEST["hosp_ns2"],
+																	@$_REQUEST["hosp_uid"],
+																	@$_REQUEST["hosp_gid"],
+																	@$_REQUEST["hosp_base"],
+																	@$_REQUEST["mail_server"],
+																	@$_REQUEST["mail_uid"],
+																	@$_REQUEST["mail_gid"],
+																	@$_REQUEST["email_base"],
+																	@$_REQUEST["pop_host"],
+																	@$_REQUEST["smtp_host"],
+																	@$_REQUEST["agrupar"]
+																);
+
+				$this->_view->atribui("url","admin-configuracoes.php?op=preferencias&tela=geral");				
+				$this->_view->atribui("mensagem","Preferências gerais atualizadas com sucesso.");
+				$this->_view->atribuiVisualizacao("msgredirect");
+			
+			}
+		}
+		
+		protected function executaPreferenciasProvedor() {
+			$acao = @$_REQUEST["acao"];
+			if(!$acao) {
+				$info = $this->preferencias->obtemPreferenciasProvedor();
+				
+				while(list($vr,$vl)=each($info)) {
+					$this->_view->atribui($vr,$vl);
+				}
+			} else {
+				$this->preferencias->atualizaPreferenciasProvedor(
+																	@$_REQUEST["endereco"],
+																	@$_REQUEST["localidade"],
+																	@$_REQUEST["cep"],
+																	@$_REQUEST["cnpj"],
+																	@$_REQUEST["fone"]
+																);
+
+				$this->_view->atribui("url","admin-configuracoes.php?op=preferencias&tela=provedor");				
+				$this->_view->atribui("mensagem","Preferências do provedor atualizadas com sucesso.");
+				$this->_view->atribuiVisualizacao("msgredirect");
+				
+			}
+		}
+		
+		protected function executaPreferenciasCobranca() {
+			$acao = @$_REQUEST["acao"];
+
+			$subtela = @$_REQUEST["subtela"];
+			$this->_view->atribui("subtela",$subtela);
+
+			$tipos_forma = $this->preferencias->obtemTiposFormaPagamento();
+			$this->_view->atribui("tipos_forma",$tipos_forma);
+			
+			$bancos = $this->preferencias->obtemListaBancos();
+			$this->_view->atribui("bancos",$bancos);
+			
+			$url = "admin-configuracoes.php?op=preferencias&tela=cobranca";			
+			$this->_view->atribui("url",$url);
+			if( !$subtela ) {
+				if( !$acao || $acao == "editar" ) {
+					$info 	= $this->preferencias->obtemPreferenciasCobranca();
+					while(list($vr,$vl)=each($info)) {
+						$this->_view->atribui($vr,$vl);
+					}
+					$tipos 	= $this->preferencias->obtemTiposPagamento();
+					$this->_view->atribui("tipos",$tipos);
+
+					if( !$acao ) {
+						// Lista de formas de pagamento
+						// echo "LISTA FORMAS<br>\n";
+						$formas = $this->preferencias->obtemFormasPagamento();
+						$this->_view->atribui("formas",$formas);
+						//echo "<pre>";
+						//print_r($formas);
+						//echo "</pre>";
+						
+					}
+				}
+				if( $acao == "alterar" ) {
+					// Rotina de alteração.
+					// echo "Alterar!!!<br>\n";
+					
+					$tx_juros = @$_REQUEST["tx_juros"];
+					$multa = @$_REQUEST["multa"];
+					$dia_venc = @$_REQUEST["dia_venc"];
+					$pagamento = @$_REQUEST["pagamento"];
+					$carencia = @$_REQUEST["carencia"];
+					$path_contrato = @$_REQUEST["path_contrato"];
+					$observacoes = @$_REQUEST["observacoes"];
+					$enviar_email = @$_REQUEST["enviar_email"];
+					$email_remetente = @$_REQUEST["email_remetente"];
+					$mensagem_email = @$_REQUEST["mensagem_email"];
+					
+					$this->preferencias->atualizaPreferenciasCobranca($tx_juros,$multa,$dia_venc,$pagamento,$carencia,$path_contrato,$observacoes,$enviar_email,$email_remetente,$mensagem_email);
+					$this->_view->atribui("mensagem","Preferências atualizadas com sucesso.");
+					$this->_view->atribuiVisualizacao("msgredirect");
+					
+
+
+				}
+			} else {
+				// FORMA DE PAGAMENTO
+				
+				$id_forma_pagamento = @$_REQUEST["id_forma_pagamento"];
+				$this->_view->atribui("id_forma_pagamento",$id_forma_pagamento);
+
+
+				
+				if( $id_forma_pagamento && !$acao ) {
+					$info = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+					
+					while(list($vr,$vl)=each($info)) {
+						$this->_view->atribui($vr,$vl);
+					}
+				}
+				
+				if( !$id_forma_pagamento ) {
+					$this->_view->atribui("nossonumero_inicial", 1);
+					$this->_view->atribui("nossonumero_final", 10000000);
+				}
+				
+				if( $acao ) {
+					
+					if( $id_forma_pagamento ) {
+						// Alteração
+						$disponivel = @$_REQUEST["disponivel"];
+						$nossonumero_inicial = @$_REQUEST["nossonumero_inicial"];
+						$nossonumero_final = @$_REQUEST["nossonumero_final"];
+						$this->preferencias->atualizaFormaPagamento($id_forma_pagamento,$disponivel,$nossonumero_inicial,$nossonumero_final);
+						$mensagem = "Disponibilidade da forma de pagamento alterada com sucesso.";
+					} else {
+						// Cadastro
+						$this->preferencias->cadastraFormaPagamento(@$_REQUEST);
+						$mensagem = "Forma de pagamento cadastrada com sucesso.";
+						
+					}
+					$this->_view->atribui("mensagem",$mensagem);					
+					$this->_view->atribuiVisualizacao("msgredirect");
+
+				}
+
+			}
+			
+			
+			
+			//echo "<pre>";
+			//print_r($info);
+			//print_r($tipos);
+			//print_r($tipos_forma);
+			//echo "</pre>";
+		}
+		
+		
+		
+		
+		
+		protected function executaPreferenciasCidades() {
+		
+			$acao = @$_REQUEST["acao"];
+			
+			if( $acao == "atualiza" ) {
+				// Executa a atualização
+				$disponivel = @$_REQUEST["disponivel"];
+				
+				if( $disponivel && count($disponivel) ) {
+					while(list($id,$disp) = each($disponivel)) {
+						$this->preferencias->atualizaDisponibilidadeCidade($id,$disp);
+					}
+				}
+
+				$this->_view->atribui("mensagem","Disponibilidade atualizada com sucesso.");
+				$this->_view->atribui("url","admin-configuracoes.php?op=preferencias&tela=cidades");
+				$this->_view->atribuiVisualizacao("msgredirect");
+
+				
+			} else {
+		
+				$texto_pesquisa = @$_REQUEST["texto_pesquisa"];
+				$this->_view->atribui("texto_pesquisa",$texto_pesquisa);
+
+				$uf = @$_REQUEST["uf"];
+				$this->_view->atribui("uf",$uf);
+
+				$this->_view->atribui("lista_uf",$this->preferencias->obtemListaUF());
+
+				if( $texto_pesquisa ) {
+					$registros = $this->preferencias->pesquisaCidadesPeloNome($texto_pesquisa);
+				} else {
+
+					if( $uf ) {
+						$registros = $this->preferencias->obtemListaCidadesPorUF($uf);
+					} else {
+						$registros = $this->preferencias->obtemListaCidadesDisponiveis();
+					}
+				}
+
+				$this->_view->atribui("registros",$registros);
+			}
+			
+		}
+		
+		protected function executaPreferenciasBanda() {
+			$registros = $this->preferencias->obtemListaBandas();
+			$this->_view->atribui("registros",$registros);
+			
+			$id = @$_REQUEST["id"];
+			
+			$acao = @$_REQUEST["acao"];
+
+			$valor_banda = @$_REQUEST["valor_banda"];
+			$descricao_banda = @$_REQUEST["descricao_banda"];
+
+			$this->_view->atribui("url","admin-configuracoes.php?op=preferencias&tela=banda");
+
+			
+			if( $acao == "cadastra" ) {
+				// Cadastra
+				$this->preferencias->cadastraBanda($valor_banda,$descricao_banda);
+				$this->_view->atribui("mensagem","Banda cadastrada com sucesso.");
+				$this->_view->atribuiVisualizacao("msgredirect");
+				
+			} else {
+				if( $id != '' ) {
+					if( !$acao ) {
+						$achou = 0;
+						for($i=0;$i<count($registros);$i++) {
+							if( $registros[$i]["id"] == $id ) {
+								$achou = 1;
+								$this->_view->atribui("banda",$registros[$i]["banda"]);
+							}
+						}
+
+						if( !$achou ) {
+							$id = '';
+						}
+
+					} else {
+						if( $acao == "atualiza" ) {
+							// Update
+							$this->preferencias->atualizaBanda($id,$valor_banda,$descricao_banda);
+							$mensagem = "Banda atualizada com sucesso.";
+						} else if( $acao == "exclui" ) {
+							// Exclui
+							$this->preferencias->excluiBanda($id);
+							$mensagem = "Banda excluída com sucesso.";
+						}
+						
+						$this->_view->atribui("mensagem",$mensagem);
+						$this->_view->atribuiVisualizacao("msgredirect");
+						
+					} 
+
+				}
+				$this->_view->atribui("id",$id);
+			}
+			
+			
+		}
+		
+		protected function executaPreferenciasMonitoramento() {
+			$info = $this->preferencias->obtemMonitoramento();
+			
+			$acao = @$_REQUEST["acao"];
+			
+			if( !$acao ) {
+				while( list($vr,$vl) = each($info) ) {
+					$this->_view->atribui($vr,$vl);
+				}
+			} else {
+				$this->preferencias->atualizaMonitoramento($_REQUEST);
+				$this->_view->atribui("url","admin-configuracoes.php?op=preferencias&tela=monitoramento");
+				$this->_view->atribui("mensagem","Preferência atualizada com sucesso.");
+				$this->_view->atribuiVisualizacao("msgredirect");
+			}
+			
+		}
+		
+		protected function executaPreferenciasLinks() {
+			$registros = $this->preferencias->obtemListaLinks();
+			$this->_view->atribui("registros",$registros);
+			
+			$id_link = @$_REQUEST["id_link"];
+			$this->_view->atribui("id_link",$id_link);
+			
+			$acao = @$_REQUEST["acao"];
+			$this->_view->atribui("acao",$acao);
+			
+			$this->_view->atribui("targets",$this->preferencias->obtemListaTargetsLink());
+			
+			
+			$titulo_link = @$_REQUEST["titulo_link"];
+			$url = @$_REQUEST["url"];
+			$descricao = @$_REQUEST["descricao"];
+			$target = @$_REQUEST["target"];
+			
+			
+			$url_redir = "admin-configuracoes.php?op=preferencias&tela=links";
+			
+			if( $acao == "cadastra" ) {
+				// Cadastra
+				$this->preferencias->cadastraLink($titulo_link,$url,$descricao,$target);
+				$this->_view->atribui("url",$url_redir);
+				$this->_view->atribui("mensagem","Link externo cadastrado com sucesso.");
+				$this->_view->atribuiVisualizacao("msgredirect");
+				
+			} else {
+				if( $id_link ) {
+					if( !$acao ) {
+						$info = $this->preferencias->obtemLinkPeloId($id_link);
+						
+						while(list($vr,$vl)=each($info)) {
+							if( $vr == "titulo" ) {
+								$vr = "titulo_link";
+							}
+							
+							$this->_view->atribui($vr,$vl);
+						}
+						
+					} else {
+						if($acao == "atualiza") {
+							$this->preferencias->atualizaLink($id_link,$titulo_link,$url,$descricao,$target);
+							$mensagem = "Link externo alterado com sucesso.";
+						} else if($acao == "exclui") {
+							$this->preferencias->excluiLink($id_link);
+							$mensagem = "Link externo excluído com sucesso.";
+						}
+
+						$this->_view->atribui("url",$url_redir);
+						$this->_view->atribui("mensagem",$mensagem);
+						$this->_view->atribuiVisualizacao("msgredirect");
+
+					}
+				}
+			}
+		}
+
+
+
+		//---------------------------------------------------//
+		//-- FIM: PREFERENCIAS                             --//
+		//---------------------------------------------------//
+
+
+
+		
+		protected function executaRelatorios() {
+		
+		}
+	
+	}
+	
+?>

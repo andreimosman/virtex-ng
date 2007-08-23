@@ -1,0 +1,74 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+<script language="JavaScript">
+{literal}
+function voltar() {
+	if( window.confirm("Deseja abandonar este registro?") ) {
+		window.open('admin-configuracoes.php?op=equipamentos&tela=nas&subtela=listagem','conteudo');
+	}
+}
+{/literal}
+</script>
+
+<form method="post" action="admin-configuracoes.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="subtela" value="{$subtela}">
+<input type="hidden" name="acao" value="alterar">
+
+<table cellspacing=0 cellpadding=0 border=0 align="center">
+	<tr>
+		<td width="100" align="right"><label>Nome:</label></td>
+		<td><input type="text" size="30" maxlength="20" name="nome" value="{$nome}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>IP:</label></td>
+		<td><input type="text" size="30" maxlength="15" name="ip" value="{$ip}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>Secret:</label></td>
+		<td><input type="text" size="30" maxlength="64" name="secret" value="{$secret}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>Tipo:</label></td>
+		<td>
+			<select name="tipo_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $id_nas}disabled="true"{/if}>
+				{foreach key=k item=v from=$tipos}
+					<option value="{$k}" {if $k == $tipo_nas}SELECTED{/if}>{$v}</option>
+				{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>Servidor:</label></td>
+		<td>
+			<select name="id_servidor" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				<option value="">-- selecione --</option>
+			{foreach item=s from=$servidores}
+				<option value="{$s.id_servidor}" {if $s.id_servidor == $id_servidor}SELECTED{/if}>{$s.hostname}</option>
+			{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center" style="border-top: dotted 1px #000000;">
+		<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
+		<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao">
+		</td>
+	</tr>
+</table>
+</html>

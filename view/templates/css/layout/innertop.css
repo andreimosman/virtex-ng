@@ -1,0 +1,25 @@
+table.titulo {
+	border-bottom: solid 1px #004900;
+	margin-bottom: 5px;
+}
+
+p.titulo {
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	font-family: verdana;
+	font-size: 16px;
+	text-alignment: center;
+	font-weight: normal;
+	color: #004900;
+}
+
+.selectMenu {
+	font-family: verdana;
+	font-size: 10px;
+	width: 120px;
+	margin-right: 10px;
+	margin-bottom: 2px;
+
+}

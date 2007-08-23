@@ -1,0 +1,144 @@
+{include file="gadget-base.html"}
+<style>
+{literal}
+
+div.gadget {
+	margin-top: 5px;
+}
+
+div.gadget fieldset {
+	font-size: 12px;
+	font-family: arial,verdana;
+
+}
+
+div.gadget label {
+	font-size: 10px;
+	font-family: arial,verdana;
+}
+
+div.gadget div {
+	padding-left: 5px;
+}
+
+div.gadget .botao {
+	border: solid 1px;
+}
+
+div.gadget #texto_pesquisa {
+	border: solid 1px;
+}
+
+div.gadget iframe {
+	border: solid 1px;
+	padding: 0;
+}
+
+{/literal}
+</style>
+
+<script language="JavaScript">
+{literal}
+var resultwin;
+function pesquisaUsuario() {
+
+	frm = document.form_pesquisa;
+
+	texto_pesquisa = frm.texto_pesquisa.value;
+
+	itens = frm.all;
+
+	tipo_pesquisa = '';
+
+	for(var i=0;i<itens.length;i++) {
+		if( itens(i).name == "tipo_pesquisa" ) {
+			if( itens(i).checked ) {
+				tipo_pesquisa = itens(i).value;
+			}
+		}
+	}
+
+	url = "admin-clientes.php?op=pesquisa&tela=mini&acao=submit&texto_pesquisa=" + texto_pesquisa + "&tipo_pesquisa=" + tipo_pesquisa;
+	document.resultwin = googlewin=dhtmlwindow.open("resultados_pesquisa", "iframe", url, "Resultado da Pesquisa", "width=350px,height=120px,resize=1,scrolling=1,center=0", "recal")
+	document.resultwin.moveTo(130,90);
+
+	return false;
+}
+{/literal}
+</script>
+
+<div class="gadget" id="divPesquisa">
+	<form name="form_pesquisa" onSubmit="return pesquisaUsuario();">
+	<fieldset style="height:115px; width:130; border:1px solid #004411"><legend><span class="style1">Procurar Cliente</span></legend>
+		<div name="box_pesquisa" id="box_pesquisa" style="height:97px; width:120;">
+			<table width="120" border="0" cellspacing="0" cellpadding="0" >
+				<tr align="left">
+					<td><input name="texto_pesquisa" id="texto_pesquisa" value="" type="text" onKeyPress="return Tecla(event);" size="15" class="campos" onFocus="this.style.backgroundColor='#E7EFEA'" onBlur="this.style.backgroundColor='#FFFFFF'"> </td>
+				</tr>
+				<tr>
+					<td>
+						<table width="120" border="0" cellspacing="2" cellpadding="0" align="center">
+							<tr>
+								<td align="left"> <p>
+									<label class="label_pesquisa">
+									<input type="radio" name="tipo_pesquisa" value="NOME" class="checkbox" {if $tipo_pesquisa=="NOME"}CHECKED{/if} checked="checked">
+									Nome</label>
+									</p>
+								</td>
+								<td> <p>
+									<label class="label_pesquisa">
+									<input type="radio" name="tipo_pesquisa" value="DOCTOS" class="checkbox" {if $tipo_pesquisa=="DOCTOS"}CHECKED{/if}>
+									Doctos</label>
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td> <p>
+									<label class="label_pesquisa">
+									<input type="radio" name="tipo_pesquisa" value="CONTA" class="checkbox" {if $tipo_pesquisa=="CONTA"}CHECKED{/if}>
+									Conta</label>
+									</p>
+								</td>
+								{if $lic_email =="sim"}<td> <p>
+									<label class="label_pesquisa">
+									<input type="radio" name="tipo_pesquisa" value="EMAIL" class="checkbox" {if $tipo_pesquisa=="EMAIL"}CHECKED{/if}>
+									E-Mail</label>
+									</p>
+								</td>
+								{/if}
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<input type="button" class="botao" name="Submit" value="Pesquisa" class="campos" onClick="javascript:pesquisaUsuario();" style="height:20px; font-size:10px">
+						<input name="op" class="hidden" type="hidden" id="op" value="pesquisa"> <input name="a" type="hidden" id="a" value="pesquisa">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</fieldset>
+	</form>
+</div>
+<div class="gadget" id="divMonitor">
+	<fieldset style="height:112; width:130; border:1px solid #004411"><legend><span class="style1">Monitoramento</span></legend>
+		<table align="center" border="0" width="123" bgcolor="#A6C4B0" height="60">
+		  <tr>
+			<td width="115" align="center">
+			  <table width="115" height="60"  border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+				  <td><iframe src="admin-suporte.php?op=monitoramento&tela=mini" height="60" width="116" scrolling="no" topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0></iframe></td>
+				</tr>
+				<tr>
+				  <td height="4px"><img src="template/default/images/menu/spacer.gif" height="4px"></td>
+				</tr>
+			  </table>
+			</td>
+		  </tr>
+		  <tr>
+			<td align="center"><input name="button" class="botao" type="button" style="height:20px; font-size:10px" onClick="javascript: frames['conteudo'].location='admin-suporte.php?op=monitoramento' ;" value="detalhes &raquo;"></td>
+		  </tr>
+		</table>
+	</fieldset>
+</div>

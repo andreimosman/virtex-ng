@@ -1,0 +1,81 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<style>
+{literal}
+.clienteTopMenu {
+	margin-left: 15px;
+	font-family: verdana;
+	font-size: 11px;
+}
+
+.clienteTopMenu A {
+	text-decoration: none;
+	color: #0000FF;
+}
+
+.clienteTopMenu A:HOVER {
+	text-decoration: underline;
+}
+
+
+.disabled {
+	border: solid 1px #DADADA;
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 2px;
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+{/literal}
+</style>
+
+<script language="JavaScript">
+{literal}
+
+function habilita(campo) {
+	campo.disabled=false;
+	campo.className='fieldWithoutFocus';
+
+}
+
+function desabilita(campo) {
+	campo.disabled=true;
+	campo.className='disabled';
+}
+{/literal}
+</script>
+<table border=0 cellspacing=0 cellpadding=0 class="clienteTopMenu">
+	<tr>
+		<td>[{if !$tela}Resumo{else}<a href="admin-clientes.php?op=contrato&id_cliente={$id_cliente}">Resumo</a>{/if}]</td>
+		<td>[{if $tela == "novo_contrato"}Novo Contrato{else}<a href="admin-clientes.php?op=contrato&tela=novo_contrato&id_cliente={$id_cliente}">Novo Contrato</a>{/if}]</td>
+		<td>[{if $tela == "contratos"}Contratos{else}<a href="admin-clientes.php?op=contrato&tela=contratos&id_cliente={$id_cliente}">Contratos</a>{/if}]</td>
+		<td>[{if $tela == "faturas"}Faturas{else}<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}">Faturas</a>{/if}]</td>
+	</tr>
+</table>
+
+{if !$tela}
+	{include file="clientes_contrato_resumo.html"}
+{/if}
+{if $tela == "novo_contrato"}
+	{include file="clientes_contrato_novo.html"}
+{/if}
+{if $tela == "contratos"}
+	{include file="clientes_contrato_contratos.html"}
+{/if}
+{if $tela == "faturas"}
+	{include file="clientes_contrato_faturas.html"}
+{/if}
+
+
+</body>
+</html>
