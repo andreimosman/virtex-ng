@@ -107,7 +107,7 @@ function createjsDOMenu() {
     addMenuItem(new menuItem("Relatórios", "relatorios", ""));
   }
 
-  menuConfiguracoesEquipamentos = new jsDOMenu(80, "absolute");
+  menuConfiguracoesEquipamentos = new jsDOMenu(120, "absolute");
   with (menuConfiguracoesEquipamentos) {
     addMenuItem(new menuItem("Servidores", "servidores","javascript:clickLink('admin-configuracoes.php?op=equipamentos&tela=servidores')"));
     addMenuItem(new menuItem("POPs", "pops", "javascript:clickLink('admin-configuracoes.php?op=equipamentos&tela=pops')"));
@@ -153,10 +153,10 @@ function createjsDOMenu() {
   menuAdministracao = new jsDOMenu(160, "absolute");
   with (menuAdministracao) {
     addMenuItem(new menuItem("Alterar Minha Senha", "altsenha", "javascript:clickLink('admin-administracao.php?op=altsenha')"));
-    addMenuItem(new menuItem("Administradores", "administradores", ""));
+    addMenuItem(new menuItem("Administradores", "administradores", "javascript:clickLink('admin-administracao.php?op=administradores&tela=listagem')"));
     addMenuItem(new menuItem("-"));
-    addMenuItem(new menuItem("Planos", "planos", ""));
-    addMenuItem(new menuItem("Produtos", "produtos", ""));
+    addMenuItem(new menuItem("Planos", "planos", "javascript:clickLink('admin-administracao.php?op=planos&tela=listagem')"));
+    //addMenuItem(new menuItem("Produtos", "produtos", ""));
     addMenuItem(new menuItem("-"));
     addMenuItem(new menuItem("Ferramentas", "ferramentas", ""));
     addMenuItem(new menuItem("-"));
@@ -192,9 +192,9 @@ function createjsDOMenu() {
     addMenuItem(new menuItem("Logs dos administradores", "logs", "javascript:clickLink('admin-administracao.php?op=relatorios&relatorio=logs_admin')"));
   }
 
-  menuAdministracao.items.administradores.setSubMenu(menuAdministracaoAdministradores);
-  menuAdministracao.items.planos.setSubMenu(menuAdministracaoPlanos);
-  menuAdministracao.items.produtos.setSubMenu(menuAdministracaoProdutos);
+  //menuAdministracao.items.administradores.setSubMenu(menuAdministracaoAdministradores);
+  //menuAdministracao.items.planos.setSubMenu(menuAdministracaoPlanos);
+  //menuAdministracao.items.produtos.setSubMenu(menuAdministracaoProdutos);
   menuAdministracao.items.ferramentas.setSubMenu(menuAdministracaoFerramentas);
   menuAdministracao.items.relatorios.setSubMenu(menuAdministracaoRelatorios);
 
