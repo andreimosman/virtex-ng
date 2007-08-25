@@ -37,18 +37,18 @@
 		}
 		
 		// TODO
-		public function cadastraServidor() {
-		
+		public function cadastraServidor($hostname, $ip, $porta, $usuario, $senha, $disponivel) {
+			$dados = array("hostname" => $hostname, "ip" => $ip, "porta" => $porta, "usuario" => $usuario, "senha" => $senha, "disponivel" => $disponivel);
+			return($this->cftb_servidor->insere($dados));
 		}
 		
 		// TODO
-		public function atualizaServidor() {
-		
+		public function atualizaServidor($id_servidor, $hostname, $ip, $porta, $usuario, $senha, $disponivel) {
+			$filtro = array("id_servidor"=>$id_servidor);
+			$dados = array("hostname" => $hostname, "ip" => $ip, "porta" => $porta, "usuario" => $usuario, "senha" => $senha, "disponivel" => $disponivel);
+			return($this->cftb_servidor->altera($dados, $filtro));
 		}
-		
-		
-		
-		
+
 		
 		public function obtemListaNAS() {
 			$filtro = array();
@@ -58,6 +58,17 @@
 			
 			return($this->cftb_nas->obtem($filtro));
 			
+		}
+		
+		public function atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor) {
+			$filtro = array("id_nas"=>$id_nas);
+			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "id_servidor"=>$id_servidor);
+			return($this->cftb_nas->altera($dados,$filtro));
+		}
+		
+		public function cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor) {
+			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "tipo_nas"=>$tipo_nas, "id_servidor"=>$id_servidor);
+			return($this->cftb_nas->insere($dados));			
 		}
 		
 		public function obtemNAS($id_nas) {

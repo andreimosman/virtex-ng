@@ -71,7 +71,21 @@
 			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
 			$this->_view->atribui("subtela",$subtela);
 			
-			$id_servidor = @$_REQUEST["id_servidor"];
+			$acao = @$_REQUEST["acao"];
+			
+			$id_servidor = @$_REQUEST["id_servidor"];																					
+			$hostname = @$_REQUEST["hostname"];
+			$ip = @$_REQUEST["ip"];
+			$usuario = @$_REQUEST["usuario"]; 
+			$senha = @$_REQUEST["senha"]; 
+			$disponivel = @$_REQUEST["disponivel"];	
+
+			$porta = @$_REQUEST["porta"];
+			if( !$porta ) $porta = 11000;
+			$this->_view->atribui("porta",$porta);
+		
+			$url = "admin-configuracoes.php?op=equipamentos&tela=servidores";
+	
 			$this->_view->atribui("id_servidor",$id_servidor);
 			
 			switch($subtela) {
@@ -83,21 +97,27 @@
 					if($id_servidor) {
 						if( !$acao ) {
 							// Pegar do banco
-							
 							$info = $equipamentos->obtemServidor($id_servidor);
 							while(list($vr,$vl)=each($info)) {
 								$this->_view->atribui($vr,$vl);
 							}
-							
-							
-							
 						} else {
-							// Processar alteração
+							// Processar alteração			
+							$equipamentos->atualizaServidor($id_servidor, $hostname, $ip, $porta, $usuario, $senha, $disponivel);
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","Servidor atualizado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");
+
 						}
 					} else {
 						// Cadastro
 						if( $acao ) {
 							// Cadastrar
+							$id_servidor = $equipamentos->cadastraServidor($hostname, $ip, $porta, $usuario, $senha, $disponivel);
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","Servidor cadastrado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");
+
 						}
 					}
 					break;
@@ -131,7 +151,7 @@
 						while(list($vr,$vl)=each($info)) {
 							$this->_view->atribui($vr,$vl);
 						}
-					} 
+					}
 					break;
 			}
 			
@@ -143,7 +163,7 @@
 			$equipamentos = VirtexModelo::factory("equipamentos");
 			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
 			$this->_view->atribui("subtela",$subtela);
-
+			
 			switch($subtela) {
 				case 'listagem':
 					$registros = $equipamentos->obtemListaNAS();
@@ -156,24 +176,49 @@
 					
 					$tipos = $equipamentos->obtemTiposNAS();
 					$this->_view->atribui("tipos",$tipos);
+
+					$id_nas = @$_REQUEST["id_nas"];					
+					$nome = @$_REQUEST["nome"];
+					$ip = @$_REQUEST["ip"];					
+					$secret = @$_REQUEST["secret"];
+					$tipo_nas = @$_REQUEST["tipo_nas"];
+					$id_servidor = @$_REQUEST["id_servidor"];					
 					
-					$id_nas = @$_REQUEST["id_nas"];
-					$this->_view->atribui("id_nas",$id_nas);
+					$this->_view->atribui("id_nas", $id_nas);
+
 					$acao = @$_REQUEST["acao"];
-					
+															
 					if( $id_nas ) {
 						if( !$acao ) {
-							// Exibir os dados
+							// Exibir os dados						
 							
 							$dados = $equipamentos->obtemNAS($id_nas);
 							while(list($vr,$vl)=each($dados)) {
 								$this->_view->atribui($vr,$vl);
 							}
 							
-						}
+						} else {
+							//ALTERAR							
+							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor);
+							
+							$url = "admin-configuracoes.php?op=equipamentos&tela=nas";
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","NAS atualizado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");							
+						}					
 						
 					} else {
 						// echo "CADASTRO<br>\n";
+						if( $acao ) {
+							//CADASTRAR							
+							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor);
+							
+							$url = "admin-configuracoes.php?op=equipamentos&tela=nas&subtela=cadastro";
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","NAS cadastrado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");							
+						}
+						
 					}
 					
 					break;

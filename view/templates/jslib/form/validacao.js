@@ -1,0 +1,30 @@
+/**
+ * validacao.js
+ * Contém várias funções de validação em JS
+ */
+ 
+ /**
+  * estaVazio - Compara se o conteúdo de uma string é vazio(ou não contém nenhum caractere ou contém somente caracteres de espaço
+  */
+function estaVazio(string) {
+	var reVazio = /^\s*$/;			//Texto vazio ou preenchido somente com caracteres de espaço
+	return reVazio.test(string);
+}
+ 
+ /**
+  * ipValido - Valida uma string de endereço IPv4
+  */
+function ipValido(stringIP) {
+	var reIP = /^([0-2]?[0-9]?[0-9]\.){3}([0-2]?[0-9]?[0-9])$/;
+
+	if(!reIP.test(stringIP)) {
+		return false;
+	} 
+
+	partes = stringIP.split(".");
+	for(i=0; i<partes.length; i++) {
+		if(parteInt(partes[i]) > 255 || parteInt(partes[i]) < 0) return false;
+	}
+
+	return true;
+}
