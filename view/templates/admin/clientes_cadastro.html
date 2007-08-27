@@ -9,12 +9,30 @@
 
 <style>
 {literal}
-.fieldDisabled {
-	border: 0px;
+
+table.mensagemErro {
+	border: dotted 1px #FF0000;
+	margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+	background-color: #FDFDEA;
+	color: #FF0000;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.disabledFP {
+	border: solid 1px #DADADA;
 	margin-right: 2px;
-	background-color: #507950;
+	background-color: #FFFFFF;
+ 	color: #000000;
  	font-family: verdana;
- 	font-size: 10px;
+ 	font-size: 9px;
 }
 
 {/literal}
@@ -22,7 +40,7 @@
 
 
 {if $extra_op=='ficha'}
-{assign var='estilo' value='fieldDisabled'}
+{assign var='estilo' value='disabledFP'}
 {else}
 {assign var='estilo' value='fieldWithoutFocus'}
 {/if}
@@ -33,9 +51,9 @@ var estilo='{$estilo}';
 function cadatroAfterLoad() {
 	frm = document.cadastro;
 	for(i=0;i<frm.all.length;i++) {
-		if( estilo == 'fieldDisabled' && frm.all[i].name != undefined && (frm.all[i].type == "text" || frm.all[i].type == "select-one" || frm.all[i].type == "radio" || frm.all[i].type == "textarea") ) {
+		if( estilo == 'disabledFP' && frm.all[i].name != undefined && (frm.all[i].type == "text" || frm.all[i].type == "select-one" || frm.all[i].type == "radio" || frm.all[i].type == "textarea") ) {
 			frm.all[i].disabled = "true";
-			frm.all[i].className = "fieldDisabled";
+			frm.all[i].className = "disabledFP";
 		}
 	}
 }
@@ -80,27 +98,7 @@ function checkForm() {
 {/literal}
 </script>
 
-<style>
-{literal}
 
-table.mensagemErro {
-	border: dotted 1px #FF0000;
-	margin-bottom: 5px;
-}
-
-table.mensagemErro td {
-	background-color: #FDFDEA;
-	color: #FF0000;
-	font-family: verdana;
-	font-size: 12px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-{/literal}
-</style>
 
 <form action="{$smarty.server.PHP_SELF}" method="{if $extra_op}get{else}post{/if}" name="cadastro" id="cadastro" {if !$extra_op}onSubmit="return checkForm();"{/if}>
 	<input type="hidden" name="op" value="{$op}">
@@ -127,10 +125,10 @@ table.mensagemErro td {
 				</tr>
 				<tr>
 					<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-						<input class="{$estilo}" name="nome_razao" type="text"  id="nome_razao3" value="{$nome_razao}" size="38" maxlength="50" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"  tabindex="1">
+						<input class="{$estilo}" style="width:200px" name="nome_razao" type="text"  id="nome_razao3" value="{$nome_razao}" size="38" maxlength="50" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"  tabindex="1">
 						</font></p></td>
 					<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-						<select class="{$estilo}" name='tipo_pessoa' tabindex="2" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+						<select class="{$estilo}" style="width:100px" name='tipo_pessoa' tabindex="2" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 							{foreach key=id item=nome from=$lista_tp_pessoa}
 								<option value='{$id}'{if $id == $tipo_pessoa}selected{/if}>{$nome}</option>
 							{/foreach}
@@ -145,14 +143,14 @@ table.mensagemErro td {
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr  valign="bottom">
 						<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Banco<br>
-							<input class="{$estilo}" tabindex="15" name="banco" type="text"  id="banco4" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$banco}" size="17" maxlength="20">
+							<input class="{$estilo}" style="width:100px" tabindex="15" name="banco" type="text"  id="banco4" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$banco}" size="17" maxlength="20">
 							</font></p></td>
 						<td > <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Ag&ecirc;ncia<br>
-							<input class="{$estilo}" tabindex="16"  name="agencia" type="text"  id="agencia4" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$agencia}" size="17" maxlength="10">
+							<input class="{$estilo}" style="width:100px" tabindex="16"  name="agencia" type="text"  id="agencia4" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$agencia}" size="17" maxlength="10">
 							</font></p></td>
 						<td> <p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Conta
 							Corrente<br>
-							<input class="{$estilo}" tabindex="17" name="conta_corrente" type="text"  id="conta_corrente5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$conta_corrente}" size="16" maxlength="10">
+							<input class="{$estilo}" style="width:100px" tabindex="17" name="conta_corrente" type="text"  id="conta_corrente5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$conta_corrente}" size="16" maxlength="10">
 							</font></p></td>
 					</tr>
 				</table>
@@ -171,13 +169,13 @@ table.mensagemErro td {
 					</tr>
 					<tr>
 						<td> <div align="justify">
-							<input class="{$estilo}" tabindex="3" name="rg_inscr" type="text" id="rg_inscr3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$rg_inscr}" size="17" maxlength="20">
+							<input class="{$estilo}" style="width:100px" tabindex="3" name="rg_inscr" type="text" id="rg_inscr3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$rg_inscr}" size="17" maxlength="20">
 							</div></td>
 						<td> <div align="justify">
-							<input class="{$estilo}" tabindex="4" name="rg_expedicao" type="text" id="rg_expedicao2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$rg_expedicao}" size="17" maxlength="10">
+							<input class="{$estilo}" style="width:100px" tabindex="4" name="rg_expedicao" type="text" id="rg_expedicao2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$rg_expedicao}" size="17" maxlength="10">
 							</div></td>
 						<td> <div align="justify">
-							<input class="{$estilo}" tabindex="5" name="cpf_cnpj" type="text" id="cpf_cnpj2"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$cpf_cnpj}" size="16" maxlength="25">
+							<input class="{$estilo}" style="width:100px" tabindex="5" name="cpf_cnpj" type="text" id="cpf_cnpj2"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$cpf_cnpj}" size="16" maxlength="25">
 							</div></td>
 					</tr>
 				</table>
@@ -186,7 +184,7 @@ table.mensagemErro td {
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td width="100%"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Contato
-							</font> <input class="{$estilo}" tabindex="17" name="contato" type="text"  id="contato5" value="{$contato}" size="59" maxlength="20" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</font> <input class="{$estilo}" style="width:250px" tabindex="17" name="contato" type="text"  id="contato5" value="{$contato}" size="59" maxlength="20" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 					</tr>
 				</table>
 			</td>
@@ -199,7 +197,7 @@ table.mensagemErro td {
 							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Endere&ccedil;o</font></p></td>
 					</tr>
 					<tr>
-						<td><input class="{$estilo}" tabindex="6" name="endereco"type="text"  id="endereco4" value="{$endereco}" size="59" maxlength="50" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" width="100%"></td>
+						<td><input class="{$estilo}" style="width:310px" tabindex="6" name="endereco"type="text"  id="endereco4" value="{$endereco}" size="59" maxlength="50" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" width="100%"></td>
 					</tr>
 				</table>
 			</td>
@@ -208,7 +206,7 @@ table.mensagemErro td {
 					<tr>
 						<td rowspan="2"> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Status
 							do Contrato<br>
-							<select class="{$estilo}" name="ativo" tabindex="17" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+							<select class="{$estilo}" style="width:150px" name="ativo" tabindex="17" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach key=id item=nome from=$lista_status}
 									<option value='{$id}'{if $id == $ativo}selected{/if}>{$nome}</option>
 								{/foreach}
@@ -216,12 +214,17 @@ table.mensagemErro td {
 						</font></p></td>
 						<td> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Data
 							de Pagamento<br>
-							<select class="{$estilo}" name='dia_pagamento' tabindex="19" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+							<select class="{$estilo}" style="width:150px" name='dia_pagamento' tabindex="19" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach key=id item=nome from=$lista_dia_pagamento}
 								<option value='{$id}'{if $id == $dia_pagamento}selected{/if}>{$nome}</option>
 								{/foreach}
 							</select>
 						</font></p></td>
+					</tr>
+				</table>
+				<!--
+				<table>
+					<tr>
 						<td>
 							<table>
 							<tr>
@@ -229,14 +232,18 @@ table.mensagemErro td {
 							publicar informações de cobrança na Interface do Cliente?</font></td>
 							</tr>
 							<tr>
-								<td><input type="radio" tabindex="20" name="info_cobranca" value="false" class="checkbox" {if !$info_cobranca || $info_cobranca == 'f' }checked{/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Não</font></td>
-								<td><input type="radio" tabindex="20" name="info_cobranca" value="true" class="checkbox" {if $info_cobranca == 't' } checked {/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sim</font></td>
+								<td>
+									<input type="radio" tabindex="20" name="info_cobranca" value="false" class="checkbox" {if !$info_cobranca || $info_cobranca == 'f' }checked{/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Não</font>
+									<input type="radio" tabindex="20" name="info_cobranca" value="true" class="checkbox" {if $info_cobranca == 't' } checked {/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sim</font>
+								</td>
 							</tr>
 							</table>
 						</td>
 					</tr>
 				</table>
+				-->
 			</td>
+
 		</tr>
 		<tr>
 			<td width=320>
@@ -251,25 +258,39 @@ table.mensagemErro td {
 					<tr>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" tabindex="7" name="complemento"type="text"  id="complemento2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$complemento}" size="17" maxlength="20">
+								<input class="{$estilo}" style="width:100px" tabindex="7" name="complemento"type="text"  id="complemento2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$complemento}" size="17" maxlength="20">
 								</font>
 							</div>
 						</td>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" tabindex="8" name="bairro" type="text"  id="bairro3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$bairro}" size="17" maxlength="15"></font>
+								<input class="{$estilo}" style="width:100px" tabindex="8" name="bairro" type="text"  id="bairro3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$bairro}" size="17" maxlength="15"></font>
 							</div>
 						</td>
 						<td><div align="justify">
-							<input class="{$estilo}" tabindex="9" align="right" name="cep"type="text"  id="cep5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"onKeyPress="formatar(this, '#####-###')" value="{$cep}" size="16" maxlength="9">
+							<input class="{$estilo}" style="width:100px" tabindex="9" align="right" name="cep"type="text"  id="cep5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"onKeyPress="formatar(this, '#####-###')" value="{$cep}" size="16" maxlength="9">
 							</div></td>
 					</tr>
 				</table>
 			</td>
-			<td rowspan=4 width=320><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Observações
-				</font> <textarea class="{$estilo}" name="obs" tabindex="21" cols="58" rows="10" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$obs}</textarea>
+
+			<td rowspan=2>
+				<table>
+				<tr>
+				<td colspan="2"> <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Deseja
+				publicar informações de cobrança na Interface do Cliente?</font></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="radio" tabindex="20" name="info_cobranca" value="false" class="checkbox" {if !$info_cobranca || $info_cobranca == 'f' }checked{/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Não</font>
+						<input type="radio" tabindex="20" name="info_cobranca" value="true" class="checkbox" {if $info_cobranca == 't' } checked {/if}/><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sim</font>
+					</td>
+				</tr>
+				</table>
 			</td>
+
 		</tr>
+
 		<tr>
 			<td width=320>
 				<table width="100%" border=0 cellpadding="0" cellspacing="0">
@@ -279,7 +300,7 @@ table.mensagemErro td {
 					</tr>
 					<tr>
 						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<select class="{$estilo}" name="id_cidade" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								<select class="{$estilo}" style="width:310px" name="id_cidade" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach item=a from=$cidades_disponiveis}
 
 								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
@@ -309,25 +330,30 @@ table.mensagemErro td {
 					<tr>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" tabindex="11" name="fone_comercial" type="text"  id="fone_comercial2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_comercial}" size="17" maxlength="15">
+								<input class="{$estilo}" style="width:100px" tabindex="11" name="fone_comercial" type="text"  id="fone_comercial2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_comercial}" size="17" maxlength="15">
 								</font>
 							</div>
 						</td>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" tabindex="12" name="fone_residencial" type="text"  id="fone_residencial2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_residencial}" size="17" maxlength="15">
+								<input class="{$estilo}" style="width:100px" tabindex="12" name="fone_residencial" type="text"  id="fone_residencial2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_residencial}" size="17" maxlength="15">
 								</font>
 							</div>
 						</td>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" tabindex="13" name="fone_celular" type="text"  id="fone_celular2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_celular}" size="16" maxlength="15">
+								<input class="{$estilo}" style="width:100px" tabindex="13" name="fone_celular" type="text"  id="fone_celular2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$fone_celular}" size="16" maxlength="15">
 								</font>
 							</div>
 						</td>
 					</tr>
 				</table>
 			</td>
+
+			<td rowspan=2 width=320><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Observações
+				</font> <textarea class="{$estilo}" name="obs" tabindex="21" cols="58" rows="7" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$obs}</textarea>
+			</td>
+
 		</tr>
 		<tr>
 			<td width=320>
@@ -337,7 +363,7 @@ table.mensagemErro td {
 					</tr>
 					<tr>
 						<td>
-							<input class="{$estilo}" tabindex="13" name="email"type="text" id="email7" value="{$email}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<input class="{$estilo}" style="width:310px" tabindex="13" name="email"type="text" id="email7" value="{$email}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 					</tr>
 				</table>
 			</td>

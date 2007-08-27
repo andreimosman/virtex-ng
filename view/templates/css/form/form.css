@@ -30,6 +30,20 @@ form input.checkbox {
 	border: 0px;
 }
 
+
+/**
+ * Campos desabilitados dos formulários
+ */
+.disabledFP {
+	border: solid 1px #DADADA;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+ 	color: #000000;
+ 	font-family: verdana;
+ 	font-size: 8px;
+}
+
+
 /**
 form option {
 	color: #FF0000;

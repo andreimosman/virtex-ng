@@ -28,3 +28,12 @@ function ipValido(stringIP) {
 
 	return true;
 }
+
+/**
+ * macValido - Valida um endereço mac
+ */
+ 
+function macValido(string) {
+	reMac = /^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$/
+	return reMac.test(string);
+}
