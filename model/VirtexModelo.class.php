@@ -31,6 +31,9 @@
 				case 'administradores':
 					return new MODELO_Administracao();
 					break;
+				case 'spool':
+					return new MODELO_Spool();
+					break;
 				default:
 					throw new ExcecaoModeloInexistente();
 					

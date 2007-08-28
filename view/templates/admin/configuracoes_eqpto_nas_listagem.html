@@ -26,7 +26,7 @@
 			<td class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_nas={$r.id_nas}">{$r.nome|upper}</a></td>
 			<td width="80" class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_nas={$r.id_nas}">{$r.ip|upper}</a></td>
 			<td width="150" class='{$estilo}'><a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=cadastro&id_nas={$r.id_nas}">{$r.tipo_nas|upper}</a></td>
-			<td class='{$estilo}' align="right">[<a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=redes&id_nas={$r.id_nas}">endereços</a>]</td>
+			<td class='{$estilo}' align="right">{if $r.tipo_nas=="R"}&nbsp;{else}[<a href="admin-configuracoes.php?op={$op}&tela={$tela}&subtela=redes&id_nas={$r.id_nas}">endereços</a>]{/if}</td>
 		</tr>
 		{foreachelse}
 		<tr>

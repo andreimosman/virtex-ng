@@ -22,6 +22,13 @@
 			
 		}
 		
+		/**
+		 * Verifica se a rede indicada não se sobrepõe (pertence a ou contem) a nenhuma rede cadastrada.
+		 */
+		public function obtemAssociacoes($rede) {
+			$sql = "SELECT r.rede FROM cftb_rede r WHERE rede << '$rede' or rede >> '$rede' or rede = '$rede'";
+			return($this->bd->obtemRegistros($sql));
+		}
 		
 	}
 		

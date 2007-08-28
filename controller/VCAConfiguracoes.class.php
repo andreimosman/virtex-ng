@@ -245,6 +245,106 @@
 							$registros = array();
 						}
 						$this->_view->atribui("registros",$registros);
+					} else {
+						// Cadastro
+						if( $info["tipo_nas"] == "I" ) {
+							// IP
+							$bits_rede = @$_REQUEST["bits_rede"];
+							if(!$bits_rede) $bits_rede = 30;
+							$this->_view->atribui("bits_rede",$bits_rede);
+							
+							$maximo_redes = @$_REQUEST["maximo_redes"];
+							if(!$maximo_redes) $maximo_redes = 1024;
+							$this->_view->atribui("maximo_redes",$maximo_redes);
+						}
+						
+						if( $info["tipo_nas"] == "P" ) {
+							// PPPoE
+						}
+						
+						
+						$acao = @$_REQUEST["acao"];
+						
+						if( $acao ) {
+						
+							$tipo_rede = @$_REQUEST["tipo_rede"];
+							if(!$tipo_rede) $tipo_rede = "C";
+							$this->_view->atribui("tipo_rede",$tipo_rede);
+						
+
+							$log_cadastro = array("ok" => array(),"erro" => array());
+							if( $info["tipo_nas"] == "I" ) {
+								// NAS IP
+								$rede_origem = @$_REQUEST["rede_origem"];								
+								
+								@list($rede_inicial,$br) = explode("/",@$_REQUEST["rede_inicial"]);
+								$rede_inicial = $rede_inicial . "/" . $bits_rede;
+								
+								$this->_view->atribui("rede_origem",$rede_origem);
+								$this->_view->atribui("rede_inicial",$rede_inicial);
+								
+								try {
+									for($ip = new MInet($rede_inicial,$rede_origem),$c=0; $ip->obtemRede() != "" && $c<$maximo_redes; $ip = $ip->proximaRede(),$c++) {
+										//
+										// 1) Verificar se a rede que está tentando cadastrar não está cadastrada. 
+										//
+
+										$nova_rede = $ip->obtemRede() . "/" . $ip->obtemBitmask();
+										$conflitos = $equipamentos->obtemRedesAssociadas($nova_rede);
+
+										if( !count($conflitos) ) {
+											$log_cadastro["ok"][] = array("endereco" => $nova_rede, "msg" => "Rede cadastrada com sucesso.");
+										} else {
+											$log_cadastro["erro"][] = array("endereco" => $nova_rede, "msg" => "Rede já está cadastrada no sistema ou sobrepõe-se a uma rede cadastrada.");
+										}
+
+										//
+										// 2) Cadastro no Banco de Dados
+										//
+										$equipamentos->cadastraRedeIPNAS($id_nas,$nova_rede,$tipo_rede);
+
+									}
+								} catch(MException $e) {
+									$this->_view->atribui("erro_inet",$e->getMessage());
+								}
+								
+								$this->_view->atribui("count_ok",count($log_cadastro["ok"]));
+								$this->_view->atribui("count_erro",count($log_cadastro["erro"]));
+								
+							} else if( $info["tipo_nas"] == "P" ) {
+								// NAS PPPoE								
+								$erro_inet = "";
+								
+								$endereco = @$_REQUEST["endereco"];
+								@list($rede,$bits) = explode("/",$endereco);
+								if( !$bits ) $erro_inet = "Endereço da rede não está no formato ip/bits";
+								
+								if( !$erro_inet ) {
+									
+									try {
+										$ip = new MInet($endereco);	// Se não for válido vai desparar uma exception.
+										$this->_view->atribui("endereco",$endereco);
+										
+										$conflitos = $equipamentos->obtemRedesAssociadas($endereco);
+										
+										if( count($conflitos) ) {
+											$erro_inet = "ERRO: Rede já está cadastrada no sistema ou sobrepõe-se a uma rede cadastrada.";
+										} else {
+											$equipamentos->cadastraRedePPPoENAS($id_nas,$endereco,$tipo_rede);
+										}
+										
+									} catch(MException $e) {
+										$erro_inet = $e->getMessage();
+									}
+								
+								}
+								
+								$this->_view->atribui("erro_inet",$erro_inet);
+								
+							}
+							
+							$this->_view->atribui("log_cadastro",$log_cadastro);
+						}
 					}
 					
 					

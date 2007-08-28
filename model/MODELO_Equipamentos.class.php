@@ -10,6 +10,8 @@
 		protected $cftb_nas_rede;
 		protected $cftb_ip;
 		
+		protected $spool;
+		
 	
 		public function __construct() {
 			parent::__construct();
@@ -20,6 +22,8 @@
 			$this->cftb_rede		= VirtexPersiste::factory("cftb_rede");
 			$this->cftb_nas_rede	= VirtexPersiste::factory("cftb_nas_rede");
 			$this->cftb_ip			= VirtexPersiste::factory("cftb_ip");
+			
+			$this->spool = null;
 			
 		}
 		
@@ -87,6 +91,72 @@
 			return($this->cftb_ip->obtemPeloNAS($id_nas));
 		}
 		
+		/**
+		 * Cadastra uma rede IP em um NAS
+		 */
+		public function cadastraRedeIPNAS($id_nas,$rede,$tipo_rede,$pppoe=false) {
+			//
+			// Inserir rede
+			//
+			$id_rede = $this->cftb_rede->insere(array("rede"=>$rede,"tipo_rede"=>$tipo_rede));
+			$this->cftb_nas_rede->insere(array("rede"=>$rede,"id_nas"=>$id_nas));
+			
+			//
+			// Enviar chamada p/ spool (somente para classes de infra-estrutura e cadastros !pppoe)
+			//
+			if( !$pppoe && $tipo_rede == "I" ) {
+				// SPOOL
+				$spool = $this->obtemSpool();
+				$spool->adicionaRedeInfraestrutura($id_nas,$id_rede,$rede);
+			}
+			
+			
+			return($id_rede);
+		}
+		
+		/**
+		 * Utilizado para questões de performance
+		 */
+		protected function obtemSpool() {
+			if( $this->spool == null ) {
+				$this->spool = VirtexModelo::factory("spool");
+			}
+			return($this->spool);
+		}
+		
+		
+		public function cadastraRedePPPoENAS($id_nas,$rede,$tipo_rede) {
+			$ip = new MInet($rede);
+			$id_rede = $this->cadastraRedeIPNAS($id_nas,$rede,$tipo_rede,true);
+
+			$nw = $ip->obtemRede();
+			$bc = $ip->obtemBroadcast();
+			$c=0; // Número de IPs gerados.
+			
+			@list($inicio,$bits) = explode("/",$rede);
+			
+			for( $ip = new MInet($inicio."/32",$rede); $ip->obtemRede() != ""; $ip = $ip->proximaRede()) {
+				$ipaddr = $ip->obtemRede();
+
+				if( $ipaddr != $nw && $ipaddr != $bc ) {
+					$c++; 
+
+					//
+					// INSERIR O IP NO NAS.
+					//
+					$this->cftb_ip->insere(array("ipaddr" => $ipaddr));
+
+
+				}
+
+			}
+			
+			return($c);
+			
+		
+		
+		}
+		
 		
 		
 		protected function _obtemPops($parentId="",$nivel=0,$filtro=array()) {
@@ -107,6 +177,12 @@
 			return($retorno);
 
 		}
+		
+		public function obtemRedesAssociadas($rede) {
+			return($this->cftb_rede->obtemAssociacoes($rede));
+		}
+				
+
 	
 		public function obtemListaPOPs($status="") {
 			$filtro = array();
