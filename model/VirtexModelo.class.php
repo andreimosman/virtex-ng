@@ -28,7 +28,9 @@
 				case 'cobranca':
 					return new MODELO_Cobranca();
 					break;
-					
+				case 'administradores':
+					return new MODELO_Administracao();
+					break;
 				default:
 					throw new ExcecaoModeloInexistente();
 					
