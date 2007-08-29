@@ -15,8 +15,8 @@
 			
 			$this->_view 			= VirtexViewAdmin::factory("administracao");
 			$this->produtos 		= VirtexModelo::factory("produtos");
-			// $this->administradores	= VirtexModelo::factory("administradores");
-			
+			$this->administradores	= VirtexModelo::factory("administradores");
+	
 		}
 		
 		protected function executa() {
@@ -43,6 +43,92 @@
 		}
 		
 		protected function executaAdministradores() {
+			$this->_view->atribuiVisualizacao("administradores");
+			$tela = @$_REQUEST["tela"] ? $_REQUEST["tela"] : "listagem";
+			
+			$id_admin = @$_REQUEST["id_admin"];
+			$nome = @$_REQUEST["nome"];
+			$senha = @$_REQUEST["senha"];
+			$admin = @$_REQUEST["admin"];
+			$status = @$_REQUEST["status"];
+			$email = @$_REQUEST["email"];
+			
+			$this->_view->atribui("tela",$tela);
+			$this->_view->atribui("id_admin", $id_admin);
+
+			switch($tela) {
+				case 'cadastro':
+												
+					if($id_admin) { //Alteração 
+					
+						if(!$this->_acao) {
+						
+							$info = $this->administradores->obtemAdminPeloId($id_admin);
+							$this->_view->atribui("acao","cadastrar");
+							
+							while(list($vr,$vl) = each($info)){
+								$this->_view->atribui($vr,$vl);					
+							}
+							
+						} else {
+							
+							$this->administradores->alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status);
+							
+							$url = "admin-administracao.php?op=administradores&tela=listagem";
+							
+							$mensagem = "Administrador alterado com sucesso";
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem",$mensagem);
+							$this->_view->atribuiVisualizacao("msgredirect");
+						}
+						
+					} else { //Cadastro
+										
+						if(!$this->_acao) {
+							$this->_view->atribui("acao","cadastrar");
+						} else {
+						
+							$url = "admin-administracao.php?op=administradores&tela=listagem";
+							$mensagem = "Administrador cadastrado com sucesso";
+							$erroMensagem="";
+							
+							$resultado = $this->administradores->obtemAdminPeloUsername($admin);
+							if ($resultado) {
+								$erroMensagem = "Já existe outro usuario cadastrado com este username.";
+							}
+							
+							$resultado = $this->administradores->obtemAdminPeloEmail($email);
+							if($resultado) {
+								$erroMensagem = "Já existe outro usuário cadastrado com este email";
+							}
+							
+							if(!$erroMensagem) {
+								$this->administradores->cadastraAdmin($admin, $email, $nome, $senha, $status, TRUE);
+								$this->_view->atribui("url",$url);
+								$this->_view->atribui("mensagem",$mensagem);
+								$this->_view->atribuiVisualizacao("msgredirect");
+							} else {
+								while(list($vr,$vl)=each(@$_REQUEST)) {
+									$this->_view->atribui($vr,$vl);
+								}
+								
+								$this->_view->atribui("erroMensagem",$erroMensagem);
+								
+							}
+							
+						}
+						
+					}
+					
+					
+					break;
+										
+				case 'listagem':
+					$this->_view->atribui("registros", $this->administradores->obtemListaAdmin());
+					break;
+				default:
+					//Do something
+			}
 		}
 		
 		protected function executaPlanos() {	
@@ -146,3 +232,4 @@
 
 
 ?>
+

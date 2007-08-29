@@ -20,6 +20,8 @@
 					$itensMenu[] = array("texto" => "Novo: Discado", "url" => "admin-administracao.php?op=planos&tela=cadastro&tipo=D");
 					$itensMenu[] = array("texto" => "Novo: Hospedagem", "url" => "admin-administracao.php?op=planos&tela=cadastro&tipo=H");
 					break;
+				case 'administradores':
+					$itensMenu[] = array("texto" => "Novo: Administrador", "url"=> "admin-administracao.php?op=administradores&tela=cadastro");
 				default:
 					// Do something
 			}
@@ -53,7 +55,29 @@
 		}
 		
 		protected function exibeAdministradores() {
-		
+			$titulo = " :: Administradores";
+			switch($this->obtem("tela") ) {
+				case 'cadastro':
+					if($this->obtem("id_admin")) {
+						$titulo .= " :: Alteração";
+					}else {
+						$titulo .= " :: Cadastro";
+					}
+					
+					$this->configureMenu($this->obtemItensMenu(),false,true);
+					$this->_file = "administracao_admin_cadastro.html";
+					break;
+					
+				case 'listagem':
+					$titulo .= " :: Listagem";
+					$this->_file = "administracao_admin_listagem.html";
+					$this->configureMenu($this->obtemItensMenu(), true, true);
+					break;
+				default:
+					//Do Something
+			}
+			
+			$this->nomeSessao .= $titulo;
 		}
 		
 		protected function exibePlanos() {
