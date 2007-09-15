@@ -1,6 +1,6 @@
 <?
 
-	class VCAClientes extends VirtexcontrollerAdmin {
+	class VCAClientes extends VirtexControllerAdmin {
 	
 		protected $clientes;		
 		protected $id_cliente;
