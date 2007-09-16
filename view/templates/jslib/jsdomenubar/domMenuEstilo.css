@@ -1,0 +1,110 @@
+a:link, a:visited, a:active {
+    font-family: Verdana, Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 10pt;
+    text-decoration: underline;
+    color: #000066;
+}
+a:hover {
+    text-decoration: none;
+}
+div.p {
+    font-family: Verdana, Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 10pt;
+    margin: 0;
+    padding: 10px;
+}
+div.small {
+    font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 12pt;
+}
+div.title {
+    color: #000066;
+    padding-left: 1px;
+    font-family: monospace;
+    letter-spacing: 2px;
+    font-size: 10pt;
+    line-height: 9px;
+    height: 9px;
+    margin-bottom: 1px;
+}
+div.main {
+    border: 1px solid #000066;
+}
+
+/* BrainJar Style */
+div.BJ_menuBar, div.BJ_menuElement,
+div.BJ_subMenuBar, div.BJ_subMenuElement {
+    font-family: Verdana, Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 10pt;
+    color: #000000;
+    text-align: left;
+
+}
+
+div.BJ_menuBar {
+    background-color: #BCD3C4;
+    border: none;
+}
+div.BJ_subMenuBar {
+    background-color: #BCD3C4;
+    border: 1px solid;
+    border-color: #000;
+}
+div.BJ_menuBar {
+    padding: 1px 4px;
+}
+div.BJ_menuElement {
+    border:1px solid #BCD3C4;
+    padding:0px 10px 0px 10px;
+}
+div.BJ_subMenuElement {
+    padding: 2px 0px 2px 5px;
+    margin: 0;
+    background-color:ffffff;
+    border-left:20px solid #BCD3C4;
+    border-top:0px;
+    border-bottom:10px none;
+}
+div.BJ_subMenuElementHover {
+    background-color: #BCD3C4;
+    color: #FFFFFF;
+}
+div.BJ_subMenuElementHeading {
+
+}
+div.BJ_menuElementHover {
+    background-color: #DEF3E4;
+    color: #000;
+    border:1px solid #55aa55;
+}
+div.BJ_menuElementActive {
+    background-color: #DEF3E4;
+    color: #000;
+    border:1px solid #55aa55;
+}
+div.hr {
+    border-top: 1px solid #906040;
+    border-bottom: 1px solid #e0b090;
+}
+/* NBLSA styles */
+.domMenuNBLSA_subMenuElement {
+  background-color: #000000;
+  font-family: Verdana;
+  color: #EBCC72;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: top;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+.domMenuNBLSA_subMenuElementHover {
+  background-color: #EBCC72;
+  color: #000000;
+}
+
+hr.separador {
+	color:#9Ab1a2;
+	padding:0;
+	margin:0;
+	height:1px;
+}
