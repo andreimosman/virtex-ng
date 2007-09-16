@@ -9,6 +9,7 @@ var BLSelecionado='';
 var DSelecionado='';
 var HSelecionado='';
 
+var LIMITE_PRORATA = {$limite_prorata};
 {literal}
 
 function contratoObtemPlano(tipo,id_produto) {
@@ -42,8 +43,10 @@ function contratoEscondeBox(tipo) {
 		contratoEscondeBox("BL");
 		contratoEscondeBox("D");
 		contratoEscondeBox("H");
+		contratoEscondeBox("EI");
 	}
 	var container = document.getElementById("box"+tipo);
+
 	if( container != null && container != undefined ) {
 		var target = document.getElementById("boxTarget");
 		var temp   = document.getElementById("boxTemporaria");
@@ -56,11 +59,20 @@ function contratoExibeBox(tipo) {
 	contratoEscondeBox("BL");
 	contratoEscondeBox("D");
 	contratoEscondeBox("H");
+	contratoEscondeBox("EI");
+	
 	var container = document.getElementById("box"+tipo);
 	if( container != null && container != undefined ) {
 		container.style.visibility = "visible";
 		var target = document.getElementById("boxTarget");
 		target.appendChild(container);
+		
+		//ser for BANDA LARGA OU DISCADA add ENDERECO DE INSTALACAO
+		if (tipo == "BL" || tipo == "D") {
+      containerEI = document.getElementById("boxEI");
+      containerEI.style.visibility = "visible";
+      target.appendChild(containerEI);
+    }
 	}
 
 	contratoDependenciasBox(tipo);
@@ -296,10 +308,12 @@ function contratoAlteraProduto() {
 	desabilita(frm.vigencia);
 	desabilita(frm.dia_vencimento);
 	desabilita(frm.carencia);
+	desabilita(frm.primeiro_vencimento_input);
 	desabilita(frm.desconto_promo);
 	desabilita(frm.periodo_desconto);
 	desabilita(frm.tx_instalacao);
 	desabilita(frm.comodato);
+	desabilita(frm.pro_rata);
 	desabilita(frm.valor_comodato);
 
 
@@ -320,10 +334,12 @@ function contratoAlteraProduto() {
 			habilita(frm.vigencia);
 			habilita(frm.dia_vencimento);
 			habilita(frm.carencia);
+			//habilita(frm.primeiro_vencimento);
 			habilita(frm.desconto_promo);
 			habilita(frm.periodo_desconto);
 			habilita(frm.tx_instalacao);
 			habilita(frm.comodato);
+			habilita(frm.pro_rata);
 			contratoAlteraComodato();
 
 			habilita(frm.pagamento);
@@ -385,6 +401,70 @@ function formOnFocusSuf(obj,sufixo) {
 	obj.className="fieldWithFocus"+sufixo;
 }
 
+function checkStatusFields(tag) {
+
+     if ( tag.name == "difEnderecoMail" ) {
+     
+       if ( tag.checked == false ) {
+          desabilita(document.getElementById('endereco_cobranca'));
+          desabilita(document.getElementById('bairro_cobranca'));
+          desabilita(document.getElementById('complemento_cobranca'));
+          desabilita(document.getElementById('id_cidade_cobranca'));
+          desabilita(document.getElementById('cep_cobranca'));
+       }
+       else {
+          habilita(document.getElementById('endereco_cobranca'));
+          habilita(document.getElementById('bairro_cobranca'));
+          habilita(document.getElementById('complemento_cobranca'));
+          habilita(document.getElementById('id_cidade_cobranca'));
+          habilita(document.getElementById('cep_cobranca'));
+       }
+    }
+    else if ( tag.name == "difEnderecoSetup" ) {
+
+       if ( tag.checked == false ) {
+          desabilita(document.getElementById('endereco_instalacao'));
+          desabilita(document.getElementById('bairro_instalacao'));
+          desabilita(document.getElementById('complemento_instalacao'));
+          desabilita(document.getElementById('id_cidade_instalacao'));
+          desabilita(document.getElementById('cep_instalacao'));
+       }
+       else {
+          habilita(document.getElementById('endereco_instalacao'));
+          habilita(document.getElementById('bairro_instalacao'));
+          habilita(document.getElementById('complemento_instalacao'));
+          habilita(document.getElementById('id_cidade_instalacao'));
+          habilita(document.getElementById('cep_instalacao'));
+       }
+    }
+}
+
+function calculaDiaProximaFatura() {
+
+   	var frm = document.contratacao;
+
+    var dia_ven = document.getElementById("dia_vencimento").value;
+    var today = new Date();
+    
+    dif =(parseInt(dia_ven)+30)-parseInt(today.getDate());
+    //alert(dif);
+    if ( dif >= LIMITE_PRORATA ) {
+      today.setMonth(today.getMonth()+2);
+    }
+    else {
+      today.setMonth(today.getMonth()+3);
+    }
+
+    if ( dia_ven < 10 )
+       dia_ven = "0"+dia_ven;
+
+    mes = today.getMonth();
+    if ( mes < 10 )
+       mes = "0"+mes;
+       
+    frm.primeiro_vencimento_input.value = dia_ven+"/"+mes+"/"+today.getYear();
+    frm.primeiro_vencimento.value = dia_ven+"/"+mes+"/"+today.getYear();
+}
 
 {/literal}
 </script>
@@ -392,6 +472,7 @@ function formOnFocusSuf(obj,sufixo) {
 {literal}
 .divBoxContratacao {
 	visibility: hidden;
+
 }
 .boxContratacao {
 	margin-top: 2px;
@@ -437,7 +518,40 @@ function formOnFocusSuf(obj,sufixo) {
 <input type="hidden" name="id_cliente" value="{$id_cliente}">
 {if $acao == ""}
 	<input type="hidden" name="acao" value="novo_contrato">
-	<table border=0 align="center" cellspacing=0>
+
+  <table class="lista" border=0 cellspacing=0 cellpadding=0 align="center">
+		<tr>
+			<th colspan=8 width=720 >Contratante </th>
+		</tr>
+		<tr>
+			<td align="right"><strong>Nome:</strong></td>
+			<td align="left"><strong>{$nome_razao}</strong></td>
+			<td align="center" colspan=4><input type="checkbox" name="difEnderecoMail" OnClick="checkStatusFields(this);" ><strong>Especificar outro endere&ccedil;o pra cobran&ccedil;a</strong>
+      </td>
+    </tr>
+  	<tr>
+			<td align="right"><strong>Endereço:</strong></td>
+			<td align="left"><input type="text" size="50" maxlength="50" disabled name="endereco_cobranca" id="endereco_cobranca" value="{$endereco}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+      <td align="right" ><strong>Complemento:</strong></td>
+			<td align="left" ><input type="text" size="30" maxlength="40" disabled name="complemento_cobranca" id="complemento_cobranca" value="{$complemento}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+    </tr>
+    <tr>
+      <td align="right"><strong>Bairro:</strong></td>
+			<td align="left"><input type="text" size="25" maxlength="40" disabled name="bairro_cobranca" id="bairro_cobranca" value="{$bairro}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+      &nbsp;&nbsp;<strong>CEP:</strong>&nbsp;<input type="text" size="13" disabled maxlength="15" name="cep_cobranca" id="cep_cobranca" value="{$bairro}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+      </td>
+  		<td align="right"><strong>Cidade:</strong></td>
+			<td align="left">
+        <select class="{$estilo}" style="width:210px" disabled name="id_cidade_cobranca" id="id_cidade_cobranca" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+  				{foreach item=a from=$cidades_disponiveis}
+  						<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
+								- {$a.uf}</option>
+					{/foreach}
+      </td>
+		</tr>
+	</table>
+
+  <table border=0 align="center" cellspacing=0>
 		<tr>
 			<td valign="top">
 				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
@@ -454,7 +568,7 @@ function formOnFocusSuf(obj,sufixo) {
 					</tr>
 					<tr>
 						<td align="right"><label>Produto:</label></td>
-						<td colspan="3"><select name="id_produto" onChange="contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></select></td>
+						<td colspan="3"><select name="id_produto" onChange="contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="formOnFocus(this);" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></select></td>
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Dt. Contratação:</label></td>
@@ -464,10 +578,15 @@ function formOnFocusSuf(obj,sufixo) {
 					</tr>
 					<tr>
 						<td align="right"><label>Dia Venc.:</label></td>
-						<td><input type="text" size="4" maxlength="2" name="dia_vencimento" value="{$dia_vencimento}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<td><input type="text" size="4" maxlength="2" name="dia_vencimento" id="dia_vencimento" value="{$dia_vencimento}" class="fieldWithoutFocus" onFocus="formOnFocus(this);calculaDiaProximaFatura();" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></td>
 						<td align="right"><label>Carência:</label></td>
 						<td><input type="text" size="4" maxlength="2" name="carencia" value="{$carencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>dias</label></td>
 					</tr>
+					<tr>
+						<td align="right"><label>Pr&oacute;xima Fatura:</label></td>
+						<td colspan=3 align="left" ><input type="text" size="12" maxlength="10" name="primeiro_vencimento_input" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<input type="hidden" name="primeiro_vencimento" value="" >
+     			</tr>
 					<tr>
 						<td align="right"><label>Desconto:</label></td>
 						<td><input type="text" size="6" maxlength="6" name="desconto_promo" value="{$desconto_promo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
@@ -476,7 +595,15 @@ function formOnFocusSuf(obj,sufixo) {
 					</tr>
 					<tr>
 						<td align="right" width="105"><label>Tx Instalação:</label></td>
-						<td colspan=3><input type="text" size="6" maxlength="6" name="tx_instalacao" value="{$tx_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+						<td align="left" ><input type="text" size="6" maxlength="6" name="tx_instalacao" value="{$tx_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+						<td align="right" ><label>Pro Rata:</label></td>
+						<td align="left" ><select name="pro_rata" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+                {foreach item=d from=$lista_boolean}
+								<option value='{$d.id}' {if $d.id == $pro_rata}SELECTED{/if}>{$d.nome}</option>
+								{/foreach}
+							</select>
+							</td>
+							<input type="hidden" name="limite_prorata" value="{$limite_prorata}" >
 					</tr>
 					<tr>
 						<td align="right"><label>Comodato:</label></td>
@@ -656,6 +783,44 @@ function formOnFocusSuf(obj,sufixo) {
 						</tr>
 					</table>
 				</div>
+				<!-- ENDERECO INSTALACAO -->
+				<div id="boxEI" class="divBoxContratacao">
+					<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+						<tr>
+							<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
+						</tr>
+  					<tr>
+              <td colspan=4 >
+                <input type="checkbox" name="difEnderecoSetup" OnClick="checkStatusFields(this);" ><label><strong>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</strong></label>
+              </td>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
+							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						</tr>
+						<tr>
+							<td align="right" width="110" ><label>Complemento:</label></td>
+              <td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+              <td align="right" ><label>Bairro:</label></td>
+              <td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						</tr>
+						<tr>
+							<td align="right" width="110"><label>CEP:</label>
+              <td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+            </tr>
+            <tr>
+              <td align="right" ><label>Cidade:</label></td>
+              <td align="left" colspan=4 >
+                <select class="{$estilo}" style="width:210px" disabled name="id_cidade_instalacao" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								{foreach item=a from=$cidades_disponiveis}
+
+								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
+								- {$a.uf}</option>
+								{/foreach}
+             </td>
+						</tr>
+					</table>
+				</div>
 				<!-- HOSPEDAGEM -->
 				<div id="boxH" class="divBoxContratacao">
 					<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
@@ -678,7 +843,7 @@ function formOnFocusSuf(obj,sufixo) {
 				</div>
 			</td>
 		</tr>
-		<tr colspan=2>
+		<tr colspan=2 valign=top>
 			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
 				<input type="button" name="prosseguir" value="Cancelar" class="botao"> <input type="submit" name="submit" value="Prosseguir" class="botao">
 			</td>
@@ -698,31 +863,52 @@ function formOnFocusSuf(obj,sufixo) {
 	<!-- CONFIRMAÇÃO DO CONTRATO -->
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
-			<th colspan=4>Contratante</th>
+			<th colspan=4>Contratante - Cobran&ccedil;a</th>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
-			<td colspan=3>{$cliente.nome_razao}</td>
+			<td colspan=4>{$cliente.nome_razao}</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
 			<td>{$cliente.cpf_cnpj}&nbsp;</td>
-			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG{else}Inscrição{/if}:</strong></td>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG:{else}Inscrição{/if}</strong></td>
 			<td>{$cliente.rg_inscr}&nbsp;</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Endereço:</strong></td>
-			<td>{$cliente.endereco}&nbsp;</td>
+			<td>{$endereco_cobranca}&nbsp;</td>
 			<td width="110" align="right"><strong>Complemento:</strong></td>
-			<td>{$cliente.complemento}&nbsp;</td>
+			<td>{$complemento_cobranca}&nbsp;</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Bairro:</strong></td>
-			<td>{$cliente.bairro}&nbsp;</td>
+			<td>{$bairro_cobranca}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_cobranca}</td>
 			<td width="110" align="right"><strong>Cidade:</strong></td>
-			<td>{$cliente.cidade}&nbsp;</td>
+			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
 		</tr>
 	</table>
+
+	{if $tipo!= "H" }
+	   <br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=4>Contratante - Instala&ccedil;&atilde;o</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Endereço:</strong></td>
+			<td>{$endereco_instalacao}&nbsp;</td>
+			<td width="110" align="right"><strong>Complemento:</strong></td>
+			<td>{$complemento_instalacao}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Bairro:</strong></td>
+			<td>{$bairro_instalacao}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_instalacao}</td>
+			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<td>{$cidade_instalacao.cidade}-{$cidade_instalacao.uf}&nbsp;</td>
+		</tr>
+	</table>
+	{/if}
 	<br>
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
@@ -765,8 +951,10 @@ function formOnFocusSuf(obj,sufixo) {
 			<td width="110" align="right"><strong>Pagamento:</strong></td>
 			<td>{if $pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
-			<td colspan=3><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
-		</tr>
+			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+      <td width="110" align="right"><strong>Pr&oacute;xima Fatura:</strong></td>
+			<td>{$primeiro_vencimento}</td>
+  	</tr>
 		{if $forma_pagamento == "DA"}
 		<tr>
 			<td width="110" align="right"><strong>Banco:</strong></td>
@@ -813,6 +1001,23 @@ function formOnFocusSuf(obj,sufixo) {
 		</tr>
 		{/if}
 
+    {if $tipo == "D"}
+    <tr>
+			<td width="110" align="right"><strong>Fone:</strong></td>
+			<td colspan=4>{$foneinfo}</td>
+		</tr>
+		{/if}
+		
+		{if $tipo == "H"}
+    <tr>
+			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td >{if $tipo_hospedagem == "D"}Dom&iacute;nio do Usu&aacute;rio{else}www.{$preferenciasGerais.dominio_padrao}/usuario/username{/if}</td>
+			<td width="110" align="right"><strong>Criar Dominio:</strong></td>
+			<td>www.{$dominio}</td>
+		</tr>
+		{/if}
+		
+
 	</table>
 	<br>
 
@@ -846,7 +1051,6 @@ function formOnFocusSuf(obj,sufixo) {
 		{/foreach}
 	</table>
 {/if}
-
 
 
 

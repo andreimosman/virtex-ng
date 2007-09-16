@@ -166,6 +166,11 @@
 			$info = $this->clientes->obtemPeloId($this->id_cliente);
 			
 			$this->_view->atribui("nome_razao",$info["nome_razao"]);
+			$this->_view->atribui("endereco",$info["endereco"]);
+			$this->_view->atribui("bairro",$info["bairro"]);
+			$this->_view->atribui("id_cidade",$info["id_cidade"]);
+			$this->_view->atribui("complemento",$info["complemento"]);
+			$this->_view->atribui("cep",$info["cep"]);
 			
 			$tela = @$_REQUEST["tela"];
 			$this->_view->atribui("tela",$tela);
@@ -192,12 +197,18 @@
 					$tiposNAS = $equipamentos->obtemTiposNAS();
 					$this->_view->atribui("tiposNAS",$tiposNAS);
 					
+					
+					
 					//echo "<pre>";
 					//print_r($tiposNAS);
 					//echo "</pre>";
 					
 					if( !$acao ) {
-						// Tela de contrataçao
+						//Cidades disponiveis
+						$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
+						
+						//Limite Prorata - criar funcao pra puxar do banco ex.: $this->preferencias->getLimiteProrata();
+						$this->_view->atribui("limite_prorata", 20);
 						
 						// Lista de produtos disponíveis por tipo.
 						$listaBL 	= $produtos->obtemListaPlanos('BL','t');
@@ -258,6 +269,21 @@
 						$valor = @$produto["valor"];
 						$this->_view->atribui("produto",$produto);
 						
+						
+						$cidade_cobranca = @$_REQUEST['id_cidade_cobranca'] ? $this->preferencias->obtemCidadePeloId($_REQUEST["id_cidade_cobranca"]) : array();
+						$cidade_instalacao = @$_REQUEST['id_cidade_instalacao'] ? $this->preferencias->obtemCidadePeloId($_REQUEST["id_cidade_instalacao"]) : array();
+
+            if ( ! count($cidade_cobranca) ) {
+                 $cidade_cobranca = $this->preferencias->obtemCidadePeloId($info['id_cidade']);
+            }
+            
+            if ( ! count($cidade_instalacao) ) {
+                 $cidade_instalacao = $this->preferencias->obtemCidadePeloId($info['id_cidade']);
+            }
+            
+  					$this->_view->atribui("cidade_cobranca",$cidade_cobranca);
+						$this->_view->atribui("cidade_instalacao",$cidade_instalacao);
+						
 						$tipo = @$_REQUEST["tipo"];
 						
 						if( $tipo == "BL" ) {
@@ -281,7 +307,7 @@
 						
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
-						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"]);
+						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],@$_REQUEST["pro_rata"],@$_REQUEST["limite_prorata"]);
 						$this->_view->atribui("faturas",$faturas);
 
 						
