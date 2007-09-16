@@ -417,7 +417,7 @@ domMenu_data.set('domMenu_keramik', new Hash(
 		'uri', '',
 
 		1, new Hash(
-		    'contents', 'Backup & Restrote',
+		    'contents', 'Backup & Restore',
 		    'uri', 'admin-administracao.php?op=backup',
 		    'target', 'conteudo'
 		)
