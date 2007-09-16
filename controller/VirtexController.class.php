@@ -10,6 +10,15 @@
 		protected $_op;
 		protected $acao;
 		
+		protected $_script;
+		
+		// Recursos de autenticação
+		protected $_login;			// Objeto de autenticação
+		protected $_loginScript;	// URL p/ autenticação
+		protected $primeiroLogin;
+		protected $_changePasswordScript;
+		protected $_uri;
+		
 		public static function &factory($tipo,$controller) {
 			$tipo = strtolower($tipo);
 			$controller = strtolower($controller);
@@ -18,12 +27,62 @@
 			
 		}
 		
+		protected function verificaLogin() {
+			
+			// Validação básica (comum à todas interfaces);
+			if( @$this->_login->obtemUsername() ) {
+				return(true);
+			}
+					
+			return(false);
+		
+		}
+		
 		protected function __construct() {
 			parent::__construct();
 			// Dados padrão que podem ser sobrescritos em init()
 			$this->_executar 	= true;
 			
+			
+			$this->_login = Login::getInstance();
+			
+			$tmp = split("/",@$_SERVER["SCRIPT_FILENAME"]);
+			$this->_script = $tmp[ count($tmp) -1 ];
 
+			$tmp = split("/",@$_SERVER["REQUEST_URI"]);
+			$this->_uri = $tmp[ count($tmp) -1 ];
+			
+			unset($tmp);
+			
+			if( $this->_loginScript && $this->_script ) {
+				if( $this->_script != $this->_loginScript ) {
+					if( !$this->verificaLogin() ) {
+						// Sem login. Redirecionar.
+						if( $this->_view ) {
+							$this->_view->redirect($this->_loginScript);
+						} else {
+							VirtexView::simpleRedirect($this->_loginScript);
+						}
+						return;
+					}
+					
+					if($this->primeiroLogin && $this->_changePasswordScript ) {
+						if( $this->_uri != $this->_changePasswordScript ) {
+							if( $this->_view ) {
+								$this->_view->redirect($this->_changePasswordScript);
+							} else {
+								VirtexView::simpleRedirect($this->_changePasswordScript);
+							}
+							return;						
+						}
+						
+					}
+
+				}
+
+			}
+			
+			
 			$this->_op			= @$_REQUEST["op"];
 			$this->_acao 		= @$_REQUEST["acao"];
 
@@ -32,13 +91,10 @@
 				$this->_view->atribui("acao",$this->_acao);
 			}
 			
-			
 			if( $this->_executar ) {
 				$this->executa();
 			}
-
 			$this->exibe();
-			
 		}
 		
 		/**
@@ -64,7 +120,8 @@
 		protected function exibe() {
 			// Exibe a view
 			if( isset($this->_view) ) {
-				$this->_view->exibe();
+				//print_r($this->_view);
+				$this->_view->exibe();				
 			}
 		}
 	

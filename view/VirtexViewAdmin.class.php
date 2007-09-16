@@ -12,6 +12,10 @@
 			$this->atribui("lista_boolean",$this->obtemListaBoolean());
 			//print_r($this->obtemListaBoolean());
 		}
+		
+		protected function selfConfig() {
+			parent::selfConfig();
+		}
 
 
 		protected function init() {
@@ -40,6 +44,10 @@
 			
 			
 			switch($view) {
+				case 'login':
+					$retorno = new VVALogin();
+					break;
+					
 				case 'index':
 					$retorno = new VVAIndex();
 					break;

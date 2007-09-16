@@ -24,12 +24,15 @@
 		protected $_erroMensagem;
 		
 		protected $_bag;
+		
+		protected $_redir;
 
 		protected function __construct() {
 			$this->_tplPath = ".";
 			$this->init();		// Object
 			$this->_tpl = MTemplate::getInstance($this->_tplPath);
 			$this->_bag = array();
+			$this->_redir = false;
 			
 			$this->atribuiErro();	// Zera o erro
 			
@@ -49,7 +52,7 @@
 		}
 		
 		public function exibe() {
-			if( $this->_file ) {
+			if( !$this->_redir && $this->_file ) {
 				$this->_tpl->exibe($this->_file);
 			}
 		}
@@ -78,6 +81,16 @@
 		public function obtemVisualizacao() {
 			return($this->_visualizacao);
 		}
+		
+		public static function simpleRedirect($url) {
+			header("Location: " . $url);
+		}
+		
+		public function redirect($url) {
+			$this->_redir = true;
+			self::simpleRedirect($url);
+		}
+		
 		
 		
 		/**

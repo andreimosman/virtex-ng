@@ -28,7 +28,7 @@
 		}
 		
 		public function cadastraAdmin($admin, $email, $nome, $senha, $status, $primeiro_login) {
-			$dados = array("admin"=>trim($admin), "email"=>trim($email), "nome"=>trim($nome), "status"=>trim($status), "senha"=>trim($senha), "primeiro_login"=>$primeiro_login);
+			$dados = array("admin"=>trim($admin), "email"=>trim($email), "nome"=>trim($nome), "status"=>trim($status), "senha"=>md5(trim($senha)), "primeiro_login"=>$primeiro_login);
 			
 			return ($this->adtb_admin->insere($dados));
 		}
@@ -38,7 +38,7 @@
 			$dados = array("email"=>trim($email), "admin"=>trim($admin), "nome"=>trim($nome), "status" => trim($status));
 			
 			if($senha) {
-				$dados["senha"] = trim($senha);
+				$dados["senha"] = md5(trim($senha));
 			}
 			
 			return ($this->adtb_admin->altera($dados, $filtro));
