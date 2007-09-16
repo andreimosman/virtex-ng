@@ -12,6 +12,15 @@ var HSelecionado='';
 var LIMITE_PRORATA = {$limite_prorata};
 {literal}
 
+function Cancelar() {
+	if(window.confirm("Deseja abandonar esta contratação?")) {
+		{/literal}
+		window.open("admin-clientes.php?op=contrato&id_cliente={$id_cliente}","_self");
+		{literal}
+	}
+	return false;
+}
+
 function contratoObtemPlano(tipo,id_produto) {
 	var lista = null;
 
@@ -51,6 +60,8 @@ function contratoEscondeBox(tipo) {
 		var target = document.getElementById("boxTarget");
 		var temp   = document.getElementById("boxTemporaria");
 		container.style.visibility = "hidden";
+		container.style.position = "absolute";
+		container.style.size="0px";
 		temp.appendChild(container);
 	}
 }
@@ -60,19 +71,22 @@ function contratoExibeBox(tipo) {
 	contratoEscondeBox("D");
 	contratoEscondeBox("H");
 	contratoEscondeBox("EI");
-	
+
 	var container = document.getElementById("box"+tipo);
 	if( container != null && container != undefined ) {
 		container.style.visibility = "visible";
 		var target = document.getElementById("boxTarget");
 		target.appendChild(container);
-		
+
+		container.style.position = "relative";
+		container.style.size="";
+
 		//ser for BANDA LARGA OU DISCADA add ENDERECO DE INSTALACAO
 		if (tipo == "BL" || tipo == "D") {
-      containerEI = document.getElementById("boxEI");
-      containerEI.style.visibility = "visible";
-      target.appendChild(containerEI);
-    }
+		  containerEI = document.getElementById("boxEI");
+		  containerEI.style.visibility = "visible";
+		  target.appendChild(containerEI);
+		}
 	}
 
 	contratoDependenciasBox(tipo);
@@ -404,7 +418,7 @@ function formOnFocusSuf(obj,sufixo) {
 function checkStatusFields(tag) {
 
      if ( tag.name == "difEnderecoMail" ) {
-     
+
        if ( tag.checked == false ) {
           desabilita(document.getElementById('endereco_cobranca'));
           desabilita(document.getElementById('bairro_cobranca'));
@@ -445,7 +459,7 @@ function calculaDiaProximaFatura() {
 
     var dia_ven = document.getElementById("dia_vencimento").value;
     var today = new Date();
-    
+
     dif =(parseInt(dia_ven)+30)-parseInt(today.getDate());
     //alert(dif);
     if ( dif >= LIMITE_PRORATA ) {
@@ -461,7 +475,7 @@ function calculaDiaProximaFatura() {
     mes = today.getMonth();
     if ( mes < 10 )
        mes = "0"+mes;
-       
+
     frm.primeiro_vencimento_input.value = dia_ven+"/"+mes+"/"+today.getYear();
     frm.primeiro_vencimento.value = dia_ven+"/"+mes+"/"+today.getYear();
 }
@@ -471,13 +485,23 @@ function calculaDiaProximaFatura() {
 <style>
 {literal}
 .divBoxContratacao {
-	visibility: hidden;
+	visibility: visible;
 
+	margin-bottom: 0px;
+	padding-bottom: 0px;
 }
+
 .boxContratacao {
 	margin-top: 2px;
 	border: solid 1px #000000;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
 }
+
+.boxContratacao TD {
+
+}
+
 .boxContratacao TH {
 	background: #aaccaa;
 }
@@ -526,23 +550,23 @@ function calculaDiaProximaFatura() {
 		<tr>
 			<td align="right"><strong>Nome:</strong></td>
 			<td align="left"><strong>{$nome_razao}</strong></td>
-			<td align="center" colspan=4><input type="checkbox" name="difEnderecoMail" OnClick="checkStatusFields(this);" ><strong>Especificar outro endere&ccedil;o pra cobran&ccedil;a</strong>
+			<td align="center" colspan=4><input type="checkbox" name="difEnderecoMail" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o pra cobran&ccedil;a</label>
       </td>
     </tr>
   	<tr>
 			<td align="right"><strong>Endereço:</strong></td>
-			<td align="left"><input type="text" size="50" maxlength="50" disabled name="endereco_cobranca" id="endereco_cobranca" value="{$endereco}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="left"><input type="text" size="50" maxlength="50" disabled name="endereco_cobranca" id="endereco_cobranca" value="{$endereco}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
       <td align="right" ><strong>Complemento:</strong></td>
-			<td align="left" ><input type="text" size="30" maxlength="40" disabled name="complemento_cobranca" id="complemento_cobranca" value="{$complemento}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="left" ><input type="text" size="30" maxlength="40" disabled name="complemento_cobranca" id="complemento_cobranca" value="{$complemento}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
     </tr>
     <tr>
       <td align="right"><strong>Bairro:</strong></td>
-			<td align="left"><input type="text" size="25" maxlength="40" disabled name="bairro_cobranca" id="bairro_cobranca" value="{$bairro}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-      &nbsp;&nbsp;<strong>CEP:</strong>&nbsp;<input type="text" size="13" disabled maxlength="15" name="cep_cobranca" id="cep_cobranca" value="{$bairro}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+			<td align="left"><input type="text" size="25" maxlength="40" disabled name="bairro_cobranca" id="bairro_cobranca" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+      &nbsp;&nbsp;<strong>CEP:</strong>&nbsp;<input type="text" size="13" disabled maxlength="15" name="cep_cobranca" id="cep_cobranca" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
       </td>
   		<td align="right"><strong>Cidade:</strong></td>
 			<td align="left">
-        <select class="{$estilo}" style="width:210px" disabled name="id_cidade_cobranca" id="id_cidade_cobranca" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+        <select class="disabled" style="width:210px" disabled name="id_cidade_cobranca" id="id_cidade_cobranca" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
   				{foreach item=a from=$cidades_disponiveis}
   						<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
 								- {$a.uf}</option>
@@ -634,7 +658,7 @@ function calculaDiaProximaFatura() {
 						</td>
 					</tr>
 					<tr>
-						<td align="right"><label>Forma Pagamento:</label></td>
+						<td align="right"><label>Forma Pgto:</label></td>
 						<!--td colspan="4">&nbsp;
 							<select name="forma_pagamento" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 							{foreach item=v from=$formasPagamento}
@@ -789,35 +813,35 @@ function calculaDiaProximaFatura() {
 						<tr>
 							<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
 						</tr>
-  					<tr>
-              <td colspan=4 >
-                <input type="checkbox" name="difEnderecoSetup" OnClick="checkStatusFields(this);" ><label><strong>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</strong></label>
-              </td>
+						<tr>
+						<td colspan=4 >
+							<input type="checkbox" name="difEnderecoSetup" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
+						</td>
 						</tr>
 						<tr>
 							<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
-							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
 							<td align="right" width="110" ><label>Complemento:</label></td>
-              <td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-              <td align="right" ><label>Bairro:</label></td>
-              <td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td align="right" ><label>Bairro:</label></td>
+							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
 							<td align="right" width="110"><label>CEP:</label>
-              <td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-            </tr>
-            <tr>
-              <td align="right" ><label>Cidade:</label></td>
-              <td align="left" colspan=4 >
-                <select class="{$estilo}" style="width:210px" disabled name="id_cidade_instalacao" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+							<td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						</tr>
+						<tr>
+							<td align="right" ><label>Cidade:</label></td>
+							<td align="left" colspan=4 >
+								<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach item=a from=$cidades_disponiveis}
 
 								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
 								- {$a.uf}</option>
 								{/foreach}
-             </td>
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -841,11 +865,12 @@ function calculaDiaProximaFatura() {
 						</tr>
 					</table>
 				</div>
+
 			</td>
 		</tr>
-		<tr colspan=2 valign=top>
+		<tr colspan=2 valign="top">
 			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
-				<input type="button" name="prosseguir" value="Cancelar" class="botao"> <input type="submit" name="submit" value="Prosseguir" class="botao">
+				<input type="button" name="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" value="Prosseguir" class="botao">
 			</td>
 		</tr>
 	</table>
@@ -1007,7 +1032,7 @@ function calculaDiaProximaFatura() {
 			<td colspan=4>{$foneinfo}</td>
 		</tr>
 		{/if}
-		
+
 		{if $tipo == "H"}
     <tr>
 			<td width="110" align="right"><strong>Tipo:</strong></td>
@@ -1016,7 +1041,7 @@ function calculaDiaProximaFatura() {
 			<td>www.{$dominio}</td>
 		</tr>
 		{/if}
-		
+
 
 	</table>
 	<br>
