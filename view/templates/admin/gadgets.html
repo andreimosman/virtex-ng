@@ -46,14 +46,15 @@ function pesquisaUsuario() {
 
 	texto_pesquisa = frm.texto_pesquisa.value;
 
-	itens = frm.all;
+	//itens = frm.all;
+	itens = document.getElementById("form_pesquisa").elements;
 
 	tipo_pesquisa = '';
 
 	for(var i=0;i<itens.length;i++) {
-		if( itens(i).name == "tipo_pesquisa" ) {
-			if( itens(i).checked ) {
-				tipo_pesquisa = itens(i).value;
+		if( itens[i].name == "tipo_pesquisa" ) {
+			if( itens[i].checked ) {
+				tipo_pesquisa = itens[i].value;
 			}
 		}
 	}
@@ -68,12 +69,12 @@ function pesquisaUsuario() {
 </script>
 
 <div class="gadget" id="divPesquisa">
-	<form name="form_pesquisa" onSubmit="return pesquisaUsuario();">
+	<form name="form_pesquisa" id="form_pesquisa" onSubmit="return pesquisaUsuario();">
 	<fieldset style="height:115px; width:130; border:1px solid #004411"><legend><span class="style1">Procurar Cliente</span></legend>
 		<div name="box_pesquisa" id="box_pesquisa" style="height:97px; width:120;">
 			<table width="120" border="0" cellspacing="0" cellpadding="0" >
 				<tr align="left">
-					<td><input name="texto_pesquisa" id="texto_pesquisa" value="" type="text" onKeyPress="return Tecla(event);" size="15" class="campos" onFocus="this.style.backgroundColor='#E7EFEA'" onBlur="this.style.backgroundColor='#FFFFFF'"> </td>
+					<td><input name="texto_pesquisa" id="texto_pesquisa" value="" type="text" size="15" class="campos" onFocus="this.style.backgroundColor='#E7EFEA'" onBlur="this.style.backgroundColor='#FFFFFF'"> </td>
 				</tr>
 				<tr>
 					<td>
