@@ -87,6 +87,10 @@ function alteraEnviarEmail() {
 			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="carencia" value="{$carencia}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		<tr>
+			<td width="130" align="right"><label>Faturas parciais:</label></td>
+			<td colspan=3><label>mínimo de <input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="dias_minimo_cobranca" value="{$dias_minimo_cobranca}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}> dias para geração/manipulação.</label></td>
+		</tr>
+		<tr>
 			<td width="130" align="right"><label>Pagamento:</label></td>
 			<td>
 				<select {if !$acao}disabled=true{/if} name="pagamento" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>

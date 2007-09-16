@@ -629,8 +629,9 @@
 					$enviar_email = @$_REQUEST["enviar_email"];
 					$email_remetente = @$_REQUEST["email_remetente"];
 					$mensagem_email = @$_REQUEST["mensagem_email"];
+					$dias_minimo_cobranca = @$_REQUEST["dias_minimo_cobranca"];
 					
-					$this->preferencias->atualizaPreferenciasCobranca($tx_juros,$multa,$dia_venc,$pagamento,$carencia,$path_contrato,$observacoes,$enviar_email,$email_remetente,$mensagem_email);
+					$this->preferencias->atualizaPreferenciasCobranca($tx_juros,$multa,$dia_venc,$pagamento,$carencia,$path_contrato,$observacoes,$enviar_email,$email_remetente,$mensagem_email,$dias_minimo_cobranca);
 					$this->_view->atribui("mensagem","Preferências atualizadas com sucesso.");
 					$this->_view->atribuiVisualizacao("msgredirect");
 					

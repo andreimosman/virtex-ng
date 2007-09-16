@@ -422,13 +422,13 @@
 			return($this->pftb_preferencia_cobranca->obtemTiposPagamento());
 		}
 		
-		public function atualizaPreferenciasCobranca($tx_juros,$multa,$dia_venc,$pagamento,$carencia,$path_contrato,$observacoes,$enviar_email,$email_remetente,$mensagem_email) {
+		public function atualizaPreferenciasCobranca($tx_juros,$multa,$dia_venc,$pagamento,$carencia,$path_contrato,$observacoes,$enviar_email,$email_remetente,$mensagem_email,$dias_minimo_cobranca) {
 			
 			if( !$enviar_email ) {
 				$enviar_email = 'f';
 			}
 			
-			$dados = array("id_provedor"=>1,"tx_juros" => $tx_juros, "multa" => $multa, "dia_venc" => $dia_venc,"pagamento" => $pagamento, "carencia" => $carencia, "path_contrato" => $path_contrato, "observacoes" => $observacoes, "enviar_email" => $enviar_email, "email_remetente" => $email_remetente, "mensagem_email" => $mensagem_email);
+			$dados = array("id_provedor"=>1,"tx_juros" => $tx_juros, "multa" => $multa, "dia_venc" => $dia_venc,"pagamento" => $pagamento, "carencia" => $carencia, "path_contrato" => $path_contrato, "observacoes" => $observacoes, "enviar_email" => $enviar_email, "email_remetente" => $email_remetente, "mensagem_email" => $mensagem_email, "dias_minimo_cobranca" => $dias_minimo_cobranca);
 			
 			$info = $this->obtemPreferenciasCobranca();
 			
