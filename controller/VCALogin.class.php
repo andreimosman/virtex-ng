@@ -60,7 +60,7 @@
 						$this->_login->atribui("privilegios",$privilegios);
 						
 						$this->_login->atribui("primeiroLogin",$info["primeiro_login"]);
-						
+						$this->_login->atribui("dados",$info);
 
 						// Grava na sessão.
 						$this->_login->persisteSessao();

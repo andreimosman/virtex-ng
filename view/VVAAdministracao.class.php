@@ -32,6 +32,9 @@
 
 		public function exibe() {
 			switch($this->_visualizacao) {
+				case 'altsenha':
+					$this->exibeAlteracaoSenha();
+					break;
 				case 'administradores':
 					$this->exibeAdministradores();
 					break;
@@ -52,6 +55,17 @@
 			}
 			
 			parent::exibe();
+		}
+		
+		protected function exibeAlteracaoSenha() {
+			$dadosLogin = $this->obtem("dadosLogin");
+			echo "<pre>";
+			print_r($dados_login);
+			echo "</pre>";
+			$this->_file = "administracao_altsenha.html";
+			$titulo = " :: ".(@$dadosLogin["nome"])." :: Alteração de Senha";
+			
+			$this->nomeSessao .= $titulo;
 		}
 		
 		protected function exibeAdministradores() {

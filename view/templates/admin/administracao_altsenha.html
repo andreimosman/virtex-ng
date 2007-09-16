@@ -1,0 +1,95 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.boxAltSenha {
+	font-family: verdana;
+	border: solid 1px #000000;
+}
+
+.boxAltSenha TH {
+	background: #aaccaa;
+	font-size: 12px;
+}
+
+table.mensagemErro {
+	border: dotted 1px #FF0000;
+	margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+	background-color: #FDFDEA;
+	color: #FF0000;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+{/literal}
+</style>
+
+<br><br>
+<form method="post" action="admin-administracao.php?op=altsenha">
+<input type="hidden" name="acao" value="altsenha">
+{if $erroMensagem }
+<table width=300 cellspacing=0 cellpadding=0 class="mensagemErro" align="center">
+	<tr>
+		<td width="100%" align="center">
+		{$erroMensagem}
+		</td>
+	</tr>
+</table>
+{/if}
+<table width="300" align="center" cellspacing=0 cellpadding=1 class="boxAltSenha">
+	<tr>
+		<th colspan=2>Alteração de Senha</th>
+	</tr>
+	<tr>
+		<td align="right"><label>Admin:</label></td>
+		<td><label><strong>{$dadosLogin.admin}</strong></label></td>
+	</tr>
+	<tr>
+		<td align="right"><label>Senha Atual:</label></td>
+		<td><input type="password" name="senha_atual" value="" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td align="right"><label>Nova Senha:</label></td>
+		<td><input type="password" name="nova_senha" value="" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td align="right"><label>Confirme:</label></td>
+		<td><input type="password" name="nova_senha_conf" value="" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center" style="border-top: dotted 1px #000000">
+			<input type="submit" name="Submit" value="Alterar Senha" class="botao">
+		</td>
+	</tr>
+</table>
+{if $dadosLogin.primeiro_login == 't'}
+<table border=0 width="300" align="center">
+	<tr>
+		<td align="center"><label>** primeiro login detectado **<br>ALTERAÇÃO OBRIGATÓRIA</label></td>
+	</tr>
+</table>
+{/if}
+
+
+</form>
+
+</body>
+</html>

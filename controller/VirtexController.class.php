@@ -89,6 +89,7 @@
 			if( $this->_view ) {
 				$this->_view->atribui("op",$this->_op);
 				$this->_view->atribui("acao",$this->_acao);
+				$this->_view->atribui("dadosLogin",$this->_login->obtem("dados"));
 			}
 			
 			if( $this->_executar ) {

@@ -21,6 +21,9 @@
 		
 		protected function executa() {
 			switch($this->_op) {
+				case 'altsenha':
+					$this->executaAlteracaoSenha();
+					break;
 				case 'administradores':
 					$this->executaAdministradores();
 					break;
@@ -40,6 +43,70 @@
 					// Do Something
 			
 			}
+		}
+		
+		protected function executaAlteracaoSenha() {
+			$this->_view->atribuiVisualizacao("altsenha");
+			
+			$dadosLogin = $this->_login->obtem("dados");
+			$admin = VirtexModelo::factory("administradores");
+			$info = $admin->obtemAdminPeloId($dadosLogin["id_admin"]);
+
+			$acao = @$_REQUEST["acao"];			
+			if( !$acao ) {				
+				//echo "<pre>INFO: ";
+				//print_r($info);
+				//echo "</pre>";
+				
+				
+			} else {
+				// Faz a validação.
+				$senha_atual = @$_REQUEST["senha_atual"];
+				$nova_senha = @$_REQUEST["nova_senha"];
+				$nova_senha_conf = @$_REQUEST["nova_senha_conf"];
+				
+				$erroMensagem = "";
+				
+				if( md5(trim($senha_atual)) != trim($info["senha"]) ) {
+					$erroMensagem = "Senha atual não confere";
+				} else {
+					if( !$nova_senha || !$nova_senha_conf ) {
+						$erroMensagem = "Todos os campos são obrigatórios.";
+					} else {
+						if( $nova_senha != $nova_senha_conf ) {
+							$erroMensagem = "A senha e a confirmação não conferem.";
+						}
+					}
+				}
+				$this->_view->atribui("erroMensagem",$erroMensagem);
+				
+				if( !$erroMensagem ) {
+					// Faz a alteração
+					// $dados = array("senha" => $nova_senha, "primeiro_login" => "f");
+					$admin->alteraAdmin($info["id_admin"],$info["admin"],$info["email"],$info["nome"],$nova_senha,$info["status"],"f");
+					
+					// Registrar as informações atualizadas na session
+					$info = $admin->obtemAdminPeloId($info["id_admin"]);
+					
+					// Dados do login
+					$this->_login->atribui("primeiroLogin",$info["primeiro_login"]);
+					$this->_login->atribui("dados",$info);
+
+					// Grava na sessão.
+					$this->_login->persisteSessao();
+
+					// Redirecionamento
+					$url = "admin.php";
+					$mensagem = "Senha alterada com sucesso.";
+					$this->_view->atribui("url",$url);
+					$this->_view->atribui("mensagem",$mensagem);
+					$this->_view->atribui("target","_top");
+					$this->_view->atribuiVisualizacao("msgredirect");
+					
+				}
+
+			}
+		
 		}
 		
 		protected function executaAdministradores() {

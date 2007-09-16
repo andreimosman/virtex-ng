@@ -3,7 +3,7 @@
 	<title></title>
 <script language="JavaScript">
 var url='{$url}';
-var target='{$url}';
+var target='{$target}';
 {literal}
 function redirect() {
 
@@ -45,7 +45,7 @@ function redirect() {
 					</td>
 				</tr>
 				<tr>
-					<td height="12" align="right"><a href="{$url}">OK</a></td>
+					<td height="12" align="right" target="{if $target}{$target}{else}_self{/if}"><a href="{$url}">OK</a></td>
 				</tr>
 			</table>
 		</td>

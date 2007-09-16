@@ -33,12 +33,13 @@
 			return ($this->adtb_admin->insere($dados));
 		}
 		
-		public function alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status) {
+		public function alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status,$primeiro_login="") {
 			$filtro = array("id_admin" => trim($id_admin));
 			$dados = array("email"=>trim($email), "admin"=>trim($admin), "nome"=>trim($nome), "status" => trim($status));
 			
 			if($senha) {
 				$dados["senha"] = md5(trim($senha));
+				$dados["primeiro_login"] = $primeiro_login ? $primeiro_login : "t";
 			}
 			
 			return ($this->adtb_admin->altera($dados, $filtro));
