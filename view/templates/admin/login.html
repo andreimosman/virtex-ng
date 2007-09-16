@@ -1,19 +1,107 @@
 <HTML>
 <HEAD>
 <TITLE>VirtexAdmin</TITLE>
+<script type="text/javascript" src="view/templates/jslib/form/form.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/validacao.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/formatacao.js"></script>
+<link rel="stylesheet" type="text/css" href="view/templates/css/form/form.css" />
+<link rel="stylesheet" type="text/css" href="view/templates/css/layout/lista.css" />
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.boxAltSenha {
+	font-family: verdana;
+	border: solid 1px #000000;
+}
+
+.boxAltSenha TH {
+	background: #aaccaa;
+	font-size: 12px;
+}
+
+table.mensagemErro {
+	border: dotted 1px #FF0000;
+	margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+	background-color: #FDFDEA;
+	color: #FF0000;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+body{
+	margin:0 auto;
+	padding:0;
+}
+{/literal}
+</style>
+
 </HEAD>
 <BODY topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0>
 
+<table border=0 style="width:100%;height:100%" cellspacing=0 cellpadding=0>
+	<tr>
+		<td width="100%" height="51" bgcolor="#BCD3C4" background="view/templates/imagens/top_background.gif">
+			<img src="view/templates/imagens/logo_top.gif">
+		</td>
+	</tr>
 
-{if $erro}
-<b><font color="red">{$erro}</font></b>
-{/if}
+	<tr>
+		<td align="center">
 
-<form method="post" action="admin-login.php">
-<input type="hidden" name="acao" value="login">
-User: <input type="text" name="username"><br>
-Pass: <input type="password" name="password"><br>
-<input type="Submit" name="Submit" value="Entrar">
+			<form method="post" action="admin-login.php">
+			<input type="hidden" name="acao" value="login">
+			<table align="center" class="boxAltSenha" width="250" height="100">
+				<tr>
+					<td>
+						<table align="center" cellspacing=2 cellpadding=2>
+							<tr>
+								<td colspan="2">
+
+									{if $erro}
+									<b><font color="red">{$erro}</font></b>
+									{/if}
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><label>Username:</label></td><td><input type="text" name="username" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td align="right"><label>Password:</label></td><td><input type="password" name="password" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td align="right" colspan="2">
+									<input type="Submit" name="Submit" class="botao"value="Entrar">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</form>
+
+		</td>
+	</tr>
+
+	<tr>
+		<td width="100%" height="20" bgcolor="#BCD3C4" align="center">
+			<font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+				&copy; Mosman Consultoria - Todos os Direitos Reservados
+			</font>
+		</td>
+	</tr>
 
 </form>
 </BODY>
