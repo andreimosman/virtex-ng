@@ -1,8 +1,29 @@
 <HTML>
 <HEAD>
 <TITLE>VirtexAdmin</TITLE>
+<style>@import url("view/templates/jslib/jsdomenubar/domMenuEstilo.css");</style>
+<script language="javascript" src="view/templates/jslib/jsdomenubar/domLib.js"></script>
+<script language="javascript" src="view/templates/jslib/jsdomenubar/domMenu.js"></script>
+<script language="javascript" src="view/templates/jslib/jsdomenubar/domMenu_items.js"></script>
+<script>
+{literal}
+
+document.onmouseup = function()
+{
+    domMenu_deactivate('domMenu_BJ');
+}
+
+function clickLink(url) {
+	window.open(url,"conteudo");
+}
+
+{/literal}
+</script>
 </HEAD>
+
+
 <BODY topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0>
+
 <base target="conteudo">
 <table border=0 width="100%" height="100%" cellspacing=0 cellpadding=0>
 	<tr>
@@ -18,7 +39,7 @@
 					<td>
 						<table border=0 width="100%" height="100%" cellspacing=0 cellpadding=0>
 							<tr>
-								<td width="100%" height=21 bgcolor="#BCD3C4" valign="top" style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="staticMenuBar"><div style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="staticMenuBar"></div></td>
+								<td width="100%" height=21 bgcolor="#BCD3C4" valign="top" style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="staticMenuBar"><div style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="domMenu_BJ"></div></td>
 							</tr>
 							<tr>
 								<td valign="top">
@@ -35,8 +56,12 @@
 		<td width="100%" height="20" bgcolor="#BCD3C4" align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">&copy;
         Mosman Consultoria - Todos os Direitos Reservados</font></td>
 	</tr>
+
+	<script language="javascript">
+		domMenu_activate('domMenu_BJ');
+    </script>
 </table>
-{include file="menu.html"}
+
 
 </BODY>
 </HTML>
