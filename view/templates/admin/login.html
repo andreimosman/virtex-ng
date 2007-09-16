@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<TITLE>VirtexAdmin</TITLE>
+</HEAD>
+<BODY topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0>
+
+
+{if $erro}
+<b><font color="red">{$erro}</font></b>
+{/if}
+
+<form method="post" action="admin-login.php">
+<input type="hidden" name="acao" value="login">
+User: <input type="text" name="username"><br>
+Pass: <input type="password" name="password"><br>
+<input type="Submit" name="Submit" value="Entrar">
+
+</form>
+</BODY>
+</HTML>
