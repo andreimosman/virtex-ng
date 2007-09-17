@@ -69,44 +69,17 @@
 			if( $pagamento == "POS" ) {
 				// $data = MData::proximoDia($dia_vencimento,$data_contratacao);
 				// Pagamento pós pago
-				$composicao = array();
-				if( $tx_instalacao ) {
+
+        $composicao = array();
+
+        if( $tx_instalacao ) {
 					// Gerar fatura 0 com a taxa de instalaçao
 					$composicao["instalacao"] = $tx_instalacao;
 					$faturas[] = array("data"=>$data_contratacao,"valor" => $tx_instalacao,"composicao"=>$composicao);
 				}
 				$meses_cobrados++;
 				
-				$composicao = array();
-				
-				if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
-					// Pró-rata aplicável.
-					$prorata_plano = $prorata["prorata_plano"];
-					$prorata_comodato = $prorata["prorata_comodato"];
-					$dias_prorata = $prorata["dias_prorata"];
 
-					$composicao["prorata_plano"] = $prorata_plano;
-					$composicao["prorata_comodato"] = $prorata_comodato;
-					$composicao["dias_prorata"] = $dias_prorata;
-					$valor_fatura = $prorata_plano + $prorata_comodato;
-
-				} else {
-					// Valores diretos
-					$valor_fatura = $valor + $valor_comodato;
-					$composicao["valor"] = $valor;
-					$composicao["comodato"] = $valor_comodato;
-				}
-				
-				if( $desconto_valor && $desconto_periodo > 0 ) {
-					$valor_fatura -= $desconto_valor;
-					$descontos_aplicados++;
-					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
-				}
-				
-				//$meses_cobrados++;
-
-				//$faturas[] = array("data"=>$data_primeiro_vencimento,"valor" => $valor_fatura,"composicao" => $composicao);
-				
 			} else {
 				// Pagamento pré-pago. Calcula pro-rata.
 				$composicao = array();
@@ -131,7 +104,7 @@
 					$composicao["comodato"] = $valor_comodato;
 				}
 
-    if( $tx_instalacao ) {
+        if( $tx_instalacao ) {
 					$valor_fatura += $tx_instalacao;
 					$composicao["instalacao"] = $tx_instalacao;
 				}
@@ -216,6 +189,29 @@
 			
 			return($faturas);
 		
+		}
+		
+		
+		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $data_renovacao, $valor_contrato,
+                          $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento,
+                          $carencia, $id_prduto, $pro_dados, $da_dados, $bl_dados, $dados_produto) {
+		
+      $comodato = $valor_comodato ? true : false;
+      
+      $dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
+      $id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
+
+      $disc_franquia_horas = @$dados_produto["franquia_horas"] ? $dados_produto["franquia_horas"] : "";
+      $disc_permitir_duplicidade = @$dados_produto["permitir_duplicidade"] ? $dados_produto["permitir_duplicidade"] : "";
+      $disc_valor_hora_adicional = @$dados_produto["valor_hora_adicional"] ? $dados_produto["valor_hora_adicional"] : "";
+
+      $dados = array("id_cliente_produto" => $id_cliente_produto, "data_contratacao" => $data_contratacao, "vigencia" => $vigencia, "data_renovacao" => $data_renovacao,
+      "valor_contrato" => $valor_contrato, "id_cobranca" => $id_cobranca, "status" => $status, "tipo_produto" => $dados_produto["tipo"], "valor_produto" => $dados_produto["valor"],
+      "num_emails" => $dados_produto["num_emails"], "quota_por_conta" => $dados_produto["quota_por_conta"], "tx_instalacao" => $tx_instalacao, "comodato" => $comodato,
+      "valor_comodato" => $valor_comodato, "desconto_promo" => $desconto_promo, "periodo_desconto" => $desconto_periodo, "hosp_dominio", "hosp_franquia_em_mb",
+      "hosp_valor_mb_adicional", "disc_franquia_horas", "disc_permitir_duplicidade", "disc_valor_hora_adicional", "bl_banda_upload_kbps", "bl_banda_download_kbps", "bl_franquia_trafego_mensal_gb", "bl_valor_trafego_adicional_gb", "cod_banco", "carteira", "agencia", "num_conta", "convenio", "cc_vencimento", "cc_numero", "cc_operadora", "db_banco", "db_agencia", "db_conta", "vencimento", "carencia", "data_alt_status", "id_produto", "nome_produto", "descricao_produto", "disponivel", "vl_email_adicional", "permitir_outros_dominios", "email_anexado", "numero_contas", "valor_estatico",
+       "da_cod_banco", "da_carteira", "da_convenio", "da_agencia", "da_num_conta", "bl_cod_banco", "bl_carteira", "bl_convenio", "bl_agencia", "bl_num_conta");
+
 		}
 	
 	

@@ -19,6 +19,7 @@
 			$this->_view = VirtexViewAdmin::factory("clientes");
 			$this->clientes = VirtexModelo::factory("clientes");
 
+
 			// Inicializações
 			$this->id_cliente 	= @$_REQUEST["id_cliente"];
 			$this->extra_op 	= @$_REQUEST["extra_op"];
@@ -161,6 +162,7 @@
 		
 		
 		protected function executaContrato() {
+		
 			$this->_view->atribuiVisualizacao("contrato");
 			$this->_view->atribui("id_cliente",$this->id_cliente);
 			$info = $this->clientes->obtemPeloId($this->id_cliente);
@@ -202,6 +204,8 @@
 					//echo "<pre>";
 					//print_r($tiposNAS);
 					//echo "</pre>";
+
+					$cobranca = VirtexModelo::factory("cobranca");
 					
 					if( !$acao ) {
 						//Cidades disponiveis
@@ -262,27 +266,82 @@
 						
 					} else {
 						$id_cliente_produto = @$_REQUEST["id_cliente_produto"];						
-						$cobranca = VirtexModelo::factory("cobranca");
+
 
 						// Informações do produto contratado
 						$produto = $produtos->obtemPlanoPeloId(@$_REQUEST["id_produto"]);
 						$valor = @$produto["valor"];
 						$this->_view->atribui("produto",$produto);
+
+            $endereco_cobranca = @$_REQUEST['endereco_cobranca'] ? $_REQUEST["endereco_cobranca"] : "";
+						$endereco_instalacao = @$_REQUEST['endereco_instalacao'] ? $_REQUEST["endereco_instalacao"] : "";
 						
+						$bairro_cobranca = @$_REQUEST['bairro_cobranca'] ? $_REQUEST["bairro_cobranca"] : "";
+						$bairro_instalacao = @$_REQUEST['bairro_instalacao'] ? $_REQUEST["bairro_instalacao"] : "";
+
+            $complemento_cobranca = @$_REQUEST['complemento_cobranca'] ? $_REQUEST["complemento_cobranca"] : "";
+						$complemento_instalacao = @$_REQUEST['complemento_instalacao'] ? $_REQUEST["complemento_instalacao"] : "";
 						
+            $cep_cobranca = @$_REQUEST['cep_cobranca'] ? $_REQUEST["cep_cobranca"] : "";
+						$cep_instalacao = @$_REQUEST['cep_instalacao'] ? $_REQUEST["cep_instalacao"] : "";
+
 						$cidade_cobranca = @$_REQUEST['id_cidade_cobranca'] ? $this->preferencias->obtemCidadePeloId($_REQUEST["id_cidade_cobranca"]) : array();
 						$cidade_instalacao = @$_REQUEST['id_cidade_instalacao'] ? $this->preferencias->obtemCidadePeloId($_REQUEST["id_cidade_instalacao"]) : array();
 
+            if ( ! $endereco_cobranca ) {
+                 $endereco_cobranca = $info['endereco'];
+            }
+
+            if ( ! $endereco_instalacao ) {
+                 $endereco_instalacao = $endereco_cobranca;
+            }
+            
+            if ( ! $bairro_cobranca ) {
+                 $bairro_cobranca = $info['bairro'];
+            }
+
+            if ( ! $bairro_instalacao ) {
+                 $bairro_instalacao = $bairro_cobranca;
+            }
+            
+            if ( ! $cep_cobranca ) {
+                 $cep_cobranca = $info['cep'];
+            }
+
+            if ( ! $cep_instalacao ) {
+                 $cep_instalacao = $cep_cobranca;
+            }
+            
+            if ( ! $complemento_cobranca ) {
+                 $complemento_cobranca = $info['complemento'];
+            }
+
+            if ( ! $complemento_instalacao ) {
+                 $complemento_instalacao = $complemento_cobranca;
+            }
+            
             if ( ! count($cidade_cobranca) ) {
                  $cidade_cobranca = $this->preferencias->obtemCidadePeloId($info['id_cidade']);
             }
             
             if ( ! count($cidade_instalacao) ) {
-                 $cidade_instalacao = $this->preferencias->obtemCidadePeloId($info['id_cidade']);
+                 $cidade_instalacao = $cidade_cobranca;
             }
-            
-  					$this->_view->atribui("cidade_cobranca",$cidade_cobranca);
-						$this->_view->atribui("cidade_instalacao",$cidade_instalacao);
+
+            $this->_view->atribui("endereco_cobranca",trim($endereco_cobranca));
+            $this->_view->atribui("endereco_instalacao",trim($endereco_instalacao));
+
+            $this->_view->atribui("bairro_cobranca",trim($bairro_cobranca));
+            $this->_view->atribui("bairro_instalacao",trim($bairro_instalacao));
+
+            $this->_view->atribui("complemento_cobranca",trim($complemento_cobranca));
+						$this->_view->atribui("complemento_instalacao",trim($complemento_instalacao));
+
+            $this->_view->atribui("cep_cobranca",trim($cep_cobranca));
+            $this->_view->atribui("cep_instalacao",trim($cep_instalacao));
+
+            $this->_view->atribui("cidade_cobranca",trim($cidade_cobranca));
+						$this->_view->atribui("cidade_instalacao",trim($cidade_instalacao));
 						
 						$tipo = @$_REQUEST["tipo"];
 						
@@ -341,10 +400,57 @@
 						}
 						
 						if( $acao == "gravar_novo_contrato" ) {
-						
+
+              $dados_produto = $produtos->obtemPlanoPeloId($_REQUEST["id_produto"]);
+
+              $dominio = @$_REQUEST["dominio"] ? $_REQUEST["dominio"] : "";
+              $data_renovacao = MData::adicionaMes($_REQUEST["primeiro_vencimento"], $_REQUEST["vigencia"]);
+              $valor_contrato = 0;
+              $id_cobranca = 0;
+              $status = "A";
+
+              $da_codigo_banco = @$_REQUEST["da_codigo_banco"] ? $_REQUEST["da_codigo_banco"] : "";
+              $da_carteira = @$_REQUEST["da_carteira"] ? $_REQUEST["da_carteira"] : "";
+              $da_convenio = @$_REQUEST["da_convenio"] ? $_REQUEST["da_convenio"] : "";
+              $da_agencia = @$_REQUEST["da_agencia"] ? $_REQUEST["da_agencia"] : "";
+              $da_num_conta = @$_REQUEST["da_conta"] ? $_REQUEST["da_conta"] : "";
+
+              $da_dados = array( "codigo_banco" => $da_codigo_banco, "carteira" => $da_carteira, "convenio" => $da_convenio, "agencia" => $da_agencia, "num_conta" => $da_num_conta );
+              
+              $bl_codigo_banco = @$_REQUEST["bl_codigo_banco"] ? $_REQUEST["bl_codigo_banco"] : "";
+              $bl_carteira = @$_REQUEST["bl_carteira"] ? $_REQUEST["bl_carteira"] : "";
+              $bl_convenio = @$_REQUEST["bl_convenio"] ? $_REQUEST["bl_convenio"] : "";
+              $bl_agencia = @$_REQUEST["bl_agencia"] ? $_REQUEST["bl_agencia"] : "";
+              $bl_num_conta = @$_REQUEST["bl_conta"] ? $_REQUEST["bl_conta"] : "";
+              
+              $bl_dados = array( "codigo_banco" => $bl_codigo_banco, "carteira" => $bl_carteira, "convenio" => $bl_convenio, "agencia" => $bl_agencia, "num_conta" => $bl_num_conta );
+              
+              $codigo_banco = @$_REQUEST["codigo_banco"] ? $_REQUEST["codigo_banco"] : "";
+              $carteira = @$_REQUEST["carteira"] ? $_REQUEST["carteira"] : "";
+              $convenio = @$_REQUEST["convenio"] ? $_REQUEST["convenio"] : "";
+              $agencia = @$_REQUEST["agencia"] ? $_REQUEST["agencia"] : "";
+              $num_conta = @$_REQUEST["conta"] ? $_REQUEST["conta"] : "";
+
+              $pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
+              
+              /*
+              echo "<pre>";
+              print_r($da_dados);
+              print_r($bl_dados);
+              print_r($pro_dados);
+              print_r($dados_produto);
+              echo "</pre>";
+              */
+
+              $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"],
+                                      $data_renovacao, $valor_contrato, $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
+                                      $_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["carencia"],
+                                      $_REQUEST["id_prduto"], $pro_dados, $da_dados, $bl_dados, $dados_produto);
+
 						}
 
 					}
+					
 					break;
 				
 				

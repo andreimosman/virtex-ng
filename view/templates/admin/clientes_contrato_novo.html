@@ -480,6 +480,118 @@ function calculaDiaProximaFatura() {
     frm.primeiro_vencimento.value = dia_ven+"/"+mes+"/"+today.getYear();
 }
 
+function replaceField(field) {
+
+  if ( document.getElementById("difEnderecoSetup").checked == false ) {
+
+    if ( field != "id_cidade" ) {
+
+      document.getElementById(field+"_instalacao").value = document.getElementById(field+"_cobranca").value;
+
+    }
+    else {
+
+      var selC = document.getElementById(field+"_cobranca");
+      var selI = document.getElementById(field+"_instalacao");
+
+      for ( i=0; i<selI.options.length; i++ ) {
+
+        if ( selI.options[i].value == selC.options[ selC.selectedIndex ].value ) {
+
+          selI.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  }
+
+}
+
+function validacao(frm ) {
+
+if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.complemento_cobranca.value == '' || frm.cep_cobranca.value == '' ) {
+
+    alert('Preencha o endereco de cobranca!');
+
+    frm.difEnderecoMail.checked = true;
+    checkStatusFields(frm.difEnderecoMail);
+    return false;
+
+  }
+  else {
+
+   if ( (frm.endereco_instalacao.value == '' || frm.bairro_instalacao.value == '' || frm.complemento_instalacao.value == '' || frm.cep_instalacao.value == '') && (frm.tipo != "H") ) {
+
+      alert('Preencha o endereco de instalacao!');
+
+      frm.difEnderecoSetup.checked = true;
+      checkStatusFields(frm.difEnderecoSetup);
+      return false;
+
+    }
+  }
+  
+  if ( frm.senha.value != frm.confsenha.value ) {
+  
+      alert('Verifique a senha!');
+      frm.senha.focus();
+      return false;
+  
+  }
+  
+  return true;
+}
+
+function checkForm(tag) {
+
+  return validacao(tag);
+}
+
+
+function validarData(campo){
+
+  var expReg = /^(([0-2]\d|[3][0-1])\/([0]\d|[1][0-2])\/[1-2][0-9]\d{2})$/;
+  var msgErro = 'Formato inválido de data. Use: mm/dd/aaaa';
+  if ((campo.value.match(expReg)) && (campo.value!='')){
+    var dia = campo.value.substring(0,2);
+    var mes = campo.value.substring(3,5);
+    var ano = campo.value.substring(6,10);
+
+    //alert(dia);    alert(mes);    alert(ano);
+
+    if( (mes==4 || mes==6 || mes==9 || mes==11) && dia > 30){
+      alert("Dia incorreto !!! O mês especificado contém no máximo 30 dias.");
+      campo.focus();
+      return false;
+    }
+    else{
+      if(ano%4!=0 && mes==2 && dia>28){
+        alert("Data incorreta!! O mês especificado contém no máximo 28 dias.");
+        campo.focus();
+        return false;
+      }
+      else{
+
+        if(ano%4==0 && mes==2 && dia>29){
+          alert("Data incorreta!! O mês especificado contém no máximo 29 dias.");
+          campo.focus();
+          return false;
+        }
+        else{
+          //alert ("Data correta!");
+          return true;
+        }
+
+      }
+    }
+  }
+  else {
+    alert(msgErro);
+    campo.focus();
+    return false;
+  }
+}
+
 {/literal}
 </script>
 <style>
@@ -536,7 +648,7 @@ function calculaDiaProximaFatura() {
 {/literal}
 </style>
 
-<form name="contratacao" action="admin-clientes.php" method="post">
+<form name="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{/if} >
 <input type="hidden" name="op" value="{$op}">
 <input type="hidden" name="tela" value="{$tela}">
 <input type="hidden" name="id_cliente" value="{$id_cliente}">
@@ -555,18 +667,18 @@ function calculaDiaProximaFatura() {
     </tr>
   	<tr>
 			<td align="right"><strong>Endereço:</strong></td>
-			<td align="left"><input type="text" size="50" maxlength="50" disabled name="endereco_cobranca" id="endereco_cobranca" value="{$endereco}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="left"><input type="text" size="50" maxlength="50" disabled name="endereco_cobranca" id="endereco_cobranca" value="{$endereco}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); replaceField('endereco');"></td>
       <td align="right" ><strong>Complemento:</strong></td>
-			<td align="left" ><input type="text" size="30" maxlength="40" disabled name="complemento_cobranca" id="complemento_cobranca" value="{$complemento}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td align="left" ><input type="text" size="30" maxlength="40" disabled name="complemento_cobranca" id="complemento_cobranca" value="{$complemento}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); replaceField('complemento');"></td>
     </tr>
     <tr>
       <td align="right"><strong>Bairro:</strong></td>
-			<td align="left"><input type="text" size="25" maxlength="40" disabled name="bairro_cobranca" id="bairro_cobranca" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-      &nbsp;&nbsp;<strong>CEP:</strong>&nbsp;<input type="text" size="13" disabled maxlength="15" name="cep_cobranca" id="cep_cobranca" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+			<td align="left"><input type="text" size="25" maxlength="40" disabled name="bairro_cobranca" id="bairro_cobranca" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); replaceField('bairro');">
+      &nbsp;&nbsp;<strong>CEP:</strong>&nbsp;<input type="text" size="13" disabled maxlength="15" name="cep_cobranca" id="cep_cobranca" value="{$cep}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); replaceField('cep');">
       </td>
   		<td align="right"><strong>Cidade:</strong></td>
 			<td align="left">
-        <select class="disabled" style="width:210px" disabled name="id_cidade_cobranca" id="id_cidade_cobranca" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+        <select class="disabled" style="width:210px" disabled name="id_cidade_cobranca" id="id_cidade_cobranca" tabindex="10" onBlur="formOnBlur(this);" onFocus="javascript:formOnFocus(this)" onChange="replaceField('id_cidade');" >
   				{foreach item=a from=$cidades_disponiveis}
   						<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
 								- {$a.uf}</option>
@@ -596,7 +708,7 @@ function calculaDiaProximaFatura() {
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Dt. Contratação:</label></td>
-						<td><input type="text" size="12" maxlength="10" name="data_contratacao" value="{$data_contratacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<td><input type="text" size="12" maxlength="10" name="data_contratacao" value="{$data_contratacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); validarData(this);"></td>
 						<td align="right" width="70"><label>Vigência:</label></td>
 						<td><input type="text" size="4" maxlength="2" name="vigencia" value="{$vigencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
 					</tr>
@@ -762,7 +874,7 @@ function calculaDiaProximaFatura() {
 								<select name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="">-- SELECIONE --</option>
 								{foreach item=v from=$listaNAS}
-									<option value="{$v.id_nas}">{$tiposNAS[$v.tipo_nas]}: {$v.nome}</option>
+									{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}">{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
 								{/foreach}
 								</select>
 							</td>
@@ -815,27 +927,27 @@ function calculaDiaProximaFatura() {
 						</tr>
 						<tr>
 						<td colspan=4 >
-							<input type="checkbox" name="difEnderecoSetup" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
+							<input type="checkbox" name="difEnderecoSetup" id="difEnderecoSetup" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
 						</td>
 						</tr>
 						<tr>
 							<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
-							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
 							<td align="right" width="110" ><label>Complemento:</label></td>
-							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" id="complemento_instalacao" value="{$complemento}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 							<td align="right" ><label>Bairro:</label></td>
-							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" id="bairro_instalacao" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
 							<td align="right" width="110"><label>CEP:</label>
-							<td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" id="cep_instalacao" value="{$cep}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
 							<td align="right" ><label>Cidade:</label></td>
 							<td align="left" colspan=4 >
-								<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" id="id_cidade_instalacao" tabindex="10" class="disabled" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach item=a from=$cidades_disponiveis}
 
 								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
@@ -886,6 +998,8 @@ function calculaDiaProximaFatura() {
 
 {if $acao == "novo_contrato"}
 	<!-- CONFIRMAÇÃO DO CONTRATO -->
+	<input type="hidden" name="acao" value="gravar_novo_contrato">
+	
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
 			<th colspan=4>Contratante - Cobran&ccedil;a</th>
@@ -893,6 +1007,7 @@ function calculaDiaProximaFatura() {
 		<tr>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
 			<td colspan=4>{$cliente.nome_razao}</td>
+			<input type=hidden name="id_cliente" value="{$id_cliente}" >
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
@@ -903,14 +1018,22 @@ function calculaDiaProximaFatura() {
 		<tr>
 			<td width="110" align="right"><strong>Endereço:</strong></td>
 			<td>{$endereco_cobranca}&nbsp;</td>
+			<input type=hidden name="endereco_cobranca" value="{$endereco_cobranca}" >
+			
 			<td width="110" align="right"><strong>Complemento:</strong></td>
 			<td>{$complemento_cobranca}&nbsp;</td>
+      <input type=hidden name="complemento_cobranca" value="{$complemento_cobranca}" >
+      
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Bairro:</strong></td>
 			<td>{$bairro_cobranca}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_cobranca}</td>
+			<input type=hidden name="bairro_cobranca" value="{$bairro_cobranca}" ><input type=hidden name="cep_cobranca" value="{$cep_cobranca}" >
+			
 			<td width="110" align="right"><strong>Cidade:</strong></td>
 			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
+			<input type=hidden name="id_cidadde_cobranca" value="{$cidade_cobranca.id_cidade}" >
+			
 		</tr>
 	</table>
 
@@ -923,14 +1046,22 @@ function calculaDiaProximaFatura() {
 		<tr>
 			<td width="110" align="right"><strong>Endereço:</strong></td>
 			<td>{$endereco_instalacao}&nbsp;</td>
+      <input type=hidden name="endereco_instalacao" value="{$endereco_instalacao}" >
+      
 			<td width="110" align="right"><strong>Complemento:</strong></td>
 			<td>{$complemento_instalacao}&nbsp;</td>
+			<input type=hidden name="complemento_instalacao" value="{$complemento_instalacao}" >
+			
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Bairro:</strong></td>
 			<td>{$bairro_instalacao}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_instalacao}</td>
-			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<input type=hidden name="bairro_instalacao" value="{$bairro_instalacao}" ><input type=hidden name="cep_instalacao" value="{$cep_instalacao}" >
+
+      <td width="110" align="right"><strong>Cidade:</strong></td>
 			<td>{$cidade_instalacao.cidade}-{$cidade_instalacao.uf}&nbsp;</td>
+			<input type=hidden name="id_cidade_instalacao" value="{$cidade_instalacao.id_cidade}" >
+			
 		</tr>
 	</table>
 	{/if}
@@ -941,6 +1072,9 @@ function calculaDiaProximaFatura() {
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Tipo:</strong></td>
+      <input type=hidden name="tipo" value="{$tipo}" >
+      <input type=hidden name="id_produto" value="{$produto.id_produto}" >
+      
 			<td>{if $tipo == "BL"}BANDA LARGA{/if}{if $tipo == "D"}DISCADO{/if}{if $tipo == "H"}HOSPEDAGEM{/if}</td>
 			<td width="110" align="right"><strong>Produto:</strong></td>
 			<td>{$produto.nome}&nbsp;</td>
@@ -951,43 +1085,84 @@ function calculaDiaProximaFatura() {
 		<tr>
 			<td width="110" align="right"><strong>Comodato:</strong></td>
 			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
+			<input type=hidden name="valor_comodato" value="{$valor_comodato}" >
+			
 			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
 			<td>{$tx_instalacao|string_format:"%.2f"}</td>
-			<td width="110" align="right"><strong>Comodato:</strong></td>
-			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
+			<input type=hidden name="tx_instalacao" value="{$tx_instalacao}" >
+			
+			<td width="110" align="right"><strong></strong></td>
+			<td></td>
+
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Desconto:</strong></td>
 			<td>{$desconto_promo|string_format:"%.2f"}&nbsp;</td>
+			<input type=hidden name="desconto_promo" value="{$desconto_promo}" >
+			
 			<td width="110" align="right"><strong>Período Desconto:</strong></td>
 			<td>{$periodo_desconto} meses</td>
+			<input type=hidden name="periodo_desconto" value="{$periodo_desconto}" >
+			
 			<td width="110" align="right"><strong>Data Contratação:</strong></td>
 			<td>{$data_contratacao}</td>
+			<input type=hidden name="data_contratacao" value="{$data_contratacao}" >
+			
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
 			<td>{$dia_vencimento}&nbsp;</td>
+			<input type=hidden name="dia_vencimento" value="{$dia_vencimento}" >
+			
 			<td width="110" align="right"><strong>Vigência:</strong></td>
 			<td>{$vigencia} meses</td>
+			<input type=hidden name="vigencia" value="{$vigencia}" >
+			
 			<td width="110" align="right"><strong>Carência:</strong></td>
 			<td>{$carencia} dias</td>
+			<input type=hidden name="carencia" value="{$carencia}" >
+			
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Pagamento:</strong></td>
 			<td>{if $pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
+			<input type=hidden name="pagamento" value="{$pagamento}" >
+			
 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
 			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+			<input type=hidden name="forma_pagamento" value="{$forma_pagamento}" >
+    {if $forma_pagamento == "BL"}
+      <input type=hidden name="bl_codigo_banco" value="{$formaPagamento.codigo_banco}" >
+      <input type=hidden name="bl_carteira" value="{$formaPagamento.carteira}" >
+      <input type=hidden name="bl_convenio" value="{$formaPagamento.convenio}" >
+    {/if}
       <td width="110" align="right"><strong>Pr&oacute;xima Fatura:</strong></td>
 			<td>{$primeiro_vencimento}</td>
+			<input type=hidden name="primeiro_vencimento" value="{$primeiro_vencimento}" >
+    {if $forma_pagamento == "BL" || $forma_pagamento == "DA"}
+      <input type=hidden name="codigo_banco" value="{$formaPagamento.codigo_banco}" >
+      <input type=hidden name="carteira" value="{$formaPagamento.carteira}" >
+      <input type=hidden name="convenio" value="{$formaPagamento.convenio}" >
+      <input type=hidden name="agencia" value="{$formaPagamento.agencia}" >
+      <input type=hidden name="conta" value="{$formaPagamento.conta}" >
+    {/if}
   	</tr>
 		{if $forma_pagamento == "DA"}
 		<tr>
 			<td width="110" align="right"><strong>Banco:</strong></td>
 			<td>{$formaPagamento.codigo_banco|string_format:"%03d"}</td>
+      <input type=hidden name="da_codigo_banco" value="{$formaPagamento.codigo_banco}" >
+      <input type=hidden name="da_carteira" value="{$formaPagamento.carteira}" >
+      <input type=hidden name="da_convenio" value="{$formaPagamento.convenio}" >
+
 			<td width="110" align="right"><strong>Agencia:</strong></td>
 			<td>{$agencia}</td>
+      <input type=hidden name="da_agencia" value="{$agencia}" >
+      
 			<td width="110" align="right"><strong>Conta:</strong></td>
 			<td>{$conta}</td>
+			<input type=hidden name="da_conta" value="{$conta}" >
+			
 		</tr>
 		{/if}
 		{/if}
@@ -1002,27 +1177,41 @@ function calculaDiaProximaFatura() {
 			<td>{if $tipo == "BL"}Banda Larga{/if}{if $tipo == "D"}Discado{/if}{if $tipo == "H"}Hospedagem{/if}</td-->
 			<td width="110" align="right"><strong>Username:</strong></td>
 			<td>{$username}</td>
+			<input type=hidden name="username" value="{$username}" >
+			<input type=hidden name="senha" value="{$senha}" >
+			
 			<td width="110" align="right"><strong>Criar e-mail:</strong></td>
 			<td>{if $criar_email == "t"}{$username}@{$preferenciasGerais.dominio_padrao}{else}NÃO{/if}</td>
+			<input type=hidden name="criar_email" value="{$criar_email}" >
+			
 		</tr>
 		{if $tipo == "BL"}
 		<tr>
 			<td width="110" align="right"><strong>Upload:</strong></td>
 			<td>{$produto.banda_upload_kbps} kbps</td>
+
 			<td width="110" align="right"><strong>Download:</strong></td>
 			<td>{$produto.banda_download_kbps} kbps</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>NAS:</strong></td>
 			<td>{$nas.nome} ({$tiposNAS[$nas.tipo_nas]})</td>
+			<input type=hidden name="id_nas" value="{$nas.id_nas}" >
+			
 			<td width="110" align="right"><strong>POP:</strong></td>
 			<td>{$pop.nome}</td>
+			<input type=hidden name="id_pop" value="{$pop.id_pop}" >
+			
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Rede/IP:</strong></td>
 			<td>{if $selecao_redeip=="A"}Automática{else}{$endereco_redeip}{/if}</td>
+			<input type=hidden name="selecao_redeip" value="{$selecao_redeip}" >
+			
 			<td width="110" align="right"><strong>MAC:</strong></td>
 			<td>{if $mac}{$mac}{else}Não Informado{/if}</td>
+			<input type=hidden name="mac" value="{$mac}" >
+			
 		</tr>
 		{/if}
 
@@ -1030,6 +1219,8 @@ function calculaDiaProximaFatura() {
     <tr>
 			<td width="110" align="right"><strong>Fone:</strong></td>
 			<td colspan=4>{$foneinfo}</td>
+			<input type=hidden name="foneinfo" value="{$foneinfo}" >
+			
 		</tr>
 		{/if}
 
@@ -1037,8 +1228,12 @@ function calculaDiaProximaFatura() {
     <tr>
 			<td width="110" align="right"><strong>Tipo:</strong></td>
 			<td >{if $tipo_hospedagem == "D"}Dom&iacute;nio do Usu&aacute;rio{else}www.{$preferenciasGerais.dominio_padrao}/usuario/username{/if}</td>
-			<td width="110" align="right"><strong>Criar Dominio:</strong></td>
+      <input type=hidden name="tipo_hospedagem" value="{$tipo_hospedagem}" >
+      
+      <td width="110" align="right"><strong>Criar Dominio:</strong></td>
 			<td>www.{$dominio}</td>
+			<input type=hidden name="dominio" value="{$dominio}" >
+			
 		</tr>
 		{/if}
 
@@ -1075,8 +1270,17 @@ function calculaDiaProximaFatura() {
 		</tr>
 		{/foreach}
 	</table>
+	
+	<table border=0 align=center >
+	
+  	<tr colspan=2 valign="top">
+  		<td style="border-top: dotted 1px #000000" colspan=2 align="center">
+  			<input type="button" name="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" value="Gravar Contrato" class="botao">
+  		</td>
+  	</tr>
+
+  </table>
+  
 {/if}
 
-
-
-
+</form>
