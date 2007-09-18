@@ -22,8 +22,8 @@
 		public static function &factory($tipo,$controller) {
 			$tipo = strtolower($tipo);
 			$controller = strtolower($controller);
-			
-			return $tipo == "admin" ? VirtexControllerAdmin::factory($controller) : VirtexControllerUsuario::factory($controller);
+			$retorno = $tipo == "admin" ? VirtexControllerAdmin::factory($controller) : VirtexControllerUsuario::factory($controller);
+			return $retorno;
 			
 		}
 		
