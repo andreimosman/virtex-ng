@@ -48,7 +48,8 @@
 		
 		
 		protected function init() {
-			$this->_tplPath = MUtils::getPwd() . "/view/templates";
+			//$this->_tplPath = MUtils::getPwd() . "/view/templates";
+			$this->_tplPath = "./view/templates";
 		}
 		
 		public function exibe() {
