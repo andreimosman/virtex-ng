@@ -199,19 +199,42 @@
       $comodato = $valor_comodato ? true : false;
       
       $dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
-      $id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
+      //$id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
 
       $disc_franquia_horas = @$dados_produto["franquia_horas"] ? $dados_produto["franquia_horas"] : "";
       $disc_permitir_duplicidade = @$dados_produto["permitir_duplicidade"] ? $dados_produto["permitir_duplicidade"] : "";
       $disc_valor_hora_adicional = @$dados_produto["valor_hora_adicional"] ? $dados_produto["valor_hora_adicional"] : "";
+      
+      $hosp_dominio = @$dados_produto["dominio"] ? $dados_produto["dominio"] : "";
+      $hosp_franquia_em_mb = @$dados_produto["franquia_em_mb"] ? $dados_produto["franquia_em_mb"] : "";
+      $hosp_valor_mb_adicional = @$dados_produto["valor_mb_adicional"] ? $dados_produto["valor_mb_adicional"] : "";
+
+      $bl_banda_upload_kbps = @$dados_produto["banda_upload_kbps"] ? $dados_produto["banda_upload_kbps"] : "";
+      $bl_banda_download_kbps = @$dados_produto["banda_download_kbps"] ? $dados_produto["banda_download_kbps"] : "";
+      $bl_franquia_trafego_mensal_gb = @$dados_produto["franquia_trafego_mensal_gb"] ? $dados_produto["franquia_trafego_mensal_gb"] : "";
+      $bl_valor_trafego_adicional_gb = @$dados_produto["valor_trafego_adicional_gb"] ? $dados_produto["valor_trafego_adicional_gb"] : "";
 
       $dados = array("id_cliente_produto" => $id_cliente_produto, "data_contratacao" => $data_contratacao, "vigencia" => $vigencia, "data_renovacao" => $data_renovacao,
       "valor_contrato" => $valor_contrato, "id_cobranca" => $id_cobranca, "status" => $status, "tipo_produto" => $dados_produto["tipo"], "valor_produto" => $dados_produto["valor"],
       "num_emails" => $dados_produto["num_emails"], "quota_por_conta" => $dados_produto["quota_por_conta"], "tx_instalacao" => $tx_instalacao, "comodato" => $comodato,
-      "valor_comodato" => $valor_comodato, "desconto_promo" => $desconto_promo, "periodo_desconto" => $desconto_periodo, "hosp_dominio", "hosp_franquia_em_mb",
-      "hosp_valor_mb_adicional", "disc_franquia_horas", "disc_permitir_duplicidade", "disc_valor_hora_adicional", "bl_banda_upload_kbps", "bl_banda_download_kbps", "bl_franquia_trafego_mensal_gb", "bl_valor_trafego_adicional_gb", "cod_banco", "carteira", "agencia", "num_conta", "convenio", "cc_vencimento", "cc_numero", "cc_operadora", "db_banco", "db_agencia", "db_conta", "vencimento", "carencia", "data_alt_status", "id_produto", "nome_produto", "descricao_produto", "disponivel", "vl_email_adicional", "permitir_outros_dominios", "email_anexado", "numero_contas", "valor_estatico",
-       "da_cod_banco", "da_carteira", "da_convenio", "da_agencia", "da_num_conta", "bl_cod_banco", "bl_carteira", "bl_convenio", "bl_agencia", "bl_num_conta");
+      "valor_comodato" => $valor_comodato, "desconto_promo" => $desconto_promo, "periodo_desconto" => $desconto_periodo, "hosp_dominio" => $hosp_dominio, "hosp_franquia_em_mb" => $hosp_franquia_em_mb,
+      "hosp_valor_mb_adicional" => $hosp_valor_mb_adicional, "disc_franquia_horas" => $disc_franquia_horas, "disc_permitir_duplicidade" => $disc_permitir_duplicidade, "disc_valor_hora_adicional" => $disc_valor_hora_adicional,
+      "bl_banda_upload_kbps" => $bl_banda_upload_kbps, "bl_banda_download_kbps" => $bl_banda_download_kbps, "bl_franquia_trafego_mensal_gb" => $bl_franquia_trafego_mensal_gb,
+      "bl_valor_trafego_adicional_gb" => $bl_valor_trafego_adicional_gb, "cod_banco" => $pro_dados["codigo_banco"], "carteira" => $pro_dados["carteira"],
+      "agencia" => $pro_dados["agencia"], "num_conta" => $pro_dados["num_conta"], "convenio" => $pro_dados["convenio"], "cc_vencimento" => "", "cc_numero" => "",
+      "cc_operadora" => "", "db_banco" => "", "db_agencia" => "", "db_conta" => "", "vencimento" => $dia_vencimento, "carencia" => $carencia,
+      "data_alt_status" => "", "id_produto" => $id_produto, "nome_produto" => $dados_produto["nome"], "descricao_produto" => $dados_produto["descricao"],
+      "disponivel" => $dados_produto["disponivel"], "vl_email_adicional"  => $dados_produto["vl_email_adicional"], "permitir_outros_dominios" => $dados_produto["permitir_outros_dominios"],
+      "email_anexado" => $dados_produto["email_anexado"], "numero_contas" => $dados_produto["numero_contas"], "valor_estatico" => $dados_produto["valor_estatico"],
+      "da_cod_banco" => $da_dados["codigo_banco"], "da_carteira" => $da_dados["carteira"], "da_convenio" => $da_dados["convenio"], "da_agencia" => $da_dados["agencia"],
+      "da_num_conta" => $da_dados["num_conta"], "bl_cod_banco" => $bl_dados["codigo_banco"], "bl_carteira" => $bl_dados["carteira"],
+      "bl_convenio" => $bl_dados["convenio"], "bl_agencia" => $bl_dados["agencia"], "bl_num_conta" => $bl_dados["num_conta"]);
 
+      echo "<pre>";
+      print_r($dados);
+      echo "</pre>";
+              
+      //$this->cbtb_contrato->insere($dados);
 		}
 	
 	

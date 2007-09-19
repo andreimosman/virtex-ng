@@ -433,14 +433,14 @@
 
               $pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
               
-              /*
+
               echo "<pre>";
               print_r($da_dados);
               print_r($bl_dados);
               print_r($pro_dados);
               print_r($dados_produto);
               echo "</pre>";
-              */
+
 
               $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"],
                                       $data_renovacao, $valor_contrato, $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
