@@ -27,8 +27,44 @@
 			
 		}
 		
-		public function obtemProximoNumeroSequencial() {
-		
+		/**
+		 * Função utilizada para obter o próximo nossonumero disponível para a forma de pagamento especificada.
+		 * O aplicativo em questão deverá gerar um erro interno no caso (remoto) deste aplicativo retornar 0,
+		 * que indicará o final dos números disponíveis para esta forma de pagamento.
+		 */
+		public function obtemProximoNumeroSequencial($id_forma_pagamento) {
+			$sql = "SELECT nossonumero_atual,nossonumero_final,nossonumero_inicial FROM pftb_forma_pagamento WHERE id_forma_pagamento = '".$this->bd->escape($id_forma_pagamento."' FOR UPDATE";
+			$info = $this->bd->obtemUnico($sql);
+			
+			$inicial = (int)$info["nossonumero_inicial"];
+			$final = (int)$info["nossonumero_final"];
+			$atual = (int)$info["nossonumero_atual"];
+			
+			$proximo = 0;
+			
+			if( $atual < $inicial ) {
+				// Contagem não começou. Iniciar.
+				$proximo = $inicial;
+			} else {
+				$proximo++;
+			}
+			
+			if( $proximo == $final ) {
+				// Esse foi o último número gerado, travar o registro para ninguém usar.
+				$sql = "UPDATE pftb_forma_pagamento SET disponivel = 'f',nossonumero_atual = '".$this->bd->escape($proximo)."' WHERE id_forma_pagamento = '".$this->bd->escape($id_forma_pagamento)."'";
+				$this->bd->executa($sql);
+			}
+			
+			if( $proximo > $final ) {
+				// Situação que pode chegar somente no caso de concorrência no último registro.
+				return(0);
+			}
+			
+			$sql = "UPDATE pftb_forma_pagamento SET nossonumero_atual = '".$this->bd->escape($proximo)."' WHERE id_forma_pagamento = '".$this->bd->escape($id_forma_pagamento)."'";
+			$this->bd->executa($sql);
+			
+			return($proximo);
+			
 		}
 		
 		
