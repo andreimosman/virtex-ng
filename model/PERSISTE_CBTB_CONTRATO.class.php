@@ -3,6 +3,8 @@
 	class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	
 		public function __construct($bd=null) {
+   		parent::__construct();
+   		
 			$this->_campos 		= array("id_cliente_produto", "data_contratacao", "vigencia", "data_renovacao", "valor_contrato", "id_cobranca", "status", "tipo_produto", "valor_produto", "num_emails", "quota_por_conta", "tx_instalacao", "comodato", "valor_comodato", "desconto_promo", "periodo_desconto", "hosp_dominio", "hosp_franquia_em_mb", "hosp_valor_mb_adicional", "disc_franquia_horas", "disc_permitir_duplicidade", "disc_valor_hora_adicional", "bl_banda_upload_kbps", "bl_banda_download_kbps", "bl_franquia_trafego_mensal_gb", "bl_valor_trafego_adicional_gb", "cod_banco", "carteira", "agencia", "num_conta", "convenio", "cc_vencimento", "cc_numero", "cc_operadora", "db_banco", "db_agencia", "db_conta", "vencimento", "carencia", "data_alt_status", "id_produto", "nome_produto", "descricao_produto", "disponivel", "vl_email_adicional", "permitir_outros_dominios", "email_anexado", "numero_contas", "valor_estatico",
        "da_cod_banco", "da_carteira", "da_convenio", "da_agencia", "da_num_conta", "bl_cod_banco", "bl_carteira", "bl_convenio", "bl_agencia", "bl_num_conta");
 			$this->_chave 		= "id_cliente_produto";
