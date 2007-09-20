@@ -357,13 +357,19 @@
 						//echo "<pre>";
 						// print_r($produto);
 						//print_r($nas);
-						//print_r($pop);
+						//print_r($_REQUEST);
 						//echo "</pre>";
-
+            /*
 						while(list($vr,$vl)=each(@$_REQUEST)) {
+
 							$this->_view->atribui($vr,$vl);
 						}
-						
+						*/
+						$keys = array_keys($_REQUEST);
+            for($i=0;$i<count($keys);$i++) {
+               $this->_view->atribui($keys[$i],$_REQUEST[$keys[$i]]);
+            }
+
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
 						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],@$_REQUEST["pro_rata"],@$_REQUEST["limite_prorata"]);
@@ -403,11 +409,17 @@
 
               $dados_produto = $produtos->obtemPlanoPeloId($_REQUEST["id_produto"]);
 
+              echo "produto<pre>";
+							// print_r($formaPagamento);
+							print_r($dados_produto);
+							echo "</pre>";
+							
               $dominio = @$_REQUEST["dominio"] ? $_REQUEST["dominio"] : "";
               $data_renovacao = MData::adicionaMes($_REQUEST["primeiro_vencimento"], $_REQUEST["vigencia"]);
               $valor_contrato = 0;
               $id_cobranca = 0;
               $status = "A";
+
 
               $da_codigo_banco = @$_REQUEST["da_codigo_banco"] ? $_REQUEST["da_codigo_banco"] : "";
               $da_carteira = @$_REQUEST["da_carteira"] ? $_REQUEST["da_carteira"] : "";

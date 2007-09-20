@@ -199,14 +199,14 @@
       $comodato = $valor_comodato ? true : false;
       
       $dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
-      //$id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
+      $id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
 
       $disc_franquia_horas = @$dados_produto["franquia_horas"] ? $dados_produto["franquia_horas"] : "";
       $disc_permitir_duplicidade = @$dados_produto["permitir_duplicidade"] ? $dados_produto["permitir_duplicidade"] : "";
       $disc_valor_hora_adicional = @$dados_produto["valor_hora_adicional"] ? $dados_produto["valor_hora_adicional"] : "";
       
       $hosp_dominio = @$dados_produto["dominio"] ? $dados_produto["dominio"] : "";
-      $hosp_franquia_em_mb = @$dados_produto["franquia_em_mb"] ? $dados_produto["franquia_em_mb"] : "";
+      $hosp_franquia_em_mb = @$dados_produto["franquia_em_mb"] ? $dados_produto["franquia_em_mb"] : 0;
       $hosp_valor_mb_adicional = @$dados_produto["valor_mb_adicional"] ? $dados_produto["valor_mb_adicional"] : "";
 
       $bl_banda_upload_kbps = @$dados_produto["banda_upload_kbps"] ? $dados_produto["banda_upload_kbps"] : "";
@@ -234,7 +234,7 @@
       print_r($dados);
       echo "</pre>";
               
-      //$this->cbtb_contrato->insere($dados);
+      $this->cbtb_contrato->insere($dados);
 		}
 	
 	
