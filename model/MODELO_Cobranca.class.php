@@ -229,11 +229,11 @@
       "da_cod_banco" => $da_dados["codigo_banco"], "da_carteira" => $da_dados["carteira"], "da_convenio" => $da_dados["convenio"], "da_agencia" => $da_dados["agencia"],
       "da_num_conta" => $da_dados["num_conta"], "bl_cod_banco" => $bl_dados["codigo_banco"], "bl_carteira" => $bl_dados["carteira"],
       "bl_convenio" => $bl_dados["convenio"], "bl_agencia" => $bl_dados["agencia"], "bl_num_conta" => $bl_dados["num_conta"]);
-
+      /*
       echo "<pre>";
       print_r($dados);
       echo "</pre>";
-              
+      */
       $this->cbtb_contrato->insere($dados);
 		}
 	
