@@ -13,7 +13,7 @@
 			$this->_tabela          = "dominio";
 			$this->_sequence        = "";
 			
-			$this->_filtro			= array("id_cliente" => "numeric", "provedor" => "bool", "dominio_provedor" => "bool");
+			$this->_filtros			= array("id_cliente" => "numeric", "provedor" => "bool", "dominio_provedor" => "bool");
 		}
 
 	}

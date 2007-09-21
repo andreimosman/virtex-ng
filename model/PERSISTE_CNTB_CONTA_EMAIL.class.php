@@ -5,7 +5,7 @@
 		public function __construct() {
 			parent::__construct();
 			
-			$this->_campos = array_merge($this->_campos, array("quota","email"));
+			$this->_campos = array_merge($this->_campos, array("quota","email","redirecionar_para"));
 			$this->_tabela = "cntb_conta_email";
 		}
 
