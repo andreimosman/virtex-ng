@@ -340,8 +340,8 @@
             $this->_view->atribui("cep_cobranca",trim($cep_cobranca));
             $this->_view->atribui("cep_instalacao",trim($cep_instalacao));
 
-            $this->_view->atribui("cidade_cobranca",trim($cidade_cobranca));
-						$this->_view->atribui("cidade_instalacao",trim($cidade_instalacao));
+            $this->_view->atribui("cidade_cobranca",$cidade_cobranca);
+						$this->_view->atribui("cidade_instalacao",$cidade_instalacao);
 						
 						$tipo = @$_REQUEST["tipo"];
 						
@@ -394,11 +394,7 @@
 							
 							// Seleção de dados para exibição na tela de confirmação.
 							
-							
-							
-							
-							
-							//echo "<pre>";
+        			//echo "<pre>";
 							// print_r($formaPagamento);
 							//print_r($_REQUEST);
 							//echo "</pre>";
@@ -445,6 +441,9 @@
 
               $pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
               
+              $endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"] );
+              $endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"] );
+              
               /*
               echo "<pre>";
               print_r($da_dados);
@@ -453,11 +452,10 @@
               print_r($dados_produto);
               echo "</pre>";
               */
-
-              $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"],
+              $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
                                       $data_renovacao, $valor_contrato, $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
-                                      $_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["carencia"],
-                                      $_REQUEST["id_prduto"], $pro_dados, $da_dados, $bl_dados, $dados_produto);
+                                      $_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $_REQUEST["carencia"],
+                                      $_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $dados_produto, $endereco_cobranca, $endereco_instalacao);
 
 						}
 

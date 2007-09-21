@@ -509,7 +509,7 @@ function replaceField(field) {
 
 function validacao(frm ) {
 
-if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.complemento_cobranca.value == '' || frm.cep_cobranca.value == '' ) {
+if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.cep_cobranca.value == '' ) {
 
     alert('Preencha o endereco de cobranca!');
 
@@ -520,7 +520,7 @@ if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm
   }
   else {
 
-   if ( (frm.endereco_instalacao.value == '' || frm.bairro_instalacao.value == '' || frm.complemento_instalacao.value == '' || frm.cep_instalacao.value == '') && (frm.tipo != "H") ) {
+     if ( (frm.endereco_instalacao.value == '' || frm.bairro_instalacao.value == '' || frm.cep_instalacao.value == '') && (frm.tipo != "H") ) {
 
       alert('Preencha o endereco de instalacao!');
 
@@ -1032,7 +1032,7 @@ function validarData(campo){
 			
 			<td width="110" align="right"><strong>Cidade:</strong></td>
 			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
-			<input type=hidden name="id_cidadde_cobranca" value="{$cidade_cobranca.id_cidade}" >
+			<input type=hidden name="id_cidade_cobranca" value="{$cidade_cobranca.id_cidade}" >
 			
 		</tr>
 	</table>
@@ -1127,8 +1127,9 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Pagamento:</strong></td>
 			<td>{if $pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
 			<input type=hidden name="pagamento" value="{$pagamento}" >
-			
-			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
+			<input type=hidden name="id_forma_pagamento" value="{if $forma_pagamento == 'BL'}{$id_forma_pagamento_BL}{/if}{if $forma_pagamento == 'DA'}{$id_forma_pagamento_DA}{/if}{if $forma_pagamento == 'MO'}{$id_forma_pagamento_MO}{/if}{if $forma_pagamento == 'PC'}{$id_forma_pagamento_PC}{/if}" >
+
+ 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
 			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
 			<input type=hidden name="forma_pagamento" value="{$forma_pagamento}" >
     {if $forma_pagamento == "BL"}

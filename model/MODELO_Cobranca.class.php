@@ -15,6 +15,8 @@
 			parent::__construct();
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
+      $this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
+      $this->cntb_endereco_instalacao = VirtexPersiste::factory("cntb_endereco_instalacao");
 		}
 		
 		
@@ -192,9 +194,9 @@
 		}
 		
 		
-		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $data_renovacao, $valor_contrato,
-                          $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento,
-                          $carencia, $id_prduto, $pro_dados, $da_dados, $bl_dados, $dados_produto) {
+		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato,
+                          $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
+                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $dados_produto, $endereco_cobranca, $endereco_instalacao) {
 		
       $comodato = $valor_comodato ? true : false;
       
@@ -228,15 +230,52 @@
       "email_anexado" => $dados_produto["email_anexado"], "numero_contas" => $dados_produto["numero_contas"], "valor_estatico" => $dados_produto["valor_estatico"],
       "da_cod_banco" => $da_dados["codigo_banco"], "da_carteira" => $da_dados["carteira"], "da_convenio" => $da_dados["convenio"], "da_agencia" => $da_dados["agencia"],
       "da_num_conta" => $da_dados["num_conta"], "bl_cod_banco" => $bl_dados["codigo_banco"], "bl_carteira" => $bl_dados["carteira"],
-      "bl_convenio" => $bl_dados["convenio"], "bl_agencia" => $bl_dados["agencia"], "bl_num_conta" => $bl_dados["num_conta"]);
+      "bl_convenio" => $bl_dados["convenio"], "bl_agencia" => $bl_dados["agencia"], "bl_num_conta" => $bl_dados["num_conta"], "id_forma_pagamento"=>$id_forma_de_pagamento);
+
       /*
       echo "<pre>";
-      print_r($dados);
+      print_r($dados_produto);
       echo "</pre>";
       */
+
+      //$faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
+
+      //echo "<pre>";
+      //print_r($faturas);
+      //echo "</pre>";
+
+
+
       $this->cbtb_contrato->insere($dados);
+      
+      //grava endereco de cobranca
+      $dados = $endereco_cobranca;
+      $dados["id_cliente"] = $id_cliente;
+      $dados["id_cliente_produto"] = $id_cliente_produto;
+      
+      $this->cbtb_endereco_cobranca->insere($dados);
+
+
+      if ( trim($dados_produto["tipo"]) != "H" ) {
+        //grava endereco de instalacao
+        $dados = $endereco_instalacao;
+        $id_conta = 0;
+        $dados["id_conta"] = $id_conta; //pega id_conta criado
+        $dados["id_cliente"] = $id_cliente;
+        $dados["id_cliente_produto"] = $id_cliente_produto;
+
+        $this->cntb_endereco_instalacao->insere($dados);
+      }
+      
+      
 		}
-	
+    /*
+    protected function cadastraFatura($id_cliente_produto, $data, $descricao, $valor, $status, $observacoes, $reagendamento, $pagto_parcial,
+                                      $data_pagamento, $desconto, $acrescimo, $valor_pago, $id_cobranca, $cod_barra, $anterior, $id_carne, $nosso_numero,
+                                      $linha_dgitavel, $nosso_numero_banco, $tipo_retorno, $email_aviso, $id_forma_pagamento) {
+    
+    }
+    */
 	
 	}
 
