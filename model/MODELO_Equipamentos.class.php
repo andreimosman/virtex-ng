@@ -92,6 +92,26 @@
 		}
 		
 		/**
+		 * Retorna um endereço disponível para o NAS especificado.
+		 */
+		public function obtemEnderecoDisponivelNAS($id_nas) {
+			$info = $this->obtemNAS($id_nas);
+
+			$endereco = null;
+			
+			if( $info["tipo_nas"] == "P" ) {
+				// PPPoE, pegar em cftb_ip
+				$endereco = $this->cftb_ip->obtemEnderecoDisponivel($id_nas);
+			} else if($info["tipo_nas"] == "I") {
+				// TCP/IP, pegar em cftb_rede.
+				$endereco = $this->cftb_rede-obtemEnderecoDisponivel($id_nas);
+			}
+			
+			return($endereco);
+		
+		}
+		
+		/**
 		 * Cadastra uma rede IP em um NAS
 		 */
 		public function cadastraRedeIPNAS($id_nas,$rede,$tipo_rede,$pppoe=false) {

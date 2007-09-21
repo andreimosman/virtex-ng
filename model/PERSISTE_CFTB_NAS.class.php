@@ -2,6 +2,9 @@
 
 	class PERSISTE_CFTB_NAS extends VirtexPersiste {
 	
+		public static $PADRAO_VIRTEX 		= '';
+		public static $PADRAO_OUTROSERVIDOR 	= 'O';	
+	
 		public function __construct() {
 			parent::__construct();
 			
@@ -13,11 +16,19 @@
 			
 		}
 		
+		public static function enumPadroes() {
+			return(array(
+						self::$PADRAO_VIRTEX => "Padrão Virtex",
+						self::$PADRAO_OUTROSERVIDOR => "Outro Servidor/Mikrotik"
+						)
+					);
+		}
+		
 		public static function enumTipoNas() {
 			$_LS_TIPO_NAS = array(
 					                "I" => "IP",
 									"P" => "PPPoE",
-									"H" => "HotSpot",
+									/** "H" => "HotSpot", */
 									"R" => "RAS (Discado)"
 								);
 			return($_LS_TIPO_NAS);

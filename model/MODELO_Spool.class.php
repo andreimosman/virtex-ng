@@ -65,8 +65,8 @@
 		 * Adiciona uma instrução de configuração de uma conta banda larga.
 		 * Usado somente para contas TCP/IP.
 		 */
-		public function adicionaContaBandaLarga($id_nas,$id_conta,$username,$rede,$mac,$upload,$download) {
-			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$rede,$mac,$upload,$download));
+		public function adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao="") {
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$endereco,$mac,$padrao,$upload,$download));
 			return($this->insereInstrucaoAdicao($id_nas,$self::$BANDA_LARGA,$id_conta,$parametros));
 		}
 		
@@ -74,8 +74,8 @@
 		 * Adiciona uma instrução de remoção de uma conta banda larga.
 		 * Usado somente para contas TCP/IP.
 		 */
-		public function removeContaBandaLarga($id_nas,$id_conta,$username,$rede,$mac) {
-			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,rede,mac));
+		public function removeContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$padrao="") {
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,rede,mac,$padrao));
 			return($this->insereInstrucaoRemocao($id_nas,self::$BANDA_LARGA,$id_conta,$parametros));
 		}
 		
@@ -250,12 +250,13 @@
 				
 				case self::$BANDA_LARGA:
 					$retorno["username"] 		= @$param[0];
-					$retorno["rede"] 			= @$param[1];
+					$retorno["endereco"] 		= @$param[1];
 					$retorno["mac"] 			= @$param[2];
+					$retorno["padrao"]			= @$param[3]
 					
 					if( $op == self::$ADICIONAR ) {
-						$retorno["upload"]		= @$param[3];
-						$retorno["download"]	= @$param[4];
+						$retorno["upload"]		= @$param[4];
+						$retorno["download"]	= @$param[5];
 					}
 					
 					break;

@@ -30,9 +30,9 @@
 			$this->cntb_endereco_instacao	= VirtexPersiste::factory("cntb_endereco_instalacao");
 			
 			// Classes de preferencias e equipamentos são acessadas internamente p/ minimizar erros de programação.
-			$this->preferencias = VirtexModelo::factory("preferencias");
-			$this->equipamentos = VirtexModelo::factory("equipamentos");
-			$this->spool		= VirtexModelo::factory("spool");
+			$this->preferencias 			= VirtexModelo::factory("preferencias");
+			$this->equipamentos 			= VirtexModelo::factory("equipamentos");
+			$this->spool					= VirtexModelo::factory("spool");
 		
 		}
 		
@@ -116,7 +116,7 @@
 		 * pesquisaPorConta().
 		 * Pesquisa de clientes por conta. Retorna informações do cliente com um array de contas que fizeram,
 		 */
-		public function pesquisaPorContas($textoPesquisa,$tipo_pesquisa="C") {
+		public function pesquisaClientesPorContas($textoPesquisa,$tipo_pesquisa="C") {
 			// 
 		}
 		
@@ -145,19 +145,60 @@
 		/**
 		 * Cadastra uma conta de Banda Larga.
 		 */
-		public function cadastraContaBL($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+		public function cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
 										$observacoes,$conta_mestre,
 										$id_pop,$id_nas,$upload,$download,$mac,$endereco) {
 			
 			$nas = $this->equipamentos->obtemNAS($id_nas);
-			
-			// Verificar o tipo do nas.
 
-			if( !$endereco ) {
-				// Atribuição automática
+			$senhaCript = MCript::criptSenha($senha);
 			
+			// Dados comuns
+			$dados = array(
+							"username"				=> $username,
+							"dominio" 				=> $dominio,
+							"senha" 				=> $senha,
+							"senha_cript"			=> $senhaCript,
+							"id_cliente" 			=> $id_cliente,
+							"id_cliente_produto" 	=> $id_cliente_produto,
+							"status"				=> $status,
+							"observacoes"			=> $observacoes,
+							"conta_mestre"			=> $conta_mestre,
+							
+							"id_pop"				=> $id_pop,
+							"id_nas"				=> $id_nas,
+							"tipo_bandalarga"		=> $nas["tipo_nas"],
+							"upload_kbps"			=> $upload,
+							"download_kbps"			=> $download
+						);
+			
+			// Registra o MAC somente se recebeu.
+			if( $mac ) {
+				$dados["mac"] = $mac;
 			}
 
+			
+			// Verificar o tipo do nas.
+			
+			$endereco = $endereco ? $endereco : $equipamentos->obtemEnderecoDisponivelNAS($id_nas);
+			
+			if( $nas["tipo_nas"] == "I" ) {
+				// Tipo NAS TCP/IP (pegar o ipaddr)
+				$dados["rede"] 		= $endereco;
+			} else if( $nas["tipo_nas"] == "P" ) {
+				// Tipo NAS PPPoE (pegar o ipaddr)
+				$dados["ipaddr"] 	= $endereco;
+			}
+			
+			// Insere a conta de Banda Larga.		
+			$id_conta = $this->cntb_conta_bandalarga->insere($dados);
+			
+			// Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool
+			if( $status == "A" && ($nas["tipo_nas"] == "I" || ($nas["tipo_nas"] == "P" && $nas["padrao"] == "O")) ) {
+				$this->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao)
+			}
+			
+			return($id_conta);
 		
 		}
 		
@@ -193,6 +234,8 @@
 											$quota,$redirecionar_para="") {
 
 			$email = trim($username) . '@' . trim($dominio);
+			$senhaCript = MCript::criptSenha($senha);
+
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
@@ -241,6 +284,8 @@
 			$home			= $tipo_hospedagem == "D" ? $hosp_base . "/" . $dominio_hospedagem : $hosp_base . "/" . $dominio_padrao . "/www/usuarios/" . $username;
 			$shell			= "/bin/false";		// Shell de Hospedagem será sempre esse.
 			
+			$senhaCript = MCript::criptSenha($senha);
+
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio_padrao,

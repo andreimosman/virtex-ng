@@ -30,6 +30,33 @@
 			return($this->bd->obtemRegistros($sql));
 		}
 		
+		/**
+		 * Obtem o próximo endereço de rede disponível para utilização no cliente.
+		 * Retorna null caso não existam mais endereços disponíveis
+		 */
+		public function obtemEnderecoDisponivel($id_nas) {
+			$sql  = "SELECT ";
+			$sql .= "   rede ";
+			$sql .= "FROM  ";
+			$sql .= "   (SELECT ";
+			$sql .= "      r.rede, cbl.rede as rede_utilizada ";
+			$sql .= "   FROM ";
+			$sql .= "      cftb_rede r INNER JOIN cftb_nas_rede nr ON(r.rede = nr.rede) ";
+			$sql .= "      LEFT OUTER JOIN cntb_conta_bandalarga cbl ON(r.rede = cbl.rede) ";
+			$sql .= "   WHERE ";
+			$sql .= "      nr.id_nas = '".$this->bd->escape($id_nas)."' ";
+			$sql .= "   ORDER BY ";
+			$sql .= "      nr.rede DESC ";
+			$sql .= "   ) r  ";
+			$sql .= "WHERE  ";
+			$sql .= "   rede_utilizada is null ";
+			$sql .= "LIMIT 1 ";
+			
+			$rede = $this->bd->obtemUnicoRegistro($sql);
+			
+			return(@$rede["rede"]);
+		}
+		
 	}
 		
 ?>
