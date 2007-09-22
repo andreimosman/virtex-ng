@@ -530,15 +530,15 @@ if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm
 
     }
   }
-  
+
   if ( frm.senha.value != frm.confsenha.value ) {
-  
+
       alert('Verifique a senha!');
       frm.senha.focus();
       return false;
-  
+
   }
-  
+
   return true;
 }
 
@@ -991,15 +991,30 @@ function validarData(campo){
 	</script>
 {/if}
 
+{if $acao == "gravar_novo_contrato"}
 
 
+<table border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<td align="center">Produto Cadastrado com Sucesso</td>
+		</tr>
+		<tr>
+				<td align="center"><a href="" class="lista">Impressão do Contrato</a></td>
+		</tr>
+		{ if $gera_carne }
+		<tr>
+				<td align="center"><a href="" class="lista">Impressão do Carnê</a></td>
+		</tr>
+		{/if}
+</table>
 
+{/if}
 
 
 {if $acao == "novo_contrato"}
 	<!-- CONFIRMAÇÃO DO CONTRATO -->
 	<input type="hidden" name="acao" value="gravar_novo_contrato">
-	
+
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
 			<th colspan=4>Contratante - Cobran&ccedil;a</th>
@@ -1019,21 +1034,21 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Endereço:</strong></td>
 			<td>{$endereco_cobranca}&nbsp;</td>
 			<input type=hidden name="endereco_cobranca" value="{$endereco_cobranca}" >
-			
+
 			<td width="110" align="right"><strong>Complemento:</strong></td>
 			<td>{$complemento_cobranca}&nbsp;</td>
       <input type=hidden name="complemento_cobranca" value="{$complemento_cobranca}" >
-      
+
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Bairro:</strong></td>
 			<td>{$bairro_cobranca}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_cobranca}</td>
 			<input type=hidden name="bairro_cobranca" value="{$bairro_cobranca}" ><input type=hidden name="cep_cobranca" value="{$cep_cobranca}" >
-			
+
 			<td width="110" align="right"><strong>Cidade:</strong></td>
 			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
 			<input type=hidden name="id_cidade_cobranca" value="{$cidade_cobranca.id_cidade}" >
-			
+
 		</tr>
 	</table>
 
@@ -1047,11 +1062,11 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Endereço:</strong></td>
 			<td>{$endereco_instalacao}&nbsp;</td>
       <input type=hidden name="endereco_instalacao" value="{$endereco_instalacao}" >
-      
+
 			<td width="110" align="right"><strong>Complemento:</strong></td>
 			<td>{$complemento_instalacao}&nbsp;</td>
 			<input type=hidden name="complemento_instalacao" value="{$complemento_instalacao}" >
-			
+
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Bairro:</strong></td>
@@ -1061,7 +1076,7 @@ function validarData(campo){
       <td width="110" align="right"><strong>Cidade:</strong></td>
 			<td>{$cidade_instalacao.cidade}-{$cidade_instalacao.uf}&nbsp;</td>
 			<input type=hidden name="id_cidade_instalacao" value="{$cidade_instalacao.id_cidade}" >
-			
+
 		</tr>
 	</table>
 	{/if}
@@ -1074,7 +1089,7 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Tipo:</strong></td>
       <input type=hidden name="tipo" value="{$tipo}" >
       <input type=hidden name="id_produto" value="{$produto.id_produto}" >
-      
+
 			<td>{if $tipo == "BL"}BANDA LARGA{/if}{if $tipo == "D"}DISCADO{/if}{if $tipo == "H"}HOSPEDAGEM{/if}</td>
 			<td width="110" align="right"><strong>Produto:</strong></td>
 			<td>{$produto.nome}&nbsp;</td>
@@ -1086,11 +1101,11 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Comodato:</strong></td>
 			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
 			<input type=hidden name="valor_comodato" value="{$valor_comodato}" >
-			
+
 			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
 			<td>{$tx_instalacao|string_format:"%.2f"}</td>
 			<input type=hidden name="tx_instalacao" value="{$tx_instalacao}" >
-			
+
 			<td width="110" align="right"><strong></strong></td>
 			<td></td>
 
@@ -1099,29 +1114,29 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Desconto:</strong></td>
 			<td>{$desconto_promo|string_format:"%.2f"}&nbsp;</td>
 			<input type=hidden name="desconto_promo" value="{$desconto_promo}" >
-			
+
 			<td width="110" align="right"><strong>Período Desconto:</strong></td>
 			<td>{$periodo_desconto} meses</td>
 			<input type=hidden name="periodo_desconto" value="{$periodo_desconto}" >
-			
+
 			<td width="110" align="right"><strong>Data Contratação:</strong></td>
 			<td>{$data_contratacao}</td>
 			<input type=hidden name="data_contratacao" value="{$data_contratacao}" >
-			
+
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
 			<td>{$dia_vencimento}&nbsp;</td>
 			<input type=hidden name="dia_vencimento" value="{$dia_vencimento}" >
-			
+
 			<td width="110" align="right"><strong>Vigência:</strong></td>
 			<td>{$vigencia} meses</td>
 			<input type=hidden name="vigencia" value="{$vigencia}" >
-			
+
 			<td width="110" align="right"><strong>Carência:</strong></td>
 			<td>{$carencia} dias</td>
 			<input type=hidden name="carencia" value="{$carencia}" >
-			
+
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Pagamento:</strong></td>
@@ -1159,11 +1174,11 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Agencia:</strong></td>
 			<td>{$agencia}</td>
       <input type=hidden name="da_agencia" value="{$agencia}" >
-      
+
 			<td width="110" align="right"><strong>Conta:</strong></td>
 			<td>{$conta}</td>
 			<input type=hidden name="da_conta" value="{$conta}" >
-			
+
 		</tr>
 		{/if}
 		{/if}
@@ -1180,11 +1195,11 @@ function validarData(campo){
 			<td>{$username}</td>
 			<input type=hidden name="username" value="{$username}" >
 			<input type=hidden name="senha" value="{$senha}" >
-			
+
 			<td width="110" align="right"><strong>Criar e-mail:</strong></td>
 			<td>{if $criar_email == "t"}{$username}@{$preferenciasGerais.dominio_padrao}{else}NÃO{/if}</td>
 			<input type=hidden name="criar_email" value="{$criar_email}" >
-			
+
 		</tr>
 		{if $tipo == "BL"}
 		<tr>
@@ -1198,21 +1213,21 @@ function validarData(campo){
 			<td width="110" align="right"><strong>NAS:</strong></td>
 			<td>{$nas.nome} ({$tiposNAS[$nas.tipo_nas]})</td>
 			<input type=hidden name="id_nas" value="{$nas.id_nas}" >
-			
+
 			<td width="110" align="right"><strong>POP:</strong></td>
 			<td>{$pop.nome}</td>
 			<input type=hidden name="id_pop" value="{$pop.id_pop}" >
-			
+
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Rede/IP:</strong></td>
 			<td>{if $selecao_redeip=="A"}Automática{else}{$endereco_redeip}{/if}</td>
 			<input type=hidden name="selecao_redeip" value="{$selecao_redeip}" >
-			
+
 			<td width="110" align="right"><strong>MAC:</strong></td>
 			<td>{if $mac}{$mac}{else}Não Informado{/if}</td>
 			<input type=hidden name="mac" value="{$mac}" >
-			
+
 		</tr>
 		{/if}
 
@@ -1221,7 +1236,7 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Fone:</strong></td>
 			<td colspan=4>{$foneinfo}</td>
 			<input type=hidden name="foneinfo" value="{$foneinfo}" >
-			
+
 		</tr>
 		{/if}
 
@@ -1230,11 +1245,11 @@ function validarData(campo){
 			<td width="110" align="right"><strong>Tipo:</strong></td>
 			<td >{if $tipo_hospedagem == "D"}Dom&iacute;nio do Usu&aacute;rio{else}www.{$preferenciasGerais.dominio_padrao}/usuario/username{/if}</td>
       <input type=hidden name="tipo_hospedagem" value="{$tipo_hospedagem}" >
-      
+
       <td width="110" align="right"><strong>Criar Dominio:</strong></td>
 			<td>www.{$dominio}</td>
 			<input type=hidden name="dominio" value="{$dominio}" >
-			
+
 		</tr>
 		{/if}
 
@@ -1271,9 +1286,9 @@ function validarData(campo){
 		</tr>
 		{/foreach}
 	</table>
-	
+
 	<table border=0 align=center >
-	
+
   	<tr colspan=2 valign="top">
   		<td style="border-top: dotted 1px #000000" colspan=2 align="center">
   			<input type="button" name="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" value="Gravar Contrato" class="botao">
@@ -1281,7 +1296,7 @@ function validarData(campo){
   	</tr>
 
   </table>
-  
+
 {/if}
 
 </form>

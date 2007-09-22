@@ -17,7 +17,7 @@
 
 		protected static $moeda = 9;
 		
-		
+			
 		public function __construct() {
 			parent::__construct();
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
@@ -209,7 +209,7 @@
 		
 		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
-                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta) {
+                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, &$gera_carne = false) {
 			
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_de_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
