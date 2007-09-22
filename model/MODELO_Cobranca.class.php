@@ -10,6 +10,7 @@
 	class MODELO_Cobranca extends VirtexModelo {
 		protected $cbtb_cliente_produto;
 		protected $cbtb_contrato;
+		protected $cbtb_carne;
 		
 		protected $preferencias;
 
@@ -21,6 +22,7 @@
 			$this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
 
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
+			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
 
 			$this->preferencias = VirtexModelo::factory("preferencias");
 
@@ -204,7 +206,10 @@
 		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
                           $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta) {
-		
+			
+			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_de_pagamento);
+			
+			
       $comodato = $valor_comodato ? true : false;
       
       $dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
@@ -251,9 +256,28 @@
 
       echo "argh";
       $id_cobranca = 0;
-      foreach( $todas_faturas as $fatura ) {
+      
+  
 
-        $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"]);
+      // gera carne
+      if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
+      	$soma_fatura = 0;
+      	foreach ($todas_faturas as $fatura)
+      		$soma_fatura += $fatura ["valor"];
+      	      
+   	$dados = array (
+   		'data_geracao' => $data_contratacao,
+   		'id_cliente_produto' => $id_cliente_produto,
+   		'valor' => $soma_fatura,
+   		'vigencia' => count ($todas_faturas),
+   		'id_cliente' => $id_cliente,   	
+   	);   
+      
+      	$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
+      }
+      
+      foreach( $todas_faturas as $fatura ) {
+        $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"], $id_cbtb_carne);
       }
       /*
       echo "<pre>";
