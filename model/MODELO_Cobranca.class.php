@@ -15,6 +15,8 @@
 		
 		protected $preferencias;
 
+		protected static $moeda = 9;
+		
 		
 		public function __construct() {
 			parent::__construct();
@@ -211,7 +213,7 @@
 			
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_de_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
-			
+				
       $comodato = $valor_comodato ? true : false;
       
       $dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
@@ -256,15 +258,12 @@
       
       $todas_faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
 
-//      echo "argh";
+      echo "argh";
       $id_cobranca = 0;
-      
-  
-
 	
       // gera carne
-      $nosso_numero = "";
       if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
+      	$gera_carne = true;
       	$soma_fatura = 0;
       	foreach ($todas_faturas as $fatura)
       		$soma_fatura += $fatura ["valor"];
@@ -278,18 +277,32 @@
    	);   
       
       	$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
-      	
-      	$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_de_pagamento);
       }
-               
+      
       foreach( $todas_faturas as $fatura ) {
        	$cod_barra = "";
        	$linha_digitavel = "";
-       	if ($nosso_numero > 0 && $id_forma_de_pagamento == '1') {
-        	$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
-        	var_dump ($cod_barra);
-        	$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barras);    	
-        }
+       	$nosso_numero = "";
+       	
+       	if ($gera_carne) {
+     		// gera codigo de barras
+     		$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_de_pagamento);
+       		
+       		switch ($formaPagto ["tipo_cobranca"]) {
+       			case "PC":
+	       			$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
+		        	$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);    	
+       		        	break;
+       			
+       			case "BL":
+       				$boleto = MBoleto::factory ($formaPagto["codigo_banco"],$formaPagto["agencia"],$formaPagto["conta"],$formaPagto["carteira"],$formaPagto["convenio"],$fatura['data'],$fatura ['valor'],$nosso_numero,self::$moeda,$formaPagto ['cnpj_ag_cedente'],$formaPagto ['codigo_cedente'],$formaPagto ['operacao_cedente']);
+     				     				
+     				$cod_barra = $boleto->obtemCodigoBoleto ();
+     				$linha_digitavel = $boleto->obtemLinhaDigitavel();	
+          			break;
+     		}
+      	
+       	}
         
         $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
       }
