@@ -11,6 +11,7 @@
 		protected $cbtb_cliente_produto;
 		protected $cbtb_contrato;
 		protected $cbtb_carne;
+		protected $pftb_forma_pagamento;
 		
 		protected $preferencias;
 
@@ -24,6 +25,7 @@
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
 			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
 
+			$this->pftb_forma_pagamento = VirtexPersiste::factory("pftb_forma_pagamento");
 			$this->preferencias = VirtexModelo::factory("preferencias");
 
 		}
@@ -208,7 +210,7 @@
                           $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta) {
 			
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_de_pagamento);
-			
+			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
 			
       $comodato = $valor_comodato ? true : false;
       
@@ -254,12 +256,14 @@
       
       $todas_faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
 
-      echo "argh";
+//      echo "argh";
       $id_cobranca = 0;
       
   
 
+	
       // gera carne
+      $nosso_numero = "";
       if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
       	$soma_fatura = 0;
       	foreach ($todas_faturas as $fatura)
@@ -274,10 +278,20 @@
    	);   
       
       	$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
+      	
+      	$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_de_pagamento);
       }
-      
+               
       foreach( $todas_faturas as $fatura ) {
-        $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"], $id_cbtb_carne);
+       	$cod_barra = "";
+       	$linha_digitavel = "";
+       	if ($nosso_numero > 0 && $id_forma_de_pagamento == '1') {
+        	$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
+        	var_dump ($cod_barra);
+        	$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barras);    	
+        }
+        
+        $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
       }
       /*
       echo "<pre>";

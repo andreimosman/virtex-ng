@@ -34,7 +34,7 @@
 		 */
 		public function obtemProximoNumeroSequencial($id_forma_pagamento) {
 			$sql = "SELECT nossonumero_atual,nossonumero_final,nossonumero_inicial FROM pftb_forma_pagamento WHERE id_forma_pagamento = '".$this->bd->escape($id_forma_pagamento)."' FOR UPDATE";
-			$info = $this->bd->obtemUnico($sql);
+			$info = $this->bd->obtemUnicoRegistro($sql);
 			
 			$inicial = (int)$info["nossonumero_inicial"];
 			$final = (int)$info["nossonumero_final"];
@@ -52,7 +52,7 @@
 			if( $proximo == $final ) {
 				// Esse foi o último número gerado, travar o registro para ninguém usar.
 				$sql = "UPDATE pftb_forma_pagamento SET disponivel = 'f',nossonumero_atual = '".$this->bd->escape($proximo)."' WHERE id_forma_pagamento = '".$this->bd->escape($id_forma_pagamento)."'";
-				$this->bd->executa($sql);
+				$this->bd->consulta($sql);
 			}
 			
 			if( $proximo > $final ) {
@@ -61,7 +61,7 @@
 			}
 			
 			$sql = "UPDATE pftb_forma_pagamento SET nossonumero_atual = '".$this->bd->escape($proximo)."' WHERE id_forma_pagamento = '".$this->bd->escape($id_forma_pagamento)."'";
-			$this->bd->executa($sql);
+			$this->bd->consulta($sql);
 			
 			return($proximo);
 			
