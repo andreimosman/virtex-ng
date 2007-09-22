@@ -18,11 +18,11 @@
 			parent::__construct();
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
-      $this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
-      $this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
-      $this->cntb_conta = VirtexPersiste::factory("cntb_conta");
-      
-      $this->preferencias = VirtexModelo::factory("preferencias");
+			$this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
+
+			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
+
+			$this->preferencias = VirtexModelo::factory("preferencias");
 
 		}
 		
@@ -79,9 +79,9 @@
 				// $data = MData::proximoDia($dia_vencimento,$data_contratacao);
 				// Pagamento pós pago
 
-        $composicao = array();
+        		$composicao = array();
 
-        if( $tx_instalacao ) {
+        		if( $tx_instalacao ) {
 					// Gerar fatura 0 com a taxa de instalaçao
 					$composicao["instalacao"] = $tx_instalacao;
 					$faturas[] = array("data"=>$data_contratacao,"valor" => $tx_instalacao,"composicao"=>$composicao);
@@ -95,7 +95,7 @@
 				$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
 
 				
-        if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
+        		if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
 					// Pró-rata aplicável.
 					$prorata_plano = $prorata["prorata_plano"];
 					$prorata_comodato = $prorata["prorata_comodato"];
@@ -113,7 +113,7 @@
 					$composicao["comodato"] = $valor_comodato;
 				}
 
-        if( $tx_instalacao ) {
+        		if( $tx_instalacao ) {
 					$valor_fatura += $tx_instalacao;
 					$composicao["instalacao"] = $tx_instalacao;
 				}
@@ -128,15 +128,15 @@
 				
 				$faturas[] = array("data"=>$data_contratacao,"valor" => $valor_fatura,"composicao" => $composicao);
 
-        $valor_fatura = $valor+$valor_comodata;
-        $composicao["prorata_plano"] = '';
+				$valor_fatura = $valor+$valor_comodata;
+				$composicao["prorata_plano"] = '';
 				$composicao["prorata_comodato"] = '';
 				$composicao["dias_prorata"] = '';
-        $composicao["valor"] = $valor;
+				$composicao["valor"] = $valor;
 				$composicao["comodato"] = $valor_comodato;
 				$composicao["instalacao"] = '';
 
-        if( $desconto_valor && $desconto_periodo > 0 ) {
+				if( $desconto_valor && $desconto_periodo > 0 ) {
 					$valor_fatura -= $desconto_valor;
 					$descontos_aplicados++;
 					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
@@ -153,13 +153,13 @@
 				if( $pagamento == "POS" && $meses_cobrados == 1 ) {
 					// Primeiro vencimento de pós-pago. Calcular pró-rata.
 					$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
-          if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
+					if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
 						// Pró-rata aplicável.
 						$prorata_plano = $prorata["prorata_plano"];
 						$prorata_comodato = $prorata["prorata_comodato"];
 						$dias_prorata = $prorata["dias_prorata"];
 
-            $data = $data_primeiro_vencimento;
+						$data = $data_primeiro_vencimento;
             
 						$composicao["prorata_plano"] = $prorata_plano;
 						$composicao["prorata_comodato"] = $prorata_comodato;
@@ -274,21 +274,23 @@
       $obs = "";
       $conta_mestre = "t";
       
+      $contas = VirtexModelo::factory("contas");
+      
       switch($dados_produto["tipo"]) {
       
         case 'BL':
-          $id_conta = $this->cntb_conta->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+          $id_conta = $contas->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
                                                                  $conta_mestre, $dados_conta["id_pop"], $dados_conta["id_nas"], $dados_produto["banda_upload_kbps"], $dados_produto["banda_download_kbps"],
                                                                  $dados_conta["mac"], $dados_conta["endereco"]);
           break;
           
         case 'D':
-          $id_conta = $this->cntb_conta->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+          $id_conta = $contas->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
                                                                  $conta_mestre, $dados_conta["foneinfo"]);
           break;
           
         case 'H':
-          $id_conta = $this->cntb_conta->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+          $id_conta = $contas->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
                                                                  $conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
           break;
      }
@@ -297,7 +299,7 @@
 
 											
      if ( $cria_conta ) {
-       $this->cntb_conta->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+       $contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
                                                                  $conta_mestre, $dados_produto["quota_por_conta"]);
      }
 

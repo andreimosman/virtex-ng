@@ -195,7 +195,7 @@
 			
 			// Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool
 			if( $status == "A" && ($nas["tipo_nas"] == "I" || ($nas["tipo_nas"] == "P" && $nas["padrao"] == "O")) ) {
-				$this->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao)
+				$this->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao);
 			}
 			
 			return($id_conta);
