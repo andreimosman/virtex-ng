@@ -150,13 +150,13 @@
 										$id_pop,$id_nas,$upload,$download,$mac,$endereco) {
 			
 			$nas = $this->equipamentos->obtemNAS($id_nas);
-
 			$senhaCript = MCript::criptSenha($senha);
 			
 			// Dados comuns
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
+							"tipo_conta"				=> 'BL',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
@@ -212,6 +212,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
+							"tipo_conta"				=> 'D',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
@@ -239,6 +240,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
+							"tipo_conta"				=> 'B',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
@@ -289,6 +291,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio_padrao,
+							"tipo_conta"				=> 'E',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
