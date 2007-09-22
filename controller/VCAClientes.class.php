@@ -452,10 +452,28 @@
               print_r($dados_produto);
               echo "</pre>";
               */
+              
+              switch ($_REQUEST["tipo"]) {
+              
+                case "BL":
+                  $ip = @$_REQUEST["endereco_redeip"] ? $_REQUEST["endereco_redeip"] : "";
+                  $dados_conta = array( "id_nas"=>$_REQUEST["id_nas"], "id_pop"=>$_REQUEST["id_pop"], "endereco"=>$ip, "mac"=>$_REQUEST["mac"] );
+                  break;
+                case "D":
+                  $dados_conta = array( "foneinfo"=>$_REQUEST["foneinfo"] );
+                  break;
+                case "H";
+                  $dados_conta = array( "tipo_hospedagem"=>$_REQUEST["tipo_hospedagem"], "dominio"=>$_REQUEST["dominio"] );
+                  break;
+                
+              }
+              
+              $cria_e = @$_REQUEST["criar_email"] ? 1 : 0;
+              
               $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
-                                      $data_renovacao, $valor_contrato, $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
+                                      $data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
                                       $_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $_REQUEST["carencia"],
-                                      $_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $dados_produto, $endereco_cobranca, $endereco_instalacao);
+                                      $_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $cria_e, $pro_dados, $da_dados, $bl_dados, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta);
 
 						}
 

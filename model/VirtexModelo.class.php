@@ -51,9 +51,11 @@
 
 				}
 				
-				return(self::$modelosInstanciados[$modelo]);
+
 
 			}
+			
+			return(self::$modelosInstanciados[$modelo]);
 			
 		}
 		

@@ -11,12 +11,19 @@
 		protected $cbtb_cliente_produto;
 		protected $cbtb_contrato;
 		
+		protected $preferencias;
+
+		
 		public function __construct() {
 			parent::__construct();
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
       $this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
-      $this->cntb_endereco_instalacao = VirtexPersiste::factory("cntb_endereco_instalacao");
+      $this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
+      $this->cntb_conta = VirtexPersiste::factory("cntb_conta");
+      
+      $this->preferencias = VirtexModelo::factory("preferencias");
+
 		}
 		
 		
@@ -194,9 +201,9 @@
 		}
 		
 		
-		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato,
+		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
-                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $dados_produto, $endereco_cobranca, $endereco_instalacao) {
+                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta) {
 		
       $comodato = $valor_comodato ? true : false;
       
@@ -237,17 +244,65 @@
       print_r($dados_produto);
       echo "</pre>";
       */
-
-      //$faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
-
-      //echo "<pre>";
-      //print_r($faturas);
-      //echo "</pre>";
-
-
-
       $this->cbtb_contrato->insere($dados);
       
+      
+      $todas_faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
+
+      echo "argh";
+      $id_cobranca = 0;
+      foreach( $todas_faturas as $fatura ) {
+
+        $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"]);
+      }
+      /*
+      echo "<pre>";
+      print_r($faturas);
+      echo "</pre>";
+      */
+
+
+      //$preferencias = VirtexModelo::factory('preferencias');
+      //echo "<pre>";
+      //print_r($this->preferencias);
+      //echo "</pre>";
+      
+  		$prefGeral = $this->preferencias->obtemPreferenciasGerais();
+      $dominio_padrao = $prefGeral["dominio_padrao"];
+
+      $status_conta = "A";
+      $obs = "";
+      $conta_mestre = "t";
+      
+      switch($dados_produto["tipo"]) {
+      
+        case 'BL':
+          $id_conta = $this->cntb_conta->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+                                                                 $conta_mestre, $dados_conta["id_pop"], $dados_conta["id_nas"], $dados_produto["banda_upload_kbps"], $dados_produto["banda_download_kbps"],
+                                                                 $dados_conta["mac"], $dados_conta["endereco"]);
+          break;
+          
+        case 'D':
+          $id_conta = $this->cntb_conta->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+                                                                 $conta_mestre, $dados_conta["foneinfo"]);
+          break;
+          
+        case 'H':
+          $id_conta = $this->cntb_conta->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+                                                                 $conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
+          break;
+     }
+     
+
+
+											
+     if ( $cria_conta ) {
+       $this->cntb_conta->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+                                                                 $conta_mestre, $dados_produto["quota_por_conta"]);
+     }
+
+     //PAREI AQUI
+     
       //grava endereco de cobranca
       $dados = $endereco_cobranca;
       $dados["id_cliente"] = $id_cliente;
@@ -256,26 +311,34 @@
       $this->cbtb_endereco_cobranca->insere($dados);
 
 
-      if ( trim($dados_produto["tipo"]) != "H" ) {
-        //grava endereco de instalacao
-        $dados = $endereco_instalacao;
-        $id_conta = 0;
-        $dados["id_conta"] = $id_conta; //pega id_conta criado
-        $dados["id_cliente"] = $id_cliente;
-        $dados["id_cliente_produto"] = $id_cliente_produto;
-
-        $this->cntb_endereco_instalacao->insere($dados);
-      }
-      
       
 		}
-    /*
-    protected function cadastraFatura($id_cliente_produto, $data, $descricao, $valor, $status, $observacoes, $reagendamento, $pagto_parcial,
-                                      $data_pagamento, $desconto, $acrescimo, $valor_pago, $id_cobranca, $cod_barra, $anterior, $id_carne, $nosso_numero,
-                                      $linha_dgitavel, $nosso_numero_banco, $tipo_retorno, $email_aviso, $id_forma_pagamento) {
-    
+
+
+    protected function cadastraFatura($id_cliente_produto, $id_cobranca, $data, $valor, $id_forma_pagamento, $descricao = "",
+                                      $id_carne = 0, $nosso_numero = "", $linha_digitavel = "", $cod_barra = "") {
+
+      $dados = array("id_cliente_produto"=>$id_cliente_produto, "data"=>$data, "valor"=>$valor, "status"=>"A", "id_forma_pagamento"=>$id_forma_pagamento);
+
+      if ( $descricao )
+        $dados["descricao"] = $descricao;
+        
+      if ( $id_carne )
+        $dados["id_carne"] = $id_carne;
+
+      if ( $nosso_numero )
+        $dados["nosso_numero"] = $nosso_numero;
+
+      if ( $linha_digitavel )
+        $dados["linha_digitavel"] = $linha_digitavel;
+        
+      if ( $cod_barra )
+        $dados["cod_barra"] = $cod_barra;
+
+        
+      $this->cbtb_fatura->insere($dados);
     }
-    */
+
 	
 	}
 
