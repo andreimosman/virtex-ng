@@ -104,7 +104,7 @@
 				$endereco = $this->cftb_ip->obtemEnderecoDisponivel($id_nas);
 			} else if($info["tipo_nas"] == "I") {
 				// TCP/IP, pegar em cftb_rede.
-				$endereco = $this->cftb_rede-obtemEnderecoDisponivel($id_nas);
+				$endereco = $this->cftb_rede->obtemEnderecoDisponivel($id_nas);
 			}
 			
 			return($endereco);

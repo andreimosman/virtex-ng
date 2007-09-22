@@ -51,14 +51,14 @@
 		 *
 		 */
 		public function adicionaRedeInfraestrutura($id_nas,$id_rede,$rede) {
-			return($this->insereInstrucaoAdicao($id_nas,$self::$INFRAESTRUTURA,$id_rede,$rede));
+			return($this->insereInstrucaoAdicao($id_nas,self::$INFRAESTRUTURA,$id_rede,$rede));
 		}
 		
 		/**
 		 * Adiciona uma instrução de remoção de rede de infraestrutura.
 		 */
 		public function removeRedeInfraestrutura($id_nas,$id_rede,$rede) {
-			return($this->insereInstrucaoRemocao($id_nas,$self::$INFRAESTRUTURA,$id_rede,$rede));
+			return($this->insereInstrucaoRemocao($id_nas,self::$INFRAESTRUTURA,$id_rede,$rede));
 		}
 		
 		/**
@@ -67,7 +67,7 @@
 		 */
 		public function adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao="") {
 			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$endereco,$mac,$padrao,$upload,$download));
-			return($this->insereInstrucaoAdicao($id_nas,$self::$BANDA_LARGA,$id_conta,$parametros));
+			return($this->insereInstrucaoAdicao($id_nas,self::$BANDA_LARGA,$id_conta,$parametros));
 		}
 		
 		/**
@@ -83,16 +83,16 @@
 		 * Adiciona uma instrução de configuração de e-mail.
 		 */
 		public function adicionaContaEmail($servidor_email,$id_conta,$username,$dominio) {
-			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$dominio);
-			return($this->insereInstrucaoAdicao($servidor_email,$self::$EMAIL,$id_conta,$parametros));
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$dominio));
+			return($this->insereInstrucaoAdicao($servidor_email,self::$EMAIL,$id_conta,$parametros));
 		}
 		
 		/**
 		 * Adiciona uma instrução de remoção de conta de e-mail.
 		 */
 		public function removeContaEmail($servidor_email,$id_conta,$username,$dominio) {
-			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$dominio);
-			return($this->insereInstrucaoRemocao($servidor_email,$self::$EMAIL,$id_conta,$parametros));
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$dominio));
+			return($this->insereInstrucaoRemocao($servidor_email,self::$EMAIL,$id_conta,$parametros));
 		}
 		
 		/**
@@ -124,7 +124,7 @@
 				$parametros = implode(self::$SEPARADOR_PARAMETROS,array($tipo_hospedagem,$username));
 			}
 			
-			return($this->insereInstrucaoAdicao($servidor_hospedagem,$self::$HOSPEDAGEM,$id_conta,$parametros));
+			return($this->insereInstrucaoAdicao($servidor_hospedagem,self::$HOSPEDAGEM,$id_conta,$parametros));
 
 		}
 		
@@ -150,7 +150,7 @@
 				$parametros = implode(self::$SEPARADOR_PARAMETROS,array($tipo_hospedagem,$username));			
 			}
 			
-			return($this->insereInstrucaoRemocao($servidor_hospedagem,$self::$HOSPEDAGEM,$id_conta,$parametros));
+			return($this->insereInstrucaoRemocao($servidor_hospedagem,self::$HOSPEDAGEM,$id_conta,$parametros));
 		}
 		
 		/**
@@ -158,7 +158,7 @@
 		 */
 		public function adicionaDNSPrimario($servidor_dns,$id_conta,$dominio) {
 			$parametros = $dominio;
-			return($this->insereInstrucaoAdicao($servidor_dns,$self::$DNS_PRIMARIO,$id_conta,$parametros));
+			return($this->insereInstrucaoAdicao($servidor_dns,self::$DNS_PRIMARIO,$id_conta,$parametros));
 		}
 		
 		/**
@@ -166,7 +166,7 @@
 		 */
 		public function removeDNSPrimario($servidor_dns,$id_conta,$dominio) {
 			$parametros = $dominio;
-			return($this->insereInstrucaoRemocao($servidor_dns,$self::$DNS_PRIMARIO,$id_conta,$parametros));
+			return($this->insereInstrucaoRemocao($servidor_dns,self::$DNS_PRIMARIO,$id_conta,$parametros));
 		}
 		
 		/**
@@ -174,7 +174,7 @@
 		 */
 		public function adicionaDNSSecundario($servidor_dns,$id_conta,$dominio,$master) {
 			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($dominio,$master));
-			return($this->insereInstrucaoAdicao($servidor_dns,$self::$DNS_SECUNDARIO,$id_conta,$parametros));
+			return($this->insereInstrucaoAdicao($servidor_dns,self::$DNS_SECUNDARIO,$id_conta,$parametros));
 		}
 		
 		/**
@@ -182,7 +182,7 @@
 		 */
 		public function removeDNSSecundario($servidor_dns,$id_conta,$dominio) {
 			$parametros = $dominio;
-			return($this->insereInstrucaoRemocao($servidor_dns,$self::$DNS_SECUNDARIO,$id_conta,$parametros));
+			return($this->insereInstrucaoRemocao($servidor_dns,self::$DNS_SECUNDARIO,$id_conta,$parametros));
 		}
 
 		/**
@@ -239,7 +239,7 @@
 		 * Decompõe os parametros em uma matriz associativa.
 		 * (este processo joga a responsabilidade da interpretação dos parametros p/ a spool ao invés da aplicação).
 		 */
-		protected function $this->decompoeParametros($tipo,$op,$parametros) {
+		protected function decompoeParametros($tipo,$op,$parametros) {
 			$param = explode(self::$SEPARADOR_PARAMETROS,$parametros);
 			$retorno = array();
 			
@@ -252,7 +252,7 @@
 					$retorno["username"] 		= @$param[0];
 					$retorno["endereco"] 		= @$param[1];
 					$retorno["mac"] 			= @$param[2];
-					$retorno["padrao"]			= @$param[3]
+					$retorno["padrao"]			= @$param[3];
 					
 					if( $op == self::$ADICIONAR ) {
 						$retorno["upload"]		= @$param[4];

@@ -180,7 +180,7 @@
 			
 			// Verificar o tipo do nas.
 			
-			$endereco = $endereco ? $endereco : $equipamentos->obtemEnderecoDisponivelNAS($id_nas);
+			$endereco = $endereco ? $endereco : $this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
 			
 			if( $nas["tipo_nas"] == "I" ) {
 				// Tipo NAS TCP/IP (pegar o ipaddr)
@@ -195,7 +195,7 @@
 			
 			// Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool
 			if( $status == "A" && ($nas["tipo_nas"] == "I" || ($nas["tipo_nas"] == "P" && $nas["padrao"] == "O")) ) {
-				$this->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao);
+				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao);
 			}
 			
 			return($id_conta);
