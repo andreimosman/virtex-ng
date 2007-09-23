@@ -449,12 +449,31 @@
 					break;
 				case 'registro':
 					$this->executaPreferenciasRegistro();
+					break;
+				case 'resumo':
+					$this->executaPreferenciasResumo();
 					break;	
 				default:
 					// Do Something
 					break;
 				
 			}
+		}
+		
+		protected function executaPreferenciasResumo() {
+			$acao = @$_REQUEST["acao"];
+			
+			$subtela = @$_REQUEST["subtela"];
+			$this->_view->atribui("subtela",$subtela);
+			
+			$geral = $this->preferencias->obtemPreferenciasGerais();
+			$this->_view->atribui("geral",$geral);
+			
+			$provedor = $this->preferencias->obtemPreferenciasProvedor();
+			$this->_view->atribui("provedor",$provedor);
+			
+
+			$url = "admin-configuracoes.php?op=preferencias&tela=resumo";
 		}
 		
 		protected function executaPreferenciasRegistro() {

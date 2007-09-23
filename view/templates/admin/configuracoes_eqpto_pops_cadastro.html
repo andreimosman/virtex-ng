@@ -135,7 +135,7 @@ label {
 </script>
 {/literal}
 
-
+<center>
 <form method="post" name="formulario" id="formulario" action="admin-configuracoes.php" onsubmit="return popValidaForm();">
 <input type="hidden" name="op" value="{$op}">
 <input type="hidden" name="tela" value="{$tela}">
@@ -258,6 +258,7 @@ label {
 	<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao">
 </div>	
 </form>
+</center>
 <script language="JavaScript">
 	habilita_monitor();	
 	preenchePopAp();

@@ -233,7 +233,11 @@
 				case 'registro':
 					$this->_file = "configuracoes_preferencias_registro.html";
 					$titulo .= " :: Registro";
-					break;	
+					break;
+				case 'resumo':
+					$this->_file = "configuracoes_preferencias_resumo.html";
+					$titulo .= " :: Resumo";
+					break;		
 			}
 			
 			$this->atribui("titulo",$titulo);
