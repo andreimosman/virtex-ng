@@ -10,8 +10,11 @@
 		protected $_config;
 
 		protected $_startdb;
+		
+		protected $licenca;
 	
 		protected function __construct() {
+			$this->licenca		= new VirtexLicenca();
 			$this->_config		= "etc/virtex.ini";
 			$this->_startdb 	= true;
 			$this->selfConfig();

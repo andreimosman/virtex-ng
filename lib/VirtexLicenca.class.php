@@ -13,11 +13,6 @@
 			parent::__construct("etc/virtex.lic",VA_SALT);
 		}
 		
-		public function verificaExpiracao($campo) {
-		
-		}
-		
-
 		protected function verificaExpiracao($campo) {
 			/**
 			 * Se a licença não for valida ou não tiver a informação da expiração retorna que expirou.
