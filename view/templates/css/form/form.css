@@ -49,3 +49,63 @@ form option {
 	color: #FF0000;
 }
 */
+
+.register_box {
+	width:500px; 
+	margin: auto; 
+	padding: 0px;
+	/*background-color: #E6ECE9;*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+.register_header {
+	font-size: 14px;
+	text-align: center;
+}
+
+.codtable{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	
+}
+
+.hintcod {
+	font-size: 9px;
+}
+
+.cellLabel {
+	background-color: #E6ECE9;
+	color: #006600;
+	text-align: right;
+	padding-right: 10px;
+	font-weight: bold;
+}
+
+.cellInfo {
+	padding-right: 10px;
+	padding-left: 10px;
+	text-align: left;
+}
+
+.cellTitle{
+	color: #006600;
+	background-color: #E6ECE9;
+}
+
+.cellModL {
+	padding-right: 10px;
+	padding-left: 10px;
+	text-align: left;
+}
+
+.cellModI{
+	text-align: center;
+	width: 16px;
+}
+
+.cellBtn {
+	text-align: right;
+}
+
+

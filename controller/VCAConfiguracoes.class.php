@@ -447,11 +447,79 @@
 				case 'modelos':
 					$this->executaPreferenciasModeloContrato();
 					break;
+				case 'registro':
+					$this->executaPreferenciasRegistro();
+					break;	
 				default:
 					// Do Something
 					break;
 				
 			}
+		}
+		
+		protected function executaPreferenciasRegistro() {
+			$acao = @$_REQUEST["acao"];
+			
+			$subtela = @$_REQUEST["subtela"];
+			$this->_view->atribui("subtela",$subtela);
+
+			$url = "admin-configuracoes.php?op=preferencias&tela=registro";
+			
+			
+			if ($acao == "upload"){
+				$diretorio = "./etc";
+				$nome_aceitavel = "virtex.lic";
+				$file = $_FILES["arquivo_registro"];
+				$arquivo = $diretorio."/".$nome_aceitavel;
+				
+				if(is_uploaded_file($file["tmp_name"]) ){
+					if (file_exists($arquivo)) {							
+						rename($arquivo, $diretorio."/_virtex.lic");
+					}
+					if(move_uploaded_file($file["tmp_name"],$arquivo )){
+						$mensagem = "Arquivo de registro aplicado com sucesso!";
+					} else {
+						$mensagem = "Falha ao tratar o arquivo";
+					}
+				} else {
+					$mensagem = "Falha no upload do arquivo";
+				}
+				
+				
+				$this->_view->atribui("mensagem",$mensagem);
+				$this->_view->atribui("url",$url);
+				$this->_view->atribuiVisualizacao("msgredirect");
+			
+			} else {
+			
+				if($this->licenca->isValid()){
+					$status = "ativo";
+					if($this->licenca->expirou()){
+						$status = "expirado";
+					}elseif ($this->licenca->congelou()){
+						$status = "congelado";
+					}
+					
+					$this->_view->atribui("licenca",$this->licenca->obtemLicenca());
+					$this->_view->atribui("status",$status);
+					$this->_view->atribui("registrado",true);
+					
+					
+				} else {	
+					$this->_view->atribui("registrado",false);
+				}
+				
+				$this->_view->atribui("infoLocalId",$this->licenca->obtemInfoLocalId());
+			}
+	
+			
+			/*if( !$subtela ) {
+				//$modelos = $this->preferencias->obtemListaModelosContrato();
+				//$this->_view->atribui("registros",$modelos);
+			} else if( $subtela == "exibir_registro") {
+				
+			}*/
+			
 		}
 		
 		protected function executaPreferenciasModeloContrato() {

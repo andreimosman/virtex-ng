@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<title></title>
+</head>
+<body topmargin='2' leftmargin='2' bottommargin='2' rightmargin='2' style='margin: auto; padding: 0px;'>
+{include file="configuracoes_header.html"}
+<center>
+<div class='register_box'>
+
+ 	
+{if $registrado}	
+	<table border="0" class='codtable' cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<th colspan='2' class="register_header">Registrado para:</th>
+		</tr>
+        <tr>
+			<td width="33%" class="cellLabel" >Nome Empresa:</td>
+			<td width="67%" class="cellInfo" >{$licenca.empresa.nome}</td>
+        </tr>
+        <tr>
+          <td class="cellLabel">Endereco:</td>
+          <td class="cellInfo">{$licenca.empresa.endereco}</td>
+        </tr>
+        <tr>
+          <td class="cellLabel">Cidade:</td>
+          <td class="cellInfo">{$licenca.empresa.cidade}</td>
+        </tr>
+    </table>
+	<br />
+	<table border="0" class='codtable' cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<th colspan='4' class="register_header">Módulos:</th>
+		</tr>
+        <tr>
+			<th width="50%" colspan='2' class="cellTitle">Frontend</th>
+			<th width="50%" colspan='2' class="cellTitle">Backend</th>
+        </tr>
+        <tr>
+			<td class="cellModL">Discado</td>
+            <td class="cellModI">{if $licenca.frontend.discado}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+			<td class="cellModL">Discado</td>
+            <td class="cellModI">{if $licenca.backend.discado}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+		</tr>
+		<tr>
+			<td class="cellModL">Banda Larga</td>
+			<td class="cellModI">{if $licenca.frontend.banda_larga }<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+			<td class="cellModL">Banda Larga</td>
+            <td class="cellModI">{if $licenca.backend.banda_larga}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+		</tr>
+		<tr>
+			<td class="cellModL">Hospedagem</td>
+			<td class="cellModI">{if $licenca.frontend.hospedagem }<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+			<td class="cellModL">Hospedagem</td>
+            <td class="cellModI">{if $licenca.backend.hospedagem}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+		</tr>
+		<tr>
+			<td class="cellModL">Email</td>
+			<td class="cellModI">{if $licenca.frontend.email}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+			<td class="cellModL">Email</td>
+            <td class="cellModI">{if $licenca.backend.email}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+		</tr>
+		<tr>
+			<td class="cellModL">Interface</td>
+			<td class="cellModI">{if $licenca.frontend.interface == 1}<img src="view/templates/imagens/checksim.gif" alt='checksim' />{else}<img src="view/templates/imagens/checknao.gif" alt='checknao' />{/if}</td>
+			<td colspan='2'>&nbsp;</td>
+		</tr>        
+    </table>
+	<br />
+	<table border="0" class='codtable' cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<th colspan='2' class="register_header">Informa&ccedil;&otilde;es de Registro:{assign var=hoje value=$smarty.now|date_format:"%Y-%m-%d"}</th>
+		</tr>        
+        <tr>
+          <td width="33%" class="cellLabel">Chave:</td>
+          <td width="67%" class="cellInfo">{$licenca.licenca.chave} {$licencaStatus}</td>
+        </tr>
+        <tr>
+          <td class="cellLabel">Gera&ccedil;&atilde;o:</td>
+          <td class="cellInfo">{$licenca.geral.emitida_em|date_format:"%d/%m/%Y"}</td>
+        </tr>
+        <tr>
+          <td class="cellLabel">Expira&ccedil;&atilde;o:</td>
+          <td class="cellInfo">{$licenca.geral.expira_em|date_format:"%d/%m/%Y"}</td>
+        </tr>
+        <tr>
+          <td class="cellLabel">Congelamento:</td>
+          <td class="cellInfo">{$licenca.geral.congela_em|date_format:"%d/%m/%Y"}</td>
+        </tr>
+    </table>
+{else}
+	<table border="0" class='codtable' cellspacing="0" cellpadding="5" width="100%">
+		<tr>
+			<th colspan='2' class="register_header">Produto Não Registrado</th>
+		</tr>
+	</table>
+{/if}	
+<br />
+<table border="0" class='codtable' cellspacing="3" cellpadding="3" width="100%">		
+	<tr>
+		<th colspan='4' class="register_header">Informa&ccedil;&otilde;es de hardware:</th>
+	</tr>
+	<tr> 
+		<th width="60" class="cellTitle">Interface</td>
+		<th width="140" class="cellTitle">MAC</td>
+		<th width="140" class="cellTitle">IP</td>
+		<th class="cellTitle">CÓDIGO</td>
+	</tr>
+	{foreach item=lid from=$infoLocalId} 
+	<tr> 
+		<td>{$lid.interface}</td>
+		<td>{$lid.mac}</td>
+		<td>{$lid.ip}</td>
+		<td><b>{$lid.local_id}</b></td>
+	</tr>
+	{/foreach}
+	<tr>
+		<td colspan='4' class="hintcod">* Para solicitar {if $registrado}um novo{else}o{/if} registro é necessário informar somente um dos códigos da tabela acima.</td>
+	</tr>	
+		<td colspan='4' class="hintcod">** Escolha o par adaptador/ip com menor probabilidade de alteração. Quaisquer alterações nas configurações de rede ou troca de placa poderá invalidar a licença.</td>
+	</tr>	
+</table>
+<br />
+<form name="form1" method="post" action="{$smarty.server.PHP_SELF}" enctype="multipart/form-data"> 
+<table border="0" class='codtable' cellspacing="3" cellpadding="3" width="100%">		
+	<tr>
+		<th colspan='3' class="register_header">Arquivo de Licen&ccedil;a</th>
+	</tr>
+	<tr>
+		<td class="cellLabel" nowrap>Encontre o arquivo:</td>
+        <td class="cellInfo"><input name="arquivo_registro" type="file" id="arquivo_registro" size="35" /></td>
+	</tr>
+	<tr>		
+		<td colspan='2' class='cellBtn'>
+			<input type="submit" name="Submit" value="atualizar"  /> 
+			<input name="op" type="hidden" id="op" value="preferencias" /> 
+			<input name="tela" type="hidden" id="op" value="registro" /> 					
+			<input name="acao" type="hidden" id="acao" value="upload" /> 
+		</td>
+	</tr>
+	</tr>	
+		<td colspan='4' class="hintcod">*** Se voc&ecirc; j&aacute; recebeu o arquivo de licen&ccedil;a atualize o registro utilizando-se do formul&aacute;rio acima.</td>		
+	</tr>
+</table>
+</form>
+ 
+
+</div>
+</center>
+</body>
+</html>

@@ -230,6 +230,10 @@
 					$this->_file = "configuracoes_preferencias_links.html";
 					$titulo .= " :: Links Externos";
 					break;
+				case 'registro':
+					$this->_file = "configuracoes_preferencias_registro.html";
+					$titulo .= " :: Registro";
+					break;	
 			}
 			
 			$this->atribui("titulo",$titulo);
