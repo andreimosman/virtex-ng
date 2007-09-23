@@ -21,9 +21,11 @@
 						
 			$q = "SELECT f.descricao, f.valor, f.status,
 				     to_char (f.data,'dd/mm/YYYY') as data,
+				     data as data_orig,
 				     to_char (f.data_pagamento,'dd/mm/YYYY') as data_pagamento,
 				     to_char (f.reagendamento,'dd/mm/YYYY') as reagendamento,
-				     valor_pago
+				     f.valor_pago,
+				     f.id_cliente_produto
 				FROM cbtb_faturas f
 			  INNER JOIN cbtb_cliente_produto p ON f.id_cliente_produto = p.id_cliente_produto
 			  

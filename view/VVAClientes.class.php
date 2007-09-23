@@ -133,6 +133,10 @@
 					$titulo .= " :: Faturas";
 					break;
 			
+				case 'amortizacao':
+					$titulo .= " :: Amortização";
+					break;
+			
 				default:
 					$selecionavel = true;
 					$titulo .= " :: Resumo Contratos/Faturas";

@@ -426,6 +426,10 @@
 		return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
 	}
 	
+	public function obtemFatura ($id_cliente_produto, $data)
+	{
+		return ($this->cbtb_fatura->obtemUnico (array ("id_cliente_produto" => $id_cliente_produto, "data" => $data)));
+	}
 	
 	}
 

@@ -492,9 +492,42 @@
 				
 				
 				case "faturas":
+					
+					$tem_carne = "";
+					$cobranca = VirtexModelo::factory("cobranca"); 
+					$faturas = $cobranca->obtemFaturas ($_REQUEST ['id_cliente'], $tem_carne, $_REQUEST ['id_cliente_produto'], 
+								 $_REQUEST ['id_forma_pagamento'], $_REQUEST ['id_carne']);
+			
+					$this->_view->atribui ('tem_carne', $tem_carne);
+					if ($tem_carne && $_REQUEST ["id_carne"] > 0) {
+						$acao = 'faturas';
+					}
+					elseif ($tem_carne) {
+						$acao = 'carnes';
+					}
+					else {
+						$acao = "faturas";
+					}
+					$this->_view->atribui ('faturas', $faturas);
+					$this->_view->atribui ('acao', $acao);
+					$this->_view->atribui ('id_forma_pagamento', $_REQUEST ['id_forma_pagamento']);
+					break;
 				
-				break;
+				case "amortizacao":
 				
+					$id_cliente_produto = $_REQUEST ['id_cliente_produto'];
+					$data = $_REQUEST ['data'];
+					
+					$cobranca = VirtexModelo::factory("cobranca"); 
+					$fatura = $cobranca->obtemFatura ($id_cliente_produto, $data);
+					
+					$d = explode ('-', $fatura ['data']);
+					$data_vencimento = $d[2] . '/' . $d[1] . '/' . $d[0];
+					
+					$this->_view->atribui ("data_vencimento", $data_vencimento);
+					$this->_view->atribui ("descricao", $fatura ['descricao']);
+					break;
+			
 				default:
 					// Resumo
 					
