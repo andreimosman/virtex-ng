@@ -484,17 +484,21 @@
 					
 					break;
 				
-				
-				
 				case "contratos":
-					
-				
-				
+					$cobranca = VirtexModelo::factory("cobranca");
+					$contratos = $cobranca->obtemContratos ($_REQUEST ["id_cliente"]);
+					$this->_view->atribui ('contratos', $contratos);
 				break;
 				
 				
+				case "faturas":
+				
+				break;
+				
 				default:
 					// Resumo
+					
+		
 					break;
 			
 			}

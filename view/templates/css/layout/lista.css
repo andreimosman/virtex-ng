@@ -22,6 +22,12 @@
 	padding-bottom: 2px;
 }
 
+.lista td.title {
+	background: #bFd0aF;
+
+}
+
+
 .lista a {
 	text-decoration: none;
 	color: #000000;

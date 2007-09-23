@@ -392,6 +392,12 @@
       $this->cbtb_fatura->insere($dados);
     }
 
+	public function obtemContratos ($id_cliente)
+	{
+		$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente);
+		return ($res);
+	}
+
 	
 	}
 
