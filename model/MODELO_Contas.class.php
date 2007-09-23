@@ -88,6 +88,17 @@
 			return($tbl->obtemUnico($filtro));
 		}
 		
+		public function obtemContasBandaLarga($id_nas,$status="") {
+			$filtro = array("id_nas" => $id_nas);
+			if( $status ) {
+				$filtro["status"] = $status;
+			}
+			
+			return($this->cntb_conta_bandalarga->obtem($filtro));
+			
+			
+		}
+		
 		/**
 		 * obtemContasPorContrato()
 		 * Retorna as contas de um contrato.

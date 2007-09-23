@@ -28,6 +28,7 @@
 		 * Status
 		 */
 		public static $ST_AGUARDANDO 	= "A";
+		public static $ST_EXECUTANDO	= "RUN";
 		public static $ST_ERRO			= "ERR";
 		public static $ST_OK			= "OK";
 		
@@ -218,8 +219,8 @@
 		 * Lista a spool
 		 */
 		
-		public function obtemInstrucoesSpool($target,$tipo,$status="") {
-			$filtro = array("target" => $target, "tipo" => $tipo);
+		public function obtemInstrucoesSpool($destino,$tipo,$status="") {
+			$filtro = array("destino" => $destino, "tipo" => $tipo);
 			if( $status ) {
 				$filtro["status"] = $status;
 			}
@@ -227,7 +228,7 @@
 			$fila = $this->sptb_spool->obtem($filtro);
 			
 			for($i=0;$i<count($fila);$i++) {
-				$parametros = $this->decompoeParametros($tipo,$op,$fila[$i]["parametros"]);
+				$parametros = $this->decompoeParametros($tipo,$fila[$i]["op"],$fila[$i]["parametros"]);
 				$fila[$i]["parametros"] = $parametros;
 			}
 			
@@ -245,7 +246,7 @@
 			
 			switch($tipo) {
 				case self::$INFRAESTRUTURA:
-					$retorno["rede"] = @$param[1];
+					$retorno["rede"] = @$param[0];
 					break;
 				
 				case self::$BANDA_LARGA:
