@@ -38,6 +38,27 @@
 			return($retorno);
 		
 		}
+		// B => backbone,  C =>  cabo,  AP => access point,  CL => cliente
+		public static function enumTipoPop() {
+			$_LS_TIPO_POP = array(
+					                "AP" => "Access Point",
+									"B"  => "Backbone",
+									"C"  => "Cabo",
+									"CL" => "Cliente"
+								);
+			return($_LS_TIPO_POP);
+		}
+		
+		//  A => Ativo,  D =>  Desativo , N => Não disponivel para contratações
+		public static function enumStatusPop() {
+			$_LS_STATUS_POP = array(
+									"A" => "Ativo",
+									"B" => "Desativo",
+									"N" => "Não disponivel para contratações"
+								);
+			return($_LS_STATUS_POP);
+		}
+		
 	}
 
 ?>

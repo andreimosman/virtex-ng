@@ -33,7 +33,7 @@
 				$filtro["disponivel"] = "t";
 			}
 			return($this->cftb_servidor->obtem($filtro));
-		}
+		}		
 		
 		public function obtemServidor($id_servidor) {
 			$filtro = array("id_servidor" => $id_servidor);
@@ -64,14 +64,16 @@
 			
 		}
 		
-		public function atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor) {
+		public function atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao) {
 			$filtro = array("id_nas"=>$id_nas);
-			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "id_servidor"=>$id_servidor);
+			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "padrao" => $padrao);			
+			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
 			return($this->cftb_nas->altera($dados,$filtro));
 		}
 		
-		public function cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor) {
-			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "tipo_nas"=>$tipo_nas, "id_servidor"=>$id_servidor);
+		public function cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao) {
+			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "tipo_nas"=>$tipo_nas, "padrao" => $padrao);
+			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
 			return($this->cftb_nas->insere($dados));			
 		}
 		
@@ -81,6 +83,10 @@
 		
 		public function obtemTiposNAS() {
 			return($this->cftb_nas->enumTipoNas());
+		}
+		
+		public function obtemPadraoPPPoE(){
+			return($this->cftb_nas->enumPadroes());
 		}
 		
 		public function obtemRedesNAS($id_nas) {
@@ -214,6 +220,33 @@
 		
 		public function obtemPop($id_pop) {
 			return($this->cftb_pop->obtemUnico(array("id_pop" => $id_pop)));
+		}
+		
+		public function obtemStatusPop(){
+			return($this->cftb_pop->enumStatusPop());
+		}
+		
+		public function obtemTipoPop(){
+			return($this->cftb_pop->enumTipoPop());
+		}
+		
+		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento) {
+			$filtro = array("id_pop"=>$id_pop);
+			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "status" => $status);			
+			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
+			$dados["ipaddr"] = $ipaddr ? $ipaddr : null; 			
+			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
+			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : null; 			
+			return($this->cftb_pop->altera($dados,$filtro));
+		}
+		
+		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento) {
+			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status);			
+			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
+			$dados["ipaddr"] = $ipaddr ? $ipaddr : null; 			
+			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 						
+			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : 'f';
+			return($this->cftb_pop->insere($dados));			
 		}
 	
 	}

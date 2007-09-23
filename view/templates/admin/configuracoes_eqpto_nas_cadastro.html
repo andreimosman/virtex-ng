@@ -16,12 +16,18 @@ label {
 </style>
 <script language="JavaScript">
 {literal}
+function getStatusPadrao(){
+	var tipo_nas = document.getElementById('tipo_nas');
+	var padrao = document.getElementById('padrao');
+	padrao.disabled = (tipo_nas.value == 'P'? false : true);
+}
+
 function nasValidaForm() {
 
 	var nome = document.getElementById("nome");
 	var ip = document.getElementById("ip");
 	var secret = document.getElementById("secret");
-	var servidor = document.getElementById("id_servidor");
+	var servidor = document.getElementById("id_servidor");	
 
 	if(estaVazio(nome.value)) {
 		alert("O campo nome deve ser preenchido.");
@@ -48,7 +54,7 @@ function nasValidaForm() {
 		alert("Um servidor deve ser selecionado na lista de servidores");
 		servidor.focus();
 		return false;
-	}
+	}	
 
 	return true;
 }
@@ -84,7 +90,7 @@ function voltar() {
 	<tr>
 		<td width="100" align="right"><label>Tipo:</label></td>
 		<td>
-			<select name="tipo_nas" id="tipo_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $id_nas}disabled="true"{/if}>
+			<select name="tipo_nas" id="tipo_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $id_nas}disabled="true"{/if} onChange="javascript:getStatusPadrao()">
 				{foreach key=k item=v from=$tipos}
 					<option value="{$k}" {if $k == $tipo_nas}SELECTED{/if}>{$v}</option>
 				{/foreach}
@@ -103,10 +109,23 @@ function voltar() {
 		</td>
 	</tr>
 	<tr>
+		<td width="100" align="right"><label>Padrão:</label></td>
+		<td>
+			<select name="padrao" id="padrao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">				
+			{foreach key=k item=v from=$padroes}
+				<option value="{$k}" {if $k == $padrao}selected='selected'{/if}>{$v}</option>
+			{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<td colspan=2 align="center" style="border-top: dotted 1px #000000;">
 		<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
 		<input type="submit" name="Submit" value="{if $id_nas}Alterar{else}Cadastrar{/if}" class="botao">
 		</td>
 	</tr>
+<script language="JavaScript">
+	getStatusPadrao();
+</script>	
 </table>
 </html>

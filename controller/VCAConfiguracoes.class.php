@@ -130,7 +130,20 @@
 			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
 			$this->_view->atribui("subtela",$subtela);
 			
+			$acao = @$_REQUEST["acao"];
+			
+			$url = "admin-configuracoes.php?op=equipamentos&tela=pops";
+			
 			$id_pop = @$_REQUEST["id_pop"];
+			$nome = @$_REQUEST["nome"];			
+			$info = @$_REQUEST["info"];
+			$tipo = @$_REQUEST["tipo"];
+			$id_pop_ap = @$_REQUEST["id_pop_ap"];
+			$status = @$_REQUEST["status"];
+			$ipaddr = @$_REQUEST["ipaddr"];
+			$id_servidor = @$_REQUEST["id_servidor"];
+			$ativar_monitoramento = @$_REQUEST["ativar_monitoramento"];
+			
 			$this->_view->atribui("id_pop",$id_pop);
 			switch($subtela) {
 				case 'listagem':
@@ -140,23 +153,51 @@
 					break;
 
 				case 'cadastro':
-					$servidores = $equipamentos->obtemListaServidores();
-					$this->_view->atribui("servidores",$servidores);
+					if( !$acao ) {
+						$servidores = $equipamentos->obtemListaServidores();
+						$this->_view->atribui("servidores",$servidores);
+						
+						$parent_pops = $equipamentos->obtemListaPOPs();		
+						$this->_view->atribui("parent_pops",MJson::encode($parent_pops) );
+											
+						$status_pop = $equipamentos->obtemStatusPop();
+						$this->_view->atribui("status_pop",$status_pop);
+						
+						$tipos = $equipamentos->obtemTipoPop();
+						$this->_view->atribui("tipo_pop",$tipos);
+					}
 					if($id_pop) {
-						if( $this->_acao ) {
-							$info = @$_REQUEST;
+						if( !$acao ) {
+							// Pegar do banco
+							
+							if($id_pop) {
+								if( $this->_acao ) {
+									$info = @$_REQUEST;
+								} else {
+									$info = $equipamentos->obtemPop($id_pop);
+								}
+								while(list($vr,$vl)=each($info)) {
+									$this->_view->atribui($vr,$vl);
+								}
+							}
 						} else {
-							$info = $equipamentos->obtemPop($id_pop);
+							// Processar alteração								
+							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento);
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","Pop atualizado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");
 						}
-						while(list($vr,$vl)=each($info)) {
-							$this->_view->atribui($vr,$vl);
+					} else {
+						if( $acao ) {
+							// Cadastrar							
+							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento);
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","Pop cadastrado com sucesso.");
+							$this->_view->atribuiVisualizacao("msgredirect");
 						}
 					}
 					break;
 			}
-			
-			
-			
 		}
 		
 		protected function executaEquipamentosNAS() {
@@ -171,8 +212,11 @@
 				
 					break;
 				case 'cadastro':
-					$servidores = $equipamentos->obtemListaServidores();
+					$servidores = $equipamentos->obtemListaServidores();					
 					$this->_view->atribui("servidores",$servidores);
+					
+					$padroes = $equipamentos->obtemPadraoPPPoE();
+					$this->_view->atribui("padroes",$padroes);
 					
 					$tipos = $equipamentos->obtemTiposNAS();
 					$this->_view->atribui("tipos",$tipos);
@@ -182,7 +226,8 @@
 					$ip = @$_REQUEST["ip"];					
 					$secret = @$_REQUEST["secret"];
 					$tipo_nas = @$_REQUEST["tipo_nas"];
-					$id_servidor = @$_REQUEST["id_servidor"];					
+					$id_servidor = @$_REQUEST["id_servidor"];
+					$padrao = @$_REQUEST["padrao"];
 					
 					$this->_view->atribui("id_nas", $id_nas);
 
@@ -199,7 +244,7 @@
 							
 						} else {
 							//ALTERAR							
-							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor);
+							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao);
 							
 							$url = "admin-configuracoes.php?op=equipamentos&tela=nas";
 							$this->_view->atribui("url",$url);
@@ -211,7 +256,7 @@
 						// echo "CADASTRO<br>\n";
 						if( $acao ) {
 							//CADASTRAR							
-							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor);
+							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao);
 							
 							$url = "admin-configuracoes.php?op=equipamentos&tela=nas&subtela=cadastro";
 							$this->_view->atribui("url",$url);
