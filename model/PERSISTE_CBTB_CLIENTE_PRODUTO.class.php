@@ -22,11 +22,13 @@
 				     p.nome as nome_produto,
 				     c.tipo_produto,
 				     c.status,
-				     c.id_cliente_produto
+				     c.id_cliente_produto,
+				     c.id_forma_pagamento
 				FROM cbtb_cliente_produto cp 
 			  INNER JOIN cbtb_contrato c ON cp.id_cliente_produto = c.id_cliente_produto
-			  INNER JOIN prtb_produto p ON p.id_produto = cp.id_produto";		
-		
+			  INNER JOIN prtb_produto p ON p.id_produto = cp.id_produto
+			       WHERE cp.id_cliente = " . $this->bd->escape ($id_cliente);
+   		
 			$res = $this->bd->obtemRegistros ($q);
 			return ($res);
 		}

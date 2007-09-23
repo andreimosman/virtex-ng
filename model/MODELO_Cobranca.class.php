@@ -12,7 +12,7 @@
 		protected $cbtb_contrato;
 		protected $cbtb_carne;
 		protected $pftb_forma_pagamento;
-		
+		protected $cbtb_fatura;
 		protected $preferencias;
 
 		protected static $moeda = 9;
@@ -398,6 +398,34 @@
 		return ($res);
 	}
 
+	/*
+	 * Obtem Faturas
+	 */
+	public function obtemFaturas ($id_cliente, &$tem_carne = "", $id_cliente_produto = "", $id_forma_pagamento = "",$id_carne = "")
+	{
+		if ($id_forma_pagamento > 0 && $id_cliente_produto > 0) {
+			if ($id_carne > 0) {
+				// obtem faturas do carne
+				$tem_carne = true;
+				return ($this->cbtb_fatura->obtemFaturas (null, $id_cliente_produto, $id_carne));	
+			}
+			else {			
+				$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+				if ($formaPagto ['carne'] == 't') {
+					// obtem carne
+					$tem_carne = true;
+				
+					return ($this->cbtb_carne->obtemCarnes ($id_cliente_produto));	
+				}
+				else {
+					$tem_carne = false;
+				}
+			}
+		}
+		// obtem todas faturas do cliente.
+		return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
+	}
+	
 	
 	}
 

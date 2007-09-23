@@ -652,27 +652,28 @@ function validarData(campo){
 <input type="hidden" name="tela" value="{$tela}">
 <input type="hidden" name="id_cliente" value="{$id_cliente}">
 
-{if $acao == ""}
+{if $acao == "carnes"}
 	<!-- CONFIRMAÇÃO DO CONTRATO -->
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
-		<tr class="lista">
-			<td style="background: #bFd0aF;">Data Contrata&ccedil;&atilde;o</th>
-			<td style="background: #bFd0aF;">Vig&ecirc;ncia</th>
-			<td style="background: #bFd0aF;">Produto</th>
-			<td style="background: #bFd0aF;">Tipo Produto</th>
-			<td style="background: #bFd0aF;">Valor</th>
-			<td style="background: #bFd0aF;">Status</th>
-			<td style="background: #bFd0aF;">&nbsp;</th>
-		</tr>
-		{foreach from=$contratos item=c}
 		<tr>
-			<td>{$c.data_contratacao}</td>
-			<td>{$c.vigencia}</td>
-			<td>{$c.nome_produto}</td>
-			<td>{$c.tipo_produto}</td>
-			<td>{$c.valor}</td>
-			<td>{$c.status}</td>
-			<td><a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}&id_forma_pagamento={$c.id_forma_pagamento}">[Faturas]</a></td>
+			<th colspan="6" style="background: #bFd0a0">Carn&ecirc;s</th>
+		</tr>
+		<tr class="lista" style="background: #bFd0aF">
+			<td>Id</th>
+			<td>Data Geração</th>
+			<td>Qtde.</th>
+			<td>Valor</th>
+			<td>Status</th>
+			<td>&nbsp;</th>
+		</tr>
+		{foreach from=$faturas item=f}
+		<tr>
+			<td>{$f.id_carne|string_format:"%08d"}</td>
+			<td>{$f.data_geracao}</td>
+			<td>{$f.total_fatura}</td>
+			<td>{$f.valor}</td>
+			<td>{$f.status}</td>
+			<td><a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$smarty.request.id_cliente_produto}&id_forma_pagamento={$smarty.request.id_forma_pagamento}&id_carne={$f.id_carne}">[Faturas]</a></td>
 		</tr>
 		{/foreach}
 	</table>
@@ -680,4 +681,36 @@ function validarData(campo){
 
 {/if}
 
+
+{if $acao == "faturas"}
+	<!-- CONFIRMAÇÃO DO CONTRATO -->
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		{ if $tem_carne }
+		<tr>
+				<th colspan="7" style="background: #bFd0a0">Carn&ecirc; { $smarty.request.id_carne|string_format:"%08d" }</th>
+		</tr>
+		{ /if }
+		<tr class="lista" style="background: #bFd0aF;">
+			<td>Vencimento</th>
+			<td>Descrição</th>
+			<td>Valor</th>
+			<td>Vl. Pago</th>
+			<td>Dt. Pagto</th>
+			<td>Reagend.</th>
+			<td>Status</th>
+		</tr>
+		{foreach from=$faturas item=f}
+		<tr>
+			<td>{$f.data}</td>
+			<td>{$f.descricao}</td>
+			<td>{$f.valor}</td>
+			<td>{$f.valor_pago}</td>
+			<td>{$f.data_pagamento}</td>
+			<td>{$f.reagendamento}</td>
+			<td>{$f.status}</td>
+		</tr>
+		{/foreach}
+	</table>
+ </table>
+{/if}
 </form>
