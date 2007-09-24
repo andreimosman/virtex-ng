@@ -118,6 +118,13 @@
 		}
 		
 		/**
+		 * Retorna os endereços de infraentrutura do NAS especificado.
+		 */
+		public function obtemEnderecoInfraestruturaNAS($id_nas) {
+			return($this->cftb_rede->obtemPeloNAS($id_nas,"I"));
+		}
+		
+		/**
 		 * Cadastra uma rede IP em um NAS
 		 */
 		public function cadastraRedeIPNAS($id_nas,$rede,$tipo_rede,$pppoe=false) {

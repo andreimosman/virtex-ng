@@ -216,17 +216,27 @@
 		}
 		
 		/**
+		 * Altera o status da instrução na spool.
+		 */
+		 public function atualizaStatusInstrucao($id_spool,$status) {
+		 	$dados = array("status" => $status, "execucao" => "=now");
+		 	$filtro = array("id_spool" => $id_spool);
+		 	$this->sptb_spool->altera($dados,$filtro);
+		 }
+		
+		/**
 		 * Lista a spool
 		 */
 		
-		public function obtemInstrucoesSpool($destino,$tipo,$status="") {
+		public function obtemInstrucoesSpool($destino,$tipo,$status="",$for_update=false) {
 			$filtro = array("destino" => $destino, "tipo" => $tipo);
 			if( $status ) {
 				$filtro["status"] = $status;
 			}
 			
+			$forupdate = $this->sptb_spool->setForUpdate(true);
 			$fila = $this->sptb_spool->obtem($filtro);
-			
+			$this->sptb_spool->setForUpdate($forupdate);
 			for($i=0;$i<count($fila);$i++) {
 				$parametros = $this->decompoeParametros($tipo,$fila[$i]["op"],$fila[$i]["parametros"]);
 				$fila[$i]["parametros"] = $parametros;
