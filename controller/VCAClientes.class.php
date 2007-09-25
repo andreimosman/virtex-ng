@@ -49,6 +49,10 @@
 				case 'contrato':
 					$this->executaContrato();
 					break;
+					
+				case 'conta':
+					$this->executaConta();
+					break;
 
 				default:
 					// Do Something
@@ -136,7 +140,8 @@
 						
 						case 'CONTA':
 						case 'EMAIL':
-							$registros = array();			// TODO: Buscar em negocios_contrato
+							//$registros = array();			// TODO: Buscar em negocios_contrato
+							$registros = $this->clientes->pesquisaClientesPorConta($texto_pesquisa);
 							break;
 							
 						default:
@@ -539,6 +544,45 @@
 			
 		}
 		
+		protected function executaConta() {
+			$this->_view->atribuiVisualizacao("conta");
+			$tipo = @$_REQUEST["tipo"];
+			$this->_view->atribui("tipo",$tipo);
+
+			$this->_view->atribui("id_cliente",$this->id_cliente);
+			$info = $this->clientes->obtemPeloId($this->id_cliente);
+			
+			$this->_view->atribui("nome_razao",$info["nome_razao"]);
+			
+			$cobranca = VirtexModelo::factory("cobranca");
+			$contas = VirtexModelo::factory("contas");
+			
+			if( $id_conta ) {
+				// Alteração
+			} else {
+				// Listagem
+				$listaContratos = $cobranca->obtemContratos($this->id_cliente,"A",$tipo);
+
+				for($i=0;$i<count($listaContratos);$i++) {
+					$listaContas = $contas->obtemContasPorContrato($listaContratos[$i]["id_cliente_produto"]);
+					$contasContrato = array();
+					for($x=0;$x<count($listaContas);$x++) {
+						$contasContrato[] = $contas->obtemContaPeloId($listaContas[$x]["id_conta"]);
+					}
+
+					$listaContratos[$i]["contas"] = $contasContrato;
+					unset($contasContrato);
+					unset($listaContas);
+				}
+				
+				echo "<pre>";
+				print_r($listaContratos);
+				echo "</pre>";
+
+				$this->_view->atribui("listaContratos",$listaContratos);
+			}
+			
+		}
 		
 		
 

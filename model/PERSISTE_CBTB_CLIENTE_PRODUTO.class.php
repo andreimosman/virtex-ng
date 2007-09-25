@@ -13,7 +13,7 @@
 		}
 
 
-		public function obtemContratos ($id_cliente)
+		public function obtemContratos ($id_cliente,$status="",$tipo="")
 		{
 			$q = "SELECT to_char (c.data_contratacao,'dd/mm/YYYY') as data_contratacao, 
 				     c.vigencia, 
@@ -28,6 +28,14 @@
 			  INNER JOIN cbtb_contrato c ON cp.id_cliente_produto = c.id_cliente_produto
 			  INNER JOIN prtb_produto p ON p.id_produto = cp.id_produto
 			       WHERE cp.id_cliente = " . $this->bd->escape ($id_cliente);
+			
+			if( $status ) {
+				$q .= " AND c.status = '".$status."' ";
+			}
+			
+			if( $tipo ) {
+				$q .= " AND p.tipo = '" . $tipo . "' ";
+			}
    		
 			$res = $this->bd->obtemRegistros ($q);
 			return ($res);

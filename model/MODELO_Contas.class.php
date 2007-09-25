@@ -127,8 +127,91 @@
 		 * pesquisaPorConta().
 		 * Pesquisa de clientes por conta. Retorna informações do cliente com um array de contas que fizeram,
 		 */
-		public function pesquisaClientesPorContas($textoPesquisa,$tipo_pesquisa="C") {
-			// 
+		public function pesquisaClientesPorContas($textoPesquisa) {
+			// Identificação do Tipo de Pesquisa por Conta
+			array($erros);
+			$tp = "USER";
+			
+			// TODO: Indentificar domínio p/ pesquisas em cntb_conta_dominio;
+			
+			if( MRegex::email($textoPesquisa) ) {
+				$tp = "EMAIL";
+			} else {
+				if( MRegex::ip($textoPesquisa) ) {
+					$tp = "IP";
+					@list($endIP,$bitsREDE) = explode("/",$textoPesquisa);
+					$qr = $bitsREDE ? $textoPesquisa : $textoPesquisa."/24";
+					
+					try { 
+						$r = new MInet($qr);
+						if( $bitsREDE ) {
+							$textoPesquisa = $r->obtemRede() . "/" . $bitsREDE;
+						}
+					} catch(MException $e) {
+						$erros[] = "Endereço Inválido";
+					}
+				} else {
+					if( MRegex::mac($textoPesquisa) ) {
+						$tp = "MAC";
+					}
+				}
+			}
+			
+			$contas = array();
+			$lista_clientes = array();
+			
+			if( !count($erros) ) {
+				$filtroConta = array();
+				
+				switch($tp) {
+					case 'EMAIL':
+						@list($usr,$dom) = explode('@',$textoPesquisa);
+						$filtroConta["dominio"] = $dom;
+						$filtroConta["tipo_conta"] = "E";
+					case 'USER':
+						$filtroConta["username"] = '%:' . (@$usr ? $usr : $textoPesquisa);
+						break;
+						
+					case 'MAC':
+						$contas = $this->cntb_conta_bandalarga->obtemPeloMAC($textoPesquisa);
+						break;
+					
+					case 'IP':
+						$contas = $this->cntb_conta_bandalarga->obtemPeloEndereco($textoPesquisa);
+						break;
+				
+				}
+				
+				if( count($filtroConta) ) {
+					$contas = $this->cntb_conta->obtem($filtroConta);
+				}
+				
+				$clientes = array();
+				$cntCli = array();
+				
+				for($i=0;$i<count($contas);$i++) {
+					if( !is_array($cntCli[$contas[$i]["id_cliente"]]) ) {
+						$cntCli[$contas[$i]["id_cliente"]] = array();
+					}
+					$cntCli[$contas[$i]["id_cliente"]][] = $contas[$i];
+				}
+				
+				$cltb_cliente = VirtexPersiste::factory("cltb_cliente");
+				if( count($cntCli) ) {
+					$filtro = array("id_cliente" =>  "in:" . implode("::", array_keys($cntCli)));
+					$lista_clientes = $cltb_cliente->obtem($filtro);
+					
+					for( $i=0;$i<count($lista_clientes);$i++ ) {
+						$lista_clientes[$i]["contas"] = $cntCli[$lista_clientes[$i]["id_cliente"]];
+					}
+				}
+				
+				
+			
+			}
+			
+			return($lista_clientes);
+			
 		}
 		
 		
@@ -296,6 +379,11 @@
 			
 			$home			= $tipo_hospedagem == "D" ? $hosp_base . "/" . $dominio_hospedagem : $hosp_base . "/" . $dominio_padrao . "/www/usuarios/" . $username;
 			$shell			= "/bin/false";		// Shell de Hospedagem será sempre esse.
+			
+			// Assume-se que a verificação da existência foi feita antes do cadastro da conta.
+			if( $tipo_hospedagem == "D" ) {
+				$this->preferencias->cadastraDominio($dominio_hospedagem,$id_cliente,'f','A','f');
+			}			
 			
 			$senhaCript = MCript::criptSenha($senha);
 

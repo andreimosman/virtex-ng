@@ -47,6 +47,9 @@
 					$this->exibeCadastro();
 					break;
 					
+				case 'conta':
+					$this->exibeConta();
+					break;
 				case 'pesquisa':
 					$this->exibePesquisa();
 					break;
@@ -72,17 +75,18 @@
 		}
 		
 		protected function atribuiTitulo() {
+		
+			$titulo = "";
+			if( $this->obtem("nome_razao") ) {
+				$titulo = $this->obtem("nome_razao") . " :: ";
+			}
 			
 			if( $this->_visualizacao == "cadastro" && $this->obtem("id_cliente") ) {
-				$titulo = @$this->titulos[ $this->obtem("extra_op") == "ficha" ? "ficha" : "alteracao" ];
+				$titulo .= @$this->titulos[ $this->obtem("extra_op") == "ficha" ? "ficha" : "alteracao" ];
 			} else {
-				$titulo = @$this->titulos[ $this->_visualizacao ];
+				$titulo .= @$this->titulos[ $this->_visualizacao ];
 			}
 
-			if( $this->obtem("nome_razao") ) {
-				$titulo.=" :: ".$this->obtem("nome_razao");
-			}
-			
 			$this->atribui("titulo",$titulo);
 		}
 		
@@ -148,6 +152,30 @@
 			$this->configureMenu($this->obtemItensMenu(),$selecionavel,true);
 			$this->atribui("titulo",$titulo);
 		
+		}
+		
+		/** 
+		 * Exibe as contas de um determinado cliente.
+		 * Organizadas por contrato.
+		 */
+		protected function exibeConta() {
+			$titulo = $this->obtem("nome_razao");
+			$this->_file = "clientes_contas.html";
+			
+			switch( $this->obtem("tipo") ) {
+				case 'BL':
+					$titulo .= " :: Banda Larga";
+					break;
+				case 'D':
+					$titulo .= " :: Discado ";
+					break;
+				case 'H':
+					$titulo .= " :: Hospedagem ";
+					break;
+			}
+			
+			$this->atribui("titulo",$titulo);
+			
 		}
 		
 		

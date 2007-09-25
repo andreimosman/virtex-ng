@@ -17,7 +17,7 @@
 	class MODELO_Clientes extends VirtexModelo {
 		protected $cltb_cliente;
 		protected $cftb_cidade;
-
+		
 		/**
 		 * Constructor
 		 */
@@ -115,6 +115,11 @@
 		}
 		
 		
+		
+		public function pesquisaClientesPorConta($textoPesquisa) {
+			$contas = VirtexModelo::factory("contas");
+			return($contas->pesquisaClientesPorContas($textoPesquisa));
+		}
 		
 		
 		
