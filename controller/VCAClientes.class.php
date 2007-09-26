@@ -556,9 +556,38 @@
 			
 			$cobranca = VirtexModelo::factory("cobranca");
 			$contas = VirtexModelo::factory("contas");
+
 			
-			if( $id_conta ) {
-				// Alteração
+			$tela 		= @$_REQUEST["tela"];
+			$id_conta 	= @$_REQUEST["id_conta"];
+			$acao 		= @$_REQUEST["acao"];
+			
+			$this->_view->atribui("tela",$tela);
+			$this->_view->atribui("id_conta",$id_conta);
+			$this->_view->atribui("acao",$acao);
+			
+			if( $id_conta && !$acao ) {
+				$info = $contas->obtemContaPeloId($id_conta);				
+				foreach($info as $vr => $vl) {
+					$this->_view->atribui($vr,$vl);
+				}
+			}
+			
+			if( $tela == "ficha"  ) {
+				// Informações específicas da ficha.
+				
+			} else if( $tela == "cadastro" ) {
+				if( $info["tipo_conta"] == "BL" ) {
+					$equipamentos = VirtexModelo::factory('equipamentos');
+					$listaNAS = $equipamentos->obtemListaNAS();
+					$this->_view->atribui("listaNAS",$listaNAS);
+					$listaPOP = $equipamentos->obtemListaPOPs('A');
+					$this->_view->atribui("listaPOP",$listaPOP);
+				}
+				if( $acao ) {
+					// Processar alteração/cadastro.
+					
+				}
 			} else {
 				// Listagem
 				$listaContratos = $cobranca->obtemContratos($this->id_cliente,"A",$tipo);
@@ -575,9 +604,9 @@
 					unset($listaContas);
 				}
 				
-				echo "<pre>";
-				print_r($listaContratos);
-				echo "</pre>";
+				//echo "<pre>";
+				//print_r($listaContratos);
+				//echo "</pre>";
 
 				$this->_view->atribui("listaContratos",$listaContratos);
 			}

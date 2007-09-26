@@ -161,19 +161,39 @@
 		protected function exibeConta() {
 			$titulo = $this->obtem("nome_razao");
 			$this->_file = "clientes_contas.html";
+			$selecionavel = true;
 			
-			switch( $this->obtem("tipo") ) {
-				case 'BL':
-					$titulo .= " :: Banda Larga";
-					break;
-				case 'D':
-					$titulo .= " :: Discado ";
-					break;
-				case 'H':
-					$titulo .= " :: Hospedagem ";
-					break;
+			if( $this->obtem("tela") == "cadastro" ) {
+				$selecionavel = false;
+				$this->_file = "clientes_contas_cadastro.html";
+
+				if( $this->obtem("id_conta") ) {
+					$titulo .= " :: " . $this->obtem("username") . " (" . $this->obtem("tipo_conta") . ")";
+				} else {
+					$titulo .= " :: Nova Conta";
+				}
+
+			} else if( $this->obtem("tela") == "ficha" ) {
+				$selecionavel = false;
+				$this->_file = "clientes_contas_ficha.html";
+				
+				$titulo .= " :: " . $this->obtem("username") . " (" . $this->obtem("tipo_conta") . ")";
+				
+			} else {
+				switch( $this->obtem("tipo") ) {
+					case 'BL':
+						$titulo .= " :: Banda Larga";
+						break;
+					case 'D':
+						$titulo .= " :: Discado ";
+						break;
+					case 'H':
+						$titulo .= " :: Hospedagem ";
+						break;
+				}
 			}
 			
+			$this->configureMenu($this->obtemItensMenu(),$selecionavel,true);
 			$this->atribui("titulo",$titulo);
 			
 		}

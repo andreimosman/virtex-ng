@@ -1,0 +1,53 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+
+
+<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+	{foreach item=r from=$listaContratos}
+	<tr>
+		<th align="right" width="50">
+			<strong>{$r.id_cliente_produto|string_format:"%05d"}</strong>
+		</th>
+		<th align="left">
+			<strong>{$r.nome_produto}</strong>
+		</th>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table class='lista' width='100%' cellpadding=0 cellspacing=0 align="center">
+			{foreach name=registros item=c from=$r.contas}
+			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+				<tr>
+					<td class='estilo' width=200><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</a></td>
+					<td class='estilo' width=80>
+					<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">
+						{if $c.tipo_conta == 'BL'}BANDA LARGA{/if}
+						{if $c.tipo_conta == 'D'}DISCADO{/if}
+						{if $c.tipo_conta == 'E'}EMAIL{/if}
+						{if $c.tipo_conta == 'H'}HOSPEDAGEM{/if}
+					</a>
+					</td>
+					<td>
+						{if $c.tipo_conta == 'BL'}
+							<small>UP: {if !$c.upload_kbps}Ilimitado{else}{$c.upload_kbps} kbps{/if} / DOWN: {if !$c.download_kbps}Ilimitado{else}{$c.download_kbps} kbps{/if}</small>
+						{/if}
+					</td>
+					<td>
+						[<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">Ficha Técnica</a>]
+					</td>
+				</tr>
+			{/foreach}
+			</table>
+		</td>
+	</tr>
+	{/foreach}
+</table>
+
+
+
+</body>
+</html>
