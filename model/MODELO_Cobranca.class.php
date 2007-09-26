@@ -397,6 +397,12 @@
 		$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente,$status,$tipo);
 		return ($res);
 	}
+	
+	public function obtemContratoPeloId($id_cliente_produto) {
+		$filtro = array("id_cliente_produto" => $id_cliente_produto);
+		$res = $this->cbtb_contrato->obtemUnico($filtro);
+		return($res);
+	}
 
 	/*
 	 * Obtem Faturas

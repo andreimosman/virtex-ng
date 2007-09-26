@@ -4,8 +4,113 @@
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
+<script language="JavaScript">
+{literal}
+function ping(ip) {
+	window.alert("Pingando: "+ip);
+}
 
-
-
+function arp(ip) {
+	window.alert("ARP: "+ip);
+}
+{/literal}
+</script>
+<br>
+{if $tipo_conta == "BL"}
+<center>
+<img src="virtex-cgi/stats/{$username}-day.png" alt="Gráfico de Acesso do Dia">
+</center>
+{/if}
+<table width="600" border="0" cellpadding=1 cellspacing=0 align="center" class="lista">
+	<tr>
+		<th colspan="2" align="left">FICHA TECNICA</th>
+		<th colspan="2" align="right"><label>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$id_conta}">alterar</a>]{if $tipo_conta == "BL"}[<a href="javascript:ping('{$infoConta.ip}')">ping</a>] [<a href="javascript:arp('{$infoConta.ip}')">arp</a>]{/if}</label></th>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>Username:</label></strong></td>
+		<td><label>{$username}{if $tipo_conta == "E"}@{$dominio}{/if}</label></td>
+		<td align="right" width="110"><strong><label>Status:</label></strong></td>
+		<td width="200"><label>{if $status == "A"}Ativo{elseif $status=="B"}Bloqueado pelo administrador{elseif $status=="C"}Conta cancelado{elseif $conta=="S"}Suspenso por pendência administrativa{elseif $conta=="N"}Conta não ativada{/if}</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>Conta Mestre:</label></strong></td>
+		<td colspan="3"><label>{if $conta_mestre == 't'}SIM{else}NÃO{/if}</label></td>
+	</tr>
+	<tr>
+		<td colspan="4"><hr size="1"></td>
+	</tr>
+{if $tipo_conta == "BL"}
+	<tr>
+		<td align="right" width="110"><strong><label>POP:</label></strong></td>
+		<td><label>{$pop.nome}</label></td>
+		<td align="right" width="110"><strong><label>NAS:</label></strong></td>
+		<td width="200"><label>{$nas.nome}</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>IP:</label></strong></td>
+		<td><label>{$infoConta.ip}</label></td>
+		<td align="right" width="110"><strong><label>Máscara:</label></strong></td>
+		<td width="200"><label>{$infoConta.mascara}</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>Gateway:</label></strong></td>
+		<td><label>{$infoConta.gateway}</label></td>
+		<td align="right" width="110"><strong><label>MAC:</label></strong></td>
+		<td width="200"><label>{if $mac}{$mac}{else}Não Configurado{/if}</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>DNS #1:</label></strong></td>
+		<td><label>{$preferenciasGerais.hosp_ns1}</label></td>
+		<td align="right" width="110"><strong><label>DNS #2:</label></strong></td>
+		<td width="200"><label>{$preferenciasGerais.hosp_ns2}</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>UPLOAD:</label></strong></td>
+		<td><label>{if $upload_kbps}{$upload_kbps} kbps{else}Ilimitado{/if}</label></td>
+		<td align="right" width="110"><strong><label>DOWNLOAD:</label></strong></td>
+		<td width="200"><label>{if $download_kbps}{$download_kbps} kbps{else}Ilimitado{/if}</label></td>
+	</tr>
+{elseif $tipo_conta == "D"}
+	<tr>
+		<td align="right" width="110"><strong><label>Fone:</label></strong></td>
+		<td colspan="3"><label>{$foneinfo}</label></td>
+	</tr>
+{elseif $tipo_conta == "E"}
+	<tr>
+		<td align="right" width="110"><strong><label>Quota:</label></strong></td>
+		<td><label>{$quota}</label></td>
+		<td align="right" width="110"><strong><label>Auth SMTP:</label></strong></td>
+		<td width="200"><label>SIM (SASL2)</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>POP:</label></strong></td>
+		<td><label>{$preferenciasGerais.pop_host}</label></td>
+		<td align="right" width="110"><strong><label>SMTP:</label></strong></td>
+		<td width="200"><label>{$preferenciasGerais.smtp_host}</label></td>
+	</tr>
+{elseif $tipo_conta == "H"}
+	{if $tipo_hospedagem == "D"}
+	<tr>
+		<td align="right" width="110"><strong><label>Site:</label></strong></td>
+		<td><label>www.{$dominio_hospedagem}</label></td>
+		<td align="right" width="110"><strong><label>FTP:</label></strong></td>
+		<td width="200"><label>ftp.{$dominio_hospedagem}({$preferenciasGerais.hosp_server})</label></td>
+	</tr>
+	<tr>
+		<td align="right" width="110"><strong><label>DNS #1:</label></strong></td>
+		<td><label>{$preferenciasGerais.hosp_ns1}</label></td>
+		<td align="right" width="110"><strong><label>DNS #2:</label></strong></td>
+		<td width="200"><label>{$preferenciasGerais.hosp_ns2}</label></td>
+	</tr>
+	{elseif $tipo_hospedagem == "U"}
+	<tr>
+		<td align="right" width="110"><strong><label>Site:</label></strong></td>
+		<td><label>http://www.{$preferenciasGerais.dominio_padrao}/usuarios/{$username}</label></td>
+		<td align="right" width="110"><strong><label>FTP:</label></strong></td>
+		<td width="200"><label>ftp.{$preferenciasGerais.dominio_padrao}({$preferenciasGerais.hosp_server})</label></td>
+	</tr>
+	{/if}
+{/if}
+</table>
 </body>
 </html>

@@ -561,10 +561,13 @@
 			$tela 		= @$_REQUEST["tela"];
 			$id_conta 	= @$_REQUEST["id_conta"];
 			$acao 		= @$_REQUEST["acao"];
+			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+			
 			
 			$this->_view->atribui("tela",$tela);
 			$this->_view->atribui("id_conta",$id_conta);
 			$this->_view->atribui("acao",$acao);
+			$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 			
 			if( $id_conta && !$acao ) {
 				$info = $contas->obtemContaPeloId($id_conta);				
@@ -573,17 +576,57 @@
 				}
 			}
 			
+			if( !$tipo && $id_cliente_produto ) {
+				$infoProduto = $cobranca->obtemContratoPeloId($id_cliente_produto);
+				$tipo = $infoProduto["tipo_produto"];
+				$this->_view->atribui("tipo",$tipo);
+			}
+
+			$equipamentos = VirtexModelo::factory('equipamentos');
+			$preferenciasGerais = $this->preferencias->obtemPreferenciasGerais();
+			$this->_view->atribui("preferenciasGerais",$preferenciasGerais);
+
 			if( $tela == "ficha"  ) {
 				// Informações específicas da ficha.
 				
+				if($info["tipo_conta"] == "BL") {
+					$nas = $equipamentos->obtemNAS($info["id_nas"]);
+					$this->_view->atribui("nas",$nas);
+					$pop = $equipamentos->obtemPOP($info["id_pop"]);
+					$this->_view->atribui("pop",$pop);
+					
+					$infoConta == array();
+					if( $nas["tipo_nas"] == "I" ) {
+						$endereco = $info["rede"];
+						if( $endereco ) {
+							$ip = new MInet($endereco);
+							$infoConta["ip"] = $ip->obtemUltimoIP();
+							$infoConta["mascara"] = $ip->obtemMascara();
+							$infoConta["gateway"] = $ip->obtemPrimeiroIP();
+						}
+					} else {
+						$infoConta["ip"] = $info["ipaddr"] . "(config. automática)";
+						$infoConta["mascara"] = "255.255.255.0";
+						$infoConta["gateway"] = "PPPoE";
+					}
+					
+					$this->_view->atribui("infoConta",$infoConta);
+					
+				}
+				
+				
+				
+				
 			} else if( $tela == "cadastro" ) {
 				if( $info["tipo_conta"] == "BL" ) {
-					$equipamentos = VirtexModelo::factory('equipamentos');
 					$listaNAS = $equipamentos->obtemListaNAS();
 					$this->_view->atribui("listaNAS",$listaNAS);
 					$listaPOP = $equipamentos->obtemListaPOPs('A');
 					$this->_view->atribui("listaPOP",$listaPOP);
 				}
+				
+				
+				
 				if( $acao ) {
 					// Processar alteração/cadastro.
 					
