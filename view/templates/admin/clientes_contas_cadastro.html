@@ -90,14 +90,46 @@ label {
 {/literal}
 </style>
 
+<script type="text/javascript">
+{literal}
+	
+
+	function alteraNas() {
+		var frm = document.frmConta;
+		if( frm.id_nas.value != frm.nas_orig.value && !frm.altera_rede.checked ) {
+			if( window.confirm("A alteração do NAS exige que o ip seja alterado, deseja continuar ?") ) {
+				frm.altera_rede.checked = true;
+				alteraNovaSelecao();
+			} else {
+				frm.id_nas.value = frm.nas_orig.value;
+			}
+		}
+	}
+	
+	function alteraNovaSelecao() {
+		var frm = document.frmConta;		
+		frm.selecao_redeip.disabled = !frm.altera_rede.checked;		
+		alteraSelecaoIP();
+	}
+	
+	function alteraSelecaoIP() {
+		var frm = document.frmConta;
+		if( frm.selecao_redeip.disabled || frm.selecao_redeip.value == "A" ) {
+			frm.endereco_redeip.disabled = true;
+   		} else {
+   			frm.endereco_redeip.disabled = false;
+   		}
+	}
+{/literal}	
+</script>
 
 
-<form action="admin-clientes.php" method="post">
-<input type="hidden" name="op" value="{$op}">
-<input type="hidden" name="tela" value="{$tela}">
-<input type="hidden" name="tipo" value="{$tipo}">
-<input type="hidden" name="id_cliente" value="{$id_cliente}">
-<input type="hidden" name="id_conta" value="{$id_conta}">
+<form action="admin-clientes.php" method="post" name="frmConta">
+<input type="hidden" name="op" value="{$op}" />
+<input type="hidden" name="tela" value="{$tela}" />
+<input type="hidden" name="tipo" value="{$tipo}" />
+<input type="hidden" name="id_cliente" value="{$id_cliente}" />
+<input type="hidden" name="id_conta" value="{$id_conta}" />
 
 <table cellspacing=0 cellpadding=0 align="center">
 	<tr>
@@ -129,41 +161,50 @@ label {
 					<tr>
 						<td align="right" width="110"><label>NAS:</label></td>
 						<td colspan=3>
-							<select name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							<select onchange="javascript:alteraNas();" name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								<option value="">-- SELECIONE --</option>
 							{foreach item=v from=$listaNAS}
 								{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}">{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
 							{/foreach}
 							</select>
+							<input type="hidden" name="nas_orig" value="" />
 						</td>
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>POP:</label></td>
 						<td colspan=3>
 							<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="">-- SELECIONE --</option>
+									<option value="">-- SELECIONE --</option>
 							{foreach item=v from=$listaPOP}
 								<option value="{$v.id_pop}">{$v.nome}</option>
 							{/foreach}
 							</select>
 						</td>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>Rede/IP:</label></td>
-						<td colspan=3>
-							<select name="selecao_redeip" onChange="contratoAlteraEndereco()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="A">Automática</option>
-								<option value="M">Manual</option>
-							</select>
-							<input type="text" name="endereco_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-						</td>
-					</tr>
+					</tr>					
 					<tr>
 						<td align="right" width="110"><label>MAC:</label></td>
 						<td colspan=3>
 							<input type="text" name="mac" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 						</td>
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Nova Seleção de Rede/IP:</label></td>
+						<td align="left" colspan='3'>
+							<input onchange="javascript:alteraNovaSelecao();" type="checkbox" id= "altera_rede" name="altera_rede" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>						
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Rede/IP:</label></td>
+						<td colspan=3>
+							<select onchange="javascript:alteraSelecaoIP();" name="selecao_redeip" id="selecao_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="A">Automática</option>
+								<option value="M">Manual</option>
+							</select>
+							<input type="text" name="endereco_redeip" id="endereco_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>					
 				</table>
+				<script type="text/javascript">alteraNovaSelecao()</script>
 			{elseif $tipo_conta == "D"}
 				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
 					<tr>
