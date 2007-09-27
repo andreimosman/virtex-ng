@@ -62,14 +62,14 @@
 		}
 		
 		public static function obtemListaEspecies() {
-			return(array(
+			$r = array(
 							"Dinheiro" => self::$ESPECIE_DINHEIRO,
 							"Cheque" => self::$ESPECIE_CHEQUE,
 							"Cartão de Crédito" => self::$ESPECIE_CARTAO_CREDITO,
 							"Transferência/DOC/Débito Automático" => self::$ESPECIE_TRANSFERENCIA,
-							"Boleto/Título" => => self::$ESPECIE_BOLETO
-						)
-					);
+							"Boleto/Título" => self::$ESPECIE_BOLETO
+						);						
+			return $r;			
 		}
 		
 		

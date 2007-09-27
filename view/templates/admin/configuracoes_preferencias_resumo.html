@@ -27,8 +27,8 @@
     </tr>
 	<tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=geral'" class='link'> 
 	{if $geral.dominio_padrao}    
-		<td class="resumoCellInfo">{$geral.dominio_padrao}</td>
-		<td class="resumoCellInfo">{$geral.nome}</td>
+		<td class="resumoCellInfol">{$geral.dominio_padrao}</td>
+		<td class="resumoCellInfol">{$geral.nome}</td>
 		<td class="resumoCellInfo">{$geral.radius_server}</td>
 		<td class="resumoCellInfo">{$geral.hosp_server}</td>
 		<td class="resumoCellInfo">{$geral.mail_server}</td>
@@ -53,12 +53,12 @@
     </tr>
     <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=provedor'" class='link'>
 	{if $provedor.endereco}	
-      <td class="resumoCellInfo">{$provedor.endereco}</td>
-      <td  class="resumoCellInfo">{$provedor.localidade}</td>
-      <td  class="resumoCellInfo">{$provedor.cep}</td>
-      <td  class="resumoCellInfo">{$provedor.cnpj}</td>
-	  <td  class="resumoCellInfo">{$provedor.fone}</td>
-	  <td  class="resumoCellInfo"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></td>
+      <td class="resumoCellInfol">{$provedor.endereco}</td>
+      <td class="resumoCellInfo">{$provedor.localidade}</td>
+      <td class="resumoCellInfo">{$provedor.cep}</td>
+      <td class="resumoCellInfo">{$provedor.cnpj}</td>
+	  <td class="resumoCellInfo">{$provedor.fone}</td>
+	  <td class="resumoCellInfo"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></td>
 	{else}	
 		<td colspan="6" class="resumoCellInfo">Não Configurado!</td>
 	{/if}  
@@ -70,135 +70,59 @@
 		<th colspan="8" class="resumoCellTitle">Prefer&ecirc;ncia de Cobran&ccedil;a</th>
 	</tr>
     <tr> 
-      <th width="115" class="resumoCellSub">Dia de Vencimento</th>
-      <th width="115" class="resumoCellSub">Car&ecirc;ncia</th>
-	  <th width="115" class="resumoCellSub">Enviar E-Mail </th>
-      <th width="115" class="resumoCellSub">Taxa de Juros</th>
-      <th width="115" class="resumoCellSub">Multa</th>
-      <th width="115" class="resumoCellSub">Pagamento</th>
-	  <th class="resumoCellSub">&nbsp;</th>
+    	<th width="115" class="resumoCellSub">Dia de Vencimento</th>
+    	<th width="115" class="resumoCellSub">Car&ecirc;ncia</th>
+		<th width="115" class="resumoCellSub">Enviar E-Mail </th>
+    	<th width="115" class="resumoCellSub">Taxa de Juros</th>
+    	<th width="115" class="resumoCellSub">Multa</th>
+    	<th width="115" class="resumoCellSub">Pagamento</th>
+		<th width="16"  class="resumoCellSub">&nbsp;</th>
     </tr>
     <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=cobranca'" class='link'> 
 	{if $cobranca.dia_venc}	
-      <td align="center">{$cobranca.dia_venc}</td>
-      <td align="center">{$cobranca.carencia} dias </td>
-	  <td align="center">{if $cobranca.enviar_email == 't'}Sim{else}Não{/if} 
-	  <td align="center">{$cobranca.tx_juros} % </td>
-      <td align="center">{$cobranca.multa} % </td>
-      <td align="center">{if $cobranca.pagamento=="PRE"}Pr&eacute;-Pago{elseif $cobranca.pagamento=="POS"}P&oacute;s-Pago{/if}</td>
-	  <td  width="24" align="center"><a href="configuracao.php?op=preferencia_cobranca"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></a></td>
+	    <td class="resumoCellInfo">{$cobranca.dia_venc}</td>
+    	<td class="resumoCellInfo">{$cobranca.carencia} dias </td>
+		<td class="resumoCellInfo">{if $cobranca.enviar_email == 't'}Sim{else}Não{/if} 
+		<td class="resumoCellInfo">{$cobranca.tx_juros} % </td>
+    	<td class="resumoCellInfo">{$cobranca.multa} % </td>
+    	<td class="resumoCellInfo">{if $cobranca.pagamento=="PRE"}Pr&eacute;-Pago{elseif $cobranca.pagamento=="POS"}P&oacute;s-Pago{/if}</td>
+		<td class="resumoCellInfo"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></td>
 	{else}	
 		<td colspan="8" class="resumoCellInfo">Não Configurado!</td>
 	{/if}  
     </tr>
-	
-    <tr>
-      <td align="center" colspan="8"><table width="100%" border="0" cellpadding="0" cellspacing="0"  style="border:1px solid #EEEEEE;" >
-	  <tr>
-	  	<td colspan="3" align="center" bgcolor="#EFEFEF"><strong><font face="Verdana, Arial, Helvetica, sans-serif" size="2">Formas de pagamento <font color="#999999">(Cobran&ccedil;a)</font> </font></strong></td>
-	  </tr>
-        <tr>
-							{assign var=boleto value=0}
-							{assign var=carne value=0}
-							{assign var=outros value=0}
-								{foreach item=b from=$forma_pag}
-					
-									{if $b.id_cobranca == 1}
-										{assign var=boleto value=$b.disponivel}
-									{/if}
-					
-									{if $b.id_cobranca == 2}
-										{assign var=carne value=$b.disponivel}									
-									{/if}
-					
-									{if $b.id_cobranca == 3}
-										{assign var=outros value=$b.disponivel}									
-									{/if}
-								
-								{/foreach}	
-          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-              <td bgcolor="#F7F9F9"><p><strong><a href="configuracao.php?op=preferencia_cobranca">Carn&ecirc;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {if $carne=='f'}<font color="#999999">(n&atilde;o disponivel)</font>{/if}</strong></p></td>
-            </tr>
-            <tr>
-              <td><table width="250" height="100%" align="center">
-                  <tr>
-                    <td>{if $carne=='t'}<font style="font-size:10px;" face="Verdana, Arial, Helvetica, sans-serif"><a href="configuracao.php?op=preferencia_cobranca">Op&ccedil;&otilde;es
-                      de Carn&ecirc;</a></font>							
-                     <table width="260" dwcopytype="CopyTableRow">
-                          <tr>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Cod. Banco: </strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.cod_banco}</p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Carteira: </strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.carteira}</p></a></td>
-                          </tr>
-                          <tr>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Ag&ecirc;ncia: </strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.agencia}</p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Num. Conta: </strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.num_conta}</p></a></td>
-                          </tr>
-                          <tr>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Conv&ecirc;nio:</strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.convenio}</p></a></td>
-                          </tr>
-                      </table>{/if}</td>
-                  </tr>
-              </table></td>
-            </tr>
-          </table></td>
-          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-              <td bgcolor="#F7F9F9"><p><strong><a href="configuracao.php?op=preferencia_cobranca">Boleto</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {if $boleto=='f'}<font color="#999999">(n&atilde;o disponivel)</font>{/if}</strong></p></td>
-            </tr>
-            <tr>
-              <td><table width="250" height="100%" align="center">
-                  <tr>
-                    <td>{if $boleto=='t'}<font style="font-size:10px;" face="Verdana, Arial, Helvetica, sans-serif"><a href="configuracao.php?op=preferencia_cobranca">Op&ccedil;&otilde;es
-                      de Boleto</a></font>
-					   <table width="" border="0" dwcopytype="CopyTableRow">
-                          <tr>
-					  
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Cod. Banco: </strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.cod_banco_boleto}</p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Carteira:</strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.carteira_boleto}</p></a></td>
-                          </tr>
-                          <tr>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Ag&ecirc;ncia:</strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.agencia_boleto}</p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Num. Conta:</strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.conta_boleto}</p></a></td>
-                          </tr>
-                          <tr>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p><strong>Conv&ecirc;nio:</strong></p></a></td>
-                            <td><a href="configuracao.php?op=preferencia_cobranca"><p>{$cobranca.convenio_boleto}</p></a></td>
-							<td>
-							</td>
-                          </tr>
-                      </table>
-                        {/if}</td>
-                  </tr>
-              </table></td>
-            </tr>
-          </table></td>
-          <td valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-              <td bgcolor="#F7F9F9"><p><strong><a href="configuracao.php?op=preferencia_cobranca">Outras Formas</a> </strong></p></td>
-            </tr>
-            <tr>
-              <td valign="top" >
-			  	{if $outros=='f'}
-			  		<p><strong><font color="#999999">(n&atilde;o disponivel)</font></strong></p>
-				{/if}
-			  </td>
-            </tr>
-          </table></td>
-        </tr>
-      </table></td>
-    </tr>
   </table>
+  <br />
+  <table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
+  	<tr>
+		<td colspan="6" class="resumoCellTitle">Formas de pagamento <span style="color:#999999;">(Cobran&ccedil;a)</span></td>
+	</tr>				
+	<tr>
+		<th class="resumoCellSub">TIPO</th>
+		<th class="resumoCellSub">BANCO</th>
+		<th class="resumoCellSub">AG.</th>
+		<th class="resumoCellSub">CONTA</th>
+		<th class="resumoCellSub">CARNÊ</th>
+		<th class="resumoCellSub">DISPONÍVEL</th>
+	</th>	
+	{foreach name=registros item=r from=$formas}
+	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}'" class='link'>
+		<td width="150" class="resumoCellInfol">{$tipos_forma[$r.tipo_cobranca]}</td>
+		<td width="190" class="resumoCellInfol">{if $r.codigo_banco}{$r.codigo_banco|string_format:"%03d"}-{$bancos[$r.codigo_banco]}{else}N/A{/if}</td>
+		<td class="resumoCellInfo">{$r.agencia|string_format:"%04d"}</td>
+		<td class="resumoCellInfo">{$r.conta|string_format:"%08d"}</td>
+		<td class="resumoCellInfo">{if $r.carne == 't'}SIM{else}NÃO{/if}</td>
+		<td class="resumoCellInfo">{if $r.disponivel == 't'}SIM{else}NÃO{/if}</td>
+	</tr>
+	{foreachelse}
+		<tr>
+			<td colspan="6" class="resumoCellInfo"><B>NENHUMA FORMA DE PAGAMENTO CADASTRADA ATÉ O MOMENTO.</B></td>
+		</tr>
+	{/foreach}
+  </table>	
 </div>
 </center>
+<br />
 </body>
 </html>

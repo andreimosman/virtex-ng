@@ -472,6 +472,23 @@
 			$provedor = $this->preferencias->obtemPreferenciasProvedor();
 			$this->_view->atribui("provedor",$provedor);
 			
+			$tipos_forma = $this->preferencias->obtemTiposFormaPagamento();			
+			$this->_view->atribui("tipos_forma",$tipos_forma);
+			
+			$bancos = $this->preferencias->obtemListaBancos();
+			$this->_view->atribui("bancos",$bancos);
+			
+			$cobranca 	= $this->preferencias->obtemPreferenciasCobranca();
+			$this->_view->atribui("cobranca",$cobranca);
+			
+			
+			$tipos 	= $this->preferencias->obtemTiposPagamento();
+			$this->_view->atribui("tipos",$tipos);
+			
+			$formas = $this->preferencias->obtemFormasPagamento();
+			$this->_view->atribui("formas",$formas);
+			
+			//die("<pre>".print_r($formas,true)."<pre>");
 
 			$url = "admin-configuracoes.php?op=preferencias&tela=resumo";
 		}
@@ -740,7 +757,7 @@
 						// Lista de formas de pagamento
 						// echo "LISTA FORMAS<br>\n";
 						$formas = $this->preferencias->obtemFormasPagamento();
-						$this->_view->atribui("formas",$formas);
+						$this->_view->atribui("formas",$formas);						
 						//echo "<pre>";
 						//print_r($formas);
 						//echo "</pre>";
@@ -779,8 +796,7 @@
 
 				
 				if( $id_forma_pagamento && !$acao ) {
-					$info = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-					
+					$info = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);					
 					while(list($vr,$vl)=each($info)) {
 						$this->_view->atribui($vr,$vl);
 					}
