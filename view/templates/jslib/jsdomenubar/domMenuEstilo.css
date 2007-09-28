@@ -42,11 +42,11 @@ div.BJ_subMenuBar, div.BJ_subMenuElement {
 }
 
 div.BJ_menuBar {
-    background-color: #BCD3C4;
+    /** background-color: #BCD3C4; */
     border: none;
 }
 div.BJ_subMenuBar {
-    background-color: #BCD3C4;
+    /** background-color: #BCD3C4; */
     border: 1px solid;
     border-color: #000;
 }
@@ -54,14 +54,14 @@ div.BJ_menuBar {
     padding: 1px 4px;
 }
 div.BJ_menuElement {
-    border:1px solid #BCD3C4;
+    /** border:1px solid #BCD3C4; */
     padding:0px 10px 0px 10px;
 }
 div.BJ_subMenuElement {
     padding: 2px 0px 2px 5px;
     margin: 0;
     background-color:ffffff;
-    border-left:20px solid #BCD3C4;
+    /** border-left:20px solid #BCD3C4; */
     border-top:0px;
     border-bottom:10px none;
 }

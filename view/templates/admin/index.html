@@ -1,7 +1,131 @@
 <HTML>
 <HEAD>
 <TITLE>VirtexAdmin</TITLE>
-<style>@import url("view/templates/jslib/jsdomenubar/domMenuEstilo.css");</style>
+<!--style>/** @import url("view/templates/jslib/jsdomenubar/domMenuEstilo.css"); */</style-->
+<style>
+{literal}
+a:link, a:visited, a:active {
+    font-family: Verdana, Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 11px;
+    text-decoration: underline;
+    color: #000066;
+}
+a:hover {
+    text-decoration: none;
+}
+div.p {
+    font-family: Verdana, Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 10px;
+}
+div.small {
+    font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 11px;
+}
+div.title {
+    color: #000066;
+    padding-left: 1px;
+    font-family: monospace;
+    letter-spacing: 2px;
+    font-size: 11px;
+    line-height: 9px;
+    height: 9px;
+    margin-bottom: 1px;
+}
+div.main {
+    border: 1px solid #000066;
+}
+
+/* BrainJar Style */
+div.BJ_menuBar, div.BJ_menuElement,
+div.BJ_subMenuBar, div.BJ_subMenuElement {
+    font-family: Verdana, Tahoma, Helvetica, sans, Arial, sans-serif;
+    font-size: 11px;
+    /** color: #000000;*/
+    color: #FFFFFF;
+    text-align: left;
+
+}
+
+div.BJ_menuBar {
+    background-color: #6E7D9A;
+    border: none;
+}
+div.BJ_subMenuBar {
+    background-color: #6E7D9A;
+    border: 1px solid;
+    border-color: #000;
+}
+div.BJ_menuBar {
+    padding: 1px 4px;
+}
+div.BJ_menuElement {
+    border:1px solid #6E7D9A;
+    padding:0px 10px 0px 10px;
+}
+div.BJ_subMenuElement {
+    padding: 2px 0px 2px 5px;
+    margin: 0;
+    background-color:ffffff;
+    border-left:20px solid #6E7D9A;
+    border-top:0px;
+    border-bottom:10px none;
+    color: #000066;
+}
+div.BJ_subMenuElementHover {
+    background-color: #6E7D9A;
+    color: #FFFFFF;
+}
+div.BJ_subMenuElementHeading {
+
+}
+div.BJ_menuElementHover {
+    /** background-color: #DEE4F3; */
+    background-color: #FEF4F3;
+    /** color: #000; */
+    color: #000066;
+    /** border:1px solid #5555aa; */
+    border:1px solid #FFFFFF;
+}
+div.BJ_menuElementActive {
+    /** background-color: #DEE4F3;
+    color: #000;
+    border:1px solid #5555aa;
+    */
+    background-color: #FEF4F3;
+    color: #000066;
+    border:1px solid #FFFFFF;
+
+}
+div.hr {
+    border-top: 1px solid #906040;
+    border-bottom: 1px solid #e0b090;
+}
+/* NBLSA styles */
+.domMenuNBLSA_subMenuElement {
+  background-color: #000000;
+  font-family: Verdana;
+  color: #EBCC72;
+  font-size: 11px;
+  text-align: left;
+  vertical-align: top;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+.domMenuNBLSA_subMenuElementHover {
+  background-color: #EBCC72;
+  color: #000000;
+}
+
+hr.separador {
+	color:#9Ab1a2;
+	padding:0;
+	margin:0;
+	height:1px;
+}
+{/literal}
+</style>
 <script language="javascript" src="view/templates/jslib/jsdomenubar/domLib.js"></script>
 <script language="javascript" src="view/templates/jslib/jsdomenubar/domMenu.js"></script>
 <script language="javascript" src="view/templates/jslib/jsdomenubar/domMenu_items.js"></script>
@@ -27,19 +151,28 @@ function clickLink(url) {
 <base target="conteudo">
 <table border=0 width="100%" height="100%" cellspacing=0 cellpadding=0>
 	<tr>
-		<td width="100%" height="51" bgcolor="#BCD3C4" background="view/templates/imagens/top_background.gif"><img src="view/templates/imagens/logo_top.gif"></td>
+		<td width="100%" height="51" bgcolor="#6E7D9A" background = "view/templates/imagens/bg_51.jpg" __background="view/templates/imagens/top_background.gif"><img src="view/templates/imagens/logo_51.jpg"></td>
 	</tr>
 	<tr>
 		<td width="100%">
 			<table border=0 width="100%" height="100%" cellspacing=0 cellpadding=0>
 				<tr>
-					<td width="140" bgcolor="#BCD3C4" valign="top" align="center"><br>
-					{include file="gadgets.html"}
+					<td width="140" bgcolor="#6E7D9A" valign="top" align="center" >
+						<table border=0 width="100%" height="100%" cellpadding=0 cellspacing=0>
+							<tr>
+								<td width="100%" height=19 background="view/templates/imagens/bg-geral.jpg" bgcolor="#6E7D9A" valign="top" style="border-top: solid 1px #000000;padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="staticMenuBar">&nbsp;</td>
+							</tr>
+							<tr>
+								<td valign="top" align="center" background="view/templates/imagens/bg-geral.jpg" >
+								{include file="gadgets.html"}
+								</td>
+							</tr>
+						</table>
 					</td>
 					<td>
 						<table border=0 width="100%" height="100%" cellspacing=0 cellpadding=0>
 							<tr>
-								<td width="100%" height=21 bgcolor="#BCD3C4" valign="top" style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="staticMenuBar"><div style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="domMenu_BJ"></div></td>
+								<td width="100%" height=19 background="view/templates/imagens/bg-geral.jpg"  bgcolor="#6E7D9A" valign="top" style="border-top: solid 1px #000000; padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="staticMenuBar"><div style="padding-top:0; margin-top: 0; padding-bottom: 0; margin-bottom: 0" id="domMenu_BJ"></div></td>
 							</tr>
 							<tr>
 								<td valign="top">
@@ -53,7 +186,7 @@ function clickLink(url) {
 		</td>
 	</tr>
 	<tr>
-		<td width="100%" height="20" bgcolor="#BCD3C4" align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">&copy;
+		<td width="100%" height="20" background="view/templates/imagens/bg-geral.jpg" bgcolor="#6E7D9A" align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">&copy;
         Mosman Consultoria - Todos os Direitos Reservados</font></td>
 	</tr>
 

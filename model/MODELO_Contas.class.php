@@ -237,6 +237,26 @@
 		}
 		
 		/**
+		 * Obtem o endereço de instalação.
+		 * (pega o último endereço atribuído à uma conta específica).
+		 */
+		public function obtemEnderecoInstalacaoPelaConta($id_conta) {
+			$filtro = array("id_conta" => $id_conta);
+			return($this->cntb_endereco_instalacao->obtemUnico($filtro,"id_endereco_instalacao DESC"));
+		}
+		
+		/**
+		 * Obtem uma lista de endereços de instalação de um cliente.
+		 */
+		public function obtemListaEnderecosInstalacaoPorCliente($id_cliente) {
+			$filtro = array("id_cliente" => $id_cliente);
+			return($this->cntb_endereco_instalacao->obtem($filtro));
+		}
+		
+		
+		
+		
+		/**
 		 * Cadastra uma conta de Banda Larga.
 		 */
 		public function cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
@@ -294,6 +314,63 @@
 			
 			return($id_conta);
 		
+		}
+		
+		// Funcionalidades comuns
+		protected function alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre) {
+			$dados = array("observacoes" => $observacoes,"conta_mestre" => $conta_mestre);
+
+			if( $senha ) {
+				$senhaCript = MCript::criptSenha($senha);
+				$dados["senha"] = $senha;
+				$dados["senhaCript"] = $senhaCript;
+			}
+			
+			if( $status ) {
+				$dados["status"] = $status;
+			}
+			
+			$this->cntb_conta->altera($dados,array("id_conta"=>$id_conta));
+
+		}
+
+		/**
+		 * Altera uma conta de Banda Larga.
+		 */
+		public function alteraContaBandaLarga($id_conta,$senha,$status,$observacoes,$conta_mestre,
+										$id_pop,$id_nas,$upload,$download,$mac,$endereco,$alterar_endereco = false) {
+
+			// Pegar os dados atuais p/ comparação
+			$infoAtual = $this->obtemContaPeloId($id_conta);
+			$nasAtual = $this->equipamentos->obtemNAS($infoAtual["id_nas"]);
+			$nasNovo = ($infoAtual["id_nas"] != $id_nas ? $this->equipamentos->obtemNAS($id_nas) : $nasAtual);
+			
+			// Dados p/ básicos.
+			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
+			
+			if( !$mac ) $mac = null;
+
+			$dados = array("id_pop" => $id_pop, "upload_kbps" => $upload, "download_kbps" => $download, "mac" => $mac, "id_nas" => $id_nas );
+
+			if( $infoAtual["id_nas"] != $id_nas || $alterar_endereco) {
+				// Alteração de NAS - Alterar obrigatoriamente o endereço.
+				// ou Alteração de endereço.
+				
+				// Atribuição automática.
+				if( !$endereco ) {
+					$this->equipamentos->obtemEnderecoDisponivel($id_nas);
+				}
+				
+				if( $nasNovo["tipo_nas"] == "I" ) {
+					$dados["rede"] = $endereco;
+					$dados["ipaddr"] = null;
+				} else {
+					$dados["ipaddr"] = $endereco;
+					$dados["rede"] = null;
+				}
+
+			}
+			
 		}
 		
 		/**
