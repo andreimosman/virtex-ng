@@ -371,6 +371,43 @@
 
 			}
 			
+			/**
+			 * Se aplicável envia a instrução de remoção da conta no nas antigo p/ spool.
+			 */
+			if( $nasAtual["tipo_nas"] == "I" || $nasAtual["padrao"] == "O" && 
+				(
+					strtoupper(trim($infoAtual["mac"])) != strtoupper(trim($mac)) ||
+					$infoAtual["ipaddr"] != $dados["ipaddr"] ||
+					$infoAtual["rede"] != $dados["rede"] || 
+					$infoAtual["upload_kbps"] != $upload ||
+					$infoAtual["download_kbps"] != $download
+				)
+			) {
+				// Enviar instrução p/ spool remover a configuração antiga.
+				
+				$remEnd = $infoAtual["rede"] ? $inoAtual["rede"] : $infoAtual["ipaddr"];
+				
+				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
+			}
+			
+			/**
+			 * Altera os dados da conta
+			 */
+			$this->cntb_conta_bandalarga->altera($dados,array("id_conta"=>$id_conta));
+			
+			/**
+			 * Envia a instrução de configuração da conta p/ spool.
+			 * Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool.
+			 * Somente se a conta tiver ativa, claro!
+			 */
+
+			if( $status == "A" && ($nasNovo["tipo_nas"] == "I" || ($nasNovo["tipo_nas"] == "P" && $nasNovo["padrao"] == "O")) ) {
+				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
+			}
+			
+						
+
+			
 		}
 		
 		/**
@@ -396,6 +433,15 @@
 			
 			return($this->cntb_conta_discado->insere($dados));
 		
+		}
+
+		public function alteraContaDiscado($id_conta,$senha,$status,$observacoes,$conta_mestre,$foneinfo) {
+			// Altera os dados comuns a todas as contas.
+			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
+			
+			// Altera os dados específicos do discado.
+			$dados = array("foneinfo" => $foneinfo);
+			$this->cntb_conta_discado->altera($dados,array("id_conta" => $id_conta));
 		}
 		
 		/**
@@ -437,6 +483,16 @@
 
 			return($id_conta);
 		}
+
+		public function alteraContaEmail($id_conta,$senha,$status,$observacoes,$conta_mestre,$quota) {
+			// Altera os dados comuns a todas as contas.
+			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
+			
+			// Altera os dados específicos do email.
+			$dados = array("quota" => $quota);
+			$this->cntb_conta_email->altera($dados,array("id_conta" => $id_conta));
+		}
+
 		
 		/**
 		 * Cadastra uma conta de Hospedagem.
@@ -492,10 +548,14 @@
 			return($id_conta);
 			
 		}
-		
-	
+
+		public function alteraHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre) {
+			// Altera os dados comuns a todas as contas.
+			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
+			
+			// Não se altera nada além dos dados comuns na hospedagem.
+		}
 	
 	}
-	
 	
 ?>
