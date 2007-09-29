@@ -18,6 +18,10 @@
 			$controller = strtolower($controller);
 			
 			switch($controller) {
+				case 'ajax':
+					$retorno = new VCAAjax();
+					break;
+					
 				case 'login':
 					$retorno = new VCALogin();
 					break;

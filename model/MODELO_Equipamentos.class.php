@@ -118,6 +118,13 @@
 		}
 		
 		/**
+		 * Caso o endereço pertença ao NAS solicitado retorna o endereço correto.
+		 */
+		public function enderecoPertenceAoNAS($id_nas,$endereco) {
+			return($this->cftb_nas_rede->enderecoPertenceAoNAS($id_nas,$endereco));
+		}
+		
+		/**
 		 * Retorna os endereços de infraentrutura do NAS especificado.
 		 */
 		public function obtemEnderecoInfraestruturaNAS($id_nas) {
