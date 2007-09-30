@@ -30,6 +30,14 @@
 					$this->_file = "suporte_ferramentas_ipcalc.html";
 					$this->atribui("titulo","Calculadora IP");
 					break;
+				case 'arp':
+					$this->_file = "suporte_ferramentas_arp.html";
+					$this->atribui("titulo","Tabela ARP");
+					break;
+				case 'ping';
+					$this->_file = "suporte_ferramentas_ping.html";
+					$this->atribui("titulo","PING");
+					break;
 				default:
 					// Do something
 			}

@@ -18,6 +18,23 @@
 		
 		/** cache dos valores encontrados */
 		protected $options;
+		protected $params;
+
+		// tcpip.ini - Arquivo de configurações de NAS tcpip.
+		protected $nasConfig;
+		protected $netConfig;
+
+		// Cache de informações
+		protected $tcpip;
+		protected $pppoe;
+		protected $pptp;
+		
+		protected $fator;
+		
+		protected $network;
+		protected $ext_iface;	// Interface externa
+		
+		protected $infoNAS;
 
 
 		/**
@@ -26,6 +43,7 @@
 		public function __construct() {
 			parent::__construct();
 			$this->options = array();
+			$this->params = array();
 			
 			$this->_shortopts = NULL;
 			$this->_longopts  = NULL;
@@ -33,6 +51,71 @@
 			$this->selfConfig();
 
 			$this->getopt();
+
+			// Configurações dos NAS
+			$this->nasConfig = MConfig::getInstance("etc/nas.ini");
+			
+			// Configurações de Rede
+			$this->netConfig = MConfig::getInstance("etc/network.ini");
+
+			$equipamentos = null;
+
+
+			$this->tcpip 	= array();
+			$this->pppoe 	= array();
+			$this->pptp		= array();
+			$this->infoNAS 	= array();
+			$this->fator 	= array();
+
+			
+			$this->network = $this->netConfig->config;
+			
+			foreach($this->network as $iface => $dados) {
+				if( $dados["status"] == "up" ) {
+					if( $dados["type"] == "external" ) {
+						$this->ext_iface = $iface;
+					}
+				}
+			}
+			
+			
+			$equipamentos = null;
+			
+			if( $this->_startdb && count($this->nasConfig->config) ) {
+				$equipamentos = VirtexModelo::factory("equipamentos");
+			}
+
+			foreach($this->nasConfig->config as $nas => $dados) {
+				// echo "NAS: " . $nas . "\n";
+				@list($tipo,$id_nas) = explode(":",$nas);
+				
+				if( ((int)$dados["enabled"]) && trim($dados["interface"]) ) {
+					if( $equipamentos ) {
+						$this->infoNAS[$id_nas] = $equipamentos->obtemNAS($id_nas);
+					}
+				
+					// Adicionar no cache
+					
+					if( $tipo == "pppoe" ) {
+						// 
+						$this->pppoe[$id_nas] = trim($dados["interface"]);
+					}
+					
+					if( $tipo == "pptp" ) {
+						//
+						$this->pptp[$id_nas] = trim($dados["interface"]);
+					}
+
+					if( $tipo == "tcpip" ) {
+						//
+						$this->tcpip[$id_nas] = trim($dados["interface"]);
+					}
+					
+					$this->fator[$id_nas] = trim($dados["fator"]);
+
+				}
+				
+			}
 			
 		}
 		
@@ -54,7 +137,7 @@
 					exit(-1);
 				}
 				
-				$this->options = @$options[0][0];
+				$this->options 	= @$options[0];
 				
 				if( !is_array($this->options) ) $this->options = array();
 			}
