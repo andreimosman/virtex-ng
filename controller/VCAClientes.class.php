@@ -486,10 +486,7 @@
 													$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $_REQUEST["carencia"],
 													$_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
 							
-							die("FIM!");						
-	      
 							$this->_view->atribui ("gera_carne", $gera_carne);
-
 						}
 
 					}
@@ -640,43 +637,11 @@
 				
 				
 			} else if( $tela == "cadastro" ) {
-				if( $info["tipo_conta"] == "BL" ) {
-					$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
-					$listaNAS = $equipamentos->obtemListaNAS();
-					$this->_view->atribui("listaNAS",$listaNAS);					
-					$listaPOP = $equipamentos->obtemListaPOPs('A');
-					$this->_view->atribui("listaPOP",$listaPOP);
-					$tiposNas = $equipamentos->obtemTiposNAS();					
-					$this->_view->atribui("tiposNAS",$tiposNas);
-					
-					
-					$endereco_instalacao = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
-					
-					if(!count($endereco_instalacao)){
-						$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);
-						$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-															$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
-					}
-					
-					$this->_view->atribui("endereco",$endereco_instalacao["endereco"]);
-					$this->_view->atribui("bairro",$endereco_instalacao["bairro"]);
-					$this->_view->atribui("id_cidade",$endereco_instalacao["id_cidade"]);
-					$this->_view->atribui("complemento",$endereco_instalacao["complemento"]);
-					$this->_view->atribui("cep",$endereco_instalacao["cep"]);
-					
-					$nas = $equipamentos->obtemNAS($info["id_nas"]);					
-					$endereco_ip = $nas["tipo_nas"] == "I" ? $info["rede"] : $info["ippaddr"];
-					$this->_view->atribui("endereco_ip",$endereco_ip);
-					
-					$bandas = $this->preferencias->obtemListaBandas();
-					
-					$this->_view->atribui("bandas",$bandas);
-					
-					
-				}
+				
 				if( $acao ) {
 					// Processar alteração/cadastro.
 					
+					$username			= @$_REQUEST["username"];
 					$status				= @$_REQUEST["status"];
 					$conta_mestre		= @$_REQUEST["conta_mestre"];
 					$id_cliente			= @$_REQUEST["id_cliente"];
@@ -689,12 +654,13 @@
 					$upload 			= @$_REQUEST["upload"];
 					$download 			= @$_REQUEST["download"];
 					$difEnderecoSetup 	= @$_REQUEST["difEnderecoSetup"];
+					$observacoes 		= @$_REQUEST["observacoes"];
 					
 					$alterar_endereco 	= (bool) (@$_REQUEST["altera_rede"] == "t");
 					
 					$senha = $senha == $confsenha ? $senha : "";
 					
-					
+					$url = "admin-clientes.php?op=conta&tipo=BL&id_cliente=".$this->id_cliente;
 					
 					// todo: buscar esse dados
 					//  $observacoes, $upload,$download
@@ -713,7 +679,7 @@
 									$info_endereco["id_cliente"] );
 						
 							$endereco_instalacao = array(
-														"endereco" => @$_REQUEST["endereco_instalacao"], 
+														"endereco" => @$_REQUEST["endereco_instalacao"],
 														"bairro" => @$_REQUEST["bairro_instalacao"], 
 														"id_cidade" => @$_REQUEST["id_cidade_instalacao"], 
 														"complemento" => @$_REQUEST["complemento_instalacao"],
@@ -725,44 +691,107 @@
 							}
 						}
 
+						$this->_view->atribui("url",$url);
+						$this->_view->atribui("mensagem","Conta alterada com sucesso.");
+						$this->_view->atribuiVisualizacao("msgredirect");
 						
 						
-						// todo:  exibir informação sobre o processo  exemplo:  conta alterada com sucesso!
-						header("Location: admin-clientes.php?op=conta&tipo=BL&id_cliente=".$this->id_cliente);
-						exit;
 					} else {  //  cadastro
-						die("cadastro!!!!");
+					
+						$dominio = $preferenciasGerais["dominio_padrao"];
+						$contas->cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+														 $observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip);
+														 
+						if($difEnderecoSetup){
+							$endereco_instalacao = array(
+														"endereco" => @$_REQUEST["endereco_instalacao"],
+														"bairro" => @$_REQUEST["bairro_instalacao"], 
+														"id_cidade" => @$_REQUEST["id_cidade_instalacao"], 
+														"complemento" => @$_REQUEST["complemento_instalacao"],
+														"cep" => @$_REQUEST["cep_instalacao"]
+													);
+						} else {
+							$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+						}
+						
+						$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
+															$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+						
+						$this->_view->atribui("url",$url);
+						$this->_view->atribui("mensagem","Conta cadastrada com sucesso.");
+						$this->_view->atribuiVisualizacao("msgredirect");
 					}
-					//
+					
+				} else {
+					$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
+					$listaNAS = $equipamentos->obtemListaNAS();
+					$this->_view->atribui("listaNAS",$listaNAS);					
+					$listaPOP = $equipamentos->obtemListaPOPs('A');
+					$this->_view->atribui("listaPOP",$listaPOP);
+					$tiposNas = $equipamentos->obtemTiposNAS();					
+					$this->_view->atribui("tiposNAS",$tiposNas);
+					$bandas = $this->preferencias->obtemListaBandas();
+					$this->_view->atribui("bandas",$bandas);
+						
+					if( $info["tipo_conta"] == "BL" ) {
+					
+						$endereco_instalacao = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+						 if(!count($endereco_instalacao)){
+							$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);
+							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
+																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+						}
+						
+						$nas = $equipamentos->obtemNAS($info["id_nas"]);
+						$endereco_ip = $nas["tipo_nas"] == "I" ? $info["rede"] : $info["ippaddr"];
+						$this->_view->atribui("endereco_ip",$endereco_ip);
+						
+						
+					} else {
+						$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);						
+						$countContas = count($contas->obtemContasPorContrato($id_cliente_produto));
+						$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
+						$qtdeDisponivel = $contrato["num_conta"] - $countContas;
+						if($qtdeDisponivel <= 0 ){
+							die("não existe mais contas disponiveis!");
+						}
+					}
+					
+					$this->_view->atribui("endereco",$endereco_instalacao["endereco"]);
+					$this->_view->atribui("bairro",$endereco_instalacao["bairro"]);
+					$this->_view->atribui("id_cidade",$endereco_instalacao["id_cidade"]);
+					$this->_view->atribui("complemento",$endereco_instalacao["complemento"]);
+					$this->_view->atribui("cep",$endereco_instalacao["cep"]);
 					
 					
 				}
 			} else {
 				// Listagem
+				
+				
+				
 				$listaContratos = $cobranca->obtemContratos($this->id_cliente,"A",$tipo);
 
 				for($i=0;$i<count($listaContratos);$i++) {
 					$listaContas = $contas->obtemContasPorContrato($listaContratos[$i]["id_cliente_produto"]);
+					$countContas = count($listaContas);
+					
 					$contasContrato = array();
-					for($x=0;$x<count($listaContas);$x++) {
-						$contasContrato[] = $contas->obtemContaPeloId($listaContas[$x]["id_conta"]);
+					foreach($listaContas as $rowConta){
+						$contasContrato[] = $contas->obtemContaPeloId($rowConta["id_conta"]);
 					}
-
 					$listaContratos[$i]["contas"] = $contasContrato;
+										
+					$contrato = $cobranca->obtemContratoPeloId($listaContratos[$i]["id_cliente_produto"]);
+					$listaContratos[$i]["qtdeDisponivel"] = $contrato["num_conta"] - $countContas;
+					
 					unset($contasContrato);
 					unset($listaContas);
 				}
-				
-				//echo "<pre>";
-				//print_r($listaContratos);
-				//echo "</pre>";
-
 				$this->_view->atribui("listaContratos",$listaContratos);
 			}
 			
 		}
-		
-		
 
 		protected function executaRelatorios() {
 			$this->_view->atribuiVisualizacao("relatorios");

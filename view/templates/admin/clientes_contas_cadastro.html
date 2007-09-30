@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
-	<title>VIRTEX</title>
+	<title>VIRTEX_NG</title>
 </head>
 <body style="margin: auto; paddin: 0px; padding: 2px;">
 {include file="clientes_header.html"}
@@ -118,6 +118,7 @@ label {
 	
 	function alteraNas() {
 		var frm = document.frmConta;
+{/literal}{if $id_conta}{literal}		
 		if( frm.id_nas.value != frm.nas_orig.value && !frm.altera_rede.checked ) {
 			if( window.confirm("A alteração do NAS exige que o ip seja alterado, deseja continuar ?") ) {
 				frm.altera_rede.checked = true;
@@ -126,12 +127,18 @@ label {
 			} else {
 				frm.id_nas.value = frm.nas_orig.value;
 			}
-		}
+		}	
+{/literal}{else}{literal}		
+		$('selecao_redeip').value = "A";				
+		alteraNovaSelecao(false);
+{/literal}{/if}{literal}	
 	}
 	
 	function alteraNovaSelecao(sit) {
+{/literal}{if $id_conta}{literal}	
 		var frm = document.frmConta;		
 		frm.selecao_redeip.disabled = !frm.altera_rede.checked;		
+{/literal}{/if}{literal}		
 		alteraSelecaoIP(sit);
 	}
 	
@@ -146,6 +153,48 @@ label {
    			frm.endereco_redeip.disabled = false;
    		}
 	}
+	
+	returnStatusUsername = false;
+	function validaUsername(){
+		username = $F('username');
+		dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
+		tipo = $F('tipo');
+		var url = "admin-ajax.php";
+		var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
+		
+		var myAjax = new Ajax.Request(			
+			url, 
+			{
+				method: 'get', 
+				parameters: pars, 
+				onComplete: showResponseUsername,
+				asynchronous: false
+			});
+		return 	returnStatusUsername;
+	}
+
+	function showResponseUsername(originalRequest) {
+		try {
+			if ( !getReturn(originalRequest.responseText)){		
+				$('username').value = "";
+				$('username').focus();
+				returnStatusUsername = false;
+			} else {
+				returnStatusUsername = true;
+			}
+		} catch(e){
+			alert(e.description);
+		}
+	}
+	
+	function getReturn(response){
+		var r = response.evalJSON();
+		if(r.codigo > 0){
+			alert(r.mensagem)		
+			return false;
+		}
+		return r;
+	}	
 	
 	returnStatus = false;
 	function checkEnderecoDisponivel(id_nas, endereco){
@@ -179,6 +228,27 @@ label {
 	function checkFrm(){	
 		var senha = $('senha');
 		var confsenha = $('confsenha');
+		var nas = $('id_nas');
+		var pop = $('id_pop');
+		
+{/literal}{if !$id_conta}{literal}		
+		var username = $('username');
+		if(username.value != ""){
+			if(!validaUsername()){
+				return false;
+			} 
+		} else {
+			alert("Informe um username!");
+			username.focus();
+			return false;
+		}
+		
+		if("" == senha.value){
+			alert("A senha deve ser informada!");
+			senha.focus();
+			return false;
+		}
+{/literal}{/if}{literal}		
 	
 		if("" != senha.value ){
 			if(senha.value != confsenha.value){
@@ -187,9 +257,24 @@ label {
 				return false;
 			}
 		}
+		
+		
+		if("" == nas.value){
+			alert("Selecione um nas!");
+			nas.focus();
+			return false;
+		}
+		
+		if("" == pop.value){
+			alert("Selecione um pop!");
+			pop.focus();
+			return false;
+		}
+
+		
 	
-{/literal}{if $tipo_conta == "BL"}{literal}
-		var nas = $('id_nas');
+{/literal}{if $tipo == "BL"}{literal}
+		
 		var mac = $('mac');
 		var altera_rede = $('altera_rede');
 		var selecao_redeip = $('selecao_redeip');
@@ -203,13 +288,11 @@ label {
 			}
 		}			
 		
-		if(altera_rede.checked && "M" == selecao_redeip.value && "" != endereco_redeip.value && endereco_redeip.value != endereco_original ){
-			if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){				
-				return false;
-			}
-		} 
-		
+{/literal}{if $id_conta}{literal}
 		if(altera_rede.checked && "M" == selecao_redeip.value) {
+{/literal}{else}{literal}
+		if("M" == selecao_redeip.value) {
+{/literal}{/if}{literal}		
 			if("" != endereco_redeip.value){				
 				if( endereco_redeip.value != endereco_original ){
 					if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
@@ -274,8 +357,9 @@ label {
 <form action="admin-clientes.php" method="post" name="frmConta" onSubmit="return checkFrm();">
 <input type="hidden" name="op" value="{$op}" />
 <input type="hidden" name="tela" value="{$tela}" />
-<input type="hidden" name="tipo" value="{$tipo}" />
+<input type="hidden" name="tipo" id="tipo" value="{$tipo}" />
 <input type="hidden" name="id_cliente" value="{$id_cliente}" />
+<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}" />
 <input type="hidden" name="id_conta" value="{$id_conta}" />
 <input type="hidden" name="acao" value="update" />
 
@@ -288,9 +372,9 @@ label {
 			<td align="right" width="110"><label>Username:</label></td>
 			<td colspan='3' align='left'>
 				{if $id_conta}
-					{$username}{if $tipo_conta == "E"}{$domini}{/if}
+					{$username}{if $tipo == "E"}@{$dominio}{/if}
 				{else}
-					<input type="text" size="30" maxlength="20" name="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);"  {if $formDisabled}disabled='disabled'{/if} />	
+					<input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);"  {if $formDisabled}disabled='disabled'{/if} />	
 				{/if}
 			</td>
 		</tr>
@@ -323,7 +407,7 @@ label {
 		</tr>
 	</table>
 
-	{if $tipo_conta == "BL"}
+	{if $tipo == "BL"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">
 			<tr>
 				<th colspan='4' align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
@@ -336,7 +420,6 @@ label {
 					{foreach item=v from=$listaNAS}
 						{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}"  {if $id_nas == $v.id_nas}selected='selected'{/if} >{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
 					{/foreach}
-					
 					</select>					
 					<input type="hidden" name="nas_orig" value="{$id_nas}" />
 				</td>
@@ -344,10 +427,12 @@ label {
 			<tr>
 				<td align="right" width="110"><label>POP:</label></td>
 				<td colspan='3' align='left'>
-					<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+					<select name="id_pop" id="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					<option value="">-- SELECIONE --</option>
 					{foreach item=v from=$listaPOP}
+						{if $v.tipo != 'B'}
 						<option value="{$v.id_pop}" {if $id_pop == $v.id_pop}selected='selected'{/if}>{$v.nome}</option>
+						{/if}
 					{/foreach}
 					</select>
 				</td>
@@ -359,9 +444,11 @@ label {
 				</td>
 			</tr>
 			<tr>
-				<td align="right" width="110"><label>Nova Seleção de Rede/IP:</label></td>
+				<td align="right" width="110"><label>{if $id_conta}Nova{/if} Seleção de Rede/IP:</label></td>
 				<td align="left" colspan='3'>
+					{if $id_conta}
 					<input onclick="javascript:alteraNovaSelecao(false);" type="checkbox" id= "altera_rede" name="altera_rede" value="t" {if $formDisabled}disabled='disabled'{/if} />&nbsp;
+					{/if}
 					<select onchange="javascript:alteraSelecaoIP();" name="selecao_redeip" id="selecao_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 						<option value="A">Automática</option>
 						<option value="M" {if $id_conta}selected='selected'{/if}>Manual</option>
@@ -391,7 +478,7 @@ label {
 			</tr>		
 		</table>
 		<script type="text/javascript">alteraNovaSelecao(true)</script>
-	{elseif $tipo_conta == "D"}
+	{elseif $tipo == "D"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">
 			<tr>
 				<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Acesso:</label></th>
@@ -401,9 +488,9 @@ label {
 				<td colspan='3' align='left'><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
 			</tr>
 		</table>
-	{elseif $tipo_conta == "E"}
+	{elseif $tipo == "E"}
 
-	{elseif $tipo_conta == "H"}
+	{elseif $tipo == "H"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">
 			<tr>
 				<th colspan='4' align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
@@ -422,7 +509,7 @@ label {
 			</tr>
 		</table>
 	{/if}
-	{if $tipo_conta == "D" || $tipo_conta == "BL"}
+	{if $tipo == "D" || $tipo == "BL"}
 		
 		<table cellspacing='0' cellpadding='0' class="boxContratacao">
 			<tr>

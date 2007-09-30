@@ -273,8 +273,7 @@
 		 * Cadastra uma conta de Banda Larga.
 		 */
 		public function cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-										$observacoes,$conta_mestre,
-										$id_pop,$id_nas,$upload,$download,$mac,$endereco) {
+										$observacoes,$conta_mestre, $id_pop,$id_nas,$upload,$download,$mac,$endereco) {
 			
 			$nas = $this->equipamentos->obtemNAS($id_nas);
 			$senhaCript = MCript::criptSenha($senha);
@@ -283,7 +282,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
-							"tipo_conta"				=> 'BL',
+							"tipo_conta"			=> 'BL',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
