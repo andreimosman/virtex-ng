@@ -179,7 +179,33 @@
 		
 		protected function executaGraficos() {
 			$this->_view->atribuiVisualizacao("graficos");
-
+			
+			$contas			= VirtexModelo::factory('contas');
+			$equipamentos 	= VirtexModelo::factory('equipamentos');
+			
+			$listaPOPs 		= $equipamentos->obtemListaPOPs();
+			$listaNAS		= $equipamentos->obtemListaNAS();
+			
+			$id_nas			= @$_REQUEST["id_nas"];
+			$id_pop			= @$_REQUEST["id_pop"];
+						
+			$this->_view->atribui("listaPOPs",$listaPOPs);
+			$this->_view->atribui("listaNAS",$listaNAS);
+			
+			$this->_view->atribui("id_nas",$id_nas);
+			$this->_view->atribui("id_pop",$id_pop);
+			
+			if( $id_pop || $id_nas ) {
+				// echo "PESQUISAR";	
+				$listaContas = $contas->obtemContasBandaLargaPeloPOPNAS($id_pop,$id_nas,"A");
+				$this->_view->atribui("listaContas",$listaContas);
+				
+				if( !count($listaContas) ) {
+					$this->_view->atribui("erro","Nenhuma conta ativa satisfaz as condições de pesquisa.");
+				}
+			
+			}
+			
 		}
 		
 	}

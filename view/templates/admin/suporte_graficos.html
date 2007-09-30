@@ -1,0 +1,136 @@
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="refresh" content="60" /></head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="suporte_header.html"}
+
+<style>
+{literal}
+.form_graficos {
+	width: 450px;
+}
+
+.graficos_titulo {
+	font-family: verdana;
+	font-size: 12px;
+	font-color:
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+.erro {
+	width: 400px;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: #FFeeee;
+	color: #FF0000;
+	border: solid 1px #ff0000;
+}
+
+{/literal}
+</style>
+
+<form name="graficos" method="get" action="admin-suporte.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="ferramenta" value="{$ferramenta}">
+<input type="hidden" name="acao" value="consulta">
+
+	<center>
+	<div class='form_graficos' align='center'>
+		<fieldset><legend><span class="graficos_titulo">Gráficos</span></legend>
+		<table cellspacing=0 cellpadding=0 align="center">
+			<tr>
+				<td align="right">
+					<label>NAS:</label>
+				</td>
+				<td>
+					<select name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style="width: 200px">
+						<option value="" />
+						{foreach item=r from=$listaNAS}
+						{if $r.tipo_nas != "R"}
+						<option value="{$r.id_nas}" {if $r.id_nas == $id_nas}SELECTED{/if}>{$r.tipo_nas}: {$r.nome}</option>
+						{/if}
+						{/foreach}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<label>POP:</label>
+				</td>
+				<td>
+					<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style="width: 310px">
+						<option value="" />
+						{foreach item=r from=$listaPOPs}
+						{if $r.tipo != "B"}
+						<option value="{$r.id_pop}" {if $r.id_pop == $id_pop}SELECTED{/if}>{$r.nome}</option>
+						{/if}
+						{/foreach}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align=center style="padding-bottom: 5px;" colspan=2>
+					<input type='submit' name='Submit' value='Consultar' class='botao'>
+				</td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	</center>
+</form>
+
+{if $erro}
+
+<center>
+<div class="erro" align="center">{$erro}</div>
+</center>
+
+{else}
+<script language="JavaScript">
+{literal}
+function abreEstatisticas(user) {
+	var url="virtex-cgi/stats/"+user+".html";
+	window.open(url,"grafico"+user,'scrollbars=yes,width=550,height=500');
+}
+{/literal}
+</script>
+	{if count($listaContas) }
+		<table width="600" class="lista" cellpadding=0 cellspacing=0 align="center">
+			{foreach name=registros item=conta from=$listaContas}
+			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+			<tr>
+				<th align="left">{$conta.username}</td>
+				<th colspan="2" align="right">
+					<small>[<a href="admin-clientes.php?op=conta&tela=ficha&tipo=BL&id_cliente={$conta.id_cliente}&id_conta={$conta.id_conta}"><small>FICHA TÉCNICA</small></a>]</small>
+				</th>
+			</tr>
+			<tr>
+				<td style="border-bottom: dashed 1px #000000;" width="40%" class='{$estilo}'><strong>Download: </strong>{if $conta.download_kbps}{$conta.download_kbps} kbps{else}Ilimitado{/if} | <strong>Upload: </strong>{if $conta.upload_kbps}{$conta.upload_kbps} kbps{else}Ilimitado{/if}</td>
+				<td style="border-bottom: dashed 1px #000000;" width="25%" class='{$estilo}'><strong>MAC: </strong>{if $conta.mac}{$conta.mac}{else}não informado{/if}</td>
+				<td style="border-bottom: dashed 1px #000000;" width="35%" class='{$estilo}'><strong>Endereço: </strong>{if $conta.rede}{$conta.rede}{else}{$conta.ipaddr}{/if}</td>
+			</tr>
+			<tr>
+				<td colspan=3 align="center" class='{$estilo}' style="border-bottom: solid 2px #000000;"><a href="javascript:abreEstatisticas('{$conta.username}')"><img border=0 src="virtex-cgi/stats/{$conta.username}-day.png"></a></td>
+			</tr>
+			{/foreach}
+		</table>
+	{/if}
+
+
+{/if}
+
+
+
+</body>
+</html>

@@ -39,12 +39,12 @@
 				if( $pop["ativar_monitoramento"] == 't' && $pop["ipaddr"] && count( @$cacheServidores[ $pop["id_servidor"] ] ) ) {
 					// echo "POP: " . $pop["id_pop"] . " / SRV: " . $pop["id_servidor"] . "\n";
 					
-					echo "PINGANDO " . $pop["ipaddr"] . "\n";
+					// echo "PINGANDO " . $pop["ipaddr"] . "\n";
 					
 					$resposta = $cacheServidores[ $pop["id_servidor"] ]["conn"]->getFPING($pop["ipaddr"],$numPings,$tamanho);
 					
-					print_r($resposta);
-					echo "--------------------------------\n";
+					//print_r($resposta);
+					//echo "--------------------------------\n";
 
 					$perdas = 0;
 					$minimo = 9999999999999999999;
