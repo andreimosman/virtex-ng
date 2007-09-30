@@ -94,9 +94,21 @@
 				$filtro["status"] = $status;
 			}
 			
+			return($this->cntb_conta_bandalarga->obtem($filtro));		
+		}
+		
+		public function obtemContasBandaLargaPeloPOPNAS($id_pop,$id_nas,$status="") {
+			$filtro = array();
+			if( $id_pop ) {
+				$filtro["id_pop"] = $id_pop;
+			}
+			if( $id_nas ) {
+				$filtro["id_nas"] = $id_nas;
+			}
+			if( $status ) {
+				$filtro["status"] = $status;
+			}
 			return($this->cntb_conta_bandalarga->obtem($filtro));
-			
-			
 		}
 		
 		/**
