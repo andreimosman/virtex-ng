@@ -30,6 +30,62 @@ function alteraSelecaoIP() {
 	}
 }
 
+returnStatusEmail = false;
+function validaEmail(username,dominio){
+	var username = $F('username');
+	var dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
+	var url = "admin-ajax.php";
+	var pars = "op=contas&output=JSON&query=email&username="+username+"&dominio="+dominio;
+	
+	var myAjax = new Ajax.Request(
+		url, 
+		{
+			method: 'get', 
+			parameters: pars, 
+			onComplete: showResponseEmail,
+			asynchronous: false
+		});
+	return 	returnStatusEmail;
+}
+
+function showResponseEmail(originalRequest) {
+	if ( !getReturn(originalRequest.responseText)){	
+		$('criar_email').checked = false;
+		returnStatusEmail = false;
+	} else {
+		returnStatusEmail = true;
+	}
+}
+
+returnStatusUsername = false;
+function validaUsername(){
+	username = $F('username');
+	dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
+	tipo = $F('tipo');
+	var url = "admin-ajax.php";
+	var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
+	
+	var myAjax = new Ajax.Request(			
+		url, 
+		{
+			method: 'get', 
+			parameters: pars, 
+			onComplete: showResponseUsername,
+			asynchronous: false
+		});
+	return 	returnStatusUsername;
+}
+
+function showResponseUsername(originalRequest) {
+	if ( !getReturn(originalRequest.responseText)){		
+		$('username').value = "";
+		$('username').focus();
+		returnStatusUsername = false;
+	} else {
+		returnStatusUsername = true;
+	}
+}
+
 returnStatus = false;
 function checkEnderecoDisponivel(id_nas, endereco){
 	var url = "admin-ajax.php";
@@ -45,18 +101,25 @@ function checkEnderecoDisponivel(id_nas, endereco){
 		});
 		
 	return returnStatus;			
+}
+
+function getReturn(response){
+	var r = response.evalJSON();
+	if(r.codigo > 0){
+		alert(r.mensagem)		
+		return false;
+	}
+	return r;
 }	
 
 function showResponse(originalRequest) {
-	var r = originalRequest.responseText.evalJSON();		
-	if(r.codigo > 0){
-		alert(r.mensagem)
+	r = getReturn(originalRequest.responseText);
+	if(r == false){
 		returnStatus = false;
-		return false;
-	}		
-	
-	returnStatus = true;
-	$('endereco_redeip').value = r.endereco;
+	} else {
+		returnStatus = true;
+		$('endereco_redeip').value = r.endereco;
+	}
 }
 
 function Cancelar() {
@@ -178,8 +241,8 @@ function contratoDependenciasBox(tipo) {
 
 }
 
-function contratoAlteraUsername() {
-	var frm = document.contratacao;
+function contratoAlteraUsername() {	
+	var frm = document.contratacao;	
 	contratoDependenciasBox(frm.tipo.value);
 }
 
@@ -562,10 +625,25 @@ function replaceField(field) {
 
 function validacao(frm ) {
 	
+	username = $('username');
+	criar_email = $('criar_email');
+	
 	if($F('tipo') == "BL") {
 		if(!checkDadosConexao()){
 			return false;
 		}
+	}
+	
+	if(username.value != ""){
+		if(!validaUsername()){			
+			return false;
+		} 
+	}
+	
+	if(criar_email.checked){
+		if(!validaEmail()){
+			return false;
+		} 
 	}
 	
 	if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.cep_cobranca.value == '' ) {
@@ -922,7 +1000,7 @@ function validarData(campo){
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Username:</label></td>
-						<td colspan=3><input type="text" size="30" maxlength="20" name="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);javascript:contratoAlteraUsername();"></td>
+						<td colspan=3><input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);contratoAlteraUsername();"></td>
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Senha:</label></td>
@@ -934,7 +1012,7 @@ function validarData(campo){
 						</td>
 					</tr>
 					<tr>
-						<td align="right"><input type="checkbox" name="criar_email" value="t"></td>
+						<td align="right"><input type="checkbox" name="criar_email" id="criar_email" value="t"></td>
 						<td><label>criar email @{$preferenciasGerais.dominio_padrao} com usuário e senha acimas.</label></td>
 					</tr>
 				</table>

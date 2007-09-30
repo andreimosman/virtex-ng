@@ -286,7 +286,7 @@ label {
 		</tr>
 		<tr>
 			<td align="right" width="110"><label>Username:</label></td>
-			<td colspan=3>
+			<td colspan='3' align='left'>
 				{if $id_conta}
 					{$username}{if $tipo_conta == "E"}{$domini}{/if}
 				{else}
@@ -296,7 +296,7 @@ label {
 		</tr>
 		<tr>
 			<td align="right" width="110"><label>Senha:</label></td>
-			<td colspan=3>
+			<td colspan='3' align='left'>
 				<label>
 					<input type="password" size="20" maxlength="20" id="senha" name="senha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /> (preencha p/ alterar)<br>
 					<input type="password" size="20" maxlength="20" id="confsenha" name="confsenha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /> (confirme)
@@ -305,7 +305,7 @@ label {
 		</tr>
 		<tr>
 			<td align="right" width="110"><label>Status:</label></td>
-			<td colspan=3>
+			<td colspan='3' align='left'>
 				<select name="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					<option value="A" {if $status == 'A'}selected='selected'{/if}>Ativo</option>
 					<option value="B" {if $status == 'B'}selected='selected'{/if}>Bloqueado</option>
@@ -314,7 +314,7 @@ label {
 		</tr>
 		<tr>
 			<td align="right" width="110"><label>Tipo:</label></td>
-			<td colspan=3>
+			<td colspan='3' align='left'>
 				<select name="conta_mestre" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					<option value="t" {if $conta_mestre == 't'}selected='selected'{/if}>Conta Mestre</option>
 					<option value="f" {if $conta_mestre == 'f'}selected='selected'{/if}>Normal</option>
@@ -326,11 +326,11 @@ label {
 	{if $tipo_conta == "BL"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">
 			<tr>
-				<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
+				<th colspan='4' align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
 			</tr>
 			<tr>
 				<td align="right" width="110"><label>NAS:</label></td>
-				<td colspan=3>
+				<td colspan='3' align='left'>
 					<select onchange="javascript:alteraNas();" name="id_nas" id="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 						<option value="">-- SELECIONE --</option>
 					{foreach item=v from=$listaNAS}
@@ -343,7 +343,7 @@ label {
 			</tr>
 			<tr>
 				<td align="right" width="110"><label>POP:</label></td>
-				<td colspan=3>
+				<td colspan='3' align='left'>
 					<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					<option value="">-- SELECIONE --</option>
 					{foreach item=v from=$listaPOP}
@@ -354,7 +354,7 @@ label {
 			</tr>					
 			<tr>
 				<td align="right" width="110"><label>MAC:</label></td>
-				<td colspan='3'>
+				<td colspan='3' align='left'>
 					<input type="text" name="mac" id="mac" value="{$mac}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} />
 				</td>
 			</tr>
@@ -371,7 +371,7 @@ label {
 			</tr>
 			<tr>
 				<td align="right" width="110" nowrap><label>Download (Kbps):</label></td>
-				<td>
+				<td align='left'>
 					<select name="download" id="download" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >						
 						{foreach item=v from=$bandas}
 						<option value="{$v.id}" {if $download_kbps == $v.id}selected='selected'{/if}>{$v.banda}</option>
@@ -379,7 +379,7 @@ label {
 					</select>					
 				</td>
 				<td align="right" width="110" nowrap><label>Upload (Kbps):</label></td>
-				<td>
+				<td align='left'>
 					<select name="upload" id="upload" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >					
 						{foreach item=v from=$bandas}
 						<option value="{$v.id}" {if $upload_kbps == $v.id}selected='selected'{/if}>{$v.banda}</option>
@@ -398,7 +398,7 @@ label {
 			</tr>
 			<tr>
 				<td align="right" width="110"><label>Fone:</label></td>
-				<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+				<td colspan='3' align='left'><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
 			</tr>
 		</table>
 	{elseif $tipo_conta == "E"}
@@ -406,11 +406,11 @@ label {
 	{elseif $tipo_conta == "H"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">
 			<tr>
-				<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
+				<th colspan='4' align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
 			</tr>
 			<tr>
 				<td align="right" width="110"><label>Tipo:</label></td>
-				<td colspan=3>
+				<td colspan='3' align='left'>
 					<select name="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 						<option value="D">Domínio do Usuário</option>
 						<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
@@ -418,7 +418,7 @@ label {
 				</td>
 			<tr>
 				<td align="right" width="110"><label>Criar:</label></td>
-				<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+				<td colspan='3' align='left'><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
 			</tr>
 		</table>
 	{/if}
@@ -426,16 +426,16 @@ label {
 		
 		<table cellspacing='0' cellpadding='0' class="boxContratacao">
 			<tr>
-				<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
+				<th colspan='4' align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
 			</tr>
 			<tr>
-			<td colspan=4 >
+			<td colspan='4' >
 				<input type="checkbox" name="difEnderecoSetup" id="difEnderecoSetup" OnClick="checkStatusFields(this);" value='1'><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
 			</td>
 			</tr>
 			<tr>
 				<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
-				<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+				<td colspan='3' align='left'><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 			</tr>
 			<tr>
 				<td align="right" width="110" ><label>Complemento:</label></td>
@@ -449,7 +449,7 @@ label {
 			</tr>
 			<tr>
 				<td align="right" ><label>Cidade:</label></td>
-				<td align="left" colspan=4 >
+				<td align="left" colspan='4' >
 					<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" id="id_cidade_instalacao" tabindex="10" class="disabled" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 					{foreach item=a from=$cidades_disponiveis}
 

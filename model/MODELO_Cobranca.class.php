@@ -23,6 +23,7 @@
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
 			$this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
+			$this->cntb_endereco_instalacao = VirtexPersiste::factory("cntb_endereco_instalacao");
 
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
 			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
@@ -209,8 +210,43 @@
 		
 		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
-                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, &$gera_carne = false) {
-			
+                          $carencia, $id_prduto, $id_forma_de_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, 
+						  $dados_conta, &$gera_carne = false) {
+			/*echo "<pre>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+			echo "MODELO_Conbranca::novoContrato()\n";
+			echo "id_cliente\t\t\t=\t".print_r($id_cliente,true)."\n";
+			echo "id_produto\t\t\t=\t".print_r($id_produto,true)."\n";
+			echo "dominio\t\t\t\t=\t".print_r($dominio,true)."\n";
+			echo "data_contratacao\t\t=\t".print_r($data_contratacao,true)."\n";
+			echo "vigencia\t\t\t=\t".print_r($vigencia,true)."\n";
+			echo "pagamento\t\t\t=\t".print_r($pagamento,true)."\n";
+			echo "data_renovacao\t\t\t=\t".print_r($data_renovacao,true)."\n";
+			echo "valor_contrato\t\t\t=\t".print_r($valor_contrato,true)."\n";
+			echo "username\t\t\t=\t".print_r($username,true)."\n";
+			echo "senha\t\t\t\t=\t".print_r($senha,true)."\n";
+			echo "id_cobranca\t\t\t=\t".print_r($id_cobranca,true)."\n";
+			echo "status\t\t\t\t=\t".print_r($status,true)."\n";
+			echo "tx_instalacao\t\t\t=\t".print_r($tx_instalacao,true)."\n";
+			echo "valor_comodato\t\t\t=\t".print_r($valor_comodato,true)."\n";
+			echo "desconto_promo\t\t\t=\t".print_r($desconto_promo,true)."\n";
+			echo "desconto_periodo\t\t=\t".print_r($desconto_periodo,true)."\n";
+			echo "dia_vencimento\t\t\t=\t".print_r($dia_vencimento,true)."\n";
+			echo "primeira_fatura\t\t\t=\t".print_r($primeira_fatura,true)."\n";
+			echo "prorata\t\t\t\t=\t".print_r($prorata,true)."\n";
+			echo "limite_prorata\t\t\t=\t".print_r($limite_prorata,true)."\n";
+			echo "carencia\t\t\t=\t".print_r($carencia,true)."\n";
+			echo "id_prduto\t\t\t=\t".print_r($id_prduto,true)."\n";
+			echo "id_forma_de_pagamento\t\t=\t".print_r($id_forma_de_pagamento,true)."\n";
+			echo "pro_dados\t\t\t=\t".print_r($pro_dados,true)."\n";
+			echo "da_dados\t\t\t=\t".print_r($da_dados,true)."\n";
+			echo "bl_dados\t\t\t=\t".print_r($bl_dados,true)."\n";
+			echo "cria_email\t\t\t=\t".print_r($cria_email,true)."\n";
+			echo "dados_produto\t\t\t=\t".print_r($dados_produto,true)."\n";
+			echo "endereco_cobranca\t\t\t=\t".print_r($endereco_cobranca,true)."\n";
+			echo "endereco_instalacao\t\t\t=\t".print_r($endereco_instalacao,true)."\n";
+			echo "dados_conta\t\t\t=\t".print_r($dados_conta,true)."\n";
+			echo "gera_carne\t\t\t=\t".print_r($gera_carne,true)."\n";			
+			echo "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</pre>";	*/
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_de_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
 				
@@ -325,8 +361,8 @@
 					$conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
 				break;
 			}
-
-			if ( $cria_conta ) {
+			
+			if ( $cria_email ) {
 				$contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
 				$conta_mestre, $dados_produto["quota_por_conta"]);
 			}
@@ -339,6 +375,12 @@
 			$dados["id_cliente_produto"] = $id_cliente_produto;
 
 			$this->cbtb_endereco_cobranca->insere($dados);
+			
+			$endereco_instalacao["id_conta"] = $id_conta;
+			$endereco_instalacao["id_cliente"] = $id_cliente;
+			$this->cntb_endereco_instalacao->insere($endereco_instalacao);
+			
+			
 		}
 
 

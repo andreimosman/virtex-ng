@@ -44,7 +44,7 @@
 			switch($this->op) {
 				case 'contas':
 					$this->executaContas();
-					break;
+					break;				
 			}
 		
 		}
@@ -69,17 +69,48 @@
 					$username = @$_REQUEST["username"];
 					$dominio = @$_REQUEST["dominio"];
 					$tipo_conta = @$_REQUEST["tipo_conta"];
-					
-					$retorno = array();
-
+										
+					$ret = array();
 					if( $username && $dominio && $tipo_conta ) {
-						$retorno = $contas->obtemContaPeloUsername($username,$dominio,$tipo_conta);
+						$ret = $contas->obtemContaPeloUsername($username,$dominio,$tipo_conta);
 					}
+					
+					if(count($ret)){
+						$retorno = array("codigo" => 1, "mensagem" => "Username indisponivel");
+					} else {
+						$retorno = array("codigo" => 0, "mensagem" => "Username disponivel");
+					}					
 					
 					// Escreve o retorno na tela de acordo com o formato especificado.
 					$this->retorna($retorno);
 					break;
+				/**
+				 * op=contas
+				 * query=email
+				 * username=?
+				 * dominio=?
+				 *
+				 * Retorna o email encontrado com as credencias fornecidas.
+				 */	
+				case 'email':
+					$username = @$_REQUEST["username"];
+					$dominio = @$_REQUEST["dominio"];
+					$tipo_conta = "E";
+										
+					$ret = array();
+					if( $username && $dominio && $tipo_conta ) {
+						$ret = $contas->obtemContaPeloUsername($username,$dominio,$tipo_conta);
+					}
 					
+					if(count($ret)){
+						$retorno = array("codigo" => 1, "mensagem" => "Email indisponivel");
+					} else {
+						$retorno = array("codigo" => 0, "mensagem" => "Email disponivel");
+					}					
+					
+					// Escreve o retorno na tela de acordo com o formato especificado.
+					$this->retorna($retorno);
+					break;	
 				/**
 				 * op=contas
 				 * query=enderecoDisponivel

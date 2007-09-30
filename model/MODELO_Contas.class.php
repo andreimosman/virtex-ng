@@ -467,7 +467,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
-							"tipo_conta"				=> 'B',
+							"tipo_conta"			=> 'E',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
