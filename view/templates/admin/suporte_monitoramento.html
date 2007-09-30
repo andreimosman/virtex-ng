@@ -1,0 +1,116 @@
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="refresh" content="60" /></head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+<style>
+{literal}
+
+label.sem_monitoramento {
+	color: #666666;
+	font-weight: bold;
+	font-family: verdana;
+	font-size: 9px;
+}
+
+label.monitoramento_ok  {
+	color: #006600;
+	font-weight: bold;
+	font-family: verdana;
+	font-size: 9px;
+}
+
+label.monitoramento_err  {
+	color: #ff0000;
+	font-weight: bold;
+	font-family: verdana;
+	font-size: 9px;
+}
+
+label.monitoramento_wrn  {
+	color: #F08932;
+	font-weight: bold;
+	font-family: verdana;
+	font-size: 9px;
+}
+
+{/literal}
+</style>
+
+{if $tela == "mini" }
+<link rel="stylesheet" type="text/css" href="view/templates/css/layout/lista.css" />
+<table border=0 width="100%" height="100%" class="lista" bgcolor="{if $resumo.IER > 0}#ff5555{else}{if $resumo.WRN > 0}#F08932{else}#FFFFF{/if}{/if}">
+	{foreach item=r key=k from=$resumo}
+	<tr>
+		<td width="50%" align="right"><strong>{if $k=="IER"}Erros:{elseif $k=="WRN"}Alertas:{else}OK:{/if}</strong></td width="50%" align="right"><td><strong>{$r|string_format:"%03d"}</strong></td>
+	</tr>
+	{/foreach}
+</table>
+
+{else}
+
+{include file="suporte_header.html"}
+<script language="javascript">
+{literal}
+function openLinkPOP(id_pop) {
+	window.open("admin-configuracoes.php?op=equipamentos&tela=pops&subtela=cadastro&id_pop=" + id_pop,"conteudo");
+}
+{/literal}
+</script>
+<br>
+	<table class='lista' width='650' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th align="left">cod</th>
+			<th align="left">nome</th>
+			<th align="left">tipo</th>
+			<th align="center">monit.</th>
+			<th align="center">p.env</th>
+			<th align="center">perdas</th>
+			<th align="center">min</th>
+			<th align="center">max</th>
+			<th align="center">med</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+			{assign var='minimo' value=$r.min_ping/1000}
+			{assign var='maximo' value=$r.max_ping/1000}
+			{assign var='media' value=$r.media_ping/1000}
+			{if $r.ativar_monitoramento=='t' && $r.ipaddr}
+				{if $r.st_mon == 'OK'}
+					{assign var='estilo_fonte' value='monitoramento_ok'}
+				{elseif $r.st_mon == 'WRN'}
+					{assign var='estilo_fonte' value='monitoramento_wrn'}
+				{elseif $r.st_mon == 'IER'}
+					{assign var='estilo_fonte' value='monitoramento_err'}
+				{else}
+					{assign var='estilo_fonte' value='sem_monitoramento'}
+				{/if}
+			{else}
+				{assign var='estilo_fonte' value='sem_monitoramento'}
+			{/if}
+
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='right' width=40 class='{$estilo}'><label class="{$estilo_fonte}"><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.id_pop|string_format:"%05d"}</a></label></td>
+			<td class='{$estilo}'><p class="nivel_{$r.nivel}">{if $r.nivel > 0}<img class="imagem" src="view/templates/imagens/hier-connector.gif" border=0>{/if}<label class="{$estilo_fonte}">{$r.nome|upper}</label></p></td>
+			<td class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')"><label class="{$estilo_fonte}">{$r.tipo|upper}</label></a></td>
+			<td class='{$estilo}'><label class="{$estilo_fonte}">{if $r.ativar_monitoramento == 't' && $r.ipaddr}SIM{else}NÃO{/if}</label></td>
+			<td class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_ping}</label></td>
+			<td class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_perdas}</label></td>
+			<td class='{$estilo}'><label class="{$estilo_fonte}">{$minimo}</label></td>
+			<td class='{$estilo}'><label class="{$estilo_fonte}">{$maximo}</label></td>
+			<td class='{$estilo}'><label class="{$estilo_fonte}">{$media}</label></td>
+		</tr>
+		{foreachelse}
+		{if $texto_pesquisa && $tipo_pesquisa}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>NÃO EXISTEM POPS CADASTRADOS</B></td>
+		</tr>
+		{/if}
+		{/foreach}
+	</table>
+{/if}
+
+</body>
+</html>

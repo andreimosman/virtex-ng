@@ -10,6 +10,8 @@
 		protected $cftb_nas_rede;
 		protected $cftb_ip;
 		
+		protected $sttb_pop_status;
+		
 		protected $spool;
 		
 	
@@ -22,6 +24,8 @@
 			$this->cftb_rede		= VirtexPersiste::factory("cftb_rede");
 			$this->cftb_nas_rede	= VirtexPersiste::factory("cftb_nas_rede");
 			$this->cftb_ip			= VirtexPersiste::factory("cftb_ip");
+			
+			$this->sttb_pop_status 	= VirtexPersiste::factory("sttb_pop_status");
 			
 			$this->spool = null;
 			
@@ -261,6 +265,10 @@
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 						
 			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : 'f';
 			return($this->cftb_pop->insere($dados));			
+		}
+		
+		public function obtemMonitoramentoPop($id_pop) {
+			return($this->sttb_pop_status->obtemUnico(array("id_pop" => $id_pop)));
 		}
 	
 	}

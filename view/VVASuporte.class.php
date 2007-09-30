@@ -17,6 +17,12 @@
 				case 'ferramentas':
 					$this->exibeFerramentas();
 					break;
+				case 'monitoramento':
+					$this->exibeMonitoramento();
+					break;
+				case 'graficos':
+					$this->exibeGraficos();
+					break;
 				default:
 					// Do something
 			}
@@ -28,19 +34,30 @@
 			switch( $this->obtem("ferramenta") ) {
 				case 'ipcalc':
 					$this->_file = "suporte_ferramentas_ipcalc.html";
-					$this->atribui("titulo","Calculadora IP");
+					$this->atribui("titulo","Ferramentas :: Calculadora IP");
 					break;
 				case 'arp':
 					$this->_file = "suporte_ferramentas_arp.html";
-					$this->atribui("titulo","Tabela ARP");
+					$this->atribui("titulo","Ferramentas :: Tabela ARP");
 					break;
 				case 'ping';
 					$this->_file = "suporte_ferramentas_ping.html";
-					$this->atribui("titulo","PING");
+					$this->atribui("titulo","Ferramentas :: PING");
 					break;
 				default:
 					// Do something
 			}
+		}
+		
+		protected function exibeMonitoramento() {
+			$this->_file = "suporte_monitoramento.html";
+			$this->atribui("titulo","Monitoramento");
+		}
+		
+		protected function exibeGraficos() {
+			$this->_file = "suporte_graficos.html";
+			$this->atribui("titulo","Gráficos");
+			
 		}
 	
 	
