@@ -17,6 +17,32 @@ function miniOpenLinkFicha(id) {
 
 	el = parent.document.getElementById("resultados_pesquisa");
 
+	/*for(i=0;i<el.all.length;i++) {
+		if(el.all[i].name == "_iframe-resultados_pesquisa" ) {
+			el.all[i].src = "about:blank";
+		}
+	}*/
+
+	//window.alert(el.innerHTML);
+	//el.innerHTML = '';
+	//parent.document.remove(el);
+	//el.outerHTML = ;
+	//window.alert();
+
+}
+
+function miniOpenLinkFichaConta(id_cliente_produto,id_cliente,id_conta) {
+	//
+	url = 'admin-clientes.php?op=conta&tela=ficha&id_cliente_produto='+id_cliente_produto+'&id_cliente='+id_cliente+'&id_conta='+id_conta;
+	
+	
+	parent.open(url,'conteudo');
+	parent.document.resultwin.hide();
+	//parent.document.resultwin.unload();
+	//window.alert(parent.document.resultwin);
+
+	el = parent.document.getElementById("resultados_pesquisa");
+
 	for(i=0;i<el.all.length;i++) {
 		if(el.all[i].name == "_iframe-resultados_pesquisa" ) {
 			el.all[i].src = "about:blank";
@@ -27,8 +53,6 @@ function miniOpenLinkFicha(id) {
 	//el.innerHTML = '';
 	//parent.document.remove(el);
 	//el.outerHTML = ;
-
-
 	//window.alert();
 
 }
@@ -120,11 +144,11 @@ label {
 			<td colspan=2>
 			<table cellpadding=0 cellspacing=0 width="100%">
 			{foreach name=contas item=c from=$r.contas}
-				<tr>
-					<td align='right' class='{$estilo}' width="50"><label style="font-size: 8px;">- <a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto={$c.id_cliente_produto}&id_cliente={$r.id_cliente}&id_conta={$c.id_conta}">{$c.id_conta|string_format:"%05d"}</label></td>
-					<td class='{$estilo}'>&nbsp;&nbsp;<a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto={$c.id_cliente_produto}&id_cliente={$r.id_cliente}&id_conta={$c.id_conta}"><label style="font-size: 8px;"><b>{$c.username}{if $c.tipo_conta == "E"}@{$c.dominio}{/if}</b></label></a></td>
-					<td class='{$estilo}'><a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto={$c.id_cliente_produto}&id_cliente={$r.id_cliente}&id_conta={$c.id_conta}"><label style="font-size: 8px;">{$c.tipo_conta}</label></a></td>
-					<td class='{$estilo}'><a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto={$c.id_cliente_produto}&id_cliente={$r.id_cliente}&id_conta={$c.id_conta}"><label style="font-size: 8px;">&nbsp;{$c.ipaddr}{$c.rede}{if $c.mac}/{$c.mac}{/if}</label></a></td>
+				<tr onClick="javascript:miniOpenLinkFichaConta('{$c.id_cliente_produto}', '{$r.id_cliente}', '{$c.id_conta}');"  class="link">
+					<td align='right' class='{$estilo}' width="50"><span style="font-size: 8px;">- {$c.id_conta|string_format:"%05d"}</span></td>
+					<td class='{$estilo}'>&nbsp;&nbsp;<span style="font-size: 8px;"><b>{$c.username}{if $c.tipo_conta == "E"}@{$c.dominio}{/if}</b></span></td>
+					<td class='{$estilo}'><span style="font-size: 8px;">{$c.tipo_conta}</span></td>
+					<td class='{$estilo}'><span style="font-size: 8px;">&nbsp;{$c.ipaddr}{$c.rede}{if $c.mac}/{$c.mac}{/if}</span></td>
 				</tr>
 			{/foreach}
 			</table>

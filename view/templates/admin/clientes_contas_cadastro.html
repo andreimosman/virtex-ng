@@ -1,8 +1,10 @@
-<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
 <head>
-	<title></title>
+	<title>VIRTEX</title>
 </head>
-<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+<body style="margin: auto; paddin: 0px; padding: 2px;">
 {include file="clientes_header.html"}
 
 <style>
@@ -50,6 +52,7 @@ label {
 	border: solid 1px #000000;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
+	width: 100%;
 }
 
 .boxContratacao TD {
@@ -91,158 +94,381 @@ label {
 </style>
 
 <script type="text/javascript">
-{literal}
 	
+	var endereco_original = '{$endereco}';
+	
+	
+{literal}
 
+	function voltar(){
+		{/literal}
+		document.location = 'admin-clientes.php?op=conta&tipo=BL&id_cliente={$id_cliente}';		
+		{literal}
+	}
+	
+	function habilita(campo) {
+		campo.disabled=false;
+		campo.className='fieldWithoutFocus';
+	}	
+
+	function desabilita(campo) {
+		campo.disabled=true;
+		campo.className='disabled';
+	}
+	
 	function alteraNas() {
 		var frm = document.frmConta;
 		if( frm.id_nas.value != frm.nas_orig.value && !frm.altera_rede.checked ) {
 			if( window.confirm("A alteração do NAS exige que o ip seja alterado, deseja continuar ?") ) {
 				frm.altera_rede.checked = true;
-				alteraNovaSelecao();
+				$('selecao_redeip').value = "A";				
+				alteraNovaSelecao(false);
 			} else {
 				frm.id_nas.value = frm.nas_orig.value;
 			}
 		}
 	}
 	
-	function alteraNovaSelecao() {
+	function alteraNovaSelecao(sit) {
 		var frm = document.frmConta;		
 		frm.selecao_redeip.disabled = !frm.altera_rede.checked;		
-		alteraSelecaoIP();
+		alteraSelecaoIP(sit);
 	}
 	
-	function alteraSelecaoIP() {
+	function alteraSelecaoIP(sit) {
 		var frm = document.frmConta;
 		if( frm.selecao_redeip.disabled || frm.selecao_redeip.value == "A" ) {
 			frm.endereco_redeip.disabled = true;
+			if(!sit){
+				$('endereco_redeip').value = "";
+			}
    		} else {
    			frm.endereco_redeip.disabled = false;
    		}
 	}
+	
+	returnStatus = false;
+	function checkEnderecoDisponivel(id_nas, endereco){
+		var url = "admin-ajax.php";
+		var pars = "op=contas&output=JSON&query=enderecoDisponivel&id_nas="+id_nas+"&endereco="+endereco;
+		
+		var myAjax = new Ajax.Request(			
+			url, 
+			{
+				method: 'get', 
+				parameters: pars, 
+				onComplete: showResponse,
+				asynchronous: false
+			});
+			
+		return returnStatus;			
+	}
+		
+	function showResponse(originalRequest) {
+		var r = originalRequest.responseText.evalJSON();		
+		if(r.codigo > 0){
+			alert(r.mensagem)
+			returnStatus = false;
+			return false;
+		}		
+		
+		returnStatus = true;
+		$('endereco_redeip').value = r.endereco;
+	}
+	
+	function checkFrm(){	
+		var senha = $('senha');
+		var confsenha = $('confsenha');
+	
+		if("" != senha.value ){
+			if(senha.value != confsenha.value){
+				alert("O campo senha e com confsenha deve ser iguais!");
+				senha.focus();
+				return false;
+			}
+		}
+	
+{/literal}{if $tipo_conta == "BL"}{literal}
+		var nas = $('id_nas');
+		var mac = $('mac');
+		var altera_rede = $('altera_rede');
+		var selecao_redeip = $('selecao_redeip');
+		var endereco_redeip = $('endereco_redeip');
+				
+		var nas_text = nas.options[nas.options.selectedIndex].text
+		var nas_type=nas_text.split(":");		
+		if( ("IP" == nas_type[0]) && ("" == mac.value) ){
+			if(!confirm("O Não preenchimento do MAC pode facilitar o acesso de usuários não autorizados no sistema. Deseja proceguir mesmo SEM o mac?")){
+				return false;
+			}
+		}			
+		
+		if(altera_rede.checked && "M" == selecao_redeip.value && "" != endereco_redeip.value && endereco_redeip.value != endereco_original ){
+			if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){				
+				return false;
+			}
+		} 
+		
+		if(altera_rede.checked && "M" == selecao_redeip.value) {
+			if("" != endereco_redeip.value){				
+				if( endereco_redeip.value != endereco_original ){
+					if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
+						return false;
+					}
+				}
+			} else {
+				alert("Preencher o campo de endereço IP!");
+				endereco_redeip.focus();
+				return false;
+			}
+		}
+{/literal}{/if}{literal}
+		
+		return true;
+	}
+	
+	function checkStatusFields(tag) {
+
+     if ( tag.name == "difEnderecoMail" ) {
+
+       if ( tag.checked == false ) {
+          desabilita(document.getElementById('endereco_cobranca'));
+          desabilita(document.getElementById('bairro_cobranca'));
+          desabilita(document.getElementById('complemento_cobranca'));
+          desabilita(document.getElementById('id_cidade_cobranca'));
+          desabilita(document.getElementById('cep_cobranca'));
+       }
+       else {
+          habilita(document.getElementById('endereco_cobranca'));
+          habilita(document.getElementById('bairro_cobranca'));
+          habilita(document.getElementById('complemento_cobranca'));
+          habilita(document.getElementById('id_cidade_cobranca'));
+          habilita(document.getElementById('cep_cobranca'));
+       }
+    }
+    else if ( tag.name == "difEnderecoSetup" ) {
+
+       if ( tag.checked == false ) {
+          desabilita(document.getElementById('endereco_instalacao'));
+          desabilita(document.getElementById('bairro_instalacao'));
+          desabilita(document.getElementById('complemento_instalacao'));
+          desabilita(document.getElementById('id_cidade_instalacao'));
+          desabilita(document.getElementById('cep_instalacao'));
+       }
+       else {
+          habilita(document.getElementById('endereco_instalacao'));
+          habilita(document.getElementById('bairro_instalacao'));
+          habilita(document.getElementById('complemento_instalacao'));
+          habilita(document.getElementById('id_cidade_instalacao'));
+          habilita(document.getElementById('cep_instalacao'));
+       }
+    }
+}
+
+	
+	
 {/literal}	
 </script>
-
-
-<form action="admin-clientes.php" method="post" name="frmConta">
+<center>
+<div id="conteiner_contas">
+<form action="admin-clientes.php" method="post" name="frmConta" onSubmit="return checkFrm();">
 <input type="hidden" name="op" value="{$op}" />
 <input type="hidden" name="tela" value="{$tela}" />
 <input type="hidden" name="tipo" value="{$tipo}" />
 <input type="hidden" name="id_cliente" value="{$id_cliente}" />
 <input type="hidden" name="id_conta" value="{$id_conta}" />
-
-<table cellspacing=0 cellpadding=0 align="center">
-	<tr>
-		<td>
-			<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
-				<tr>
-					<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Usuário:</label></th>
-				</tr>
-				<tr>
-					<td align="right" width="110"><label>Username:</label></td>
-					<td colspan=3><input type="text" size="30" maxlength="20" name="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);javascript:contratoAlteraUsername();"></td>
-				</tr>
-				<tr>
-					<td align="right" width="110"><label>Senha:</label></td>
-					<td colspan=3>
-						<label>
-							<input type="password" size="20" maxlength="20" name="senha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (preencha p/ alterar)<br>
-							<input type="password" size="20" maxlength="20" name="confsenha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (confirme)
-						</label>
-					</td>
-				</tr>
-			</table>
-
-			{if $tipo_conta == "BL"}
-				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
-					<tr>
-						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>NAS:</label></td>
-						<td colspan=3>
-							<select onchange="javascript:alteraNas();" name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="">-- SELECIONE --</option>
-							{foreach item=v from=$listaNAS}
-								{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}">{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
-							{/foreach}
-							</select>
-							<input type="hidden" name="nas_orig" value="" />
-						</td>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>POP:</label></td>
-						<td colspan=3>
-							<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-									<option value="">-- SELECIONE --</option>
-							{foreach item=v from=$listaPOP}
-								<option value="{$v.id_pop}">{$v.nome}</option>
-							{/foreach}
-							</select>
-						</td>
-					</tr>					
-					<tr>
-						<td align="right" width="110"><label>MAC:</label></td>
-						<td colspan=3>
-							<input type="text" name="mac" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-						</td>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>Nova Seleção de Rede/IP:</label></td>
-						<td align="left" colspan='3'>
-							<input onchange="javascript:alteraNovaSelecao();" type="checkbox" id= "altera_rede" name="altera_rede" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-						</td>						
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>Rede/IP:</label></td>
-						<td colspan=3>
-							<select onchange="javascript:alteraSelecaoIP();" name="selecao_redeip" id="selecao_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="A">Automática</option>
-								<option value="M">Manual</option>
-							</select>
-							<input type="text" name="endereco_redeip" id="endereco_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-						</td>
-					</tr>					
-				</table>
-				<script type="text/javascript">alteraNovaSelecao()</script>
-			{elseif $tipo_conta == "D"}
-				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
-					<tr>
-						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Acesso:</label></th>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>Fone:</label></td>
-						<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-					</tr>
-				</table>
-			{elseif $tipo_conta == "E"}
-
-			{elseif $tipo_conta == "H"}
-				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
-					<tr>
-						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>Tipo:</label></td>
-						<td colspan=3>
-							<select name="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="D">Domínio do Usuário</option>
-								<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
-							</select>
-						</td>
-					<tr>
-						<td align="right" width="110"><label>Criar:</label></td>
-						<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-					</tr>
-				</table>
-			{/if}
-		</td>
-	</tr>
-</table>
+<input type="hidden" name="acao" value="update" />
 
 
+	<table cellspacing="0" cellpadding="0" class="boxContratacao">
+		<tr>
+			<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Usuário:</label></th>
+		</tr>
+		<tr>
+			<td align="right" width="110"><label>Username:</label></td>
+			<td colspan=3>
+				{if $id_conta}
+					{$username}{if $tipo_conta == "E"}{$domini}{/if}
+				{else}
+					<input type="text" size="30" maxlength="20" name="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);"  {if $formDisabled}disabled='disabled'{/if} />	
+				{/if}
+			</td>
+		</tr>
+		<tr>
+			<td align="right" width="110"><label>Senha:</label></td>
+			<td colspan=3>
+				<label>
+					<input type="password" size="20" maxlength="20" id="senha" name="senha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /> (preencha p/ alterar)<br>
+					<input type="password" size="20" maxlength="20" id="confsenha" name="confsenha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /> (confirme)
+				</label>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" width="110"><label>Status:</label></td>
+			<td colspan=3>
+				<select name="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+					<option value="A" {if $status == 'A'}selected='selected'{/if}>Ativo</option>
+					<option value="B" {if $status == 'B'}selected='selected'{/if}>Bloqueado</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" width="110"><label>Tipo:</label></td>
+			<td colspan=3>
+				<select name="conta_mestre" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+					<option value="t" {if $conta_mestre == 't'}selected='selected'{/if}>Conta Mestre</option>
+					<option value="f" {if $conta_mestre == 'f'}selected='selected'{/if}>Normal</option>
+				</select>
+			</td>
+		</tr>
+	</table>
 
+	{if $tipo_conta == "BL"}
+		<table cellspacing="0" cellpadding="0" class="boxContratacao">
+			<tr>
+				<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>NAS:</label></td>
+				<td colspan=3>
+					<select onchange="javascript:alteraNas();" name="id_nas" id="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+						<option value="">-- SELECIONE --</option>
+					{foreach item=v from=$listaNAS}
+						{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}"  {if $id_nas == $v.id_nas}selected='selected'{/if} >{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
+					{/foreach}
+					
+					</select>					
+					<input type="hidden" name="nas_orig" value="{$id_nas}" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>POP:</label></td>
+				<td colspan=3>
+					<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+					<option value="">-- SELECIONE --</option>
+					{foreach item=v from=$listaPOP}
+						<option value="{$v.id_pop}" {if $id_pop == $v.id_pop}selected='selected'{/if}>{$v.nome}</option>
+					{/foreach}
+					</select>
+				</td>
+			</tr>					
+			<tr>
+				<td align="right" width="110"><label>MAC:</label></td>
+				<td colspan='3'>
+					<input type="text" name="mac" id="mac" value="{$mac}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>Nova Seleção de Rede/IP:</label></td>
+				<td align="left" colspan='3'>
+					<input onclick="javascript:alteraNovaSelecao(false);" type="checkbox" id= "altera_rede" name="altera_rede" value="t" {if $formDisabled}disabled='disabled'{/if} />&nbsp;
+					<select onchange="javascript:alteraSelecaoIP();" name="selecao_redeip" id="selecao_redeip" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+						<option value="A">Automática</option>
+						<option value="M" {if $id_conta}selected='selected'{/if}>Manual</option>
+					</select>&nbsp;					
+					<input type="text" name="endereco_redeip" id="endereco_redeip" value="{$endereco_ip}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="110" nowrap><label>Download (Kbps):</label></td>
+				<td>
+					<select name="download" id="download" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >						
+						{foreach item=v from=$bandas}
+						<option value="{$v.id}" {if $download_kbps == $v.id}selected='selected'{/if}>{$v.banda}</option>
+						{/foreach}					
+					</select>					
+				</td>
+				<td align="right" width="110" nowrap><label>Upload (Kbps):</label></td>
+				<td>
+					<select name="upload" id="upload" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >					
+						{foreach item=v from=$bandas}
+						<option value="{$v.id}" {if $upload_kbps == $v.id}selected='selected'{/if}>{$v.banda}</option>
+						{/foreach}					
+					</select>
+					
+				</td>
+				
+			</tr>		
+		</table>
+		<script type="text/javascript">alteraNovaSelecao(true)</script>
+	{elseif $tipo_conta == "D"}
+		<table cellspacing="0" cellpadding="0" class="boxContratacao">
+			<tr>
+				<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Acesso:</label></th>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>Fone:</label></td>
+				<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+			</tr>
+		</table>
+	{elseif $tipo_conta == "E"}
+
+	{elseif $tipo_conta == "H"}
+		<table cellspacing="0" cellpadding="0" class="boxContratacao">
+			<tr>
+				<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>Tipo:</label></td>
+				<td colspan=3>
+					<select name="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+						<option value="D">Domínio do Usuário</option>
+						<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
+					</select>
+				</td>
+			<tr>
+				<td align="right" width="110"><label>Criar:</label></td>
+				<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+			</tr>
+		</table>
+	{/if}
+	{if $tipo_conta == "D" || $tipo_conta == "BL"}
+		
+		<table cellspacing='0' cellpadding='0' class="boxContratacao">
+			<tr>
+				<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
+			</tr>
+			<tr>
+			<td colspan=4 >
+				<input type="checkbox" name="difEnderecoSetup" id="difEnderecoSetup" OnClick="checkStatusFields(this);" value='1'><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
+			</td>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
+				<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			</tr>
+			<tr>
+				<td align="right" width="110" ><label>Complemento:</label></td>
+				<td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" id="complemento_instalacao" value="{$complemento}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+				<td align="right" ><label>Bairro:</label></td>
+				<td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" id="bairro_instalacao" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			</tr>
+			<tr>
+				<td align="right" width="110"><label>CEP:</label>
+				<td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" id="cep_instalacao" value="{$cep}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			</tr>
+			<tr>
+				<td align="right" ><label>Cidade:</label></td>
+				<td align="left" colspan=4 >
+					<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" id="id_cidade_instalacao" tabindex="10" class="disabled" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+					{foreach item=a from=$cidades_disponiveis}
+
+					<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
+					- {$a.uf}</option>
+					{/foreach}
+				</td>
+			</tr>
+		</table>
+		
+	{/if}
+
+	<br />
+	<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
+	{if !$formDisabled}
+	<input type="submit" name="Submit" value="{if $id_conta}Alterar{else}Cadastrar{/if}" class="botao">
+	{/if}
 </form>
-
+</div>
+</center>
 </body>
 </html>

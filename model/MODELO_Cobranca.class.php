@@ -214,230 +214,204 @@
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_de_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
 				
-      $comodato = $valor_comodato ? true : false;
-      
-      $dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
-      $id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
+			$comodato = $valor_comodato ? true : false;
 
-      $disc_franquia_horas = @$dados_produto["franquia_horas"] ? $dados_produto["franquia_horas"] : "";
-      $disc_permitir_duplicidade = @$dados_produto["permitir_duplicidade"] ? $dados_produto["permitir_duplicidade"] : "";
-      $disc_valor_hora_adicional = @$dados_produto["valor_hora_adicional"] ? $dados_produto["valor_hora_adicional"] : "";
-      
-      $hosp_dominio = @$dados_produto["dominio"] ? $dados_produto["dominio"] : "";
-      $hosp_franquia_em_mb = @$dados_produto["franquia_em_mb"] ? $dados_produto["franquia_em_mb"] : 0;
-      $hosp_valor_mb_adicional = @$dados_produto["valor_mb_adicional"] ? $dados_produto["valor_mb_adicional"] : "";
+			$dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
+			$id_cliente_produto = $this->cbtb_cliente_produto->insere($dados);
 
-      $bl_banda_upload_kbps = @$dados_produto["banda_upload_kbps"] ? $dados_produto["banda_upload_kbps"] : "";
-      $bl_banda_download_kbps = @$dados_produto["banda_download_kbps"] ? $dados_produto["banda_download_kbps"] : "";
-      $bl_franquia_trafego_mensal_gb = @$dados_produto["franquia_trafego_mensal_gb"] ? $dados_produto["franquia_trafego_mensal_gb"] : "";
-      $bl_valor_trafego_adicional_gb = @$dados_produto["valor_trafego_adicional_gb"] ? $dados_produto["valor_trafego_adicional_gb"] : "";
+			$disc_franquia_horas = @$dados_produto["franquia_horas"] ? $dados_produto["franquia_horas"] : "";
+			$disc_permitir_duplicidade = @$dados_produto["permitir_duplicidade"] ? $dados_produto["permitir_duplicidade"] : "";
+			$disc_valor_hora_adicional = @$dados_produto["valor_hora_adicional"] ? $dados_produto["valor_hora_adicional"] : "";
 
-      $dados = array("id_cliente_produto" => $id_cliente_produto, "data_contratacao" => $data_contratacao, "vigencia" => $vigencia, "data_renovacao" => $data_renovacao,
-      "valor_contrato" => $valor_contrato, "id_cobranca" => $id_cobranca, "status" => $status, "tipo_produto" => $dados_produto["tipo"], "valor_produto" => $dados_produto["valor"],
-      "num_emails" => $dados_produto["num_emails"], "quota_por_conta" => $dados_produto["quota_por_conta"], "tx_instalacao" => $tx_instalacao, "comodato" => $comodato,
-      "valor_comodato" => $valor_comodato, "desconto_promo" => $desconto_promo, "periodo_desconto" => $desconto_periodo, "hosp_dominio" => $hosp_dominio, "hosp_franquia_em_mb" => $hosp_franquia_em_mb,
-      "hosp_valor_mb_adicional" => $hosp_valor_mb_adicional, "disc_franquia_horas" => $disc_franquia_horas, "disc_permitir_duplicidade" => $disc_permitir_duplicidade, "disc_valor_hora_adicional" => $disc_valor_hora_adicional,
-      "bl_banda_upload_kbps" => $bl_banda_upload_kbps, "bl_banda_download_kbps" => $bl_banda_download_kbps, "bl_franquia_trafego_mensal_gb" => $bl_franquia_trafego_mensal_gb,
-      "bl_valor_trafego_adicional_gb" => $bl_valor_trafego_adicional_gb, "cod_banco" => $pro_dados["codigo_banco"], "carteira" => $pro_dados["carteira"],
-      "agencia" => $pro_dados["agencia"], "num_conta" => $pro_dados["num_conta"], "convenio" => $pro_dados["convenio"], "cc_vencimento" => "", "cc_numero" => "",
-      "cc_operadora" => "", "db_banco" => "", "db_agencia" => "", "db_conta" => "", "vencimento" => $dia_vencimento, "carencia" => $carencia,
-      "data_alt_status" => "", "id_produto" => $id_produto, "nome_produto" => $dados_produto["nome"], "descricao_produto" => $dados_produto["descricao"],
-      "disponivel" => $dados_produto["disponivel"], "vl_email_adicional"  => $dados_produto["vl_email_adicional"], "permitir_outros_dominios" => $dados_produto["permitir_outros_dominios"],
-      "email_anexado" => $dados_produto["email_anexado"], "numero_contas" => $dados_produto["numero_contas"], "valor_estatico" => $dados_produto["valor_estatico"],
-      "da_cod_banco" => $da_dados["codigo_banco"], "da_carteira" => $da_dados["carteira"], "da_convenio" => $da_dados["convenio"], "da_agencia" => $da_dados["agencia"],
-      "da_num_conta" => $da_dados["num_conta"], "bl_cod_banco" => $bl_dados["codigo_banco"], "bl_carteira" => $bl_dados["carteira"],
-      "bl_convenio" => $bl_dados["convenio"], "bl_agencia" => $bl_dados["agencia"], "bl_num_conta" => $bl_dados["num_conta"], "id_forma_pagamento"=>$id_forma_de_pagamento);
+			$hosp_dominio = @$dados_produto["dominio"] ? $dados_produto["dominio"] : "";
+			$hosp_franquia_em_mb = @$dados_produto["franquia_em_mb"] ? $dados_produto["franquia_em_mb"] : 0;
+			$hosp_valor_mb_adicional = @$dados_produto["valor_mb_adicional"] ? $dados_produto["valor_mb_adicional"] : "";
 
-      /*
-      echo "<pre>";
-      print_r($dados_produto);
-      echo "</pre>";
-      */
-      $this->cbtb_contrato->insere($dados);
-      
-      
-      $todas_faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
+			$bl_banda_upload_kbps = @$dados_produto["banda_upload_kbps"] ? $dados_produto["banda_upload_kbps"] : "";
+			$bl_banda_download_kbps = @$dados_produto["banda_download_kbps"] ? $dados_produto["banda_download_kbps"] : "";
+			$bl_franquia_trafego_mensal_gb = @$dados_produto["franquia_trafego_mensal_gb"] ? $dados_produto["franquia_trafego_mensal_gb"] : "";
+			$bl_valor_trafego_adicional_gb = @$dados_produto["valor_trafego_adicional_gb"] ? $dados_produto["valor_trafego_adicional_gb"] : "";
 
-      echo "argh";
-      $id_cobranca = 0;
-	
-      // gera carne
-      if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
-      	$gera_carne = true;
-      	$soma_fatura = 0;
-      	foreach ($todas_faturas as $fatura)
-      		$soma_fatura += $fatura ["valor"];
-      	      
-   	$dados = array (
-   		'data_geracao' => $data_contratacao,
-   		'id_cliente_produto' => $id_cliente_produto,
-   		'valor' => $soma_fatura,
-   		'vigencia' => count ($todas_faturas),
-   		'id_cliente' => $id_cliente,   	
-   	);   
-      
-      	$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
-      }
-      
-      foreach( $todas_faturas as $fatura ) {
-       	$cod_barra = "";
-       	$linha_digitavel = "";
-       	$nosso_numero = "";
-       	
-       	if ($gera_carne) {
-     		// gera codigo de barras
-     		$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_de_pagamento);
-       		
-       		switch ($formaPagto ["tipo_cobranca"]) {
-       			case "PC":
-	       			$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
-		        	$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);    	
-       		        	break;
-       			
-       			case "BL":
-       				$boleto = MBoleto::factory ($formaPagto["codigo_banco"],$formaPagto["agencia"],$formaPagto["conta"],$formaPagto["carteira"],$formaPagto["convenio"],$fatura['data'],$fatura ['valor'],$nosso_numero,self::$moeda,$formaPagto ['cnpj_ag_cedente'],$formaPagto ['codigo_cedente'],$formaPagto ['operacao_cedente']);
-     				     				
-     				$cod_barra = $boleto->obtemCodigoBoleto ();
-     				$linha_digitavel = $boleto->obtemLinhaDigitavel();	
-          			break;
-     		}
-      	
-       	}
-        
-        $this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
-      }
-      /*
-      echo "<pre>";
-      print_r($faturas);
-      echo "</pre>";
-      */
+			$dados = array(	"id_cliente_produto" => $id_cliente_produto, "data_contratacao" => $data_contratacao, "vigencia" => $vigencia, "data_renovacao" => $data_renovacao,
+							"valor_contrato" => $valor_contrato, "id_cobranca" => $id_cobranca, "status" => $status, "tipo_produto" => $dados_produto["tipo"], "valor_produto" => $dados_produto["valor"],
+							"num_emails" => $dados_produto["num_emails"], "quota_por_conta" => $dados_produto["quota_por_conta"], "tx_instalacao" => $tx_instalacao, "comodato" => $comodato,
+							"valor_comodato" => $valor_comodato, "desconto_promo" => $desconto_promo, "periodo_desconto" => $desconto_periodo, "hosp_dominio" => $hosp_dominio, "hosp_franquia_em_mb" => $hosp_franquia_em_mb,
+							"hosp_valor_mb_adicional" => $hosp_valor_mb_adicional, "disc_franquia_horas" => $disc_franquia_horas, "disc_permitir_duplicidade" => $disc_permitir_duplicidade, "disc_valor_hora_adicional" => $disc_valor_hora_adicional,
+							"bl_banda_upload_kbps" => $bl_banda_upload_kbps, "bl_banda_download_kbps" => $bl_banda_download_kbps, "bl_franquia_trafego_mensal_gb" => $bl_franquia_trafego_mensal_gb,
+							"bl_valor_trafego_adicional_gb" => $bl_valor_trafego_adicional_gb, "cod_banco" => $pro_dados["codigo_banco"], "carteira" => $pro_dados["carteira"],
+							"agencia" => $pro_dados["agencia"], "num_conta" => $pro_dados["num_conta"], "convenio" => $pro_dados["convenio"], "cc_vencimento" => "", "cc_numero" => "",
+							"cc_operadora" => "", "db_banco" => "", "db_agencia" => "", "db_conta" => "", "vencimento" => $dia_vencimento, "carencia" => $carencia,
+							"data_alt_status" => "", "id_produto" => $id_produto, "nome_produto" => $dados_produto["nome"], "descricao_produto" => $dados_produto["descricao"],
+							"disponivel" => $dados_produto["disponivel"], "vl_email_adicional"  => $dados_produto["vl_email_adicional"], "permitir_outros_dominios" => $dados_produto["permitir_outros_dominios"],
+							"email_anexado" => $dados_produto["email_anexado"], "numero_contas" => $dados_produto["numero_contas"], "valor_estatico" => $dados_produto["valor_estatico"],
+							"da_cod_banco" => $da_dados["codigo_banco"], "da_carteira" => $da_dados["carteira"], "da_convenio" => $da_dados["convenio"], "da_agencia" => $da_dados["agencia"],
+							"da_num_conta" => $da_dados["num_conta"], "bl_cod_banco" => $bl_dados["codigo_banco"], "bl_carteira" => $bl_dados["carteira"],
+							"bl_convenio" => $bl_dados["convenio"], "bl_agencia" => $bl_dados["agencia"], "bl_num_conta" => $bl_dados["num_conta"], "id_forma_pagamento"=>$id_forma_de_pagamento);
 
+			$this->cbtb_contrato->insere($dados);
+			$todas_faturas = $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata);
 
-      //$preferencias = VirtexModelo::factory('preferencias');
-      //echo "<pre>";
-      //print_r($this->preferencias);
-      //echo "</pre>";
-      
-  		$prefGeral = $this->preferencias->obtemPreferenciasGerais();
-      $dominio_padrao = $prefGeral["dominio_padrao"];
+			echo "argh";
+			$id_cobranca = 0;
 
-      $status_conta = "A";
-      $obs = "";
-      $conta_mestre = "t";
-      
-      $contas = VirtexModelo::factory("contas");
-      
-      switch($dados_produto["tipo"]) {
-      
-        case 'BL':
-          $id_conta = $contas->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-                                                                 $conta_mestre, $dados_conta["id_pop"], $dados_conta["id_nas"], $dados_produto["banda_upload_kbps"], $dados_produto["banda_download_kbps"],
-                                                                 $dados_conta["mac"], $dados_conta["endereco"]);
-          break;
-          
-        case 'D':
-          $id_conta = $contas->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-                                                                 $conta_mestre, $dados_conta["foneinfo"]);
-          break;
-          
-        case 'H':
-          $id_conta = $contas->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-                                                                 $conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
-          break;
-     }
-     
+			// gera carne
+			if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
+				$gera_carne = true;
+				$soma_fatura = 0;
+				foreach ($todas_faturas as $fatura){
+					$soma_fatura += $fatura ["valor"];
+				}
 
+				$dados = array (
+					'data_geracao' => $data_contratacao,
+					'id_cliente_produto' => $id_cliente_produto,
+					'valor' => $soma_fatura,
+					'vigencia' => count ($todas_faturas),
+					'id_cliente' => $id_cliente,   	
+				);   
 
-											
-     if ( $cria_conta ) {
-       $contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-                                                                 $conta_mestre, $dados_produto["quota_por_conta"]);
-     }
+				$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
+			}
 
-     //PAREI AQUI
-     
-      //grava endereco de cobranca
-      $dados = $endereco_cobranca;
-      $dados["id_cliente"] = $id_cliente;
-      $dados["id_cliente_produto"] = $id_cliente_produto;
-      
-      $this->cbtb_endereco_cobranca->insere($dados);
+			foreach( $todas_faturas as $fatura ) {
+				$cod_barra = "";
+				$linha_digitavel = "";
+				$nosso_numero = "";
 
+				if ($gera_carne) {
+					// gera codigo de barras
+					$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_de_pagamento);
 
-      
+					switch ($formaPagto ["tipo_cobranca"]) {
+						case "PC":
+							$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
+							$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);    	
+						break;
+						case "BL":
+							$boleto = MBoleto::factory ($formaPagto["codigo_banco"],$formaPagto["agencia"],$formaPagto["conta"],$formaPagto["carteira"],$formaPagto["convenio"],$fatura['data'],$fatura ['valor'],$nosso_numero,self::$moeda,$formaPagto ['cnpj_ag_cedente'],$formaPagto ['codigo_cedente'],$formaPagto ['operacao_cedente']);
+							$cod_barra = $boleto->obtemCodigoBoleto ();
+							$linha_digitavel = $boleto->obtemLinhaDigitavel();	
+						break;
+					}
+
+				}
+
+				$this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_de_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
+			}
+			
+			//$preferencias = VirtexModelo::factory('preferencias');
+			
+			$prefGeral = $this->preferencias->obtemPreferenciasGerais();
+			$dominio_padrao = $prefGeral["dominio_padrao"];
+
+			$status_conta = "A";
+			$obs = "";
+			$conta_mestre = "t";
+
+			$contas = VirtexModelo::factory("contas");
+
+			switch($dados_produto["tipo"]) {
+				case 'BL':
+					$id_conta = $contas->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+					$conta_mestre, $dados_conta["id_pop"], $dados_conta["id_nas"], $dados_produto["banda_upload_kbps"], $dados_produto["banda_download_kbps"],
+					$dados_conta["mac"], $dados_conta["endereco"]);
+				break;
+				case 'D':
+					$id_conta = $contas->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+					$conta_mestre, $dados_conta["foneinfo"]);
+				break;
+				case 'H':
+					$id_conta = $contas->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+					$conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
+				break;
+			}
+
+			if ( $cria_conta ) {
+				$contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+				$conta_mestre, $dados_produto["quota_por_conta"]);
+			}
+
+			//PAREI AQUI
+
+			//grava endereco de cobranca
+			$dados = $endereco_cobranca;
+			$dados["id_cliente"] = $id_cliente;
+			$dados["id_cliente_produto"] = $id_cliente_produto;
+
+			$this->cbtb_endereco_cobranca->insere($dados);
 		}
 
 
-    protected function cadastraFatura($id_cliente_produto, $id_cobranca, $data, $valor, $id_forma_pagamento, $descricao = "",
-                                      $id_carne = 0, $nosso_numero = "", $linha_digitavel = "", $cod_barra = "") {
+	    protected function cadastraFatura($id_cliente_produto, $id_cobranca, $data, $valor, $id_forma_pagamento, $descricao = "",
+	                                      $id_carne = 0, $nosso_numero = "", $linha_digitavel = "", $cod_barra = "") {
 
-      $dados = array("id_cliente_produto"=>$id_cliente_produto, "data"=>$data, "valor"=>$valor, "status"=>"A", "id_forma_pagamento"=>$id_forma_pagamento);
+	      $dados = array("id_cliente_produto"=>$id_cliente_produto, "data"=>$data, "valor"=>$valor, "status"=>"A", "id_forma_pagamento"=>$id_forma_pagamento);
 
-      if ( $descricao )
-        $dados["descricao"] = $descricao;
-        
-      if ( $id_carne )
-        $dados["id_carne"] = $id_carne;
+	      if ( $descricao )
+	        $dados["descricao"] = $descricao;
+	        
+	      if ( $id_carne )
+	        $dados["id_carne"] = $id_carne;
 
-      if ( $nosso_numero )
-        $dados["nosso_numero"] = $nosso_numero;
+	      if ( $nosso_numero )
+	        $dados["nosso_numero"] = $nosso_numero;
 
-      if ( $linha_digitavel )
-        $dados["linha_digitavel"] = $linha_digitavel;
-        
-      if ( $cod_barra )
-        $dados["cod_barra"] = $cod_barra;
+	      if ( $linha_digitavel )
+	        $dados["linha_digitavel"] = $linha_digitavel;
+	        
+	      if ( $cod_barra )
+	        $dados["cod_barra"] = $cod_barra;
 
-        
-      $this->cbtb_fatura->insere($dados);
-    }
+	        
+	      $this->cbtb_fatura->insere($dados);
+	    }
 
-	public function obtemContratos ($id_cliente,$status="",$tipo="")
-	{
-		$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente,$status,$tipo);
-		return ($res);
-	}
-	
-	public function obtemContratoPeloId($id_cliente_produto) {
-		$filtro = array("id_cliente_produto" => $id_cliente_produto);
-		$res = $this->cbtb_contrato->obtemUnico($filtro);
-		return($res);
-	}
+		public function obtemContratos ($id_cliente,$status="",$tipo="")
+		{
+			$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente,$status,$tipo);
+			return ($res);
+		}
+		
+		public function obtemContratoPeloId($id_cliente_produto) {
+			$filtro = array("id_cliente_produto" => $id_cliente_produto);
+			$res = $this->cbtb_contrato->obtemUnico($filtro);
+			return($res);
+		}
 
-	/*
-	 * Obtem Faturas
-	 */
-	public function obtemFaturas ($id_cliente, &$tem_carne = "", $id_cliente_produto = "", $id_forma_pagamento = "",$id_carne = "")
-	{
-		if ($id_forma_pagamento > 0 && $id_cliente_produto > 0) {
-			if ($id_carne > 0) {
-				// obtem faturas do carne
-				$tem_carne = true;
-				return ($this->cbtb_fatura->obtemFaturas (null, $id_cliente_produto, $id_carne));	
-			}
-			else {			
-				$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-				if ($formaPagto ['carne'] == 't') {
-					// obtem carne
+		/*
+		 * Obtem Faturas
+		 */
+		public function obtemFaturas ($id_cliente, &$tem_carne = "", $id_cliente_produto = "", $id_forma_pagamento = "",$id_carne = "")
+		{
+			if ($id_forma_pagamento > 0 && $id_cliente_produto > 0) {
+				if ($id_carne > 0) {
+					// obtem faturas do carne
 					$tem_carne = true;
-				
-					return ($this->cbtb_carne->obtemCarnes ($id_cliente_produto));	
+					return ($this->cbtb_fatura->obtemFaturas (null, $id_cliente_produto, $id_carne));	
 				}
-				else {
-					$tem_carne = false;
+				else {			
+					$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+					if ($formaPagto ['carne'] == 't') {
+						// obtem carne
+						$tem_carne = true;
+					
+						return ($this->cbtb_carne->obtemCarnes ($id_cliente_produto));	
+					}
+					else {
+						$tem_carne = false;
+					}
 				}
 			}
+			// obtem todas faturas do cliente.
+			return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
 		}
-		// obtem todas faturas do cliente.
-		return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
-	}
-	
-	public function obtemFatura ($id_cliente_produto, $data)
-	{
-		return ($this->cbtb_fatura->obtemUnico (array ("id_cliente_produto" => $id_cliente_produto, "data" => $data)));
-	}
-	
-	}
+		
+		public function obtemFatura ($id_cliente_produto, $data)
+		{
+			return ($this->cbtb_fatura->obtemUnico (array ("id_cliente_produto" => $id_cliente_produto, "data" => $data)));
+		}
+		
+		}
 
 
 ?>

@@ -13,17 +13,15 @@
 
 		public function __construct() {
 			parent::__construct();
+			VirtexPersiste::setDebug(false);
 		}
 		
 		public function init() {
 			parent::init();
-			// $this->_view = VirtexViewAdmin::factory(
-			
+			// $this->_view = VirtexViewAdmin::factory(			
 			$this->op 		= @$_REQUEST["op"];
 			$this->query 	= @$_REQUEST["query"];
 			$this->output	= @$_REQUEST["output"] ? $_REQUEST["output"] : "JSON";
-			
-			
 		}
 		
 		
@@ -41,12 +39,7 @@
 			}
 		}
 		
-		
-		
-		
 		protected function executa() {
-		
-			echo "OP: " . $this->op;
 		
 			switch($this->op) {
 				case 'contas':
@@ -63,9 +56,6 @@
 			$contas = VirtexModelo::factory('contas');
 
 			switch($this->query) {
-			
-			
-			
 				/**
 				 * op=contas
 				 * query=usuario
@@ -151,26 +141,7 @@
 					}
 										
 					$this->retorna($retorno);
-			
 			}
-		
-		
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-	
 	}
-	
-	
 ?>

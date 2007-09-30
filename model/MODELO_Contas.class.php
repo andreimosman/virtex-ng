@@ -27,7 +27,7 @@
 			$this->cntb_conta_discado		= VirtexPersiste::factory("cntb_conta_discado");
 			$this->cntb_conta_email			= VirtexPersiste::factory("cntb_conta_email");
 			$this->cntb_cnta_hospedagem		= VirtexPersiste::factory("cntb_conta_hospedagem");
-			$this->cntb_endereco_instacao	= VirtexPersiste::factory("cntb_endereco_instalacao");
+			$this->cntb_endereco_instalacao	= VirtexPersiste::factory("cntb_endereco_instalacao");			
 			
 			// Classes de preferencias e equipamentos são acessadas internamente p/ minimizar erros de programação.
 			$this->preferencias 			= VirtexModelo::factory("preferencias");
@@ -218,7 +218,7 @@
 		/**
 		 * Cadastra o endereço de instalação.
 		 */
-		public function cadastraEnderecoInstalacao($id_conta,$endereco,$complemento,$bairro,$id_cidade,$id_cliente) {
+		public function cadastraEnderecoInstalacao($id_conta,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_cliente) {
 			// TODO: Verificar se já existe outro endereço p/ esta conta. Caso exista tirar o endereço da conta antes de cadastrar a conta.
 		
 		
@@ -227,6 +227,7 @@
 							"complemento" => $complemento,
 							"bairro" => $bairro,
 							"id_cidade" => $id_cidade,
+							"cep" => $cep,
 							"id_cliente" => $id_cliente
 							);
 			if( $id_conta ) {
@@ -358,7 +359,7 @@
 				
 				// Atribuição automática.
 				if( !$endereco ) {
-					$this->equipamentos->obtemEnderecoDisponivel($id_nas);
+					$this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
 				}
 				
 				if( $nasNovo["tipo_nas"] == "I" ) {
@@ -369,6 +370,8 @@
 					$dados["rede"] = null;
 				}
 
+			} else {
+				$endereco = $nasAtual["tipo_nas"] == "I" ? $infoAtual["rede"] : $infoAtual["ipaddr"];
 			}
 			
 			/**
@@ -385,7 +388,12 @@
 			) {
 				// Enviar instrução p/ spool remover a configuração antiga.
 				
-				$remEnd = $infoAtual["rede"] ? $inoAtual["rede"] : $infoAtual["ipaddr"];
+				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];
+				
+				//echo "<pre>".print_r($remEnd,true)."</pre>";
+				//echo "<pre>".print_r($infoAtual,true)."</pre>";
+				
+				
 				
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
 			}
@@ -400,9 +408,11 @@
 			 * Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool.
 			 * Somente se a conta tiver ativa, claro!
 			 */
+			 
+			//echo "ENDERECO: $endereco<br>\n";
 
 			if( $status == "A" && ($nasNovo["tipo_nas"] == "I" || ($nasNovo["tipo_nas"] == "P" && $nasNovo["padrao"] == "O")) ) {
-				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
+				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$infoAtual["username"],$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
 			}
 			
 						

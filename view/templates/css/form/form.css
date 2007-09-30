@@ -50,6 +50,13 @@ form option {
 }
 */
 
+
+#conteiner_contas{
+	width: 430px;
+	margin: auto;
+	padding: 0px;
+}
+
 .register_box {
 	width:500px; 
 	margin: auto; 

@@ -76,7 +76,7 @@
 		 * Usado somente para contas TCP/IP.
 		 */
 		public function removeContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$padrao="") {
-			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$rede,$mac,$padrao));
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$endereco,$mac,$padrao));
 			return($this->insereInstrucaoRemocao($id_nas,self::$BANDA_LARGA,$id_conta,$parametros));
 		}
 		
