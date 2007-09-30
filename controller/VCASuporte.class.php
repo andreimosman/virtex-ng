@@ -156,16 +156,17 @@
 			$equipamentos = VirtexModelo::factory('equipamentos');
 			$registros = $equipamentos->obtemListaPOPs();
 			
-			$resumo = array("IER" => 0, "WRN" => 0, "OK" => 0);
+			$resumo = array("ERR" => 0, "WRN" => 0, "OK" => 0);
 			
 			for($i=0;$i<count($registros);$i++) {
-				if($registros[$i]["ativar_monitoramento"] == 't' && $registros[$i]["ip"]) {
+				if($registros[$i]["ativar_monitoramento"] == 't' && $registros[$i]["ipaddr"]) {
 					$status = $equipamentos->obtemMonitoramentoPop($registros[$i]["id_pop"]);
 					
 					$registros[$i] = array_merge($registros[$i],$status);
 					$registros[$i]["st_mon"] = $status["status"];
 					if( $status["status"] ) {
-						$resumo[ $status["status"] ]++;
+						$st = $status["status"] == "IER" ? "ERR" : $status["status"];
+						$resumo[ $st ]++;
 					}
 					
 				}

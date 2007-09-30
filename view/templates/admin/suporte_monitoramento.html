@@ -39,10 +39,10 @@ label.monitoramento_wrn  {
 
 {if $tela == "mini" }
 <link rel="stylesheet" type="text/css" href="view/templates/css/layout/lista.css" />
-<table border=0 width="100%" height="100%" class="lista" bgcolor="{if $resumo.IER > 0}#ff5555{else}{if $resumo.WRN > 0}#F08932{else}#FFFFF{/if}{/if}">
+<table border=0 width="100%" height="100%" class="lista" bgcolor="{if $resumo.ERR > 0 }#ff5555{else}{if $resumo.WRN > 0}#F08932{else}#FFFFF{/if}{/if}">
 	{foreach item=r key=k from=$resumo}
 	<tr>
-		<td width="50%" align="right"><strong>{if $k=="IER"}Erros:{elseif $k=="WRN"}Alertas:{else}OK:{/if}</strong></td width="50%" align="right"><td><strong>{$r|string_format:"%03d"}</strong></td>
+		<td width="50%" align="right"><strong>{if $k=="IER" || $k == "ERR"}Erros:{elseif $k=="WRN"}Alertas:{else}OK:{/if}</strong></td width="50%" align="right"><td><strong>{$r|string_format:"%03d"}</strong></td>
 	</tr>
 	{/foreach}
 </table>
@@ -81,7 +81,7 @@ function openLinkPOP(id_pop) {
 					{assign var='estilo_fonte' value='monitoramento_ok'}
 				{elseif $r.st_mon == 'WRN'}
 					{assign var='estilo_fonte' value='monitoramento_wrn'}
-				{elseif $r.st_mon == 'IER'}
+				{elseif $r.st_mon == 'IER' || $r.st_mon == "ERR"}
 					{assign var='estilo_fonte' value='monitoramento_err'}
 				{else}
 					{assign var='estilo_fonte' value='sem_monitoramento'}
@@ -95,12 +95,12 @@ function openLinkPOP(id_pop) {
 			<td align='right' width=40 class='{$estilo}'><label class="{$estilo_fonte}"><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.id_pop|string_format:"%05d"}</a></label></td>
 			<td class='{$estilo}'><p class="nivel_{$r.nivel}">{if $r.nivel > 0}<img class="imagem" src="view/templates/imagens/hier-connector.gif" border=0>{/if}<label class="{$estilo_fonte}">{$r.nome|upper}</label></p></td>
 			<td class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')"><label class="{$estilo_fonte}">{$r.tipo|upper}</label></a></td>
-			<td class='{$estilo}'><label class="{$estilo_fonte}">{if $r.ativar_monitoramento == 't' && $r.ipaddr}SIM{else}NÃO{/if}</label></td>
-			<td class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_ping}</label></td>
-			<td class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_perdas}</label></td>
-			<td class='{$estilo}'><label class="{$estilo_fonte}">{$minimo}</label></td>
-			<td class='{$estilo}'><label class="{$estilo_fonte}">{$maximo}</label></td>
-			<td class='{$estilo}'><label class="{$estilo_fonte}">{$media}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{if $r.ativar_monitoramento == 't' && $r.ipaddr}SIM{else}NÃO{/if}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_ping}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_perdas}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$minimo}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$maximo}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$media}</label></td>
 		</tr>
 		{foreachelse}
 		{if $texto_pesquisa && $tipo_pesquisa}

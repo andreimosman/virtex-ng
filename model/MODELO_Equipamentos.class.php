@@ -270,6 +270,16 @@
 		public function obtemMonitoramentoPop($id_pop) {
 			return($this->sttb_pop_status->obtemUnico(array("id_pop" => $id_pop)));
 		}
+		
+		public function excluiMonitoramentoPop($id_pop) {
+			return($this->sttb_pop_status->exclui(array("id_pop" => $id_pop)));
+		}
+		
+		public function registraMonitoramentoPop($id_pop,$minimo,$maximo,$media,$num_perdas,$num_erros,$num_ping,$status) {
+			$dados = array( "id_pop" => $id_pop, "min_ping" => $minimo, "max_ping" => $maximo, "media_ping" => $media,
+							"num_perdas" => $num_perdas, "num_erros" => $num_erros, "num_ping" => $num_ping, "status" => $status);
+			return($this->sttb_pop_status->insere($dados));
+		}
 	
 	}
 
