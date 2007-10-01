@@ -95,6 +95,7 @@
 						$id_cliente = $this->clientes->cadastra(@$_REQUEST);
 						$mensagem = "Cliente cadastrado com sucesso.";
 					}
+
 					$this->_view->atribui("mensagem",$mensagem);
 					$this->_view->atribui("url","admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente=$id_cliente");
 					$this->_view->atribuiVisualizacao("msgredirect");
@@ -458,7 +459,7 @@
 							echo "</pre>";
 							*/
               
-							switch ($_REQUEST["tipo"]) {
+							switch (trim($_REQUEST["tipo"])) {
 
 							case "BL":
 								$ip = @$_REQUEST["endereco_redeip"] ? $_REQUEST["endereco_redeip"] : "";
@@ -468,7 +469,7 @@
 								$dados_conta = array( "foneinfo"=>$_REQUEST["foneinfo"] );
 								break;
 							case "H";
-								$dados_conta = array( "tipo_hospedagem"=>$_REQUEST["tipo_hospedagem"], "dominio"=>$_REQUEST["dominio"] );
+								$dados_conta = array( "tipo_hospedagem"=>$_REQUEST["tipo_hospedagem"], "dominio_hospedagem"=>$_REQUEST["dominio_hospedagem"] );
 								break;
 							}
               
@@ -550,7 +551,7 @@
 		
 		protected function executaConta() {
 			$this->_view->atribuiVisualizacao("conta");
-			$tipo = @$_REQUEST["tipo"];
+			$tipo = trim($_REQUEST["tipo"]);
 			$this->_view->atribui("tipo",$tipo);
 
 			$this->_view->atribui("id_cliente",$this->id_cliente);
@@ -592,18 +593,26 @@
 					$this->_view->atribui("status_msg","");
 					$this->_view->atribui("formDisabled",false);
 				}
+				
+				if( @$info["id_cliente_produto"] ) {
+					$contrato = $cobranca->obtemContratoPeloId($info["id_cliente_produto"]);
+					$tipo_contrato = trim($contrato["tipo_produto"]);
+					$this->_view->atribui("tipo_contrato",$tipo_contrato);
+				}
+
+				
 			}
 			
 			if( !$tipo && $id_cliente_produto ) {
 				$infoProduto = $cobranca->obtemContratoPeloId($id_cliente_produto);
-				$tipo = $infoProduto["tipo_produto"];
+				$tipo = trim($infoProduto["tipo_produto"]);
 				$this->_view->atribui("tipo",$tipo);
 			}
 
 			$equipamentos = VirtexModelo::factory('equipamentos');
 			$preferenciasGerais = $this->preferencias->obtemPreferenciasGerais();
 			$this->_view->atribui("preferenciasGerais",$preferenciasGerais);
-
+			
 			if( $tela == "ficha"  ) {
 				// Informações específicas da ficha.
 				
@@ -652,11 +661,22 @@
 					$quota 				= @$_REQUEST["quota"];
 					$dominio 			= $preferenciasGerais["dominio_padrao"];
 					
+					$tipo_hospedagem	= @$_REQUEST["tipo_hospedagem"];
+					$dominio_hospedagem = @$_REQUEST["dominio_hospedagem"];
+					
 					$alterar_endereco 	= (bool) (@$_REQUEST["altera_rede"] == "t");
 					
 					$senha = $senha == $confsenha ? $senha : "";
 					
-					$url = "admin-clientes.php?op=conta&tipo=BL&id_cliente=".$this->id_cliente;
+					// $contrato = $this->
+					
+					//echo "<pre>";
+					//print_r($_REQUEST);
+					//echo "</pre>";
+					
+					
+					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);					
+					$url = "admin-clientes.php?op=conta&tipo=".@$contrato["tipo_produto"]."&id_cliente=".$this->id_cliente;
 					
 					// todo: buscar esse dados
 					//  $observacoes, $upload,$download
@@ -691,8 +711,14 @@
 						} elseif("E" == $tipo){
 							$contas->alteraContaEmail($id_conta,$senha,$status,$observacoes,$conta_mestre,$quota);
 							$msg = "Email alterado com sucesso.";
+						} elseif($tipo == "D") {
+							$contas->alteraContaDiscado($id_conta,$senha,$status,$observacoes,$conta_mestre,$foneinfo);
+							$msg = "Conta alterada com sucesso.";
+						} elseif($tipo == "H") {
+							$contas->alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre);
+							$msg = "Conta alterada com sucesso.";
 						} else {							
-							die("tipo inválido!");
+							// die("tipo inválido!");
 						}
 
 						$this->_view->atribui("url",$url);
@@ -728,6 +754,15 @@
 							$contas->cadastraContaEmail($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
 														$observacoes,$conta_meste, $quota) ;
 							$msg = "Email cadastrado com sucesso.";
+						} elseif( $tipo == "D" ) {
+							$contas->cadastraContaDiscado($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+														$observacoes,$conta_meste, $foneinfo) ;
+							$msg = "Conta cadastrada com sucesso.";
+						
+						} elseif( $tipo == "H" ) {
+							$contas->cadastraContaHospedagem($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+														$observacoes,$conta_meste, $tipo_hospedagem,$dominio_hospedagem) ;
+							$msg = "Conta cadastrada com sucesso.";						
 						}
 						
 						$this->_view->atribui("url",$url);
@@ -746,7 +781,7 @@
 					$bandas = $this->preferencias->obtemListaBandas();
 					$this->_view->atribui("bandas",$bandas);
 						
-					if( $info["tipo_conta"] == "BL" ) {
+					if( trim($info["tipo_conta"]) == "BL" || trim($info["tipo_conta"]) == "D") {
 					
 						$endereco_instalacao = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
 						 if(!count($endereco_instalacao)){
@@ -759,45 +794,51 @@
 						$endereco_ip = $nas["tipo_nas"] == "I" ? $info["rede"] : $info["ippaddr"];
 						$this->_view->atribui("endereco_ip",$endereco_ip);
 						
-						
-					} else {
-						$qtde = $contas->obtemQtdeContasPorContrato($id_cliente_produto, $tipo);
-						$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
-						
-						if( "BL" == $tipo){
-							$qtdeDisponivel = $contrato["numero_contas"] - $qtde["num_contas"];							
+						$this->_view->atribui("endereco",$endereco_instalacao["endereco"]);
+						$this->_view->atribui("bairro",$endereco_instalacao["bairro"]);
+						$this->_view->atribui("id_cidade",$endereco_instalacao["id_cidade"]);
+						$this->_view->atribui("complemento",$endereco_instalacao["complemento"]);
+						$this->_view->atribui("cep",$endereco_instalacao["cep"]);
+					
+					} 
+
+					$qtde = $contas->obtemQtdeContasPorContrato($id_cliente_produto, $tipo);
+					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
+
+					if( $tipo == "E" ) {
+						if( !$id_conta && $contrato["num_emails"] > 0 ){			
+							$qtdeDisponivel = $contrato["num_emails"] - $qtde["num_contas"];							
 							if($qtdeDisponivel <= 0 ){
 								die("não existe mais contas disponiveis!");
 							}
-						} elseif("E" == $tipo){
-							if( $contrato["num_emails"] > 0 ){			
-								$qtdeDisponivel = $contrato["num_emails"] - $qtde["num_contas"];							
-								if($qtdeDisponivel <= 0 ){
-									die("não existe mais contas disponiveis!");
-								}
-							}
-														
-							$permite = $contrato["permitir_outros_dominios"] == 't' ? true : false;
-							$this->_view->atribui("permite",$permite);
-							
-							if($permite){
-								$listaDominios = $this->preferencias->obtemListaDominios($this->id_cliente);
-								
-							} else {
-								$listaDominios = $preferenciasGerais["dominio_padrao"];
-							}
-							
-							$this->_view->atribui("listaDominios",$listaDominios);
 						}
+
+						if( !$id_conta ) {
+							// Pega a cota do contrato;
+							$quota = $contrato["quota_por_conta"];
+							$this->_view->atribui("quota",$quota);
+						}
+
+						$permite = $contrato["permitir_outros_dominios"] == 't' ? true : false;
+						$this->_view->atribui("permite",$permite);
+
+						if($permite){
+							$listaDominios = $this->preferencias->obtemListaDominios($this->id_cliente);
+
+						} else {
+							$listaDominios = $preferenciasGerais["dominio_padrao"];
+						}
+
+						$this->_view->atribui("listaDominios",$listaDominios);
+					} else {
+						$qtdeDisponivel = $contrato["numero_contas"] - $qtde["num_contas"];	
+						if(!$id_conta && $qtdeDisponivel <= 0 ){
+							die("não existe mais contas disponiveis!");
+						}
+					}
 						
 						
-					} 
-					
-					$this->_view->atribui("endereco",$endereco_instalacao["endereco"]);
-					$this->_view->atribui("bairro",$endereco_instalacao["bairro"]);
-					$this->_view->atribui("id_cidade",$endereco_instalacao["id_cidade"]);
-					$this->_view->atribui("complemento",$endereco_instalacao["complemento"]);
-					$this->_view->atribui("cep",$endereco_instalacao["cep"]);
+					 
 					
 					
 				}
@@ -805,38 +846,46 @@
 				// Listagem
 				
 				$listaContratos = $cobranca->obtemContratos($this->id_cliente,"A",$tipo);
-
+				
 				for($i=0;$i<count($listaContratos);$i++) {
 					$listaContas = $contas->obtemContasPorContrato($listaContratos[$i]["id_cliente_produto"]);
 					$countContas = count($listaContas);
 					
+					$numContasEmail = 0;
+					$numContasTipo = 0;
+					
 					$contasContrato = array();
 					foreach($listaContas as $rowConta){
-						$contasContrato[] = $contas->obtemContaPeloId($rowConta["id_conta"]);
+						 $conta = $contas->obtemContaPeloId($rowConta["id_conta"]);
+						 $contasContrato[] = $conta;
+						 
+						 if( trim($conta["tipo_conta"]) == "E" ) {
+						 	$numContasEmail++;
+						 } else {
+						 	$numContasTipo++;
+						 }
+						 
 					}
+					
+					$listaContratos[$i]["numContasEmail"] = $numContasEmail;
+					$listaContratos[$i]["numContasTipo"] = $numContasTipo;
+
 					$listaContratos[$i]["contas"] = $contasContrato;
 										
 					$contrato = $cobranca->obtemContratoPeloId($listaContratos[$i]["id_cliente_produto"]);
-					$listaContratos[$i]["qtdeDisponivel"] = $contrato["numero_contas"] - $countContas;
-					
-					
-					print("<pre>".print_r($listemail,true)."</pre>");
+					$listaContratos[$i]["qtdeTipoDisponivel"] = $contrato["numero_contas"] - $numContasTipo;
+
 					if( $contrato["num_emails"] == 0 ){
 						$listaContratos[$i]["emailIlimitado"] = true;
-						$listaContratos[$i]["qtdeDisponivel"] = -1;
+						$listaContratos[$i]["qtdeEmailsDisponivel"] = -1;
 					} else {
-						$qtde = $contas->obtemQtdeContasPorContrato($listaContratos[$i]["id_cliente_produto"], "E");
 						$listaContratos[$i]["emailIlimitado"] = false;
-						$listaContratos[$i]["qtdeDisponivel"] = $contrato["num_emails"] - $qtde["num_contas"];
+						$listaContratos[$i]["qtdeEmailsDisponivel"] = $contrato["num_emails"] - $numContasEmails;;
 					}
 					
-					
-					//die("<pre>".print_r($contrato,true)."</pre>");
-					//permitir_outros_dominios
-					
-					unset($contasContrato);
 					unset($listaContas);
 				}
+
 				//die("<pre>".print_r($listaContratos,true)."</pre>");
 				$this->_view->atribui("listaContratos",$listaContratos);
 			}

@@ -14,18 +14,18 @@ var LIMITE_PRORATA = {$limite_prorata};
 
 function alteraNas() {
 	var frm = document.contratacao;
-	if( frm.id_nas.value != frm.nas_orig.value ) {		
-		$('selecao_redeip').value = "A";			
+	if( frm.id_nas.value != frm.nas_orig.value ) {
+		$('selecao_redeip').value = "A";
 		alteraSelecaoIP();
 	}
 }
-	
+
 function alteraSelecaoIP() {
-	var frm = document.contratacao;	
-	if( frm.selecao_redeip.value == "A" ) {		
+	var frm = document.contratacao;
+	if( frm.selecao_redeip.value == "A" ) {
 		desabilita(frm.endereco_redeip);
 		$('endereco_redeip').value = "";
-	} else {		
+	} else {
 		habilita(frm.endereco_redeip);
 	}
 }
@@ -36,12 +36,12 @@ function validaEmail(username,dominio){
 	var dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=email&username="+username+"&dominio="+dominio;
-	
+
 	var myAjax = new Ajax.Request(
-		url, 
+		url,
 		{
-			method: 'get', 
-			parameters: pars, 
+			method: 'get',
+			parameters: pars,
 			onComplete: showResponseEmail,
 			asynchronous: false
 		});
@@ -49,7 +49,7 @@ function validaEmail(username,dominio){
 }
 
 function showResponseEmail(originalRequest) {
-	if ( !getReturn(originalRequest.responseText)){	
+	if ( !getReturn(originalRequest.responseText)){
 		$('criar_email').checked = false;
 		returnStatusEmail = false;
 	} else {
@@ -64,12 +64,12 @@ function validaUsername(){
 	tipo = $F('tipo');
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
-	
-	var myAjax = new Ajax.Request(			
-		url, 
+
+	var myAjax = new Ajax.Request(
+		url,
 		{
-			method: 'get', 
-			parameters: pars, 
+			method: 'get',
+			parameters: pars,
 			onComplete: showResponseUsername,
 			asynchronous: false
 		});
@@ -77,7 +77,7 @@ function validaUsername(){
 }
 
 function showResponseUsername(originalRequest) {
-	if ( !getReturn(originalRequest.responseText)){		
+	if ( !getReturn(originalRequest.responseText)){
 		$('username').value = "";
 		$('username').focus();
 		returnStatusUsername = false;
@@ -90,27 +90,27 @@ returnStatus = false;
 function checkEnderecoDisponivel(id_nas, endereco){
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=enderecoDisponivel&id_nas="+id_nas+"&endereco="+endereco;
-	
-	var myAjax = new Ajax.Request(			
-		url, 
+
+	var myAjax = new Ajax.Request(
+		url,
 		{
-			method: 'get', 
-			parameters: pars, 
+			method: 'get',
+			parameters: pars,
 			onComplete: showResponse,
 			asynchronous: false
 		});
-		
-	return returnStatus;			
+
+	return returnStatus;
 }
 
 function getReturn(response){
 	var r = response.evalJSON();
 	if(r.codigo > 0){
-		alert(r.mensagem)		
+		alert(r.mensagem)
 		return false;
 	}
 	return r;
-}	
+}
 
 function showResponse(originalRequest) {
 	r = getReturn(originalRequest.responseText);
@@ -241,8 +241,8 @@ function contratoDependenciasBox(tipo) {
 
 }
 
-function contratoAlteraUsername() {	
-	var frm = document.contratacao;	
+function contratoAlteraUsername() {
+	var frm = document.contratacao;
 	contratoDependenciasBox(frm.tipo.value);
 }
 
@@ -250,9 +250,9 @@ function contratoAlteraTipoHospedagem() {
 	var frm = document.contratacao;
 
 	if( frm.tipo_hospedagem.disabled || frm.tipo_hospedagem.value == "" || frm.tipo_hospedagem.value == "U") {
-		desabilita(frm.dominio);
+		desabilita(frm.dominio_hospedagem);
 	} else {
-		habilita(frm.dominio);
+		habilita(frm.dominio_hospedagem);
 	}
 }
 
@@ -267,9 +267,9 @@ function contratoPopulaProdutos(tipo) {
 	for(i=frm.id_produto.options.length;i>0;--i) {
 		frm.id_produto.remove(0);
 	}
-	
+
 	var e =  document.getElementById("id_produto");
-	e.options[option_index] = new Option("-- SELECIONE --","");	
+	e.options[option_index] = new Option("-- SELECIONE --","");
 
 	/*o = document.createElement("OPTION");
 	o.value = "";
@@ -308,7 +308,7 @@ function contratoPopulaProdutos(tipo) {
 			//o.innerText = lista[i].nome + " / " + vl;
 			//frm.id_produto.appendChild(o);
 			option_index++;
-			e.options[option_index] = new Option(lista[i].nome + " / " + vl,lista[i].id_produto);	
+			e.options[option_index] = new Option(lista[i].nome + " / " + vl,lista[i].id_produto);
 		}
 	}
 }
@@ -457,10 +457,12 @@ function contratoAlteraProduto() {
 	if( frm.id_produto.value != "" ) {
 		produto = contratoObtemPlano(frm.tipo.value,frm.id_produto.value);
 
+		habilita(frm.data_contratacao);
+		habilita(frm.vigencia);
+
+
 		if( produto.valor > 0 ) {
 			// Produto pago. Habilitar campos de valores
-			habilita(frm.data_contratacao);
-			habilita(frm.vigencia);
 			habilita(frm.dia_vencimento);
 			habilita(frm.carencia);
 			//habilita(frm.primeiro_vencimento);
@@ -624,28 +626,28 @@ function replaceField(field) {
 }
 
 function validacao(frm ) {
-	
+
 	username = $('username');
 	criar_email = $('criar_email');
-	
+
 	if($F('tipo') == "BL") {
 		if(!checkDadosConexao()){
 			return false;
 		}
 	}
-	
+
 	if(username.value != ""){
-		if(!validaUsername()){			
+		if(!validaUsername()){
 			return false;
-		} 
+		}
 	}
-	
+
 	if(criar_email.checked){
 		if(!validaEmail()){
 			return false;
-		} 
+		}
 	}
-	
+
 	if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.cep_cobranca.value == '' ) {
 		alert('Preencha o endereco de cobranca!');
 		frm.difEnderecoMail.checked = true;
@@ -670,24 +672,24 @@ function validacao(frm ) {
 	return true;
 }
 
-function checkDadosConexao(){	
+function checkDadosConexao(){
 		var nas = $('id_nas');
 		var mac = $('mac');
 		var altera_rede = $('altera_rede');
 		var selecao_redeip = $('selecao_redeip');
 		var endereco_redeip = $('endereco_redeip');
-				
+
 		var nas_text = nas.options[nas.options.selectedIndex].text;
-		var nas_type=nas_text.split(":");		
+		var nas_type=nas_text.split(":");
 		if( ("IP" == nas_type[0]) && ("" == mac.value) ){
 			if(!confirm("O Não preenchimento do MAC pode facilitar o acesso de usuários não autorizados no sistema. Deseja proceguir mesmo SEM o mac?")){
 				return false;
 			}
-		}			
-		
+		}
+
 		if("M" == selecao_redeip.value) {
-			if("" != endereco_redeip.value){				
-				if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){				
+			if("" != endereco_redeip.value){
+				if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
 					return false;
 				}
 			} else {
@@ -695,17 +697,17 @@ function checkDadosConexao(){
 				endereco_redeip.focus();
 				return false;
 			}
-		}		
+		}
 		return true;
 	}
 
-function checkForm(tag) {	
+function checkForm(tag) {
   return validacao(tag);
 }
 
 
 function validarData(campo){
-	
+
   var expReg = /^(([0-2]\d|[3][0-1])\/([0]\d|[1][0-2])\/[1-2][0-9]\d{2})$/;
   var msgErro = 'Formato inválido de data. Use: mm/dd/aaaa';
   if ((campo.value.match(expReg)) && (campo.value!='')){
@@ -1130,7 +1132,7 @@ function validarData(campo){
 							</td>
 						<tr>
 							<td align="right" width="110"><label>Criar:</label></td>
-							<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" value="{$dominio_hospedagem}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 					</table>
 				</div>
@@ -1404,8 +1406,8 @@ function validarData(campo){
       <input type=hidden name="tipo_hospedagem" value="{$tipo_hospedagem}" >
 
       <td width="110" align="right"><strong>Criar Dominio:</strong></td>
-			<td>www.{$dominio}</td>
-			<input type=hidden name="dominio" value="{$dominio}" >
+			<td>www.{$dominio_hospedagem}</td>
+			<input type=hidden name="dominio_hospedagem" value="{$dominio_hospedagem}" >
 
 		</tr>
 		{/if}

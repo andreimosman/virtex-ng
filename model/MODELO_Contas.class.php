@@ -26,7 +26,7 @@
 			$this->cntb_conta_bandalarga 	= VirtexPersiste::factory("cntb_conta_bandalarga");
 			$this->cntb_conta_discado		= VirtexPersiste::factory("cntb_conta_discado");
 			$this->cntb_conta_email			= VirtexPersiste::factory("cntb_conta_email");
-			$this->cntb_cnta_hospedagem		= VirtexPersiste::factory("cntb_conta_hospedagem");
+			$this->cntb_conta_hospedagem		= VirtexPersiste::factory("cntb_conta_hospedagem");
 			$this->cntb_endereco_instalacao	= VirtexPersiste::factory("cntb_endereco_instalacao");			
 			
 			// Classes de preferencias e equipamentos são acessadas internamente p/ minimizar erros de programação.
@@ -450,7 +450,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio,
-							"tipo_conta"				=> 'D',
+							"tipo_conta"			=> 'D',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,
@@ -553,7 +553,7 @@
 			$dados = array(
 							"username"				=> $username,
 							"dominio" 				=> $dominio_padrao,
-							"tipo_conta"				=> 'E',
+							"tipo_conta"			=> 'H',
 							"senha" 				=> $senha,
 							"senha_cript"			=> $senhaCript,
 							"id_cliente" 			=> $id_cliente,

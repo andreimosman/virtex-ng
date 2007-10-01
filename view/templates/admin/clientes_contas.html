@@ -4,17 +4,26 @@
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
-
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
 
 <table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border='0' >
 	{foreach item=r from=$listaContratos}
 	<tr>
 		<th align="right" width="50px"><strong>{$r.id_cliente_produto|string_format:"%05d"}</strong></th>
-		
+
 		<th align="left" width='80%'><strong>{$r.nome_produto}</strong></th>
-		
+
 		<th align="right" nowrap>
-		{if $r.qtdeDisponivel > 0}
+		{if $r.qtdeTipoDisponivel > 0}
 			{if $r.tipo_produto == 'BL'}{assign var="str_tipo" value='Banda Larga'}{/if}
 			{if $r.tipo_produto == 'D'}{assign var="str_tipo" value='Discado'}{/if}
 			{if $r.tipo_produto == 'H'}{assign var="str_tipo" value='Hospedagem'}{/if}
@@ -23,13 +32,13 @@
 			&nbsp;
 		{/if}
 		<th align="right" nowrap>
-			{if $r.emailIlimitado || $r.qtdeDisponivel > 0}
+			{if $r.qtdeEmailsDisponivel < 0 || $r.qtdeEmailsDisponivel > 0}
 			<strong>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo=E&id_cliente={$id_cliente}&id_cliente_produto={$r.id_cliente_produto}">Email adicional</a>]</strong>
 			{else}
 			&nbsp;
 			{/if}
 		</th>
-		
+
 	</tr>
 	<tr>
 		<td colspan="4">

@@ -15,6 +15,17 @@ function arp(ip) {
 }
 {/literal}
 </script>
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+
 <br>
 {if $tipo_conta == "BL"}
 <center>
@@ -112,5 +123,8 @@ function arp(ip) {
 	{/if}
 {/if}
 </table>
+<center>
+<label><a href="admin-clientes.php?op=conta&tipo={$tipo_contrato}&id_cliente={$id_cliente}">voltar</a></label>
+</center>
 </body>
 </html>
