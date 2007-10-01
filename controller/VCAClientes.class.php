@@ -628,14 +628,8 @@
 						$infoConta["mascara"] = "255.255.255.0";
 						$infoConta["gateway"] = "PPPoE";
 					}
-					
-					$this->_view->atribui("infoConta",$infoConta);
-					
-				}
-				
-				
-				
-				
+					$this->_view->atribui("infoConta",$infoConta);	
+				} 
 			} else if( $tela == "cadastro" ) {
 				
 				if( $acao ) {
@@ -655,6 +649,8 @@
 					$download 			= @$_REQUEST["download"];
 					$difEnderecoSetup 	= @$_REQUEST["difEnderecoSetup"];
 					$observacoes 		= @$_REQUEST["observacoes"];
+					$quota 				= @$_REQUEST["quota"];
+					$dominio 			= $preferenciasGerais["dominio_padrao"];
 					
 					$alterar_endereco 	= (bool) (@$_REQUEST["altera_rede"] == "t");
 					
@@ -667,58 +663,75 @@
 					
 					
 					if($id_conta) {  // alteração
-						//die("MODELO_Contas::alteraContaBandaLarga $id_conta,$senha, $status,$observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco,$alterar_endereco<br />");
-						$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
-								$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
-						
-						
-						if($difEnderecoSetup){						
-							$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
-							unset(	$info_endereco["id_endereco_instalacao"], 
-									$info_endereco["id_conta"],
-									$info_endereco["id_cliente"] );
-						
-							$endereco_instalacao = array(
-														"endereco" => @$_REQUEST["endereco_instalacao"],
-														"bairro" => @$_REQUEST["bairro_instalacao"], 
-														"id_cidade" => @$_REQUEST["id_cidade_instalacao"], 
-														"complemento" => @$_REQUEST["complemento_instalacao"],
-														"cep" => @$_REQUEST["cep_instalacao"]
-													);
-							if($info_endereco != $endereco_instalacao){
-								$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																	$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+						if("BL" == $tipo){
+							//die("MODELO_Contas::alteraContaBandaLarga $id_conta,$senha, $status,$observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco,$alterar_endereco<br />");
+							$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
+									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
+							
+							
+							if($difEnderecoSetup){						
+								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+								unset(	$info_endereco["id_endereco_instalacao"], 
+										$info_endereco["id_conta"],
+										$info_endereco["id_cliente"] );
+							
+								$endereco_instalacao = array(
+															"endereco" => @$_REQUEST["endereco_instalacao"],
+															"bairro" => @$_REQUEST["bairro_instalacao"], 
+															"id_cidade" => @$_REQUEST["id_cidade_instalacao"], 
+															"complemento" => @$_REQUEST["complemento_instalacao"],
+															"cep" => @$_REQUEST["cep_instalacao"]
+														);
+								if($info_endereco != $endereco_instalacao){
+									$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
+																		$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+								}
 							}
+							$msg = "Conta alterada com sucesso.";
+						} elseif("E" == $tipo){
+							$contas->alteraContaEmail($id_conta,$senha,$status,$observacoes,$conta_mestre,$quota);
+							$msg = "Email alterado com sucesso.";
+						} else {							
+							die("tipo inválido!");
 						}
 
 						$this->_view->atribui("url",$url);
-						$this->_view->atribui("mensagem","Conta alterada com sucesso.");
+						$this->_view->atribui("mensagem",$msg);
 						$this->_view->atribuiVisualizacao("msgredirect");
 						
 						
 					} else {  //  cadastro
 					
-						$dominio = $preferenciasGerais["dominio_padrao"];
-						$contas->cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-														 $observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip);
-														 
-						if($difEnderecoSetup){
-							$endereco_instalacao = array(
-														"endereco" => @$_REQUEST["endereco_instalacao"],
-														"bairro" => @$_REQUEST["bairro_instalacao"], 
-														"id_cidade" => @$_REQUEST["id_cidade_instalacao"], 
-														"complemento" => @$_REQUEST["complemento_instalacao"],
-														"cep" => @$_REQUEST["cep_instalacao"]
-													);
-						} else {
-							$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+						
+						if("BL" == $tipo){
+							$contas->cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+															 $observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip);
+															 
+							if($difEnderecoSetup){
+								$endereco_instalacao = array(
+															"endereco" => @$_REQUEST["endereco_instalacao"],
+															"bairro" => @$_REQUEST["bairro_instalacao"], 
+															"id_cidade" => @$_REQUEST["id_cidade_instalacao"], 
+															"complemento" => @$_REQUEST["complemento_instalacao"],
+															"cep" => @$_REQUEST["cep_instalacao"]
+														);
+							} else {
+								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+							}
+							
+							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
+																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+							$msg = "Conta cadastrada com sucesso.";
+						} elseif("E" == $tipo){
+						
+							$dominio = isset($_REQUEST["sel_dominio"]) ? $_REQUEST["sel_dominio"] : $dominio;
+							$contas->cadastraContaEmail($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+														$observacoes,$conta_meste, $quota) ;
+							$msg = "Email cadastrado com sucesso.";
 						}
 						
-						$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-															$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
-						
 						$this->_view->atribui("url",$url);
-						$this->_view->atribui("mensagem","Conta cadastrada com sucesso.");
+						$this->_view->atribui("mensagem",$msg);
 						$this->_view->atribuiVisualizacao("msgredirect");
 					}
 					
@@ -748,14 +761,37 @@
 						
 						
 					} else {
-						$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);						
-						$countContas = count($contas->obtemContasPorContrato($id_cliente_produto));
+						$qtde = $contas->obtemQtdeContasPorContrato($id_cliente_produto, $tipo);
 						$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
-						$qtdeDisponivel = $contrato["num_conta"] - $countContas;
-						if($qtdeDisponivel <= 0 ){
-							die("não existe mais contas disponiveis!");
+						
+						if( "BL" == $tipo){
+							$qtdeDisponivel = $contrato["numero_contas"] - $qtde["num_contas"];							
+							if($qtdeDisponivel <= 0 ){
+								die("não existe mais contas disponiveis!");
+							}
+						} elseif("E" == $tipo){
+							if( $contrato["num_emails"] > 0 ){			
+								$qtdeDisponivel = $contrato["num_emails"] - $qtde["num_contas"];							
+								if($qtdeDisponivel <= 0 ){
+									die("não existe mais contas disponiveis!");
+								}
+							}
+														
+							$permite = $contrato["permitir_outros_dominios"] == 't' ? true : false;
+							$this->_view->atribui("permite",$permite);
+							
+							if($permite){
+								$listaDominios = $this->preferencias->obtemListaDominios($this->id_cliente);
+								
+							} else {
+								$listaDominios = $preferenciasGerais["dominio_padrao"];
+							}
+							
+							$this->_view->atribui("listaDominios",$listaDominios);
 						}
-					}
+						
+						
+					} 
 					
 					$this->_view->atribui("endereco",$endereco_instalacao["endereco"]);
 					$this->_view->atribui("bairro",$endereco_instalacao["bairro"]);
@@ -767,8 +803,6 @@
 				}
 			} else {
 				// Listagem
-				
-				
 				
 				$listaContratos = $cobranca->obtemContratos($this->id_cliente,"A",$tipo);
 
@@ -783,11 +817,27 @@
 					$listaContratos[$i]["contas"] = $contasContrato;
 										
 					$contrato = $cobranca->obtemContratoPeloId($listaContratos[$i]["id_cliente_produto"]);
-					$listaContratos[$i]["qtdeDisponivel"] = $contrato["num_conta"] - $countContas;
+					$listaContratos[$i]["qtdeDisponivel"] = $contrato["numero_contas"] - $countContas;
+					
+					
+					print("<pre>".print_r($listemail,true)."</pre>");
+					if( $contrato["num_emails"] == 0 ){
+						$listaContratos[$i]["emailIlimitado"] = true;
+						$listaContratos[$i]["qtdeDisponivel"] = -1;
+					} else {
+						$qtde = $contas->obtemQtdeContasPorContrato($listaContratos[$i]["id_cliente_produto"], "E");
+						$listaContratos[$i]["emailIlimitado"] = false;
+						$listaContratos[$i]["qtdeDisponivel"] = $contrato["num_emails"] - $qtde["num_contas"];
+					}
+					
+					
+					//die("<pre>".print_r($contrato,true)."</pre>");
+					//permitir_outros_dominios
 					
 					unset($contasContrato);
 					unset($listaContas);
 				}
+				//die("<pre>".print_r($listaContratos,true)."</pre>");
 				$this->_view->atribui("listaContratos",$listaContratos);
 			}
 			

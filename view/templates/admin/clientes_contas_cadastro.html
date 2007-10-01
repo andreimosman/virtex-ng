@@ -259,6 +259,17 @@ label {
 		}
 		
 		
+		
+
+		
+	
+{/literal}{if $tipo == "BL"}{literal}
+
+		var mac = $('mac');
+		var altera_rede = $('altera_rede');
+		var selecao_redeip = $('selecao_redeip');
+		var endereco_redeip = $('endereco_redeip');
+
 		if("" == nas.value){
 			alert("Selecione um nas!");
 			nas.focus();
@@ -270,16 +281,7 @@ label {
 			pop.focus();
 			return false;
 		}
-
 		
-	
-{/literal}{if $tipo == "BL"}{literal}
-		
-		var mac = $('mac');
-		var altera_rede = $('altera_rede');
-		var selecao_redeip = $('selecao_redeip');
-		var endereco_redeip = $('endereco_redeip');
-				
 		var nas_text = nas.options[nas.options.selectedIndex].text
 		var nas_type=nas_text.split(":");		
 		if( ("IP" == nas_type[0]) && ("" == mac.value) ){
@@ -374,7 +376,18 @@ label {
 				{if $id_conta}
 					{$username}{if $tipo == "E"}@{$dominio}{/if}
 				{else}
-					<input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);"  {if $formDisabled}disabled='disabled'{/if} />	
+					<input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);"  {if $formDisabled}disabled='disabled'{/if} />					
+					{if $tipo == "E"}
+						{if $permite}
+							<select name="sel_dominio" id="sel_dominio" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+								{foreach from=$listaDominios item=d}
+								<option value="{$d.dominio}">{$d.dominio}</option>
+								{/foreach}
+							</select>
+						{else}	
+							{$listaDominios}
+						{/if}
+					{/if}	
 				{/if}
 			</td>
 		</tr>
@@ -405,6 +418,14 @@ label {
 				</select>
 			</td>
 		</tr>
+		{if $tipo == "E"}
+		<tr>
+			<td align="right" width="110"><label>Quota:</label></td>
+			<td colspan='3' align='left'>
+				<label><input type="text" name="quota" id="quota" value="{$quota}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></label>
+			</td>
+		</tr>
+		{/if}
 	</table>
 
 	{if $tipo == "BL"}

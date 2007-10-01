@@ -123,6 +123,15 @@
 			return($this->cntb_conta->obtem($filtro));
 		}
 		
+				
+		/**
+		 * obtemQtdeContasPorContrato()
+		 * Retorna os emails de um contrato.
+		 */
+		public function obtemQtdeContasPorContrato($id_cliente_produto,$tipo) {
+			return($this->cntb_conta->obtemQuantidadePorTipo($id_cliente_produto, $tipo));
+		}
+		
 		/**
 		 * obtemContasPorCliente()
 		 * Retorna as contas de um cliente.

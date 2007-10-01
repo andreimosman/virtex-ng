@@ -38,6 +38,12 @@
 			
 			return($retorno);
 		}
+		
+		public function obtemQuantidadePorTipo($id_cliente_produto,$tipo){
+			$sql = "select count(*) as num_contas from cntb_conta where tipo_conta = '$tipo' and id_cliente_produto = $id_cliente_produto";
+			return $this->bd->obtemUnicoRegistro($sql);
+		}
+		
 	}
 
 ?>

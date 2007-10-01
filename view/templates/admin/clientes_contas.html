@@ -15,14 +15,20 @@
 		
 		<th align="right" nowrap>
 		{if $r.qtdeDisponivel > 0}
-			{if $tipo == 'BL'}{assign var="str_tipo" value='Banda Larga'}{/if}
-			{if $tipo == 'D'}{assign var="str_tipo" value='Discado'}{/if}
-			{if $tipo == 'H'}{assign var="str_tipo" value='Hospedagem'}{/if}
-			<strong>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_cliente_produto={$r.id_cliente_produto}">Conta {$str_tipo} adicional</a>]</strong></th>
+			{if $r.tipo_produto == 'BL'}{assign var="str_tipo" value='Banda Larga'}{/if}
+			{if $r.tipo_produto == 'D'}{assign var="str_tipo" value='Discado'}{/if}
+			{if $r.tipo_produto == 'H'}{assign var="str_tipo" value='Hospedagem'}{/if}
+			<strong>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$r.tipo_produto}&id_cliente={$id_cliente}&id_cliente_produto={$r.id_cliente_produto}">Conta {$str_tipo} adicional</a>]</strong></th>
 		{else}
 			&nbsp;
 		{/if}
-		<th align="right" nowrap><strong>[Email adicional]</strong></th>
+		<th align="right" nowrap>
+			{if $r.emailIlimitado || $r.qtdeDisponivel > 0}
+			<strong>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo=E&id_cliente={$id_cliente}&id_cliente_produto={$r.id_cliente_produto}">Email adicional</a>]</strong>
+			{else}
+			&nbsp;
+			{/if}
+		</th>
 		
 	</tr>
 	<tr>
@@ -31,9 +37,9 @@
 			{foreach name=registros item=c from=$r.contas}
 			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 				<tr>
-					<td class='estilo' width=200><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</a></td>
+					<td class='estilo' width=200><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</a></td>
 					<td class='estilo' width=80>
-					<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">
+					<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">
 						{if $c.tipo_conta == 'BL'}BANDA LARGA{/if}
 						{if $c.tipo_conta == 'D'}DISCADO{/if}
 						{if $c.tipo_conta == 'E'}EMAIL{/if}
@@ -46,7 +52,7 @@
 						{/if}
 					</td>
 					<td>
-						[<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">Ficha Técnica</a>]
+						[<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">Ficha Técnica</a>]
 					</td>
 				</tr>
 			{/foreach}

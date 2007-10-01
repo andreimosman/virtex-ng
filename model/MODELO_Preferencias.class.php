@@ -221,15 +221,7 @@
 		 * Se $todos for true o sistema ignorará o id do cliente e retornará TODOS os domínios.
 		 */
 		public function obtemListaDominios($id_cliente=0,$todos=false) {
-			$filtro = array();
-			
-			if( !$todos ) {
-				if($id_cliente) {
-					// Retornar domínios do provedor + domínios do cliente
-				} else {
-					// Retornar domínios do provedor
-				}
-			}
+			return $this->dominio->obtemListaDominios($id_cliente,$todos);			
 		}
 		
 		/**
