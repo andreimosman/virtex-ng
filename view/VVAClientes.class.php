@@ -128,6 +128,11 @@
 					}
 					$selecionavel = false;
 					break;
+					
+				case 'cancelar_contrato':	// CANCELAMENTO
+				case 'contrato':			// DETALHES
+					$titulo .= " :: ".($this->obtem("tela")=='cancelar_contrato'?'CANCELAR ':"")."Contrato #" . str_pad($this->obtem("id_cliente_produto"),6,"0",STR_PAD_LEFT);
+					break;
 				
 				case 'contratos':
 					$titulo .=  " :: Contratos";

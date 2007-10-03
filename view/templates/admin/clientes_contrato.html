@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -67,17 +67,15 @@ function desabilita(campo) {
 
 {if !$tela}
 	{include file="clientes_contrato_resumo.html"}
-{/if}
-{if $tela == "novo_contrato"}
+{elseif $tela == "novo_contrato"}
 	{include file="clientes_contrato_novo.html"}
-{/if}
-{if $tela == "contratos"}
+{elseif $tela == "contrato" || $tela == "cancelar_contrato"}
+	{include file="clientes_contrato_detalhes.html"}
+{elseif $tela == "contratos"}
 	{include file="clientes_contrato_contratos.html"}
-{/if}
-{if $tela == "faturas"}
+{elseif $tela == "faturas"}
 	{include file="clientes_contrato_faturas.html"}
-{/if}
-{if $tela == "amortizacao"}
+{elseif $tela == "amortizacao"}
 	{include file="clientes_contrato_amortizacao.html"}
 {/if}
 

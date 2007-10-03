@@ -1,0 +1,253 @@
+
+<br>
+	<!-- CONFIRMAÇÃO DO CONTRATO -->
+
+<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="630" {if $tela == "cancelar_contrato"}style="border: solid 1px #FF0000;"{/if}>
+<tr>
+	<td align="left" style="border-bottom: solid 1px;">
+	&nbsp;Opções:
+	[<a href="admin-clientes.php?op=contrato&tela=contratos&id_cliente={$id_cliente}">Voltar</a>]
+	{if $tela == "contrato"}
+		{if $contrato.status != "C"}
+			[<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}&id_forma_pagamento={$formaPagamento.id_forma_pagamento}">Faturas/Carnês</a>]
+			[<a href="admin-clientes.php?op=contrato&tela=migrar&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Migrar Contrato</a>]
+			[<a href="admin-clientes.php?op=contrato&tela=cancelar_contrato&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Cancelar Contrato</a>]
+		{/if}
+	{/if}
+	</td>
+</tr>
+
+
+{if $tela == "cancelar_contrato"}
+{if $erro}
+<tr>
+	<td align="center" style="border-bottom: solid 1px #FF0000;"><span style="font-size: 14px"><strong>{$erro}</strong></span></td>
+</tr>
+{/if}
+<tr>
+	<td align="center" style="border-bottom: solid 1px #FF0000;"><span style="color: #FF0000;"><strong>-- CANCELAMENTO --</strong></span></td>
+</tr>
+	<td align="left" style="border-bottom: solid 1px; padding-left: 5px; padding-right: 5px; padding-bottom: 5px;"><p align="justify"><span style="color: #FF0000;">
+	&nbsp; &nbsp; &nbsp;O contrato informado abaixo está prestes a ser <strong>CANCELADO</strong>.<br>
+	Neste procedimento, todas as contas do usuário (especificadas na tabela "contas" abaixo) serão canceladas e deixarão de funcionar.<br><br>
+	As cobranças futuras serão estornadas e e novas informações de cobrança para este contrato NÃO serão geradas.
+	</span>
+	</p>
+	</td>
+</tr>
+{/if}
+<tr>
+<td align="center">
+	{if $contrato.status == "C"}<span style="color: #FF0000; font-size: 14px;"><strong>** CONTRATO CANCELADO **</strong></span>{/if}
+	{if $contrato.status == "S"}<span style="color: orange; font-size: 14px;"><strong>** CONTRATO SUSPENSO **</strong></span>{/if}
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=4>Contratante - Cobran&ccedil;a</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
+			<td colspan=4>{$cliente.nome_razao}</td>
+			<input type=hidden name="id_cliente" value="{$id_cliente}" >
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
+			<td>{$cliente.cpf_cnpj}&nbsp;</td>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG:{else}Inscrição{/if}</strong></td>
+			<td>{$cliente.rg_inscr}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Endereço:</strong></td>
+			<td>{$endereco_cobranca.endereco}&nbsp;</td>
+
+			<td width="110" align="right"><strong>Complemento:</strong></td>
+			<td>{$endereco_cobranca.complemento}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Bairro:</strong></td>
+			<td>{$endereco_cobranca.bairro}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$endereco_cobranca.cep}</td>
+			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
+		</tr>
+	</table>
+	<br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=6>Contrato</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td>{if $contrato.tipo_produto == "BL"}BANDA LARGA{/if}{if $contrato.tipo_produto == "D"}DISCADO{/if}{if $contrato.tipo_produto == "H"}HOSPEDAGEM{/if}</td>
+			<td width="110" align="right"><strong>Produto:</strong></td>
+			<td>{$contrato.nome_produto}&nbsp;</td>
+			<td width="110" align="right"><strong>Valor:</strong></td>
+			<td>{if $contrato.valor_produto}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
+		</tr>
+		{if $contrato.valor_produto}
+		<tr>
+			<td width="110" align="right"><strong>Comodato:</strong></td>
+			<td>{$contrato.valor_comodato|string_format:"%.2f"}&nbsp;</td>
+
+			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
+			<td>{$contrato.tx_instalacao|string_format:"%.2f"}</td>
+			<input type=hidden name="tx_instalacao" value="{$tx_instalacao}" >
+
+			<td width="110" align="right"><strong></strong></td>
+			<td></td>
+
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Desconto:</strong></td>
+			<td>{$contrato.desconto_promo|string_format:"%.2f"}&nbsp;</td>
+			<td width="110" align="right"><strong>Período Desconto:</strong></td>
+			<td>{$contrato.periodo_desconto} meses</td>
+			<td width="110" align="right"><strong>Data Contratação:</strong></td>
+			<td>{$contrato.data_contratacao}</td>
+
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
+			<td>{$contrato.vencimento}&nbsp;</td>
+			<td width="110" align="right"><strong>Vigência:</strong></td>
+			<td>{$contrato.vigencia} meses</td>
+			<td width="110" align="right"><strong>Carência:</strong></td>
+			<td>{$contrato.carencia} dias</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Pagamento:</strong></td>
+			<td>{if $contrato.pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
+			<input type=hidden name="pagamento" value="{$pagamento}" >
+			<input type=hidden name="id_forma_pagamento" value="{if $forma_pagamento == 'BL'}{$id_forma_pagamento_BL}{/if}{if $forma_pagamento == 'DA'}{$id_forma_pagamento_DA}{/if}{if $forma_pagamento == 'MO'}{$id_forma_pagamento_MO}{/if}{if $forma_pagamento == 'PC'}{$id_forma_pagamento_PC}{/if}" >
+
+ 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
+			<td colspan=3><span style="font-family: arial; font-size: 9px;">{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+		</tr>
+		{if $formaPagamento.tipo_cobranca == "DA"}
+		<tr>
+			<td width="110" align="right"><strong>Banco:</strong></td>
+			<td>{$formaPagamento.codigo_banco|string_format:"%03d"}</td>
+			<td width="110" align="right"><strong>Agencia:</strong></td>
+			<td>{$agencia}</td>
+			<td width="110" align="right"><strong>Conta:</strong></td>
+			<td>{$conta}</td>
+			<input type=hidden name="da_conta" value="{$conta}" >
+
+		</tr>
+		{/if}
+	{/if}
+	</table>
+	<br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=6>Contas</th>
+		</tr>
+		{foreach name=registros item=c from=$listaContas}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td class='{$estilo}' width=200 align="left">&nbsp;<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</a></td>
+			<td class='{$estilo}' width=80>
+			<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">
+				{if $c.tipo_conta == 'BL'}BANDA LARGA{/if}
+				{if $c.tipo_conta == 'D'}DISCADO{/if}
+				{if $c.tipo_conta == 'E'}EMAIL{/if}
+				{if $c.tipo_conta == 'H'}HOSPEDAGEM{/if}
+			</a>
+			</td>
+			<td class='{$estilo}' width="80">
+				{if $c.status=='A'}ATIVO{elseif $c.status=='B'}BLOQUEADO{elseif $c.status=='C'}CANCELADO{elseif $c.status=='S'}SUSPENSO{/if}
+			</td>
+			<td class='{$estilo}'>
+				{if $c.tipo_conta == 'BL'}
+					<small>UP: {if !$c.upload_kbps}Ilimitado{else}{$c.upload_kbps} kbps{/if} / DOWN: {if !$c.download_kbps}Ilimitado{else}{$c.download_kbps} kbps{/if}</small>
+				{elseif $c.tipo_conta == "H"}
+					{if $c.tipo_hospedagem == "U"}
+						hosp. usuário
+					{elseif $c.tipo_hospedagem == "D"}
+						{$c.dominio_hospedagem}
+					{/if}
+				{elseif $c.tipo_conta == "E"}
+
+				{/if}
+			</td>
+			<td class='{$estilo}' align="right" width="100">
+				[<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">Ficha Técnica</a>]
+			</td>
+		</tr>
+		{/foreach}
+	</table>
+	<br>
+
+	<!-- FATURAS -->
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
+		<tr>
+			<th colspan=10>Faturas</th>
+		</tr>
+		<tr>
+			{if $tela == "cancelar_contrato"}
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">*</td>
+			{/if}
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">#</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Vencimento</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pagamento</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Valor</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Acréscimo</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Desconto</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Valor Pago</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Valor Restante</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-bottom: solid 1px #000000;">Status</td>
+		</tr>
+		{foreach name=registros item=f from=$faturas}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			{if $tela == "cancelar_contrato"}
+			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">
+				&nbsp;
+				{if $f.estornavel}
+				 *
+				{/if}
+			</td>
+			{/if}
+			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.id_cobranca}</td>
+			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{if $r.reagendamento}{$f.reagendamento}*{else}{$f.data}{/if}</td>
+			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.data_pagamento}&nbsp;</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.acrescimo}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.desconto}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor_pago}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor_restante}</td>
+			<td align="center" class="{$estilo}">{$f.strstatus}</td>
+		</tr>
+		{/foreach}
+	</table>
+	{if $tela == "cancelar_contrato"}
+	<p align="center" style="color: #FF0000; padding: 0; margin: 0;">* faturas que serão estornadas.</p>
+	{/if}
+	<br>
+
+</td>
+</tr>
+</table>
+<br>
+{if $tela == "cancelar_contrato"}
+<form method="post" action="admin-clientes.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="id_cliente" value="{$id_cliente}">
+<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
+<input type="hidden" name="acao" value="cancela">
+<table width="630" class="lista" cellpadding=0 cellspacing=0 align="center">
+	<tr>
+		<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação de Cancelamento</th>
+	</tr>
+	<tr>
+		<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+	</tr>
+	<tr>
+		<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><input type="submit" class="botao" name="submit" value="CANCELAR CONTRATO"></td>
+	</tr>
+
+</table>
+<br>
+</form>
+{/if}
+
+
