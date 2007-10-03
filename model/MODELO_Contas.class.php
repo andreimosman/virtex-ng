@@ -120,7 +120,11 @@
 			if( $status ) {
 				$filtro["status"] = $status;
 			}
-			return($this->cntb_conta->obtem($filtro));
+			$contas = $this->cntb_conta->obtem($filtro);
+			for($i=0;$i<count($contas);$i++) {
+				$contas[$i] = $this->obtemContaPeloIdTipo($contas[$i]["id_conta"],$contas[$i]["tipo_conta"]);
+			}
+			return($contas);
 		}
 		
 				

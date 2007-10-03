@@ -67,7 +67,7 @@ function desabilita(campo) {
 
 {if !$tela}
 	{include file="clientes_contrato_resumo.html"}
-{elseif $tela == "novo_contrato"}
+{elseif $tela == "novo_contrato" || $tela == "migrar"}
 	{include file="clientes_contrato_novo.html"}
 {elseif $tela == "contrato" || $tela == "cancelar_contrato"}
 	{include file="clientes_contrato_detalhes.html"}

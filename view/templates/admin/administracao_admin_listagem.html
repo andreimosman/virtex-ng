@@ -22,7 +22,7 @@
 			<td width="100" class='{$estilo}'><a href="admin-administracao.php?op=administradores&tela=cadastro&id_admin={$r.id_admin}">{$r.nome}</a></td>
 			<td class='{$estilo}'><a href="admin-administracao.php?op=administradores&tela=cadastro&id_admin={$r.id_admin}">{$r.email|lower}</a></td>
 			<td width="100" class='{$estilo}' align="left"><a href="admin-administracao.php?op=administradores&tela=cadastro&id_admin={$r.id_admin}">{if $r.status=="A"}Ativo{else}Cancelado{/if}</a></td>
-			<td width="70" class='{$estilo}' align="right">[<a href="admin-administracao.php?op=administradores&tela=cadastro&id_admin={$r.id_admin}">privilégios</a>]</td>
+			<td width="70" class='{$estilo}' align="right">[<a href="admin-administracao.php?op=administradores&tela=privilegio&id_admin={$r.id_admin}">privilégios</a>]</td>
 		</tr>
 		{foreachelse}
 		<tr>

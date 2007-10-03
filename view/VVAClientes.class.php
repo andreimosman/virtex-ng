@@ -138,6 +138,10 @@
 					$titulo .=  " :: Contratos";
 					break;
 					
+				case 'migrar':
+					$titulo .= " :: Migrar Contrato #". str_pad($this->obtem("id_cliente_produto"),6,"0",STR_PAD_LEFT);
+					break;
+					
 				case 'faturas':
 					$titulo .= " :: Faturas";
 					break;

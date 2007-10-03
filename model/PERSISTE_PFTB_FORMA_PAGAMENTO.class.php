@@ -39,14 +39,13 @@
 			$inicial = (int)$info["nossonumero_inicial"];
 			$final = (int)$info["nossonumero_final"];
 			$atual = (int)$info["nossonumero_atual"];
-			
 			$proximo = 0;
 			
 			if( $atual < $inicial ) {
 				// Contagem não começou. Iniciar.
 				$proximo = $inicial;
 			} else {
-				$proximo++;
+				$proximo=$atual+1;
 			}
 			
 			if( $proximo == $final ) {

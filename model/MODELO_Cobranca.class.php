@@ -384,6 +384,8 @@
 				if ($gera_carne) {
 					// gera codigo de barras
 					$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_pagamento);
+					
+					// ($banco,$agencia,$conta,$carteira,$convenio,$vencimento,$valor,$id,$moeda=9,$cnpj_ag_cedente="",$codigo_cedente="",$operacao_cedente="")
 
 					switch ($formaPagto ["tipo_cobranca"]) {
 						case "PC":

@@ -9,6 +9,7 @@ var BLSelecionado='';
 var DSelecionado='';
 var HSelecionado='';
 
+
 var LIMITE_PRORATA = {$limite_prorata};
 {literal}
 
@@ -158,6 +159,12 @@ function contratoObtemPlano(tipo,id_produto) {
 }
 
 function contratoEscondeBox(tipo) {
+	var frm = document.contratacao;
+
+	if( frm.id_cliente_produto != '' ) {
+		return;
+	}
+
 	if( tipo == null || tipo == undefined || tipo == "" ){
 		contratoEscondeBox("BL");
 		contratoEscondeBox("D");
@@ -177,6 +184,12 @@ function contratoEscondeBox(tipo) {
 }
 
 function contratoExibeBox(tipo) {
+	var frm = document.contratacao;
+
+	if( frm.id_cliente_produto != '' ) {
+		return;
+	}
+
 	contratoEscondeBox("BL");
 	contratoEscondeBox("D");
 	contratoEscondeBox("H");
@@ -205,6 +218,10 @@ function contratoExibeBox(tipo) {
 
 function contratoDependenciasBox(tipo) {
 	var frm = document.contratacao;
+
+	if( frm.id_cliente_produto.value != '' ) {
+		return;
+	}
 
 	if( tipo == "BL" ) {
 		if( frm.username.disabled || frm.username.value == "" ) {
@@ -449,10 +466,19 @@ function contratoAlteraProduto() {
 	desabilita(frm.pagamento);
 	contratoDesabilitaFormaPagamento();
 
-	desabilita(frm.username);
-	contratoAlteraUsername();
-	desabilita(frm.senha);
-	desabilita(frm.confsenha);
+	if( frm.id_cliente_produto.value == '' ) {
+		desabilita(frm.username);
+		contratoAlteraUsername();
+		desabilita(frm.senha);
+		desabilita(frm.confsenha);
+	}
+
+	//window.alert("CONTRATO: " + contrato);
+
+	if( frm.id_produto.value == "" && frm.tipo_produto_original.value != '' ) {
+		// window.alert("MIG: " + contrato.id_contrato);
+		frm.id_produto.value = frm.id_produto_original.value;
+	}
 
 	if( frm.id_produto.value != "" ) {
 		produto = contratoObtemPlano(frm.tipo.value,frm.id_produto.value);
@@ -491,10 +517,12 @@ function contratoAlteraProduto() {
 			}
 		}
 
-		habilita(frm.username);
-		contratoAlteraUsername();
-		habilita(frm.senha);
-		habilita(frm.confsenha);
+		if( frm.id_cliente_produto.value == '' ) {
+			habilita(frm.username);
+			contratoAlteraUsername();
+			habilita(frm.senha);
+			habilita(frm.confsenha);
+		}
 
 	}
 }
@@ -810,6 +838,10 @@ function validarData(campo){
 <input type="hidden" name="op" value="{$op}">
 <input type="hidden" name="tela" value="{$tela}">
 <input type="hidden" name="id_cliente" value="{$id_cliente}">
+<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
+<input type="hidden" name="tipo_produto_original" value="{$contrato.tipo_produto}">
+<input type="hidden" name="id_produto_original" value="{$contrato.id_produto}">
+<input type="hidden" name="id_forma_pagamento" value="{$contrato.id_forma_pagamento}">
 {if $acao == ""}
 	<input type="hidden" name="acao" value="novo_contrato">
 
@@ -853,10 +885,18 @@ function validarData(campo){
 						<th align="right"><label>Contrato:</label></th>
 						<th colspan=3 align="left">
 							<select name="tipo" id="tipo" onChange="contratoAlteraTipo()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								{if $tela == "novo_contrato"}
 								<option value="">-- SELECIONE --</option>
-								<option value="BL">Banda Larga</option>
-								<option value="D">Discado</option>
-								<option value="H">Hospedagem</option>
+								{/if}
+								{if $tela == "novo_contrato" || $contrato.tipo_produto == "BL"}
+								<option value="BL" {if $tela == "migrar"}SELECTED{/if}>Banda Larga</option>
+								{/if}
+								{if $tela == "novo_contrato" || $contrato.tipo_produto == "D"}
+								<option value="D" {if $tela == "migrar"}SELECTED{/if}>Discado</option>
+								{/if}
+								{if $tela == "novo_contrato" || $contrato.tipo_produto == "H"}
+								<option value="H" {if $tela == "migrar"}SELECTED{/if}>Hospedagem</option>
+								{/if}
 							</select>
 						</th>
 					</tr>
@@ -942,7 +982,7 @@ function validarData(campo){
 								{if count($v)}
 									{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 									<tr>
-										<td width="10" class='{$estilo}'><label><input type="radio" name="forma_pagamento" value="{$tipo}" onClick="javascript:contratoAlteraFormaPagamento()"></td>
+										<td width="10" class='{$estilo}'><label><input type="radio" name="forma_pagamento" value="{$tipo}" onClick="javascript:contratoAlteraFormaPagamento()" {if $tipo == $forma_pagamento_original}CHECKED{/if}></td>
 										<td class='{$estilo}'>
 											<b>{$tiposFormaPgto[$tipo]}</b><br><span style="font-family: arial; font-size: 8px;">
 											{if count($v) == 1}
@@ -952,10 +992,10 @@ function validarData(campo){
 												<table border=0 cellpadding=0 cellspacing=0>
 													<tr>
 														<td>
-															<select name="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"}onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
+															<select name="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"} onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
 																<option value="">-- SELECIONE --</option>
 																{foreach item=f from=$v}
-																	<option value="{$f.id_forma_pagamento}">
+																	<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
 																		{if $tipo == "MO"}
 																			{$f.id_forma_pagamento}
 																		{/if}
@@ -973,9 +1013,9 @@ function validarData(campo){
 															<table border=0 cellspacing=0 cellpadding=0 width="100">
 																<tr>
 																	<td align="right"><label style="font-size: 8px">ag:</label>
-																	<td><input type="text" size="8" maxlength="4" name="agencia" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP' )"></td>
+																	<td><input type="text" size="8" maxlength="4" name="agencia" value="{if $contrato.da_agencia}{$contrato.da_agencia}{/if}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP' )"></td>
 																	<td aling="right"><label style="font-size: 8px">cc:</label>
-																	<td><input type="text" size="8" maxlength="10" name="conta" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')"></td>
+																	<td><input type="text" size="8" maxlength="10" name="conta" value="{if $contrato.da_num_conta}{$contrato.da_num_conta}{/if}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')"></td>
 																</tr>
 															</table>
 														</td>
@@ -996,6 +1036,43 @@ function validarData(campo){
 				</table>
 			</td>
 			<td valign="top">
+
+
+{if $tela == "migrar"}
+				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+					<tr>
+						<th colspan=4 align="left">&nbsp; &nbsp;<label>Contas que serão migradas:</label></th>
+					</tr>
+
+					{foreach name=registros item=c from=$listaContas}
+					<tr>
+						<td><label>{$c.username}{if $c.tipo_conta == "E"}@{$c.dominio}{/if}</label></td>
+						<td><label>{if $c.tipo_conta == 'BL'}Banda Larga{elseif $c.tipo_conta == 'E'}Email{elseif $c.tipo_conta=='H'}Hospedagem{elseif $tipo_conta == 'D'}Discado{/if}</label></td>
+						<td><label>{if $c.status == "A"}Ativa{elseif $c.status == "B"}Bloqueado{elseif $c.status == "S"}Suspenso{elseif $c.status == "C"}Cancelado{/if}</label></td>
+					</tr>
+
+					{/foreach}
+
+					<!--tr>
+						<td align="right" width="110"><label>Username:</label></td>
+						<td colspan=3><input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);contratoAlteraUsername();"></td>
+					</tr>
+					<tr>
+						<td align="right" width="110"><label>Senha:</label></td>
+						<td colspan=3>
+							<label>
+								<input type="password" size="20" maxlength="20" name="senha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><br>
+								<input type="password" size="20" maxlength="20" name="confsenha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (confirme)
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" name="criar_email" id="criar_email" value="t"></td>
+						<td><label>criar email @{$preferenciasGerais.dominio_padrao} com usuário e senha acimas.</label></td>
+					</tr-->
+				</table>
+
+{else}
 				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
 					<tr>
 						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Usuário:</label></th>
@@ -1136,6 +1213,8 @@ function validarData(campo){
 						</tr>
 					</table>
 				</div>
+
+{/if}
 
 			</td>
 		</tr>
@@ -1459,3 +1538,12 @@ function validarData(campo){
 {/if}
 
 </form>
+
+<script>
+/**
+ * Inicializações
+ */
+contratoAlteraTipo();
+contratoAlteraFormaPagamentoDA();
+
+</script>

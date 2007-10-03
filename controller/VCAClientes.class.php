@@ -301,7 +301,11 @@
 					
 					break;
 				
+				case 'migrar':
 				case 'novo_contrato':
+					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
+				
 					$produtos     = VirtexModelo::factory("produtos");
 					$equipamentos = VirtexModelo::factory("equipamentos");
 
@@ -319,6 +323,15 @@
 					$this->_view->atribui("tiposNAS",$tiposNAS);
 					
 					$cobranca = VirtexModelo::factory("cobranca");
+					
+					// Migração
+					$contrato = $tela == "migrar" ? $cobranca->obtemContratoPeloId($id_cliente_produto) : array();
+					$this->_view->atribui("contrato",$contrato);
+					$this->_view->atribui("cttJSON",MJson::encode($contrato));
+					
+					//echo "<pre>";
+					//print_r(MJson::encode($contrato));
+					//echo "</pre>";
 					
 					if( !$acao ) {
 						//Cidades disponiveis
@@ -370,11 +383,42 @@
 						
 						// Valores Padrão
 						$data_contratacao = date("d/m/Y");
-						$this->_view->atribui("dia_vencimento",$preferenciasCobranca["dia_venc"]);
+						
+						$dia_venc 	= $tela == "migrar" ? $contrato["vencimento"] : $preferenciasCobranca["dia_venc"];
+						$pagamento 	= $tela == "migrar" ? $contrato["pagamento"] 	: $preferenciasCobranca["pagamento"];
+						$vigencia 	= $tela == "migrar" ? $contrato["vigencia"] 	: "12";
+						$carencia 	= $tela == "migrar" ? $contrato["carencia"] 	: $preferenciasCobranca["carencia"];
+						$comodato	= $tela == "migrar" ? $contrato["comodato"] 	: "f";
+						
+						if( $tela == "migrar" ) {
+							// Forma de pagamento
+							$id_forma_pagamento = $contrato["id_forma_pagamento"];
+							$forma = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+							
+							$this->_view->atribui("forma_pagamento_original",$forma["tipo_cobranca"]);
+							
+							// Contas que serão migradas:
+							$contas = VirtexModelo::factory('contas');
+							$listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
+							$this->_view->atribui("listaContas",$listaContas);
+							
+							echo "<pre>";
+							print_r($listaContas);
+							echo "</pre>";
+							
+							
+						}
+
+						echo "<pre>";
+						print_r($contrato);
+						echo "</pre>";
+
+
+						$this->_view->atribui("dia_vencimento",$dia_venc);
 						$this->_view->atribui("data_contratacao",$data_contratacao);
-						$this->_view->atribui("pagamento",$preferenciasCobranca["pagamento"]);
-						$this->_view->atribui("carencia",$preferenciasCobranca["carencia"]);
-						$this->_view->atribui("vigencia","12");
+						$this->_view->atribui("pagamento",$pagamento);
+						$this->_view->atribui("carencia",$carencia);
+						$this->_view->atribui("vigencia",$vigencia);
 						$this->_view->atribui("comodato","f");
 						
 					} else {
