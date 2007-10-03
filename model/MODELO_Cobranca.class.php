@@ -14,6 +14,8 @@
 		protected $pftb_forma_pagamento;
 		protected $cbtb_fatura;
 		protected $preferencias;
+		
+		protected $cbtb_endereco_cobranca;
 
 		protected static $moeda = 9;
 		
@@ -23,7 +25,6 @@
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
 			$this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
-			$this->cntb_endereco_instalacao = VirtexPersiste::factory("cntb_endereco_instalacao");
 
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
 			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
@@ -33,6 +34,23 @@
 
 		}
 		
+		public function cadastraEnderecoCobranca($id_cliente_produto,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_cliente) {
+			$dados = array(
+							"id_cliente_produto" => $id_cliente_produto,
+							"endereco" => $endereco,
+							"complemento" => $complemento,
+							"bairro" => $bairro,
+							"id_cidade" => $id_cidade,
+							"cep" => $cep,
+							"id_cliente" => $id_cliente
+							);
+			$this->cbtb_endereco_cobranca->insere($dados);
+		}
+		
+		public function obtemEnderecoCobranca($id_cliente_produto) {
+			$filtro = array("id_cliente_produto" => $id_cliente_produto);
+			return($this->cbtb_endereco_cobranca->obtemUnico($filtro));
+		}
 		
 
 
@@ -327,7 +345,8 @@
 							"bl_carteira" => $bl_dados["carteira"],
 							"bl_convenio" => $bl_dados["convenio"], 
 							"bl_agencia" => $bl_dados["agencia"], 
-							"bl_num_conta" => $bl_dados["num_conta"] );
+							"bl_num_conta" => $bl_dados["num_conta"],
+							"pagamento" => $pagamento);
 							
 			if( $id_forma_pagamento ) {
 				$dados["id_forma_pagamento"]=$id_forma_pagamento;
@@ -433,11 +452,8 @@
 			$dados["id_cliente"] = $id_cliente;
 			$dados["id_cliente_produto"] = $id_cliente_produto;
 
-			$this->cbtb_endereco_cobranca->insere($dados);
-			
-			$endereco_instalacao["id_conta"] = $id_conta;
-			$endereco_instalacao["id_cliente"] = $id_cliente;
-			$this->cntb_endereco_instalacao->insere($endereco_instalacao);
+			$this->cadastraEnderecoCobranca($id_cliente_produto,$dados["endereco"],$dados["complemento"],$dados["bairro"],$dados["id_cidade"],$dados["cep"],$id_cliente);
+			$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],$endereco_instalacao["id_cidade"],$endereco_instalacao["cep"],$id_cliente);
 			
 			
 		}
@@ -466,6 +482,11 @@
 	        
 	      $this->cbtb_fatura->insere($dados);
 	    }
+	    
+	    public function cancelaContrato($id_cliente_produto) {
+			$dados = array("status" => "C","data_alt_status" => "=now");
+			$this->cbtb_contrato->altera($dados,array("id_cliente_produto" => $id_cliente_produto));	    
+	    }
 
 		public function obtemContratos ($id_cliente,$status="",$tipo="")
 		{
@@ -477,6 +498,81 @@
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
 			$res = $this->cbtb_contrato->obtemUnico($filtro);
 			return($res);
+		}
+		
+		public function estornaFatura($id_cobranca) {
+			$filtro = array("id_cobranca" => $id_cobranca);
+			$dados = array("status" => "E");
+			return($this->cbtb_fatura->altera($dados,$filtro));
+		}
+		
+		/**
+		 * 
+		 */
+		public function obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas=false) {
+			$filtro = array("id_cliente_produto" => $id_cliente_produto);
+			
+			if( !$exibirEstornadas ) {
+				$filtro["status"] = "!=:E";
+			}
+			$faturas = $this->cbtb_fatura->obtem($filtro);
+
+			$hoje = date("Y-m-d");
+			list($aH,$mH,$dH) = explode("-",$hoje);
+			$hoje = mktime(0,0,0,$mH,$dH,$aH);
+
+			for($i=0;$i<count($faturas);$i++) {
+				$faturas[$i]["valor"] = (float) $faturas[$i]["valor"];
+				$faturas[$i]["acrescimo"] = (float) $faturas[$i]["acrescimo"];
+				$faturas[$i]["desconto"] = (float) $faturas[$i]["desconto"];
+				$faturas[$i]["valor_pago"] = (float) $faturas[$i]["valor_pago"];
+
+
+				$faturas[$i]["valor_restante"] = $faturas[$i]["valor"] + $faturas[$i]["acrescimo"] - $faturas[$i]["desconto"] - $faturas[$i]["valor_pago"];
+
+				list($aV,$mV,$dV) = explode("-",$faturas[$i]["data"]);
+				$venc = mktime(0,0,0,$mV,$dV,$aV);
+
+
+				if( $faturas[$i]["data_pagamento"] ) {
+					list($aP,$mP,$dP) = explode("-",$faturas[$i]["data_pagamento"]);
+					$pgto = mktime(0,0,0,$mP,$dP,$aP);
+				}
+				
+				// Utilizado por códigos como cancelamento e migração
+				$faturas[$i]["estornavel"] = false;
+
+				if( $faturas[$i]["status"] == "E" ) {
+					$faturas[$i]["strstatus"] = "Estornada";
+					$faturas[$i]["estornavel"] = false;
+				}elseif( $faturas[$i]["status"] == "P" ) {
+					$faturas[$i]["strstatus"] = "Pago";
+
+					if( $pgto > $venc ) {
+						$faturas[$i]["strstatus"] = "Pago com atrazo";
+					}
+
+
+				} else {
+					if( $faturas[$i]["status"] == "A" ) {
+						$faturas[$i]["estornavel"] = true;
+					}
+
+					if( $venc < $hoje ) {
+						$faturas[$i]["strstatus"] = "Em atrazo";
+						$faturas[$i]["estornavel"] = false;
+					} else {
+						$faturas[$i]["strstatus"] = "A vencer";
+					}
+				}
+				
+			}
+			
+			return($faturas);
+
+
+
+
 		}
 
 		/*

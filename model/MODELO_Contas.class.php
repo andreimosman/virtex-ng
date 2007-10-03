@@ -338,15 +338,19 @@
 		}
 		
 		// Funcionalidades comuns
-		protected function alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre) {
-			$dados = array("observacoes" => $observacoes,"conta_mestre" => $conta_mestre);
+		public function alteraConta($id_conta,$senha,$status,$observacoes="",$conta_mestre="") {
+		
+			if( $status == "C" || $status == "S" ) {
+				$dados = array();
+			} else {
+				$dados = array("observacoes" => $observacoes,"conta_mestre" => $conta_mestre);
 
-			if( $senha ) {
-				$senhaCript = MCript::criptSenha($senha);
-				$dados["senha"] = $senha;
-				$dados["senhaCript"] = $senhaCript;
+				if( $senha ) {
+					$senhaCript = MCript::criptSenha($senha);
+					$dados["senha"] = $senha;
+					$dados["senhaCript"] = $senhaCript;
+				}
 			}
-			
 			if( $status ) {
 				$dados["status"] = $status;
 			}
@@ -358,46 +362,48 @@
 		/**
 		 * Altera uma conta de Banda Larga.
 		 */
-		public function alteraContaBandaLarga($id_conta,$senha,$status,$observacoes,$conta_mestre,
-										$id_pop,$id_nas,$upload,$download,$mac,$endereco,$alterar_endereco = false) {
+		public function alteraContaBandaLarga($id_conta,$senha,$status,$observacoes="",$conta_mestre="",
+										$id_pop="",$id_nas="",$upload="",$download="",$mac="",$endereco="",$alterar_endereco = false) {
 
-			// Pegar os dados atuais p/ comparação
-			$infoAtual = $this->obtemContaPeloId($id_conta);
-			$nasAtual = $this->equipamentos->obtemNAS($infoAtual["id_nas"]);
-			$nasNovo = ($infoAtual["id_nas"] != $id_nas ? $this->equipamentos->obtemNAS($id_nas) : $nasAtual);
-			
-			// Dados p/ básicos.
-			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
-			
-			if( !$mac ) $mac = null;
+			if( $status != "C" ) {
+				// Pegar os dados atuais p/ comparação
+				$infoAtual = $this->obtemContaPeloId($id_conta);
+				$nasAtual = $this->equipamentos->obtemNAS($infoAtual["id_nas"]);
+				$nasNovo = ($infoAtual["id_nas"] != $id_nas ? $this->equipamentos->obtemNAS($id_nas) : $nasAtual);
 
-			$dados = array("id_pop" => $id_pop, "upload_kbps" => $upload, "download_kbps" => $download, "mac" => $mac, "id_nas" => $id_nas );
+				// Dados p/ básicos.
+				$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
 
-			if( $infoAtual["id_nas"] != $id_nas || $alterar_endereco) {
-				// Alteração de NAS - Alterar obrigatoriamente o endereço.
-				// ou Alteração de endereço.
-				
-				// Atribuição automática.
-				if( !$endereco ) {
-					$this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
-				}
-				
-				if( $nasNovo["tipo_nas"] == "I" ) {
-					$dados["rede"] = $endereco;
-					$dados["ipaddr"] = null;
+				if( !$mac ) $mac = null;
+
+				$dados = array("id_pop" => $id_pop, "upload_kbps" => $upload, "download_kbps" => $download, "mac" => $mac, "id_nas" => $id_nas );
+
+				if( $infoAtual["id_nas"] != $id_nas || $alterar_endereco) {
+					// Alteração de NAS - Alterar obrigatoriamente o endereço.
+					// ou Alteração de endereço.
+
+					// Atribuição automática.
+					if( !$endereco ) {
+						$this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
+					}
+
+					if( $nasNovo["tipo_nas"] == "I" ) {
+						$dados["rede"] = $endereco;
+						$dados["ipaddr"] = null;
+					} else {
+						$dados["ipaddr"] = $endereco;
+						$dados["rede"] = null;
+					}
+
 				} else {
-					$dados["ipaddr"] = $endereco;
-					$dados["rede"] = null;
+					$endereco = $nasAtual["tipo_nas"] == "I" ? $infoAtual["rede"] : $infoAtual["ipaddr"];
 				}
-
-			} else {
-				$endereco = $nasAtual["tipo_nas"] == "I" ? $infoAtual["rede"] : $infoAtual["ipaddr"];
 			}
 			
 			/**
 			 * Se aplicável envia a instrução de remoção da conta no nas antigo p/ spool.
 			 */
-			if( $nasAtual["tipo_nas"] == "I" || $nasAtual["padrao"] == "O" && 
+			if( $status != "A" || $nasAtual["tipo_nas"] == "I" || $nasAtual["padrao"] == "O" && 
 				(
 					strtoupper(trim($infoAtual["mac"])) != strtoupper(trim($mac)) ||
 					$infoAtual["ipaddr"] != $dados["ipaddr"] ||
@@ -418,6 +424,15 @@
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
 			}
 			
+			
+			// CANCELAMENTO
+			if( $status == "C" ) {
+				// Libera os endereços IP e de Rede p/ uso em outro cliente.
+				$dados = array("rede" => null, "ipaddr" => null, "status" => "C");
+			}
+			
+			
+			
 			/**
 			 * Altera os dados da conta
 			 */
@@ -435,8 +450,6 @@
 				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$infoAtual["username"],$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
 			}
 			
-						
-
 			
 		}
 		

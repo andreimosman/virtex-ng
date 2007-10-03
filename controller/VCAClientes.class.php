@@ -188,6 +188,119 @@
 			
 			switch($tela) {
 				
+				case 'cancelar_contrato':
+				case 'contrato':
+					// TELA DE DETALHES DO CONTRATO
+					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
+					
+					$cliente = $this->clientes->obtemPeloId($this->id_cliente);
+					$this->_view->atribui("cliente",$cliente);
+					
+					$cobranca = VirtexModelo::factory('cobranca');
+										
+					$endereco_cobranca = $cobranca->obtemEnderecoCobranca($id_cliente_produto);
+					$this->_view->atribui("endereco_cobranca",$endereco_cobranca);
+					
+					$cidade_cobranca = array();
+					if( @$endereco_cobranca["id_cidade"] ) {
+						$cidade_cobranca = $this->preferencias->obtemCidadePeloId($endereco_cobranca["id_cidade"]);
+					}
+					$this->_view->atribui("cidade_cobranca",$cidade_cobranca);
+					
+					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
+					// Alguns campos podem ser CHAR ou invés de VARCHAR
+					foreach( $contrato as $vr => $vl ) {
+						$contrato[$vr] = trim($vl);
+					}
+					$this->_view->atribui("contrato",$contrato);
+					
+					$formaPagamento = array();
+					if($contrato["id_forma_pagamento"]) {
+						$formaPagamento = $this->preferencias->obtemFormaPagamento($contrato["id_forma_pagamento"]);
+					}
+					$this->_view->atribui("formaPagamento",$formaPagamento);
+
+					$tiposFormaPgto = $this->preferencias->obtemTiposFormaPagamento();
+					$this->_view->atribui("tiposFormaPgto",$tiposFormaPgto);
+
+					$bancos = $this->preferencias->obtemListaBancos();
+					$this->_view->atribui("bancos",$bancos);
+
+					$contas = VirtexModelo::factory('contas');
+					$listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
+					for($i=0;$i<count($listaContas);$i++) {
+						$listaContas[$i] = $contas->obtemContaPeloIdTipo($listaContas[$i]["id_conta"],$listaContas[$i]["tipo_conta"]);
+					}
+					$this->_view->atribui("listaContas",$listaContas);
+					
+					$exibirEstornadas = $contrato["status"] == "C" ? true : false;
+					
+					echo "EXIBIR ESTORNADAS: $exibirEstornadas<br>";
+					
+					$faturas = $cobranca->obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas);
+					$this->_view->atribui("faturas",$faturas);
+					
+					$acao = @$_REQUEST["acao"];
+					$dadosLogin = $this->_login->obtem("dados");
+					
+					$this->_view->atribui("dadosLogin",$dadosLogin);
+					
+					if( $acao ) {
+						$erro = "";
+						
+						$senha_admin = @$_REQUEST["senha_admin"];
+						
+						if( !$senha_admin ) {
+							$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
+						} else {
+							if( md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+								$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
+							}
+						
+						}
+						
+						$this->_view->atribui("erro",$erro);
+						
+						if( !$erro ) {
+						
+							// Cancela as contas.
+							for($i=0;$i<count($listaContas);$i++) {
+								// echo "Cancelando " . $listaContas[$i]["username"] . " - " . $listaContas[$i]["dominio"] . "-" . $listaContas[$i]["tipo_conta"] . "<br>\n";
+								if( $listaContas[$i]["tipo_conta"] == "BL" ) {
+									$contas->alteraContaBandaLarga($listaContas[$i]["id_conta"],"","C");
+								} else {
+									$contas->alteraConta($listaContas[$i]["id_conta"],"","C");
+								}
+							}
+							
+							// Estornar as faturas.
+							for($i=0;$i<count($faturas);$i++) {
+								if( $faturas[$i]["estornavel"] ) {
+									// echo "CANCELANDO FATURA " . $faturas[$i]["id_cobranca"] . "<br>\n";
+									$cobranca->estornaFatura($faturas[$i]["id_cobranca"]);
+								}
+							}
+							
+							// Cancela o contrato.
+							$cobranca->cancelaContrato($id_cliente_produto);							
+							
+							$url = "admin-clientes.php?op=contrato&tela=contratos&id_cliente=" . $this->id_cliente;
+							$msg = "Contrato cancelado com sucesso.";
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem",$msg);
+							$this->_view->atribuiVisualizacao("msgredirect");
+							
+							
+							
+						}
+					
+					
+					}
+					
+					
+					break;
+				
 				case 'novo_contrato':
 					$produtos     = VirtexModelo::factory("produtos");
 					$equipamentos = VirtexModelo::factory("equipamentos");
@@ -205,12 +318,6 @@
 					$tiposNAS = $equipamentos->obtemTiposNAS();
 					$this->_view->atribui("tiposNAS",$tiposNAS);
 					
-					
-					
-					//echo "<pre>";
-					//print_r($tiposNAS);
-					//echo "</pre>";
-
 					$cobranca = VirtexModelo::factory("cobranca");
 					
 					if( !$acao ) {
