@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Vitex</title>
+</head>
+<body style="margin: auto; padding: 0px;">
+{include file="configuracoes_header.html"}
+
+<div id="conteiner_priv">
+
+
+<div id="tb_priv">
+	<form method="post" action="{$smarty.server.PHP_SELF}">
+    <input type="hidden" name="acao" value="gravar" />
+    <input type="hidden" name="id_admin" value="{$id_admin}" />
+    <input type="hidden" name="op" value="administradores" />
+    <input type="hidden" name="tela" value="privilegio" />
+	<table border='0' cellspacing='0' cellpadding='0' width="100%" >
+		<tr>
+			<th class='privCellTitle'>Privilégio</th>
+	        <th class='privCellTitle'>Op&ccedil;&atilde;o..</th>
+		</tr>		
+		{foreach item=v from=$privilegios}
+		<tr>			
+			<td class="privCellLabel">{$v.nome}</td>
+	    	<td class="privCellInfo">
+	    		<select name='acesso[{$v.id_priv}]'>
+				{foreach key=id item=nome from=$acessos}                  
+					<option value='{$id}' >{$nome}</option>
+				{/foreach}                
+				</select>
+			</td>
+		</tr>
+		{/foreach}
+		<tr><td colspan='2'>&nbsp;</td></tr>
+		<tr>
+			<td colspan='2' align="center">
+				<input name="cadastro_cliente" type="submit" class="campos" id="cadastro_cliente2" value="Alterar Privil&eacute;gios &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" />
+			</td>
+		</tr>
+	</table>
+	</form>
+</div>		
+
+</div>
+
+
+</body>
+</html>

@@ -18,6 +18,23 @@
 			return($this->bd->obtemRegistros($sql));
 
 		}
+		
+		
+		public function apagaPrivilegiosUsuario($id_admin){			
+			$where["id_admin"] = $id_admin;						
+			$this->exclui($where);			
+		}
+		
+		public function gravaPrivilegiosUsuario($id_admin, $dados){					
+			$where["id_admin"] = $id_admin;						
+			foreach($dados as $id_priv => $acesso){						
+				if($acesso != "0"){										
+					$where["id_priv"] = $id_priv;
+					$where["pode_gravar"] = $acesso;											
+					$this->insere($where);
+				}
+			}				
+		}
 
 	}
 

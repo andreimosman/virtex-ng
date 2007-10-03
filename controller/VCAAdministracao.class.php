@@ -189,7 +189,27 @@
 					
 					
 					break;
+				case 'privilegio':	
+					
+					
+					$acao = @$_REQUEST["acao"];
+					$acesso = @$_REQUEST["acesso"];
+					
+					
+					if("gravar" == $acao){
+						$this->administradores->gravaPrivilegioUsuario($id_admin,$acesso);
+						$this->_view->atribui("url","admin-administracao.php?op=administradores&tela=listagem");
+						$this->_view->atribui("mensagem","Privilégios gravados com sucesso!");
+						$this->_view->atribuiVisualizacao("msgredirect");		
+					} else {
+						$list = $this->administradores->obtemPrivilegios();
+    					$this->_view->atribui("privilegios",$list);
+    					
+    					$list = $this->administradores->obtemAcessos();
+    					$this->_view->atribui("acessos",$list);				
+					}
 										
+				break;						
 				case 'listagem':
 					$this->_view->atribui("registros", $this->administradores->obtemListaAdmin());
 					break;

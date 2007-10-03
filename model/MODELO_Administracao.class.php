@@ -4,11 +4,13 @@
 	
 		protected $adtb_admin;
 		protected $adtb_privilegio;
+		protected $adtb_usuario_privilegio;
 		
 		public function __construct() {
 			parent::__construct();
 			$this->adtb_admin = VirtexPersiste::factory("adtb_admin");
-			//$this->adtb_privilegio = VirtexPersiste::factory("adtb_privilegio");
+			$this->adtb_privilegio = VirtexPersiste::factory("adtb_privilegio");
+			$this->adtb_usuario_privilegio = VirtexPersiste::factory("adtb_usuario_privilegio");			
 		}
 		
 		public function obtemListaAdmin() {
@@ -43,6 +45,21 @@
 			}
 			
 			return ($this->adtb_admin->altera($dados, $filtro));
+		}
+		
+		public function obtemPrivilegios(){
+			return $this->adtb_privilegio->obtemPrivilegios();
+		}
+		
+		
+		public function obtemAcessos(){
+			return $this->adtb_privilegio->enumAcessos();			
+		}
+		
+		
+		public function gravaPrivilegioUsuario($id_admin, $dados){
+				$this->adtb_usuario_privilegio->apagaPrivilegiosUsuario($id_admin, $dados);
+				$this->adtb_usuario_privilegio->gravaPrivilegiosUsuario($id_admin, $dados);				
 		}
 		
 	}

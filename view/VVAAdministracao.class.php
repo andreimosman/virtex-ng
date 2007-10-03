@@ -81,7 +81,11 @@
 					$this->configureMenu($this->obtemItensMenu(),false,true);
 					$this->_file = "administracao_admin_cadastro.html";
 					break;
-					
+				case 'privilegio':	
+					$titulo .= " :: Privilégios";
+					$this->configureMenu($this->obtemItensMenu(),false,true);
+					$this->_file = "administracao_admin_privilegio.html";				
+				break;	
 				case 'listagem':
 					$titulo .= " :: Listagem";
 					$this->_file = "administracao_admin_listagem.html";
