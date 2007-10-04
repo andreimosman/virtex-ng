@@ -161,7 +161,7 @@ function contratoObtemPlano(tipo,id_produto) {
 function contratoEscondeBox(tipo) {
 	var frm = document.contratacao;
 
-	if( frm.id_cliente_produto != '' ) {
+	if( frm.id_cliente_produto.value != '' ) {
 		return;
 	}
 
@@ -186,7 +186,7 @@ function contratoEscondeBox(tipo) {
 function contratoExibeBox(tipo) {
 	var frm = document.contratacao;
 
-	if( frm.id_cliente_produto != '' ) {
+	if( frm.id_cliente_produto.value != '' ) {
 		return;
 	}
 
@@ -325,7 +325,31 @@ function contratoPopulaProdutos(tipo) {
 			//o.innerText = lista[i].nome + " / " + vl;
 			//frm.id_produto.appendChild(o);
 			option_index++;
-			e.options[option_index] = new Option(lista[i].nome + " / " + vl,lista[i].id_produto);
+
+			var opcao = lista[i].nome + "|" + vl;
+			//window.alert(lista[i].tipo);
+			if( lista[i].tipo == 'BL' ) {
+				var up = lista[i].banda_upload_kbps;
+				var dn = lista[i].banda_download_kbps
+				//window.alert("UP: " + up);
+				//window.alert("DN: " + dn);
+
+				if( up == '0' || up == '') {
+					up = 'Ilim.';
+				} else {
+					// up += ' kbps';
+				}
+
+				if( dn == '0' || dn == '') {
+					dn = 'Ilim.';
+				} else {
+					// dn += ' kbps';
+				}
+
+				opcao += '|U/D: ' + up + "/" + dn;
+			}
+
+			e.options[option_index] = new Option(opcao,lista[i].id_produto);
 		}
 	}
 }
@@ -655,24 +679,42 @@ function replaceField(field) {
 
 function validacao(frm ) {
 
-	username = $('username');
-	criar_email = $('criar_email');
+	var migracao = false;
 
-	if($F('tipo') == "BL") {
-		if(!checkDadosConexao()){
+	if( $F('tipo') != '' ) {
+		migracao = true;
+		//window.alert($F('id_produto_original'));
+		//window.alert($F('id_produto'));
+
+		if( $F('id_produto_original') == $F('id_produto') ) {
+			window.alert("Você deve escolher outro plano para migrar o contrato.");
 			return false;
 		}
+
+
+
 	}
 
-	if(username.value != ""){
-		if(!validaUsername()){
-			return false;
+	if( !migracao ) {
+		username = $('username');
+		criar_email = $('criar_email');
+
+		if($F('tipo') == "BL") {
+			if(!checkDadosConexao()){
+				return false;
+			}
 		}
-	}
 
-	if(criar_email.checked){
-		if(!validaEmail()){
-			return false;
+		if(username.value != ""){
+			if(!validaUsername()){
+				return false;
+			}
+		}
+
+		if(criar_email.checked){
+			if(!validaEmail()){
+				return false;
+			}
 		}
 	}
 
@@ -681,20 +723,23 @@ function validacao(frm ) {
 		frm.difEnderecoMail.checked = true;
 		checkStatusFields(frm.difEnderecoMail);
 		return false;
-	}
-	else {
-		if ( (frm.endereco_instalacao.value == '' || frm.bairro_instalacao.value == '' || frm.cep_instalacao.value == '') && (frm.tipo != "H") ) {
-		alert('Preencha o endereco de instalacao!');
-		frm.difEnderecoSetup.checked = true;
-		checkStatusFields(frm.difEnderecoSetup);
-		return false;
+	} else {
+		if( !migracao ) {
+			if ( (frm.endereco_instalacao.value == '' || frm.bairro_instalacao.value == '' || frm.cep_instalacao.value == '') && (frm.tipo != "H") ) {
+				alert('Preencha o endereco de instalacao!');
+				frm.difEnderecoSetup.checked = true;
+				checkStatusFields(frm.difEnderecoSetup);
+				return false;
+			}
 		}
 	}
 
-	if ( frm.senha.value != frm.confsenha.value ) {
-		alert('Verifique a senha!');
-		frm.senha.focus();
-		return false;
+	if( !migracao ) {
+		if ( frm.senha.value != frm.confsenha.value ) {
+			alert('Verifique a senha!');
+			frm.senha.focus();
+			return false;
+		}
 	}
 
 	return true;
@@ -879,6 +924,40 @@ function validarData(campo){
 
   <table border=0 align="center" cellspacing=0>
 		<tr>
+{if $tela == "migrar"}
+			<td valign="top">
+				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+					<tr>
+						<th colspan=4 align="left">&nbsp; &nbsp;<label>MIGRAÇÃO DE CONTRATO:</label></th>
+					</tr>
+					<tr>
+						<td style="padding: 5px 5px 5px 5px;">
+							<p align="justify"><span style="font-family: verdana; color: #0000FF; font-size: 12px;">
+								&nbsp; &nbsp;Você está iniciando a operação de migração de contrato.
+								Nesta operação, todas as faturas a vencer, assim como as contas deste contrato serão migradas para um novo contrato.
+							</span></p>
+						</td>
+					</tr>
+				</table>
+
+				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+					<tr>
+						<th colspan=4 align="left">&nbsp; &nbsp;<label>Contas que serão migradas:</label></th>
+					</tr>
+
+					{foreach name=registros item=c from=$listaContas}
+					<tr>
+						<td><label>&nbsp; {$c.username}{if $c.tipo_conta == "E"}@{$c.dominio}{/if}</label></td>
+						<td><label>{if $c.tipo_conta == 'BL'}Banda Larga{elseif $c.tipo_conta == 'E'}Email{elseif $c.tipo_conta=='H'}Hospedagem{elseif $tipo_conta == 'D'}Discado{/if}</label></td>
+						<td><label>{if $c.status == "A"}Ativa{elseif $c.status == "B"}Bloqueado{elseif $c.status == "S"}Suspenso{elseif $c.status == "C"}Cancelado{/if}</label></td>
+					</tr>
+
+					{/foreach}
+
+				</table>
+			</td>
+{/if}
+
 			<td valign="top">
 				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
 					<tr>
@@ -902,7 +981,7 @@ function validarData(campo){
 					</tr>
 					<tr>
 						<td align="right"><label>Produto:</label></td>
-						<td colspan="3"><select name="id_produto" id="id_produto" onChange="contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="formOnFocus(this);" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></select></td>
+						<td colspan="3"><select style="width: 250px;" name="id_produto" id="id_produto" onChange="contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="formOnFocus(this);" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></select></td>
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Dt. Contratação:</label></td>
@@ -1035,44 +1114,8 @@ function validarData(campo){
 					</tr>
 				</table>
 			</td>
+{if $tela != "migrar"}
 			<td valign="top">
-
-
-{if $tela == "migrar"}
-				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
-					<tr>
-						<th colspan=4 align="left">&nbsp; &nbsp;<label>Contas que serão migradas:</label></th>
-					</tr>
-
-					{foreach name=registros item=c from=$listaContas}
-					<tr>
-						<td><label>{$c.username}{if $c.tipo_conta == "E"}@{$c.dominio}{/if}</label></td>
-						<td><label>{if $c.tipo_conta == 'BL'}Banda Larga{elseif $c.tipo_conta == 'E'}Email{elseif $c.tipo_conta=='H'}Hospedagem{elseif $tipo_conta == 'D'}Discado{/if}</label></td>
-						<td><label>{if $c.status == "A"}Ativa{elseif $c.status == "B"}Bloqueado{elseif $c.status == "S"}Suspenso{elseif $c.status == "C"}Cancelado{/if}</label></td>
-					</tr>
-
-					{/foreach}
-
-					<!--tr>
-						<td align="right" width="110"><label>Username:</label></td>
-						<td colspan=3><input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);contratoAlteraUsername();"></td>
-					</tr>
-					<tr>
-						<td align="right" width="110"><label>Senha:</label></td>
-						<td colspan=3>
-							<label>
-								<input type="password" size="20" maxlength="20" name="senha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><br>
-								<input type="password" size="20" maxlength="20" name="confsenha" value="" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (confirme)
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td align="right"><input type="checkbox" name="criar_email" id="criar_email" value="t"></td>
-						<td><label>criar email @{$preferenciasGerais.dominio_padrao} com usuário e senha acimas.</label></td>
-					</tr-->
-				</table>
-
-{else}
 				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
 					<tr>
 						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Usuário:</label></th>
@@ -1213,10 +1256,8 @@ function validarData(campo){
 						</tr>
 					</table>
 				</div>
-
-{/if}
-
 			</td>
+{/if}
 		</tr>
 		<tr colspan=2 valign="top">
 			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
@@ -1224,9 +1265,20 @@ function validarData(campo){
 			</td>
 		</tr>
 	</table>
-	<script language="JavaScript">
-	contratoAlteraTipo();
-	</script>
+
+
+</form>
+
+<script>
+/**
+ * Inicializações
+ */
+contratoAlteraTipo();
+contratoAlteraFormaPagamentoDA();
+
+</script>
+
+
 {/if}
 
 {if $acao == "gravar_novo_contrato"}
@@ -1250,8 +1302,21 @@ function validarData(campo){
 
 
 {if $acao == "novo_contrato"}
+<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="630" style="border: solid 1px #FF0000;">
+{if $erro}
+<tr>
+	<td align="center" style="border-bottom: solid 1px #FF0000;"><span style="font-size: 14px"><strong>{$erro}</strong></span></td>
+</tr>
+{/if}
+<tr>
+	<td align="center" style="border-bottom: solid 1px #FF0000;"><span style="color: #FF0000;"><strong>-- {if $id_cliente_produto}MIGRAÇÃO{else}NOVO CONTRATO{/if} --</strong></span></td>
+</tr>
+<tr>
+	<td align="center">
+	<br>
 	<!-- CONFIRMAÇÃO DO CONTRATO -->
 	<input type="hidden" name="acao" value="gravar_novo_contrato">
+	<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
 
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
@@ -1290,38 +1355,108 @@ function validarData(campo){
 		</tr>
 	</table>
 
-	{if $tipo!= "H" }
-	   <br>
-	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
-		<tr>
-			<th colspan=4>Contratante - Instala&ccedil;&atilde;o</th>
-		</tr>
-		<tr>
-			<td width="110" align="right"><strong>Endereço:</strong></td>
-			<td>{$endereco_instalacao}&nbsp;</td>
-      <input type=hidden name="endereco_instalacao" value="{$endereco_instalacao}" >
+	{if !$id_cliente_produto}
 
-			<td width="110" align="right"><strong>Complemento:</strong></td>
-			<td>{$complemento_instalacao}&nbsp;</td>
-			<input type=hidden name="complemento_instalacao" value="{$complemento_instalacao}" >
+		{if $tipo!= "H" }
+		   <br>
+		<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+			<tr>
+				<th colspan=4>Contratante - Instala&ccedil;&atilde;o</th>
+			</tr>
+			<tr>
+				<td width="110" align="right"><strong>Endereço:</strong></td>
+				<td>{$endereco_instalacao}&nbsp;</td>
+		  <input type=hidden name="endereco_instalacao" value="{$endereco_instalacao}" >
 
-		</tr>
-		<tr>
-			<td width="110" align="right"><strong>Bairro:</strong></td>
-			<td>{$bairro_instalacao}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_instalacao}</td>
-			<input type=hidden name="bairro_instalacao" value="{$bairro_instalacao}" ><input type=hidden name="cep_instalacao" value="{$cep_instalacao}" >
+				<td width="110" align="right"><strong>Complemento:</strong></td>
+				<td>{$complemento_instalacao}&nbsp;</td>
+				<input type=hidden name="complemento_instalacao" value="{$complemento_instalacao}" >
 
-      <td width="110" align="right"><strong>Cidade:</strong></td>
-			<td>{$cidade_instalacao.cidade}-{$cidade_instalacao.uf}&nbsp;</td>
-			<input type=hidden name="id_cidade_instalacao" value="{$cidade_instalacao.id_cidade}" >
+			</tr>
+			<tr>
+				<td width="110" align="right"><strong>Bairro:</strong></td>
+				<td>{$bairro_instalacao}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_instalacao}</td>
+				<input type=hidden name="bairro_instalacao" value="{$bairro_instalacao}" ><input type=hidden name="cep_instalacao" value="{$cep_instalacao}" >
 
-		</tr>
-	</table>
+		  <td width="110" align="right"><strong>Cidade:</strong></td>
+				<td>{$cidade_instalacao.cidade}-{$cidade_instalacao.uf}&nbsp;</td>
+				<input type=hidden name="id_cidade_instalacao" value="{$cidade_instalacao.id_cidade}" >
+
+			</tr>
+		</table>
+		{/if}
+
 	{/if}
+
+	{if $id_cliente_produto}
+
+
 	<br>
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
-			<th colspan=6>Contrato</th>
+			<th colspan=6>Contrato Atual</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td>{if $contrato.tipo_produto == "BL"}BANDA LARGA{/if}{if $contrato.tipo_produto == "D"}DISCADO{/if}{if $contrato.tipo_produto == "H"}HOSPEDAGEM{/if}</td>
+			<td width="110" align="right"><strong>Produto:</strong></td>
+			<td>{$contrato.nome_produto}&nbsp;</td>
+			<td width="110" align="right"><strong>Valor:</strong></td>
+			<td>{if $contrato.valor_produto}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
+		</tr>
+		{if $contrato.valor_produto}
+		<tr>
+			<td width="110" align="right"><strong>Comodato:</strong></td>
+			<td>{$contrato.valor_comodato|string_format:"%.2f"}&nbsp;</td>
+			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
+			<td>{$contrato.tx_instalacao|string_format:"%.2f"}</td>
+			<td width="110" align="right"><strong></strong></td>
+			<td></td>
+
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Desconto:</strong></td>
+			<td>{$contrato.desconto_promo|string_format:"%.2f"}&nbsp;</td>
+			<td width="110" align="right"><strong>Período Desconto:</strong></td>
+			<td>{$contrato.periodo_desconto} meses</td>
+			<td width="110" align="right"><strong>Data Contratação:</strong></td>
+			<td>{$contrato.data_contratacao}</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
+			<td>{$contrato.vencimento}&nbsp;</td>
+			<td width="110" align="right"><strong>Vigência:</strong></td>
+			<td>{$contrato.vigencia} meses</td>
+			<td width="110" align="right"><strong>Carência:</strong></td>
+			<td>{$contrato.carencia} dias</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Pagamento:</strong></td>
+			<td>{if $contrato.pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
+ 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
+			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento_original == "PC" || $forma_pagamento_original == "DA" || $forma_pagamento_original == "BL"}{$tiposFormaPgto[$forma_pagamento_original]} {$bancos[$fp_original.codigo_banco]} - convênio {$fp_original.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+			<input type=hidden name="forma_pagamento" value="{$forma_pagamento}" >
+  		</tr>
+		{if $forma_pagamento_original == "DA"}
+		<tr>
+			<td width="110" align="right"><strong>Banco:</strong></td>
+			<td>{$fp_original.codigo_banco|string_format:"%03d"}</td>
+			<td width="110" align="right"><strong>Agencia:</strong></td>
+			<td>{$contrato.da_agencia}</td>
+			<td width="110" align="right"><strong>Conta:</strong></td>
+			<td>{$contrato.da_num_conta}</td>
+		</tr>
+		{/if}
+		{/if}
+	</table>
+
+
+	{/if}
+
+	<br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=6>Novo Contrato</th>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Tipo:</strong></td>
@@ -1421,6 +1556,26 @@ function validarData(campo){
 		{/if}
 		{/if}
 	</table>
+
+{if $id_cliente_produto}
+	<br>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr>
+			<th colspan=6>Contas que serão migradas</th>
+		</tr>
+		{foreach name=registros item=c from=$listaContas}
+		<tr>
+			<td><label>&nbsp; {$c.username}{if $c.tipo_conta == "E"}@{$c.dominio}{/if}</label></td>
+			<td><label>{if $c.tipo_conta == 'BL'}Banda Larga{elseif $c.tipo_conta == 'E'}Email{elseif $c.tipo_conta=='H'}Hospedagem{elseif $tipo_conta == 'D'}Discado{/if}</label></td>
+			<td><label>{if $c.status == "A"}Ativa{elseif $c.status == "B"}Bloqueado{elseif $c.status == "S"}Suspenso{elseif $c.status == "C"}Cancelado{/if}</label></td>
+		</tr>
+
+		{/foreach}
+	</table>
+
+
+{else}
+
 	<br>
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
@@ -1493,6 +1648,8 @@ function validarData(campo){
 
 
 	</table>
+{/if}
+
 	<br>
 
 
@@ -1524,26 +1681,24 @@ function validarData(campo){
 		</tr>
 		{/foreach}
 	</table>
+	<br>
+</td>
+</tr>
+</table>
+<br>
+<table width="630" class="lista" cellpadding=0 cellspacing=0 align="center">
+	<tr>
+		<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação</th>
+	</tr>
+	<tr>
+		<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+	</tr>
+	<tr>
+		<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><input type="submit" class="botao" name="submit" value="{if $id_cliente_produto}Migrar Contrato{else}Gravar Contrato{/if}"></td>
+	</tr>
 
-	<table border=0 align=center >
-
-  	<tr colspan=2 valign="top">
-  		<td style="border-top: dotted 1px #000000" colspan=2 align="center">
-  			<input type="button" name="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" value="Gravar Contrato" class="botao">
-  		</td>
-  	</tr>
-
-  </table>
+</table>
+<br>
 
 {/if}
 
-</form>
-
-<script>
-/**
- * Inicializações
- */
-contratoAlteraTipo();
-contratoAlteraFormaPagamentoDA();
-
-</script>

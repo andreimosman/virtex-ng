@@ -375,8 +375,9 @@
 
 				$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
 			}
-
-			foreach( $todas_faturas as $fatura ) {
+			
+			for( $i=0;$i<count($todas_faturas);$i++) {
+				$fatura = $todas_faturas[$i];
 				$cod_barra = "";
 				$linha_digitavel = "";
 				$nosso_numero = "";
@@ -386,22 +387,25 @@
 					$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_pagamento);
 					
 					// ($banco,$agencia,$conta,$carteira,$convenio,$vencimento,$valor,$id,$moeda=9,$cnpj_ag_cedente="",$codigo_cedente="",$operacao_cedente="")
+					
+					
 
 					switch ($formaPagto ["tipo_cobranca"]) {
 						case "PC":
 							$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
 							$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);    	
-						break;
+							break;
 						case "BL":
 							$boleto = MBoleto::factory ($formaPagto["codigo_banco"],$formaPagto["agencia"],$formaPagto["conta"],$formaPagto["carteira"],$formaPagto["convenio"],$fatura['data'],$fatura ['valor'],$nosso_numero,self::$moeda,$formaPagto ['cnpj_ag_cedente'],$formaPagto ['codigo_cedente'],$formaPagto ['operacao_cedente']);
 							$cod_barra = $boleto->obtemCodigoBoleto ();
 							$linha_digitavel = $boleto->obtemLinhaDigitavel();	
-						break;
+							break;
 					}
 
 				}
 
 				$this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
+				
 			}
 			
 			//$preferencias = VirtexModelo::factory('preferencias');
@@ -413,41 +417,7 @@
 			$obs = "";
 			$conta_mestre = "t";
 
-
-			//echo "<pre>";
-			//print_r($dados_produto);
-			//echo "</pre>";
-			
-			//echo "<pre>";
-			//print_r($todas_faturas);
-			//echo "</pre>";
-
-
-
 			$contas = VirtexModelo::factory("contas");
-
-			switch(trim($dados_produto["tipo"])) {
-				case 'BL':
-					$id_conta = $contas->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-					$conta_mestre, $dados_conta["id_pop"], $dados_conta["id_nas"], $dados_produto["banda_upload_kbps"], $dados_produto["banda_download_kbps"],
-					$dados_conta["mac"], $dados_conta["endereco"]);
-				break;
-				case 'D':
-					$id_conta = $contas->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-					$conta_mestre, $dados_conta["foneinfo"]);
-				break;
-				case 'H':
-					$id_conta = $contas->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-					$conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
-				break;
-			}
-			
-			if ( $cria_email ) {
-				$contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
-				$conta_mestre, $dados_produto["quota_por_conta"]);
-			}
-
-			//PAREI AQUI
 
 			//grava endereco de cobranca
 			$dados = $endereco_cobranca;
@@ -455,8 +425,36 @@
 			$dados["id_cliente_produto"] = $id_cliente_produto;
 
 			$this->cadastraEnderecoCobranca($id_cliente_produto,$dados["endereco"],$dados["complemento"],$dados["bairro"],$dados["id_cidade"],$dados["cep"],$id_cliente);
-			$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],$endereco_instalacao["id_cidade"],$endereco_instalacao["cep"],$id_cliente);
 			
+			if( count($dados_conta) ) {
+
+				switch(trim($dados_produto["tipo"])) {
+					case 'BL':
+						$id_conta = $contas->cadastraContaBandaLarga($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+						$conta_mestre, $dados_conta["id_pop"], $dados_conta["id_nas"], $dados_produto["banda_upload_kbps"], $dados_produto["banda_download_kbps"],
+						$dados_conta["mac"], $dados_conta["endereco"]);
+					break;
+					case 'D':
+						$id_conta = $contas->cadastraContaDiscado($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+						$conta_mestre, $dados_conta["foneinfo"]);
+					break;
+					case 'H':
+						$id_conta = $contas->cadastraContaHospedagem($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+						$conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
+					break;
+				}
+			
+				if ( $cria_email ) {
+					$contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
+					$conta_mestre, $dados_produto["quota_por_conta"]);
+				}
+
+				$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],$endereco_instalacao["id_cidade"],$endereco_instalacao["cep"],$id_cliente);
+
+			}
+
+			return($id_cliente_produto);
+
 			
 		}
 
@@ -605,12 +603,36 @@
 			return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
 		}
 		
-		public function obtemFatura ($id_cliente_produto, $data)
-		{
+		public function migrarFatura($id_cobranca,$id_cliente_produto) {
+			$filtro = array("id_cobranca" => $id_cobranca);
+			$dados = array("id_cliente_produto" => $id_cliente_produto);
+			
+			$fatura = $this->cbtb_fatura->obtemUnico(array("id_cobranca"=> $id_cobranca));
+			$descricao = $fatura["descricao"];
+			$descricao .= "\n\n*** MIGRADA DO CONTRATO ".$fatura["id_cliente_produto"] ." ***";			
+			$dados["descricao"] = $descricao;
+			
+			return($this->cbtb_fatura->altera($dados,$filtro));
+		}
+		
+		public function obtemFatura ($id_cliente_produto, $data) {
 			return ($this->cbtb_fatura->obtemUnico (array ("id_cliente_produto" => $id_cliente_produto, "data" => $data)));
 		}
 		
+		public function migrarContrato($id_cliente_produto,$novo_id_cliente_produto,$admin) {
+			$filtro = array("id_cliente_produto" => $id_cliente_produto);
+			$dados = array(
+							"migrado_para" => $novo_id_cliente_produto,
+							"migrado_em" => "=now",
+							"migrado_por" => $admin,
+							"status" => "M"
+							);
+			
+			$this->cbtb_contrato->altera($dados,$filtro);
+			//
 		}
+		
+	}
 
 
 ?>

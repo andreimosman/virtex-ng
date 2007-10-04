@@ -36,6 +36,8 @@
 			if( $tipo ) {
 				$q .= " AND p.tipo = '" . $tipo . "' ";
 			}
+			
+			$q .= " ORDER BY cp.id_cliente_produto DESC";
    		
 			$res = $this->bd->obtemRegistros ($q);
 			return ($res);

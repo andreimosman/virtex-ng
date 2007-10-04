@@ -57,7 +57,7 @@
 				$filtro["disponivel"] = $disponivel == 't' || $dispinivel == 1 || $disponivel == 's' ? $disponivel : 'f';	// Filtro p/ boolean
 			}
 		
-			return($this->obtemPlanos($filtro));
+			return($this->obtemPlanos($filtro,$tipo));
 		}
 		
 		protected function cadastraPlanoBL($dados) {

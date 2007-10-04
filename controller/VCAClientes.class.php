@@ -83,8 +83,6 @@
 				}
 			}
 			
-			// echo "EXTRA_OP: " . ( !$this->extra_op && $this->_acao ) . " - " . $this->extra_op . "<br>\n";
-			
 			if( !$this->extra_op && $this->_acao ) {
 				try {
 					if( $this->id_cliente ) {
@@ -109,10 +107,6 @@
 					 
 					$this->_view->atribuiErro($e->obtemCodigo(),$e->obtemMensagem());
 					 
-					//echo "EXCEPTION!!!";
-					
-					// echo "EXCEPTION!!!";
-					
 				}
 			}
 		}
@@ -163,7 +157,6 @@
 					$this->_view->atribui("registros",$registros);
 				}
 			}
-			// echo "EXECUTA PESQUISA<br>\n";
 		}
 		
 		
@@ -234,9 +227,7 @@
 					}
 					$this->_view->atribui("listaContas",$listaContas);
 					
-					$exibirEstornadas = $contrato["status"] == "C" ? true : false;
-					
-					echo "EXIBIR ESTORNADAS: $exibirEstornadas<br>";
+					$exibirEstornadas = $contrato["status"] == "C" || $contrato["status"] == "M" ? true : false;
 					
 					$faturas = $cobranca->obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas);
 					$this->_view->atribui("faturas",$faturas);
@@ -266,7 +257,6 @@
 						
 							// Cancela as contas.
 							for($i=0;$i<count($listaContas);$i++) {
-								// echo "Cancelando " . $listaContas[$i]["username"] . " - " . $listaContas[$i]["dominio"] . "-" . $listaContas[$i]["tipo_conta"] . "<br>\n";
 								if( $listaContas[$i]["tipo_conta"] == "BL" ) {
 									$contas->alteraContaBandaLarga($listaContas[$i]["id_conta"],"","C");
 								} else {
@@ -277,7 +267,6 @@
 							// Estornar as faturas.
 							for($i=0;$i<count($faturas);$i++) {
 								if( $faturas[$i]["estornavel"] ) {
-									// echo "CANCELANDO FATURA " . $faturas[$i]["id_cobranca"] . "<br>\n";
 									$cobranca->estornaFatura($faturas[$i]["id_cobranca"]);
 								}
 							}
@@ -304,6 +293,7 @@
 				case 'migrar':
 				case 'novo_contrato':
 					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+					
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 				
 					$produtos     = VirtexModelo::factory("produtos");
@@ -329,10 +319,22 @@
 					$this->_view->atribui("contrato",$contrato);
 					$this->_view->atribui("cttJSON",MJson::encode($contrato));
 					
-					//echo "<pre>";
-					//print_r(MJson::encode($contrato));
-					//echo "</pre>";
-					
+					if( $tela == "migrar" ) {
+						// Forma de pagamento
+						$id_forma_pagamento = $contrato["id_forma_pagamento"];
+						$forma = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+
+						$this->_view->atribui("forma_pagamento_original",$forma["tipo_cobranca"]);
+						$this->_view->atribui("fp_original",$forma);
+
+						// Contas que serão migradas:
+						$contas = VirtexModelo::factory('contas');
+						
+						$listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
+						$this->_view->atribui("listaContas",$listaContas);
+
+					}
+
 					if( !$acao ) {
 						//Cidades disponiveis
 						$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
@@ -390,29 +392,6 @@
 						$carencia 	= $tela == "migrar" ? $contrato["carencia"] 	: $preferenciasCobranca["carencia"];
 						$comodato	= $tela == "migrar" ? $contrato["comodato"] 	: "f";
 						
-						if( $tela == "migrar" ) {
-							// Forma de pagamento
-							$id_forma_pagamento = $contrato["id_forma_pagamento"];
-							$forma = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-							
-							$this->_view->atribui("forma_pagamento_original",$forma["tipo_cobranca"]);
-							
-							// Contas que serão migradas:
-							$contas = VirtexModelo::factory('contas');
-							$listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
-							$this->_view->atribui("listaContas",$listaContas);
-							
-							echo "<pre>";
-							print_r($listaContas);
-							echo "</pre>";
-							
-							
-						}
-
-						echo "<pre>";
-						print_r($contrato);
-						echo "</pre>";
-
 
 						$this->_view->atribui("dia_vencimento",$dia_venc);
 						$this->_view->atribui("data_contratacao",$data_contratacao);
@@ -422,7 +401,6 @@
 						$this->_view->atribui("comodato","f");
 						
 					} else {
-						$id_cliente_produto = @$_REQUEST["id_cliente_produto"];						
 
 
 						// Informações do produto contratado
@@ -501,27 +479,19 @@
 						$this->_view->atribui("cidade_instalacao",$cidade_instalacao);
 						
 						$tipo = @$_REQUEST["tipo"];
-						
-						if( $tipo == "BL" ) {
-							$id_nas = @$_REQUEST["id_nas"];
-							$nas = $equipamentos->obtemNAS($id_nas);
-							$this->_view->atribui("nas",$nas);
-							
-							$id_pop = @$_REQUEST["id_pop"];
-							$pop = $equipamentos->obtemPOP($id_pop);
-							$this->_view->atribui("pop",$pop);
-						}
-						//echo "<pre>";
-						// print_r($produto);
-						//print_r($nas);
-						//print_r($_REQUEST);
-						//echo "</pre>";
-						/*
-						while(list($vr,$vl)=each(@$_REQUEST)) {
 
-							$this->_view->atribui($vr,$vl);
+						if( $tela != "migrar" ) {
+							if( $tipo == "BL" ) {
+								$id_nas = @$_REQUEST["id_nas"];
+								$nas = $equipamentos->obtemNAS($id_nas);
+								$this->_view->atribui("nas",$nas);
+
+								$id_pop = @$_REQUEST["id_pop"];
+								$pop = $equipamentos->obtemPOP($id_pop);
+								$this->_view->atribui("pop",$pop);
+							}
 						}
-						*/
+
 						$keys = array_keys($_REQUEST);
 			            for($i=0;$i<count($keys);$i++) {
 			               $this->_view->atribui($keys[$i],$_REQUEST[$keys[$i]]);
@@ -534,6 +504,7 @@
 
 						
 						if( $acao == "novo_contrato" ) {
+
 							// Validação dos dados entrados
 							
 							// Informações do Contratante (cliente)
@@ -551,94 +522,157 @@
 							
 							// Seleção de dados para exibição na tela de confirmação.
 							
-							//echo "<pre>";
-							// print_r($formaPagamento);
-							//print_r($_REQUEST);
-							//echo "</pre>";
-							
 						}
 						
 						if( $acao == "gravar_novo_contrato" ) {
 
-							$dados_produto = $produtos->obtemPlanoPeloId($_REQUEST["id_produto"]);
+							$erro = "";
 
-							//echo "produto<pre>";
-							// print_r($formaPagamento);
-							//print_r($dados_produto);
-							//echo "</pre>";
-							
-							$dominio = @$_REQUEST["dominio"] ? $_REQUEST["dominio"] : "";
-							$data_renovacao = MData::adicionaMes($_REQUEST["primeiro_vencimento"], $_REQUEST["vigencia"]);
-							$valor_contrato = 0;
-							$id_cobranca = 0;
-							$status = "A";
+							$senha_admin = @$_REQUEST["senha_admin"];
+							$dadosLogin = $this->_login->obtem("dados");
 
+							if( !$senha_admin ) {
+								$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
+							} else {
+								if( md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+									$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
+								}
 
-							$da_codigo_banco = @$_REQUEST["da_codigo_banco"] ? $_REQUEST["da_codigo_banco"] : "";
-							$da_carteira = @$_REQUEST["da_carteira"] ? $_REQUEST["da_carteira"] : "";
-							$da_convenio = @$_REQUEST["da_convenio"] ? $_REQUEST["da_convenio"] : "";
-							$da_agencia = @$_REQUEST["da_agencia"] ? $_REQUEST["da_agencia"] : "";
-							$da_num_conta = @$_REQUEST["da_conta"] ? $_REQUEST["da_conta"] : "";
-
-							$da_dados = array( "codigo_banco" => $da_codigo_banco, "carteira" => $da_carteira, "convenio" => $da_convenio, "agencia" => $da_agencia, "num_conta" => $da_num_conta );
-			              
-							$bl_codigo_banco = @$_REQUEST["bl_codigo_banco"] ? $_REQUEST["bl_codigo_banco"] : "";
-							$bl_carteira = @$_REQUEST["bl_carteira"] ? $_REQUEST["bl_carteira"] : "";
-							$bl_convenio = @$_REQUEST["bl_convenio"] ? $_REQUEST["bl_convenio"] : "";
-							$bl_agencia = @$_REQUEST["bl_agencia"] ? $_REQUEST["bl_agencia"] : "";
-							$bl_num_conta = @$_REQUEST["bl_conta"] ? $_REQUEST["bl_conta"] : "";
-			              
-							$bl_dados = array( "codigo_banco" => $bl_codigo_banco, "carteira" => $bl_carteira, "convenio" => $bl_convenio, "agencia" => $bl_agencia, "num_conta" => $bl_num_conta );
-			              
-							$codigo_banco = @$_REQUEST["codigo_banco"] ? $_REQUEST["codigo_banco"] : "";
-							$carteira = @$_REQUEST["carteira"] ? $_REQUEST["carteira"] : "";
-							$convenio = @$_REQUEST["convenio"] ? $_REQUEST["convenio"] : "";
-							$agencia = @$_REQUEST["agencia"] ? $_REQUEST["agencia"] : "";
-							$num_conta = @$_REQUEST["conta"] ? $_REQUEST["conta"] : "";
-
-							$pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
-
-							$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"] );
-							$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"] );
-			              
-							/*
-							echo "<pre>";
-							print_r($da_dados);
-							print_r($bl_dados);
-							print_r($pro_dados);
-							print_r($dados_produto);
-							echo "</pre>";
-							*/
-              
-							switch (trim($_REQUEST["tipo"])) {
-
-							case "BL":
-								$ip = @$_REQUEST["endereco_redeip"] ? $_REQUEST["endereco_redeip"] : "";
-								$dados_conta = array( "id_nas"=>$_REQUEST["id_nas"], "id_pop"=>$_REQUEST["id_pop"], "endereco"=>$ip, "mac"=>$_REQUEST["mac"] );
-								break;
-							case "D":
-								$dados_conta = array( "foneinfo"=>$_REQUEST["foneinfo"] );
-								break;
-							case "H";
-								$dados_conta = array( "tipo_hospedagem"=>$_REQUEST["tipo_hospedagem"], "dominio_hospedagem"=>$_REQUEST["dominio_hospedagem"] );
-								break;
 							}
-              
-							$cria_e = @$_REQUEST["criar_email"] ? 1 : 0;
-							
-							/*cadastraContaEmail($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-											$observacoes,$conta_meste,
-											$quota,$redirecionar_para="")*/
-							
 
-							$gera_carne = false;
+							$this->_view->atribui("erro",$erro);
+							$this->_view->atribui("acao","novo_contrato");
 							
-							$cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
-													$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
-													$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $_REQUEST["carencia"],
-													$_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
+							if( !$erro ) {
+
+								$dados_produto = $produtos->obtemPlanoPeloId($_REQUEST["id_produto"]);
+	
+								$dominio = @$_REQUEST["dominio"] ? $_REQUEST["dominio"] : "";
+								$data_renovacao = MData::adicionaMes($_REQUEST["primeiro_vencimento"], $_REQUEST["vigencia"]);
+								$valor_contrato = 0;
+								$id_cobranca = 0;
+								$status = "A";
+
+								$da_codigo_banco = @$_REQUEST["da_codigo_banco"] ? $_REQUEST["da_codigo_banco"] : "";
+								$da_carteira = @$_REQUEST["da_carteira"] ? $_REQUEST["da_carteira"] : "";
+								$da_convenio = @$_REQUEST["da_convenio"] ? $_REQUEST["da_convenio"] : "";
+								$da_agencia = @$_REQUEST["da_agencia"] ? $_REQUEST["da_agencia"] : "";
+								$da_num_conta = @$_REQUEST["da_conta"] ? $_REQUEST["da_conta"] : "";
+
+								$da_dados = array( "codigo_banco" => $da_codigo_banco, "carteira" => $da_carteira, "convenio" => $da_convenio, "agencia" => $da_agencia, "num_conta" => $da_num_conta );
+
+								$bl_codigo_banco = @$_REQUEST["bl_codigo_banco"] ? $_REQUEST["bl_codigo_banco"] : "";
+								$bl_carteira = @$_REQUEST["bl_carteira"] ? $_REQUEST["bl_carteira"] : "";
+								$bl_convenio = @$_REQUEST["bl_convenio"] ? $_REQUEST["bl_convenio"] : "";
+								$bl_agencia = @$_REQUEST["bl_agencia"] ? $_REQUEST["bl_agencia"] : "";
+								$bl_num_conta = @$_REQUEST["bl_conta"] ? $_REQUEST["bl_conta"] : "";
+
+								$bl_dados = array( "codigo_banco" => $bl_codigo_banco, "carteira" => $bl_carteira, "convenio" => $bl_convenio, "agencia" => $bl_agencia, "num_conta" => $bl_num_conta );
+
+								$codigo_banco = @$_REQUEST["codigo_banco"] ? $_REQUEST["codigo_banco"] : "";
+								$carteira = @$_REQUEST["carteira"] ? $_REQUEST["carteira"] : "";
+								$convenio = @$_REQUEST["convenio"] ? $_REQUEST["convenio"] : "";
+								$agencia = @$_REQUEST["agencia"] ? $_REQUEST["agencia"] : "";
+								$num_conta = @$_REQUEST["conta"] ? $_REQUEST["conta"] : "";
+
+								$pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
+
+								$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"] );
+								$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"] );
+								
+								$dados_conta = array();
+								$cria_e = 0;
+								
+								/**
+								 * Procedimentos específicos da contratação
+								 */
+								if( $tela != "migrar" ) {
+									switch (trim($_REQUEST["tipo"])) {
+										case "BL":
+											$ip = @$_REQUEST["endereco_redeip"] ? $_REQUEST["endereco_redeip"] : "";
+											$dados_conta = array( "id_nas"=>$_REQUEST["id_nas"], "id_pop"=>$_REQUEST["id_pop"], "endereco"=>$ip, "mac"=>$_REQUEST["mac"] );
+											break;
+										case "D":
+											$dados_conta = array( "foneinfo"=>$_REQUEST["foneinfo"] );
+											break;
+										case "H";
+											$dados_conta = array( "tipo_hospedagem"=>$_REQUEST["tipo_hospedagem"], "dominio_hospedagem"=>$_REQUEST["dominio_hospedagem"] );
+											break;
+									}
+
+									$cria_e = @$_REQUEST["criar_email"] ? 1 : 0;
+
+									/*cadastraContaEmail($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+													$observacoes,$conta_meste,
+													$quota,$redirecionar_para="")*/
+
+									
+								}
+
+								$gera_carne = false;
+								$this->_view->atribui ("gera_carne", $gera_carne);
+								
+								// $listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
+								
+								
+								$novo_id_cliente_produto = $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
+																						$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
+																						$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $_REQUEST["carencia"],
+																			$_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
+								
+
+								if( $tela == "migrar" ) {
+									// ESTORNAR/MIGRAR AS FATURAS 
+									$faturas = $cobranca->obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas);
+
+									// Estornar as faturas.
+									for($i=0;$i<count($faturas);$i++) {
+										if( $faturas[$i]["estornavel"] ) {
+											$cobranca->estornaFatura($faturas[$i]["id_cobranca"]);
+										} else {
+											// Migrar faturas não-pagas p/ novo contrato.
+											if( $daturas[$i]["status"] != "P" ) {
+												$cobranca->migrarFatura($faturas[$i]["id_cobranca"],$novo_id_cliente_produto);
+											}
+										}
+									}
+									
+									
+									// Migra as contas.
+									for($i=0;$i<count($listaContas);$i++) {
+										$contas->migrarConta($listaContas[$i]["id_conta"],$novo_id_cliente_produto);
+									
+										switch( trim($listaContas[$i]["tipo_conta"]) ) {
+											case "BL":
+												$contas->alteraContaBandaLarga($listaContas[$i]["id_conta"],"",$listaContas[$i]["status"],$listaContas[$i]["observacoes"],
+																				$listaContas[$i]["conta_mestre"],$listaContas[$i]["id_pop"],$listaContas[$i]["id_nas"],
+																				$produto["banda_upload_kbps"], $produto["banda_download_kbps"], $listaContas[$i]["mac"],
+																				"",false);
+												break;
+											case "E":
+												$contas->alteraContaEmail($listaContas[$i]["id_conta"],"",$listaContas[$i]["status"],$listaContas[$i]["observacoes"],
+																			$listaContas[$i]["conta_mestre"],$produto["quota_por_conta"]);
+												break;
+											case "H":
+												// TODO
+												break;
+											case "D":
+												// TODO
+												break;
+										}
+									}
+									
+									$cobranca->migrarContrato($id_cliente_produto,$novo_id_cliente_produto,$dadosLogin["admin"]);
 							
-							$this->_view->atribui ("gera_carne", $gera_carne);
+								}
+								
+								$url = "admin-clientes.php?op=contrato&tela=contrato&id_cliente=".$this->id_cliente."&id_cliente_produto=" . $novo_id_cliente_produto;
+								$mensagem = $tela == "migrar" ? "Migração realizada com sucesso" : "Contratação realizada com sucesso";
+								$this->_view->atribui("url",$url);
+								$this->_view->atribui("mensagem",$mensagem);
+								$this->_view->atribuiVisualizacao("msgredirect");
+
+							}
 						}
 
 					}
@@ -729,7 +763,7 @@
 			
 			if( $id_conta && !$acao ) {
 				$info = $contas->obtemContaPeloId($id_conta);
-				//die("<pre>".print_r($info,true)."</pre>");
+
 				foreach($info as $vr => $vl) {
 					$this->_view->atribui($vr,$vl);
 				}
@@ -818,12 +852,6 @@
 					$alterar_endereco 	= (bool) (@$_REQUEST["altera_rede"] == "t");
 					
 					$senha = $senha == $confsenha ? $senha : "";
-					
-					// $contrato = $this->
-					
-					//echo "<pre>";
-					//print_r($_REQUEST);
-					//echo "</pre>";
 					
 					
 					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);					
@@ -1037,7 +1065,6 @@
 					unset($listaContas);
 				}
 
-				//die("<pre>".print_r($listaContratos,true)."</pre>");
 				$this->_view->atribui("listaContratos",$listaContratos);
 			}
 			

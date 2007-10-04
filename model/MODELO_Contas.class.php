@@ -88,6 +88,15 @@
 			return($tbl->obtemUnico($filtro));
 		}
 		
+		/**
+		 * Migra a conta para outro contrato.
+		 */
+		public function migrarConta($id_conta,$id_cliente_produto) {
+			$filtro = array("id_conta" => $id_conta);
+			$dados = array("id_cliente_produto" => $id_cliente_produto);
+			$this->cntb_conta->altera($dados,$filtro);
+		}
+		
 		public function obtemContasBandaLarga($id_nas,$status="") {
 			$filtro = array("id_nas" => $id_nas);
 			if( $status ) {
@@ -420,10 +429,6 @@
 				
 				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];
 				
-				//echo "<pre>".print_r($remEnd,true)."</pre>";
-				//echo "<pre>".print_r($infoAtual,true)."</pre>";
-				
-				
 				
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
 			}
@@ -448,8 +453,6 @@
 			 * Somente se a conta tiver ativa, claro!
 			 */
 			 
-			//echo "ENDERECO: $endereco<br>\n";
-
 			if( $status == "A" && ($nasNovo["tipo_nas"] == "I" || ($nasNovo["tipo_nas"] == "P" && $nasNovo["padrao"] == "O")) ) {
 				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$infoAtual["username"],$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
 			}

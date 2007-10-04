@@ -8,7 +8,7 @@
 	&nbsp;Opções:
 	[<a href="admin-clientes.php?op=contrato&tela=contratos&id_cliente={$id_cliente}">Voltar</a>]
 	{if $tela == "contrato"}
-		{if $contrato.status != "C"}
+		{if $contrato.status != "C" && $contrato.status != "M"}
 			[<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}&id_forma_pagamento={$formaPagamento.id_forma_pagamento}">Faturas/Carnês</a>]
 			[<a href="admin-clientes.php?op=contrato&tela=migrar&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Migrar Contrato</a>]
 			[<a href="admin-clientes.php?op=contrato&tela=cancelar_contrato&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Cancelar Contrato</a>]
@@ -27,6 +27,7 @@
 <tr>
 	<td align="center" style="border-bottom: solid 1px #FF0000;"><span style="color: #FF0000;"><strong>-- CANCELAMENTO --</strong></span></td>
 </tr>
+<tr>
 	<td align="left" style="border-bottom: solid 1px; padding-left: 5px; padding-right: 5px; padding-bottom: 5px;"><p align="justify"><span style="color: #FF0000;">
 	&nbsp; &nbsp; &nbsp;O contrato informado abaixo está prestes a ser <strong>CANCELADO</strong>.<br>
 	Neste procedimento, todas as contas do usuário (especificadas na tabela "contas" abaixo) serão canceladas e deixarão de funcionar.<br><br>
@@ -39,7 +40,7 @@
 <tr>
 <td align="center">
 	{if $contrato.status == "C"}<span style="color: #FF0000; font-size: 14px;"><strong>** CONTRATO CANCELADO **</strong></span>{/if}
-	{if $contrato.status == "S"}<span style="color: orange; font-size: 14px;"><strong>** CONTRATO SUSPENSO **</strong></span>{/if}
+	{if $contrato.status == "M"}<span style="color: orange; font-size: 14px;"><strong>** CONTRATO MIGRADO **</strong></span>{/if}
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
 			<th colspan=4>Contratante - Cobran&ccedil;a</th>
