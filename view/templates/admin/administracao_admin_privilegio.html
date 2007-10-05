@@ -7,10 +7,15 @@
 <body style="margin: auto; padding: 0px;">
 {include file="configuracoes_header.html"}
 
-<div id="conteiner_priv">
+<script language="JavaScript">
+{literal}
+function voltar() {
+	window.open('admin-administracao.php?op=administradores&tela=listagem','_self');
+}
+{/literal}
+</script>
 
 
-<div id="tb_priv">
 	<form method="post" action="{$smarty.server.PHP_SELF}">
     <input type="hidden" name="acao" value="gravar" />
     <input type="hidden" name="id_admin" value="{$id_admin}" />
@@ -24,11 +29,11 @@
 		{foreach name="registros" item=v from=$privilegios}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td class="{$estilo}">&nbsp; {$v.nome}</td>
+			<td class="{$estilo}" align="left">&nbsp; {$v.nome}</td>
 	    	<td class="{$estilo}" width="100">
 	    		<select name='acesso[{$v.id_priv}]' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 				{foreach key=id item=nome from=$acessos}
-					<option value='{$id}' >{$nome}</option>
+					<option value='{$id}' {if $id == $v.selecao}SELECTED{/if}>{$nome}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -37,14 +42,11 @@
 		<tr><td colspan='2'>&nbsp;</td></tr>
 		<tr>
 			<td colspan='2' align="center">
-				<input name="cadastro_cliente" type="submit" class="campos" id="cadastro_cliente2" value="Alterar Privil&eacute;gios &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" />
+				<input type="Button" value="Voltar" onClick="javascript:voltar()" class="botao"> <input name="cadastro_cliente" type="submit" id="cadastro_cliente2" value="Alterar Privil&eacute;gios &gt;&gt;" class="botao" />
 			</td>
 		</tr>
 	</table>
 	</form>
-</div>
-
-</div>
 
 
 </body>

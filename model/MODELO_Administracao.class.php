@@ -51,9 +51,13 @@
 			return $this->adtb_privilegio->obtemPrivilegios();
 		}
 		
+		public function obtemPrivilegiosUsuario($id_admin) {
+			return($this->adtb_usuario_privilegio->obtemPrivilegiosUsuario($id_admin));
+		}
+		
 		
 		public function obtemAcessos(){
-			return $this->adtb_privilegio->enumAcessos();			
+			return $this->adtb_privilegio->enumAcessos();
 		}
 		
 		

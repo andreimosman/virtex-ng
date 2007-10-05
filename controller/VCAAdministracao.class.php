@@ -195,18 +195,41 @@
 					$acao = @$_REQUEST["acao"];
 					$acesso = @$_REQUEST["acesso"];
 					
+					$id_admin = @$_REQUEST["id_admin"];
 					
-					if("gravar" == $acao){
+					if($acao=="gravar"){
 						$this->administradores->gravaPrivilegioUsuario($id_admin,$acesso);
 						$this->_view->atribui("url","admin-administracao.php?op=administradores&tela=listagem");
 						$this->_view->atribui("mensagem","Privilégios gravados com sucesso!");
 						$this->_view->atribuiVisualizacao("msgredirect");		
 					} else {
-						$list = $this->administradores->obtemPrivilegios();
-    					$this->_view->atribui("privilegios",$list);
+					
+						$admin = $this->administradores->obtemAdminPeloId($id_admin);
+						//echo "<pre>";
+						//print_r($admin);
+						//echo "</pre>";
+					
+						$privilegios = $this->administradores->obtemPrivilegios();
     					
-    					$list = $this->administradores->obtemAcessos();
-    					$this->_view->atribui("acessos",$list);				
+    					$privilegiosUsuario = $this->administradores->obtemPrivilegiosUsuario($id_admin);
+    					$cachePriv = array();
+    					
+    					for($i=0;$i<count($privilegiosUsuario);$i++) {
+    						$cachePriv[ $privilegiosUsuario[$i]["id_priv"] ] = $privilegiosUsuario[$i]["pode_gravar"];
+    					}
+    					
+    					for($i=0;$i<count($privilegios);$i++) {
+    						if( @$cachePriv[ $privilegios[$i]["id_priv"] ] ) {
+    							$privilegios[$i]["selecao"] = $cachePriv[ $privilegios[$i]["id_priv"] ];
+    						} else {
+    							$privilegios[$i]["selecao"] = "0";
+    						}
+    					}
+    					
+    					$this->_view->atribui("privilegios",$privilegios);
+
+    					$acessos = $this->administradores->obtemAcessos();
+    					$this->_view->atribui("acessos",$acessos);
 					}
 										
 				break;						
