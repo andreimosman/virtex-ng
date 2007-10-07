@@ -19,6 +19,8 @@
 		protected $_changePasswordScript;
 		protected $_uri;
 		
+		protected $_registroScript;
+		
 		public static function &factory($tipo,$controller) {
 			$tipo = strtolower($tipo);
 			$controller = strtolower($controller);
@@ -35,6 +37,16 @@
 			}
 					
 			return(false);
+		
+		}
+		
+		protected function verificaRegistro() {
+		
+			if( !$this->licenca->isValid() ) {
+				return(false);
+			}
+			
+			return(true);
 		
 		}
 		
@@ -77,7 +89,20 @@
 						}
 						
 					}
-
+					
+				
+					if( $this->_registroScript && $this->_script ) {
+						$acao = @$_REQUEST["acao"];
+						if( $acao != "upload" && $this->_uri != $this->_registroScript ) {
+							if( !$this->verificaRegistro() ) {
+								if( $this->_view ) {
+									$this->_view->redirect($this->_registroScript);
+								} else {
+									VirtexView::simpleRedirect($this->_registroScript);
+								}
+							}
+						}
+					}
 				}
 
 			}

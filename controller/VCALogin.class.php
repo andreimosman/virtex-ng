@@ -22,13 +22,6 @@
 			 
 			$this->_login->init();
 			
-			
-			 
-			 
-			 
-			
-			
-			
 			/**
 			 * Autenticação.
 			 */
@@ -56,8 +49,8 @@
 						$this->_login->atribuiUsername($username);
 						$this->_login->atribui("tipo","ADMIN");	// Indica que esta autenticação é do ambiente administrativo.
 						
-						$privilegios = array(); // TODO: Pegar privilégios no sistema
-						$this->_login->atribui("privilegios",$privilegios);
+						$privilegios = $admin->obtemPrivilegiosUsuario($info["id_admin"]); // TODO: Pegar privilégios no sistema
+						$this->_login->atribuiPrivilegios($privilegios);
 						
 						$this->_login->atribui("primeiroLogin",$info["primeiro_login"]);
 						$this->_login->atribui("dados",$info);

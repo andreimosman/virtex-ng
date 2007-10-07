@@ -6,10 +6,10 @@
 	class VirtexControllerAdmin extends VirtexController {
 
 		protected $preferencias;
-		protected $privilegios;
 	
 		protected function __construct() {
 			parent::__construct();
+			
 		}
 		
 
@@ -62,8 +62,11 @@
 		protected function init() {
 			parent::init();
 			$this->preferencias = VirtexModelo::factory("preferencias");
-			$this->_loginScript = "admin-login.php";			
+			$this->_loginScript = "admin-login.php";
 			$this->_changePasswordScript = "admin-administracao.php?op=altsenha";
+			
+			$this->_registroScript = "admin-configuracoes.php?op=preferencias&tela=registro";
+			
 		}
 		
 		protected function executa() {
@@ -84,17 +87,9 @@
 				return false;
 			}
 			
-			$privilegios = $this->_login->obtem("privilegios");
-			if( !is_array($privilegios) ) {
-				return false;
-			}
-			
-			// Joga os privilégios dentro do objeto;
-			$this->privilegios = $privilegios;
-			
 			$primeiroLogin = $this->_login->obtem("primeiroLogin");
 			if( !$primeiroLogin ) {
-				return(false);
+				return(true);
 			}
 			
 			// Joga o primeiro login dentro do objeto;
@@ -103,6 +98,22 @@
 			return(true);
 			
 		}
+		
+		/**
+		 * Verificações de licença específicas da interface de administração.
+		 */
+		protected function verificaRegistro() {
+			// Verifica as regras básicas.
+			if( !parent::verificaRegistro() ) {
+				return false;
+			}
+			
+			
+			return true;
+			
+			
+		}
+		
 		
 	}
 

@@ -509,13 +509,18 @@
 				$arquivo = $diretorio."/".$nome_aceitavel;
 				
 				if(is_uploaded_file($file["tmp_name"]) ){
-					if (file_exists($arquivo)) {							
-						rename($arquivo, $diretorio."/_virtex.lic");
-					}
-					if(move_uploaded_file($file["tmp_name"],$arquivo )){
-						$mensagem = "Arquivo de registro aplicado com sucesso!";
+					if( filesize($file["tmp_name"]) > 0 ) {
+						if (file_exists($arquivo)) {							
+							rename($arquivo, $diretorio."/_virtex.lic");
+						}
+						if(move_uploaded_file($file["tmp_name"],$arquivo ) ){
+							$mensagem = "Arquivo de registro aplicado com sucesso!<br><br>Refaça o login no sistema.";
+							$url = "admin-login.php";
+						} else {
+							$mensagem = "Falha ao tratar o arquivo";
+						}
 					} else {
-						$mensagem = "Falha ao tratar o arquivo";
+						$mensagem = "Arquivo Inválido.";
 					}
 				} else {
 					$mensagem = "Falha no upload do arquivo";
@@ -524,8 +529,9 @@
 				
 				$this->_view->atribui("mensagem",$mensagem);
 				$this->_view->atribui("url",$url);
+				$this->_view->atribui("target","_top");
 				$this->_view->atribuiVisualizacao("msgredirect");
-			
+				
 			} else {
 			
 				if($this->licenca->isValid()){
@@ -541,7 +547,7 @@
 					$this->_view->atribui("registrado",true);
 					
 					
-				} else {	
+				} else {
 					$this->_view->atribui("registrado",false);
 				}
 				

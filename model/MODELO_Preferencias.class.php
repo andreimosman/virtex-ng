@@ -384,7 +384,7 @@
 		
 		public function atualizaPreferenciasProvedor($endereco,$localidade,$cep,$cnpj,$fone) {
 			$id_provedor = 1;
-
+			
 			$this->verificaClienteProvedor();
 			
 			// Pega o nome do banco.
@@ -394,6 +394,11 @@
 			unset($info);
 			
 			$this->alteraClienteProvedor($nome,$endereco,$localidade,$cep,$cnpj,$fone);
+			
+			$prefProv = $this->obtemPreferenciasProvedor();
+			if( !count($prefProv) ) {
+				$this->pftb_preferencia_provedor->insere(array("id_provedor" => $id_provedor));
+			}
 			
 			$dados = array("endereco" => $endereco, "localidade" => $localidade, "cep" => $cep, "cnpj" => $cnpj,"fone" => $fone);
 			return($this->pftb_preferencia_provedor->altera($dados,array("id_provedor"=>1)));

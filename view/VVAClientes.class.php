@@ -183,7 +183,7 @@
 				}
 
 			} else if( $this->obtem("tela") == "ficha" ) {
-				$selecionavel = false;
+				$selecionavel = true;
 				$this->_file = "clientes_contas_ficha.html";
 				
 				$titulo .= " :: " . $this->obtem("username") . " (" . $this->obtem("tipo_conta") . ")";

@@ -11,6 +11,9 @@
 		protected $username;
 		protected $password;
 		protected $variaveis;
+		
+		protected $listaPodeLer;
+		protected $listaPodeGravar;
 	
 		protected function __construct() {
 			$this->init();			
@@ -20,6 +23,9 @@
 			$this->username = "";
 			$this->password = "";
 			$this->variaveis = array();
+			
+			$this->listaPodeLer = array();
+			$this->listaPodeGravar = array();
 		}
 		
 		public static function &getInstance() {
@@ -66,12 +72,35 @@
 		public function obtem($variavel) {
 			return(@$this->variaveis[$variavel]);
 		}
-	
+		
+		public function atribuiPrivilegios($listaPrivilegios,$chave="cod_priv",$write="pode_gravar") {
+			if( !is_array($listaPrivilegios) ) {
+				$this->privilegios = array();
+				return;
+			}
+
+			foreach($listaPrivilegios as $privilegio) {
+				// print_r($privilegio);
+				
+				$this->listaPodeLer[$privilegio[$chave]] = true;
+				
+				if( $privilegio[$write] == 't' ) {
+					$this->listaPodeGravar[$privilegio[$chave]] = true;
+				}
+				
+			}
+			
+		}
+		
+		public function podeLer($privilegio) {
+			return(@$this->listaPodeLer($privilegio));
+		}
+
+		public function podeGravar($privilegio) {
+			return(@$this->listaPodeGravar($privilegio));
+		}
+
+
 	}
 	
-	// $teste = Login::getInstance();
-	// $teste->atribuiUsername("Andrei","Teste");
-	// $teste->atribui("privilegios",array("A","B","C"));
-	// print_r($teste);
-
 ?>
