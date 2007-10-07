@@ -45,15 +45,20 @@
 		}
 		
 		// TODO
-		public function cadastraServidor($hostname, $ip, $porta, $usuario, $senha, $disponivel) {
-			$dados = array("hostname" => $hostname, "ip" => $ip, "porta" => $porta, "usuario" => $usuario, "senha" => $senha, "disponivel" => $disponivel);
+		public function cadastraServidor($hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel) {
+			$dados = array("hostname" => $hostname, "ip" => $ip, "porta" => $porta, "chave" => $chave, "usuario" => $usuario, "senha" => $senha, "disponivel" => $disponivel);
 			return($this->cftb_servidor->insere($dados));
 		}
 		
 		// TODO
-		public function atualizaServidor($id_servidor, $hostname, $ip, $porta, $usuario, $senha, $disponivel) {
+		public function atualizaServidor($id_servidor, $hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel) {
 			$filtro = array("id_servidor"=>$id_servidor);
-			$dados = array("hostname" => $hostname, "ip" => $ip, "porta" => $porta, "usuario" => $usuario, "senha" => $senha, "disponivel" => $disponivel);
+			$dados = array("hostname" => $hostname, "ip" => $ip, "porta" => $porta, "chave" => $chave, "usuario" => $usuario, "disponivel" => $disponivel);
+			
+			if( $senha ) {
+				$dados["senha"] = $senha;
+			}
+			
 			return($this->cftb_servidor->altera($dados, $filtro));
 		}
 

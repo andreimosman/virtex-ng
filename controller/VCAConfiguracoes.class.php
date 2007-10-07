@@ -83,6 +83,8 @@
 			$porta = @$_REQUEST["porta"];
 			if( !$porta ) $porta = 11000;
 			$this->_view->atribui("porta",$porta);
+			
+			$chave = @$_REQUEST["chave"];
 		
 			$url = "admin-configuracoes.php?op=equipamentos&tela=servidores";
 	
@@ -103,7 +105,7 @@
 							}
 						} else {
 							// Processar alteração			
-							$equipamentos->atualizaServidor($id_servidor, $hostname, $ip, $porta, $usuario, $senha, $disponivel);
+							$equipamentos->atualizaServidor($id_servidor, $hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Servidor atualizado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
@@ -113,7 +115,7 @@
 						// Cadastro
 						if( $acao ) {
 							// Cadastrar
-							$id_servidor = $equipamentos->cadastraServidor($hostname, $ip, $porta, $usuario, $senha, $disponivel);
+							$id_servidor = $equipamentos->cadastraServidor($hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Servidor cadastrado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
