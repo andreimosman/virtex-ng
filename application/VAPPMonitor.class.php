@@ -86,7 +86,7 @@
 					}
 					
 					$equipamentos->excluiMonitoramentoPop($pop["id_pop"]);
-					$equipamentos->registraMonitoramentoPop($pop["id_pop"],$minimo,$maximo,$media,$perdas,$num_erros,count($retorno),$status);
+					$equipamentos->registraMonitoramentoPop($pop["id_pop"],$minimo,$maximo,$media,$perdas,$num_erros,count($resposta),$status);
 
 				}
 			}

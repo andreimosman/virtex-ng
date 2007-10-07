@@ -26,7 +26,7 @@
 		$possibilidades[] = str_replace("_","/",$class_name) . ".php";
 
 		for($i=0;$i<count($possibilidades);$i++) {
-			if( include_once($possibilidades[$i]) ) return;
+			if( @include_once($possibilidades[$i]) ) return;
 		}
 
 		// Não encontrou
