@@ -408,7 +408,7 @@
 
 					// Atribuição automática.
 					if( !$endereco ) {
-						$this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
+						$endereco = $this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
 					}
 
 					if( $nasNovo["tipo_nas"] == "I" ) {
