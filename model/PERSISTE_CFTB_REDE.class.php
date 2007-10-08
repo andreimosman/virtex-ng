@@ -50,6 +50,7 @@
 			$sql .= "      LEFT OUTER JOIN cntb_conta_bandalarga cbl ON(r.rede = cbl.rede) ";
 			$sql .= "   WHERE ";
 			$sql .= "      nr.id_nas = '".$this->bd->escape($id_nas)."' ";
+			$sql .= "	   AND r.tipo_rede = 'C' ";
 			$sql .= "   ORDER BY ";
 			$sql .= "      nr.rede DESC ";
 			$sql .= "   ) r  ";

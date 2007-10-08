@@ -31,6 +31,7 @@
 			$sql .= "   LEFT OUTER JOIN cntb_conta_bandalarga cbl ON(i.ipaddr = cbl.ipaddr) ";
 			$sql .= "WHERE ";
 			$sql .= "   nr.id_nas = '".$this->bd->escape($id_nas)."' ";
+			$sql .= "	AND r.tipo_rede = 'C' ";
 			$sql .= "   AND cbl.ipaddr is null ";
 			$sql .= "ORDER BY ";
 			$sql .= "   i.ipaddr DESC ";
