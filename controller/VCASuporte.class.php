@@ -22,6 +22,9 @@
 				case 'graficos':
 					$this->executaGraficos();
 					break;
+				case 'relatorios':
+					$this->executaRelatorios();
+					break;
 				default:
 					// do something
 			}
@@ -204,6 +207,47 @@
 					$this->_view->atribui("erro","Nenhuma conta ativa satisfaz as condições de pesquisa.");
 				}
 			
+			}
+			
+		}
+		
+		protected function executaRelatorios() {
+			$relatorio = @$_REQUEST["relatorio"];
+			$this->_view->atribuiVisualizacao("relatorios");
+			$this->_view->atribui("relatorio",$relatorio);
+			
+			switch($relatorio) {
+				case 'cliente_sem_mac':
+					$contas = VirtexModelo::factory('contas');
+					$lista = $contas->obtemContasSemMac();
+					
+					$this->_view->atribui("lista",$lista);
+					
+					break;
+				case 'banda':
+					
+					$contas = VirtexModelo::factory('contas');
+					
+					$banda = @$_REQUEST["banda"];
+					$this->_view->atribui("banda",$banda);
+					if( !$banda ) {
+						// Lista Geral
+						$lista = $this->preferencias->obtemListaBandas();
+						for($i=0;$i<count($lista);$i++) {
+							$listaContas = $contas->obtemContasPorBanda($lista[$i]["id"]);
+							$lista[$i]["num_contas"] = count($listaContas);
+						}
+						$this->_view->atribui("lista",$lista);
+					} else {
+						$infoBanda = $this->preferencias->obtemBanda($banda);
+						$this->_view->atribui("infoBanda",$infoBanda);
+						
+						$listaContas = $contas->obtemContasPorBanda($banda);
+						$this->_view->atribui("listaContas",$listaContas);
+					}
+										
+					break;
+
 			}
 			
 		}

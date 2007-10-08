@@ -409,17 +409,20 @@ function contratoAlteraFormaPagamentoDA() {
 		valor = null;
 	}
 
-	frm.agencia.disabled = true;
-	frm.agencia.className="disabledFP";
-	frm.conta.disabled = true;
-	frm.conta.className="disabledFP";
-
+	if( frm.agencia != undefined && frm.agencia != null && frm.conta != undefined && frm.conta != null ) {
+		frm.agencia.disabled = true;
+		frm.agencia.className="disabledFP";
+		frm.conta.disabled = true;
+		frm.conta.className="disabledFP";
+	}
 	if( fp != null && !fp.disabled ) {
 		if(  valor == "DA" && frm.id_forma_pagamento_DA.value != "" ) {
-			frm.agencia.disabled = false;
-			frm.agencia.className="fieldWithoutFocusFP";
-			frm.conta.disabled = false;
-			frm.conta.className="fieldWithoutFocusFP";
+			if( frm.agencia != undefined && frm.agencia != null && frm.conta != undefined && frm.conta != null ) {
+				frm.agencia.disabled = false;
+				frm.agencia.className="fieldWithoutFocusFP";
+				frm.conta.disabled = false;
+				frm.conta.className="fieldWithoutFocusFP";
+			}
 		}
 	}
 }
@@ -434,10 +437,18 @@ function contratoAlteraFormaPagamento() {
 		valor = null;
 	}
 
-	frm.id_forma_pagamento_BL.disabled = true;
-	frm.id_forma_pagamento_DA.disabled = true;
-	frm.id_forma_pagamento_PC.disabled = true;
-	frm.id_forma_pagamento_MO.disabled = true;
+	if( frm.id_forma_pagamento_BL != undefined && frm.id_forma_pagamento_BL != null ) {
+		frm.id_forma_pagamento_BL.disabled = true;
+	}
+	if( frm.id_forma_pagamento_DA != undefined && frm.id_forma_pagamento_DA != null ) {
+		frm.id_forma_pagamento_DA.disabled = true;
+	}
+	if( frm.id_forma_pagamento_PC != undefined && frm.id_forma_pagamento_PC != null ) {
+		frm.id_forma_pagamento_PC.disabled = true;
+	}
+	if( frm.id_forma_pagamento_MO != undefined && frm.id_forma_pagamento_MO != null ) {
+		frm.id_forma_pagamento_MO.disabled = true;
+	}
 
 	if( fp != null && !fp.disabled ) {
 		if( frm.id_forma_pagamento_BL != undefined ) {
@@ -922,7 +933,7 @@ function validarData(campo){
 		</tr>
 	</table>
 
-  <table border=0 align="center" cellspacing=0>
+  <table border=0 align="center" cellspacing=0 height="355">
 		<tr>
 {if $tela == "migrar"}
 			<td valign="top">

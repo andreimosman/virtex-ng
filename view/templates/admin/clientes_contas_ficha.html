@@ -25,11 +25,18 @@ label {
 }
 {/literal}
 </style>
-
+<script language="JavaScript">
+{literal}
+function abreEstatisticas(user) {
+	var url="/virtex-cgi/stats/"+user+".html";
+	window.open(url,"grafico"+user,'scrollbars=yes,width=550,height=500');
+}
+{/literal}
+</script>
 <br>
 {if $tipo_conta == "BL"}
 <center>
-<img src="/virtex-cgi/stats/{$username}-day.png" alt="Gráfico de Acesso do Dia">
+<a href="javascript:abreEstatisticas('{$username}')"><img src="/virtex-cgi/stats/{$username}-day.png" alt="Gráfico de Acesso do Dia" border="0"></a>
 </center>
 {/if}
 <table width="600" border="0" cellpadding=1 cellspacing=0 align="center" class="lista">

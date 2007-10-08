@@ -46,6 +46,10 @@
 					$retorno = new VCASuporte();
 					break;
 					
+				case 'home':
+					$retorno = new VCAHome();
+					break;
+					
 				default:
 					throw new ExcecaoController(255,"Controller não encontrado");
 			

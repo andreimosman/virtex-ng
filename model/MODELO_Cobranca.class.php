@@ -400,6 +400,12 @@
 							$cod_barra = $boleto->obtemCodigoBoleto ();
 							$linha_digitavel = $boleto->obtemLinhaDigitavel();	
 							break;
+						case "MO":
+							// Carnê genérico
+							$carne = new MCarne($fatura["valor"],$id_cliente_produto,$nosso_numero,$fatura['data']);
+							$cod_barra = $carne->obtemCodigoBarras();
+							$linha_digitavel = $carne->obtemLinhaDigitavel();
+							break;
 					}
 
 				}

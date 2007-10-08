@@ -114,6 +114,12 @@
 		public function obtemListaBandas() {
 			return($this->cftb_banda->obtem());		
 		}
+
+		public function obtemBanda($id) {
+			$filtro = array("id" => $id);
+			return($this->cftb_banda->obtemUnico($filtro));		
+		}
+
 		
 		/**
 		 * Atualiza banda.
@@ -492,7 +498,6 @@
 				case 'MO':
 					//echo "Manual/Outro<br>\n";
 					$dados["codigo_banco"] = null;
-					$dados["carne"] = "f";
 					break;
 				case 'PC':
 					$dados["codigo_banco"] = 104;

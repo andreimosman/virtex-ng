@@ -106,6 +106,17 @@
 			return($this->cntb_conta_bandalarga->obtem($filtro));		
 		}
 		
+		public function obtemContasSemMac() {
+			$filtro = array("mac" => "null:","status"=>"in:A::B");
+			
+			return($this->cntb_conta_bandalarga->obtem($filtro));
+		}
+		
+		public function obtemContasPorBanda($banda) {
+			$filtro = array("status"=>"in:A::B","*OR*0" => array("upload_kbps" => $banda, "download_kbps" => $banda));
+			return($this->cntb_conta_bandalarga->obtem($filtro));
+		}
+		
 		public function obtemContasBandaLargaPeloPOPNAS($id_pop,$id_nas,$status="") {
 			$filtro = array();
 			if( $id_pop ) {

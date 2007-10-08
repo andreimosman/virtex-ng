@@ -23,6 +23,9 @@
 				case 'graficos':
 					$this->exibeGraficos();
 					break;
+				case 'relatorios':
+					$this->exibeRelatorios();
+					break;
 				default:
 					// Do something
 			}
@@ -59,6 +62,27 @@
 			$this->atribui("titulo","Gráficos");
 			
 		}
+		
+		protected function exibeRelatorios() {
+			$titulo = "Suporte :: Relatórios";
+			
+			switch($this->obtem("relatorio")) {
+				case 'cliente_sem_mac':
+					$titulo .= " :: Clientes Sem MAC";
+					$this->_file = "suporte_relatorios_semmac.html";
+					
+					break;
+				case 'banda':
+					$titulo .= " :: Clientes por Banda";
+					$this->_file = "suporte_relatorios_banda.html";
+					break;
+			}
+			
+			$this->atribui("titulo",$titulo);
+		
+		}
+		
+		
 	
 	
 	

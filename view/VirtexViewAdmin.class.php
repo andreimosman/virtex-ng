@@ -68,6 +68,10 @@
 					$retorno = new VVASuporte();
 					break;
 				
+				case 'home':
+					$retorno = new VVAHome();
+					break;
+				
 				default:
 					throw new ExcecaoView(255,"View não disponível");
 					

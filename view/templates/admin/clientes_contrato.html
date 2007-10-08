@@ -45,14 +45,17 @@ label {
 {literal}
 
 function habilita(campo) {
-	campo.disabled=false;
-	campo.className='fieldWithoutFocus';
-
+	if( campo != undefined && campo != null ) {
+		campo.disabled=false;
+		campo.className='fieldWithoutFocus';
+	}
 }
 
 function desabilita(campo) {
-	campo.disabled=true;
-	campo.className='disabled';
+	if( campo != undefined && campo != null ) {
+		campo.disabled=true;
+		campo.className='disabled';
+	}
 }
 {/literal}
 </script>

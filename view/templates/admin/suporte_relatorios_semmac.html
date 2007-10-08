@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="suporte_header.html"}
+<br>
+
+<table width="600" class="lista" cellpadding=0 cellspacing=0 align="center">
+	<tr>
+		<th align="left">Username</th>
+		<th align="left">Endereço</th>
+		<th>Status</th>
+		<th>&nbsp;</th>
+	</tr>
+	{foreach name=registros item=c from=$lista}
+	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr>
+		<td class="{$estilo}" width="250">&nbsp;{$c.username}</td>
+		<td class="{$estilo}" width="100">{$c.ipaddr}{$c.rede}</td>
+		<td class="{$estilo}" align="center">{if $c.status == "A"}Ativo{elseif $c.status == "B"}Bloqueado{elseif $c.status == "S"}Suspenso{elseif $c.status == "C"}Cancelado{/if}</td>
+		<td class="{$estilo}" width="100" align="right">[<a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto=206&id_cliente={$c.id_cliente}&id_conta={$c.id_conta}">FICHA TÉCNICA</a>]</td>
+	</tr>
+	{/foreach}
+</table>
+</body>
+</html>
