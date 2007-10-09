@@ -512,6 +512,13 @@
 			return($this->cbtb_fatura->altera($dados,$filtro));
 		}
 		
+		
+		public function obtemFaturasPorCarne($id_carne) {
+			$filtro = array("status" => "A", "id_carne" => $id_carne);
+			return($this->cbtb_fatura->obtem($filtro));
+		}
+		
+		
 		/**
 		 * 
 		 */

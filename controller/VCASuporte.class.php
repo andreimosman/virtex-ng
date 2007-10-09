@@ -228,9 +228,9 @@
 					
 					$contas = VirtexModelo::factory('contas');
 					
-					$banda = @$_REQUEST["banda"];
+					$banda = isset($_REQUEST["banda"]) ? $_REQUEST["banda"] : null;
 					$this->_view->atribui("banda",$banda);
-					if( !$banda ) {
+					if( is_null($banda) ) {
 						// Lista Geral
 						$lista = $this->preferencias->obtemListaBandas();
 						for($i=0;$i<count($lista);$i++) {

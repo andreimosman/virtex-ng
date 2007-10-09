@@ -1,4 +1,11 @@
-
+<script language="JavaScript">
+{literal}
+function abreCarne(id_carne,id_cliente,id_cliente_produto) {
+	url = "admin-clientes.php?op=contrato&tela=imprime_carne&id_cliente="+id_cliente+"&id_cliente_produto="+id_cliente_produto+"&id_carne="+id_carne;
+	window.open(url,"carne_"+id_carne,'scrollbars=yes,width=700,height=500');
+}
+{/literal}
+</script>
 <br />
 
 
@@ -23,7 +30,10 @@
 			<td>{$f.total_fatura}</td>
 			<td>{$f.valor}</td>
 			<td>{$f.status}</td>
-			<td><a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$smarty.request.id_cliente_produto}&id_forma_pagamento={$smarty.request.id_forma_pagamento}&id_carne={$f.id_carne}">[Faturas]</a></td>
+			<td aling="right" width="130">
+				[<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$smarty.request.id_cliente_produto}&id_forma_pagamento={$smarty.request.id_forma_pagamento}&id_carne={$f.id_carne}">Faturas</a>]
+				[<a href="javascript:abreCarne({$f.id_carne},{$id_cliente},{$smarty.request.id_cliente_produto})">Imprimir</a>]
+			</td>
 		</tr>
 		{/foreach}
 	</table>

@@ -1,0 +1,32 @@
+<br />
+{if $acao == ""}
+	<!-- CONFIRMAÇÃO DO CONTRATO -->
+	<p align="center" style="font-family: verdana">CONTRATOS ATIVOS</p>
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<tr class="lista">
+			<th>#</th>
+			<th align="left">Data</th>
+			<th>Vig&ecirc;ncia</th>
+			<th align="left">Produto</th>
+			<th>Tipo</th>
+			<th align="right">Valor</th>
+			<th>Status</th>
+			<th>&nbsp;</th>
+		</tr>
+		{foreach name=registros from=$contratos item=c}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.id_cliente_produto|string_format:"%06d"}</a></td>
+			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.data_contratacao}</a></td>
+			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.vigencia}</a></td>
+			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.nome_produto}</a></td>
+			<td class='{$estilo}' align="center"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.tipo_produto}</a></td>
+			<td class='{$estilo}' align="right"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{if $c.valor > 0}{$c.valor}{else}cortesia{/if}</a></td>
+			<td class='{$estilo}' align="center"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.status}</a></td>
+			<td class='{$estilo}' align="right">{if $c.valor > 0}[<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}&id_forma_pagamento={$c.id_forma_pagamento}">Faturas</a>]{else}&nbsp;{/if}</td>
+		</tr>
+		{/foreach}
+	</table>
+ </table>
+
+{/if}

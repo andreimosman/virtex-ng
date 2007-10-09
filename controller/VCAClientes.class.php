@@ -162,6 +162,10 @@
 		
 		protected function executaContrato() {
 		
+			$urlPreto 	= "view/templates/imagens/preto.gif";
+			$urlBranco 	= "view/templates/imagens/branco.gif";
+			
+		
 			$this->_view->atribuiVisualizacao("contrato");
 			$this->_view->atribui("id_cliente",$this->id_cliente);
 			$info = $this->clientes->obtemPeloId($this->id_cliente);
@@ -180,6 +184,41 @@
 			$this->_view->atribui("acao",$acao);
 			
 			switch($tela) {
+				case 'imprime_carne':
+					$id_carne = @$_REQUEST["id_carne"];
+					$id_cliente = @$_REQUEST["id_cliente"];
+					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+					
+					$this->_view->atribui("id_carne",$id_carne);
+					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
+					
+					$cobranca = VirtexModelo::factory('cobranca');
+					$faturas = $cobranca->obtemFaturasPorCarne($id_carne);
+					
+					$prefGeral 		= $this->preferencias->obtemPreferenciasGerais();
+					$prefProvedor 	= $this->preferencias->obtemPreferenciasProvedor();
+					$prefCobranca	= $this->preferencias->obtemPreferenciasCobranca();
+					$this->_view->atribui("prefGeral",$prefGeral);
+					$this->_view->atribui("prefProvedor",$prefProvedor);
+					$this->_view->atribui("prefCobranca",$prefCobranca);
+					
+					for($i=0;$i<count($faturas);$i++) {
+						$faturas[$i]["html_barcode"] = MBanco::htmlBarcode($faturas[$i]["cod_barra"],$urlPreto,$urlBranco);
+						
+						@list($a,$m,$d) = explode("-",$faturas[$i]["data"]);
+						if($d && $m && $a) {
+							$faturas[$i]["data"] = "$d/$m/$a";
+						}
+						
+						$faturas[$i]["forma_pagamento"] = $this->preferencias->obtemFormaPagamento($faturas[$i]["id_forma_pagamento"]);
+						
+					}
+					
+					$emissao = date("d/m/Y");
+					$this->_view->atribui("emissao",$emissao);
+					$this->_view->atribui("faturas",$faturas);
+					
+					break;
 				
 				case 'cancelar_contrato':
 				case 'contrato':
@@ -725,6 +764,9 @@
 			
 				default:
 					// Resumo
+					$cobranca = VirtexModelo::factory("cobranca");
+					$contratos = $cobranca->obtemContratos ($_REQUEST ["id_cliente"],"A");
+					$this->_view->atribui ('contratos', $contratos);
 					
 		
 					break;
@@ -853,6 +895,8 @@
 					
 					$senha = $senha == $confsenha ? $senha : "";
 					
+					$selecao_redeip		= @$_REQUEST["selecao_redeip"];
+					
 					
 					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);					
 					$url = "admin-clientes.php?op=conta&tipo=".@$contrato["tipo_produto"]."&id_cliente=".$this->id_cliente;
@@ -864,10 +908,11 @@
 					if($id_conta) {  // alteração
 						if("BL" == $tipo){
 							//die("MODELO_Contas::alteraContaBandaLarga $id_conta,$senha, $status,$observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco,$alterar_endereco<br />");
+							
+							
 							$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
 									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
-							
-							
+
 							if($difEnderecoSetup){						
 								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
 								unset(	$info_endereco["id_endereco_instalacao"], 

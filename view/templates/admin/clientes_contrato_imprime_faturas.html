@@ -1,0 +1,173 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_contrato_imprime_header.html"}
+
+
+<style>
+{literal}
+
+.carne {
+	font-family: arial;
+	font-size: 9px;
+	border-top: dotted 1px #000000;
+	border-bottom: dotted 1px #000000;
+	margin-top: 1px;
+}
+
+.carne th {
+	font-size: 14px;
+}
+
+.carne td {
+
+}
+
+.carne td span {
+	font-size: 8px;
+	font-weight: bold;
+}
+
+.canhoto {
+	font-family: arial;
+	font-size: 9px;
+}
+
+.canhoto p {
+	margin-top: 2px;
+}
+
+.canhoto td {
+	border-bottom: solid 1px #000000;
+}
+
+.posto {
+	font-family: arial;
+	font-size: 9px;
+}
+
+.posto p {
+	margin-top: 2px;
+	font-size: 10px;
+	font-weight: bold;
+}}
+
+.posto td {
+	border-bottom: solid 1px #000000;
+}
+
+#quebraPagina {
+	color: #ffffff;
+
+}
+
+#imprimir {
+	position:relative;
+	left:8px;
+	top:8px;
+	font-family:arial,helvetica;
+	text-decoration: none;
+	font-size:12px;
+	font-color: #ffffff;
+	align: center;
+	vertical-align: bottom;
+	background-color:#CACAFF;
+	width:70px;
+	height:10px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	visibility: visible;
+}
+
+
+{/literal}
+
+
+</style>
+
+<style>
+{literal}
+@media print {
+	#quebraPagina {
+		page-break-after: always;
+	}
+	#imprimir {
+		visibility: hidden;
+		position: absolute;
+	}
+}
+{/literal}
+</style>
+
+<div id="imprimir" align="center" width="100%">
+<table align="center" width="665">
+	<tr>
+		<td><a href="javascript:;" onClick="return window.print();"><img alt="IMPRIMIR CARNÊ" src="view/templates/imagens/print.gif" border="0"></a></td>
+		<td>
+			<div align="LEFT"><font face="Arial, Helvetica, sans-serif" size="2" color="#000000"><b>Instruções para Impressão</b><li>Imprima em impressora jato de tinta (ink jet) ou laser em qualidade normal ou alta.<br>
+			<li>Não use modo econêmico.<br>
+			<li>Utilize folha A4 (210 x 297mm) e margens mínimas à esquerda e à direita do formulário.</font><br>
+			</div>
+		</td>
+	</tr>
+</table>
+</div>
+
+
+{foreach name=faturas item=f from=$faturas}
+	{if $f.forma_pagamento.tipo_cobranca=="PC" || $f.forma_pagamento.tipo_cobranca=="MO" }
+		{include file="clientes_contrato_modelo_pagcontas_carne.html"}
+	{elseif $f.forma_pagamento.tipo_cobranca=="BL" }
+		{include file="clientes_contrato_modelo_boleto.html"}
+	{/if}
+{/foreach}
+
+
+<!--
+<table class="carne" cellspacing=0 cellpadding=2 width="500">
+	<tr>
+		<th align="left">COBRANÇA INTERNET</th>
+		<th align="right">{$f.linha_digitavel}</th>
+	</tr>
+	<tr>
+		<td width="160" style="border-right: dotted 2px #000000;">
+			<table border=0 width="100%" class="carne">
+				<tr>
+					<td>Identificação<br>
+						<span>{$f.linha_digitavel}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>Data<br>
+						<span>{$f.data}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>Valor<br>
+						<span>{$f.valor}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			{$f.html_barcode}
+		</td>
+	</tr>
+</table>
+<br>
+-->
+
+
+</body>
+</html>

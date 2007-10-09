@@ -1,0 +1,135 @@
+<table class="carne" cellspacing=0 cellpadding=2 width="650">
+<tr>
+	<td width="180" style="border-right: dotted 1px #000000;" valign="top"><br><br>
+		<table class="canhoto" cellspacing="0" cellpadding="2" width="100%">
+			<tr>
+				<td colspan="2" align="right" width="100%"><strong>{$prefGeral.nome}</strong></td>
+			</tr>
+			<tr>
+				<td width="70" height="50" align="right" style="border-right: solid 1px #000000">{if $f.forma_pagamento.tipo_cobranca=="PC"}<img src="view/templates/imagens/pagcontas_logo.jpg">{else}&nbsp;{/if}</td>
+				<td width="110">
+					Vencimento
+					<p align="center">{$f.data}</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					Valor
+					<p align="center">R$ {$f.valor}</p>
+				</td>
+			</tr>
+			<tr>
+				<td style="border-right: solid 1px #000000">
+					Emissão
+					<p align="center">{$emissao}</p>
+				</td>
+				<td>
+					Referente à:
+					<p align="center">&nbsp;</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					Nosso Número:
+					<p align="center">{$f.nosso_numero|string_format:"%08d"}</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					Produto:
+					<p align="center">{$f.descricao}</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					Sacado:
+					<p align="center">{$nome_razao}</p>
+				</tr>
+			</tr>
+			<tr>
+				<td colspan="2" style="border-bottom: none" align="right">
+					<strong>RECIBO DO CLIENTE</strong>
+				</td>
+			</tr>
+		</table>
+	<td>
+	<td valign="top" align="left" width="470">
+		<table class="posto" cellspacing=0 cellpadding=2 width="100%">
+			<tr>
+				<td colspan=2>
+					<table widht="100%" cellpadding=0 cellspacing=0 width="100%" height=50>
+						<tr>
+							{if $f.forma_pagamento.tipo_cobranca=="PC"}
+							<td align="right" width="60" style="border-bottom: none"><img src="view/templates/imagens/pagcontas_logo.jpg"></td>
+							{/if}
+							<td align="left" style="border-bottom: none"><strong>RECIBO DO POSTO</strong></td>
+							<td align="right" style="border-bottom: none">{$prefGeral.nome}</td>
+						<tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td width="360" style="border-right: solid 1px #000000">
+					Local de Pagamento:
+					<p>{if $f.forma_pagamento.tipo_cobranca=="MO"}VIDE INSTRUÇÕES DO PROVEDOR{else}POSTOS PAG CONTAS{/if}</p>
+				</td>
+				<td width="110">
+					Vencimento:
+					<p align="right">{$f.data}</p>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="3" valign="top" style="border-right: solid 1px #000000">
+					<strong>I N S T R U Ç Õ E S:</strong><br><br>
+					<p>{$prefCobranca.observacoes}</p>
+				</td>
+				<td>
+					Nosso Número:
+					<p align="right">{$f.nosso_numero|string_format:"%08d"}</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					(=) Valor do Documento
+					<p align="right">R$ {$f.valor} &nbsp;</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					(-) Desconto:
+					<p align="right">&nbsp;</p>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="2" valign="top" style="border-right: solid 1px #000000">
+					<strong>SACADO:</strong>
+					<p>{$nome_razao}</p>
+				</td>
+				<td>
+					(+) Mora/Multa/Juros:
+					<p align="right">&nbsp;</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					(=) Valor Cobrado:
+					<p align="right">&nbsp;</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 align="right">
+					<span>{$prefGeral.nome} - {$prefProvedor.endereco} - FONE {$prefProvedor.fone} - {$prefProvedor.localidade}</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 align="right" style="border:none">
+					&nbsp; &nbsp; {$f.linha_digitavel}<br>
+					{$f.html_barcode}
+				</td>
+			</tr>
+
+		</table>
+	</td>
+</tr>
+</table>
+{if $smarty.foreach.faturas.iteration%3 == 0 && $smarty.foreach.faturas.iteration < count($faturas) }<hr id="quebraPagina">{/if}

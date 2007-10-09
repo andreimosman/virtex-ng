@@ -121,6 +121,10 @@
 			
 			
 			switch($this->obtem("tela")) {
+				case 'imprime_carne':
+					$this->_file = "clientes_contrato_imprime_faturas.html";
+					break;
+			
 				case 'novo_contrato':
 					$titulo .= " :: Novo Contrato";
 					if($this->obtem("acao")=="novo_contrato") {
