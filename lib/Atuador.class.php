@@ -52,8 +52,10 @@
 			
 		}
 		
-		public function processaInstrucaoBandaLarga($id_nas,$interface,$id,$op,$username,$endereco,$mac,$padrao,$upload,$download) {
+		public function processaInstrucaoBandaLarga($id_nas,$interface,$id,$op,$username,$endereco,$mac,$padrao,$upload,$download,$fator=1) {
 			$addr = new MInet($endereco);
+			
+			if( !$fator ) $fator = 1;
 			
 			// Padrão é somente para outros padrões (com gerenciamento externo da banda)
 			// A responsabilidade seria somente p/ regra e coleta de estatística.
@@ -75,7 +77,7 @@
 			$ip = $addr->obtemUltimoIP();
 			if( $op == MODELO_Spool::$ADICIONAR ) {
 				$this->SO->ifConfig($interface,$addr->obtemPrimeiroIP(),$addr->obtemMascara());
-				$this->SO->adicionaRegraBW($id,$baserule,$basepipe_in,$basepipe_out,$interface,$this->ext_iface,$ip,$mac,$upload,$download,$username);
+				$this->SO->adicionaRegraBW($id,$baserule,$basepipe_in,$basepipe_out,$interface,$this->ext_iface,$ip,$mac,$upload*$fator,$download*$fator,$username);
 			} else {
 				$this->SO->ifUnConfig($interface,$addr->obtemPrimeiroIP());
 				$this->SO->deletaRegraBW($id,$baserule,$basepipe_in,$basepipe_out);

@@ -281,7 +281,7 @@
 				// Inserir o cliente 1 (provedor)
 				// TODO: criar opção em MPersiste pra forçar a definiçao do id_cliente sem pegar da sequence.
 				//       *** inserindo normalmente e conferindo o ID de retorno do insert pra fazer um update "forçado" para o id_cliente=1
-				echo "INSERT CLIENTE PROVEDOR!!!<br>\n";
+				//echo "INSERT CLIENTE PROVEDOR!!!<br>\n";
 			} else {
 				// Update do nome do cliente para o novo nome.
 				// echo "UPDATE CLIENTE PROVEDOR!!!!<br>\n";
@@ -370,7 +370,7 @@
 			if( !count($info) ) {
 				// Insert
 				$retorno = $this->pftb_preferencia_geral->insere($dados);
-				echo "INSERT PREFERENCIA GERAL!!!<br>\n";
+				//echo "INSERT PREFERENCIA GERAL!!!<br>\n";
 			} else {
 				// Update
 				$retorno = $this->pftb_preferencia_geral->altera($dados,array("id_provedor"=>1));
