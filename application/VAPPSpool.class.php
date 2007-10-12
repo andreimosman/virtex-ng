@@ -21,13 +21,10 @@
 		}
 		
 		public function executa() {
-			// echo "\n\n\nEXECUTA\n\n\n";
 			
 			if( in_array("b",@$this->options[0]) || in_array("--boot",@$this->options[0]) ) {
 				// Rotina de Boot
 
-				// echo "BOOT!!\n";
-				
 				$this->bootNetwork();
 				$this->bootInfraestrutura();
 				$this->bootClientes();
@@ -36,9 +33,7 @@
 				
 			} else {
 				// Processamento de spool
-				// echo "SPOOL!!\n";
 				$this->processaSpool();
-				
 				
 			}
 			
