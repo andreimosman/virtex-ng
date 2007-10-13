@@ -96,8 +96,8 @@
 
 			$menuSuporte->addSeparator();
 			$menuSuporteRelatorios = new MMenu();
-			$menuSuporteRelatorios->addItem("Clientes por Banda","admin-suporte.php?op=relatorios&relatiorio=banda", $target);
-			$menuSuporteRelatorios->addItem("Clientes sem MAC","admin-suporte.php?op=relatorios&relatiorio=clientes_sem_mac", $target);
+			$menuSuporteRelatorios->addItem("Clientes por Banda","admin-suporte.php?op=relatorios&relatorio=banda", $target);
+			$menuSuporteRelatorios->addItem("Clientes sem MAC","admin-suporte.php?op=relatorios&relatorio=cliente_sem_mac", $target);
 			$menuSuporte->addSubmenu("Relatórios", $menuSuporteRelatorios);		
 
 			$menu->addSubmenu("Suporte",$menuSuporte);
