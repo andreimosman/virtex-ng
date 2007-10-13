@@ -286,7 +286,6 @@
 			$bl_franquia_trafego_mensal_gb = @$dados_produto["franquia_trafego_mensal_gb"] ? $dados_produto["franquia_trafego_mensal_gb"] : "";
 			$bl_valor_trafego_adicional_gb = @$dados_produto["valor_trafego_adicional_gb"] ? $dados_produto["valor_trafego_adicional_gb"] : "";
 			
-
 			$dados = array(	"id_cliente_produto" => $id_cliente_produto, 
 							"data_contratacao" => $data_contratacao, 
 							"vigencia" => $vigencia, 
@@ -645,6 +644,72 @@
 			//
 		}
 		
+		public function obtemStatusFatura(){
+			return $this->cbtb_fatura->enumStatusFatura();
+		}
+		
+		public function obtemFaturaPorIdCobranca ($id_cobranca) {
+			return ($this->cbtb_fatura->obtemUnico (array ("id_cobranca" => $id_cobranca)));
+		}
+		
+		public function obtemFaturaPelaLinhaDigitavel ($codigo) {
+			return ($this->cbtb_fatura->obtemUnico (array ("linha_digitavel" => $codigo)));
+		}
+		
+		public function obtemFaturaPeloCodigoBarras ($codigo) {
+			return ($this->cbtb_fatura->obtemUnico (array ("cod_barra" => $codigo)));
+		}
+		
+		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
+					$reagendamento, $observacoes){
+			
+			$fatura = $this->obtemFaturaPorIdCobranca($id_cobranca);
+			$data = array();
+			
+			if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or 
+				$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
+				$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
+				return false;
+			}
+			
+			$totalDevido = $fatura["valor"] - $desconto + $acrescimo;
+			
+			if($amortizar > 0) {
+				$data["valor_pago"] = $fatura["valor_pago"] + $amortizar;
+				if($totalDevido == $amortizar){
+					$data["status"] = PERSISTE_CBTB_FATURAS::$PAGA;
+					$data["pagto_parcial"] = 0;
+				} elseif($amortizar < $totalDevido) {
+					$data["status"] = PERSISTE_CBTB_FATURAS::$PARCIAL;
+					$data["pagto_parcial"] = $data["valor_pago"];	
+				} elseif($amortizar > $totalDevido){
+				//	 throw new ("Valor a receber excede o valor pendente!");
+				}
+				
+			} elseif($amortizar == 0) {
+				if($totalDevido == 0){ // desconto de 100% sobre o valor devido
+					$data["status"] = PERSISTE_CBTB_FATURAS::$PAGA;
+				} else {
+					$data["status"] = $fatura["status"];
+				}
+			} else {
+				// 
+			}
+			
+			$data["desconto"] = $desconto;
+			$data["acrescimo"] = $acrescimo;
+			$data["data_pagamento"] = $data_pagamento;
+			
+			if($reagendar and $data["status"] != PERSISTE_CBTB_FATURAS::$PAGA){
+				$data["reagendamento"] = $reagendamento;
+				$data["observacoes"] = $observacoes;
+			}
+			
+			$seek["id_cobranca"] = $id_cobranca;
+			$this->cbtb_fatura->altera($data,$seek);
+			
+			return true;
+		}
 	}
 
 

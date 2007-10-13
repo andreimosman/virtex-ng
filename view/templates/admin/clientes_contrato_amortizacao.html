@@ -1,131 +1,236 @@
-<br />
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
-              <tr>
-                <td align="CENTER" valign="MIDDLE"> <form name=formulario method="post" action="/virtexadmin/cobranca.php" onSubmit="return validaForm()" >
-                    <input type="hidden" name="acao" value="alt">
-                    <input type="hidden" name="op" value="amortizacao">
-                    <input type="hidden" name="id_cliente" value="24">
-                    <input type="hidden" name="id_cliente_produto" value="3674">
-                    <input type="hidden" name="data" value="2007-12-10">
-                    <input type="hidden" name="valor" value="70.00">
-                    <input type="hidden" name="descricao" value="RADIO 256Kbps - 70">
-                    <input type="hidden" name="vt" value="">
-                    <input type="hidden" name="vp" value="">
-                    <input type="hidden" name="status_fatura" value="">
-                    <input type="hidden" name="popup" value="">
-                    <table border=0  _bgcolor="#000000" cellspacing=1 cellpadding=1>
-		<tr>
-			<td align="center">
-				<table border=0 width=390 cellspacing=0 cellpadding=0>
-				   <tr><td><font color="#FF0000"><b></b></font></td></tr>
-				</table>
-				          <table width="200" border="0">
-                            <tr>
-                              <td> <table border=0 width="325" bgcolor="#A0A0A0">
-                                  <tr bgcolor="#fafafa">
-                                    <td colspan=2><font color="#000000" size="+1" face="Arial, Helvetica, sans-serif"><strong>Fatura</strong></font></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Referente
-                                        à:</p></td>
-                                    <td width="376" bgcolor="#FFFFFF"><p>{ $descricao }</p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Vencimento:</p></td>
-                                    <td bgcolor="#FFFFFF"><p>{ $data_vencimento }                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Valor
-                                        Total:</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input type="text" name="valor_total" value="70.00" disabled="true">
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Valor
-                                        já pago(-):</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input type="text" name="valor_pago" value="0.00" disabled="1">
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Desconto(-):</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <!--<input type="text" name="desconto" value="0.00" onChange="javascript:calculaValores();" onFocusOut="javascript:calculaValores();"> -->
-                                        <input type="text" name="desconto" value="0.00" onChange="javascript:calculaValores();" onFocusOut="javascript:calculaValores();">
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Acrescimo(+):</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input type="text" name="acrescimo" value="0.00" onChange="javascript:calculaValores();" onFocusOut="javascript:calculaValores();">
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Valor
-                                        a ser pago(=):</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input type="text" name="valor_restante" value="" disabled=1>
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Amortizar(-):</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input type="text" name="amortizar" value="" onChange="javascript:calculaValores();" onBlur=" calculaReagendamento(); " onFocusOut="javascript:calculaValores(); calculaReagendamento();">
-                                        <input type="button" name="hoje" value="Tudo" onClick="javascript:amortizarTudo(); calculaReagendamento();" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;">
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Valor
-                                        Pendente(=):</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input type="text" name="valor_pendente" value="" disabled=1>
-                                      </p></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Status:</p></td>
-                                    <td bgcolor="#FFFFFF"> <SELECT id="status" name="status" style="width: 117px;">
-														            <OPTION value="A" SELECTED>Aberto</OPTION>
-														            <OPTION value="P" >Paga</OPTION>
-														            <OPTION value="R" >Paga Parcial</OPTION>
-														            <OPTION value="E" >Estornadas</OPTION>
-														            <OPTION value="C" >Canceladas</OPTION>
-														          </SELECT> </td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="87"><p>Data
-                                        do Pagamento:</p></td>
-                                    <td bgcolor="#FFFFFF"><p>
-                                        <input name="data_pagamento" type="text" OnKeyPress="formatar(this, '##/##/####'); return Tecla(event);" value="" maxlength="10">
-                                        <input type="button" name="hoje" value="Hoje" onClick="javascript:pagamentoHoje();" &gt;&gt;"" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;">
-                                        <input type="button" name="venc" value="Venc." onClick="javascript:pagamentoVencimento();" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;">
-                                      </p></td>
-                                  </tr>
-                                </table></td>
-                              <td valign="top"> <table width="320" border=0 bgcolor="#A0A0A0" dwcopytype="CopyTableRow">
-                                  <tr bgcolor="#fafafa">
-                                    <td colspan=2><font color="#000000" size="+1" face="Arial, Helvetica, sans-serif"><strong>Opções</strong></font></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right"  width="150">
-                                      <p>
-                                        <input type="checkbox" name="reagendar" value="1"  class="checkbox" onClick="javascript:verificaReagendamento();" onChange="javascript:verificaReagendamento();" >
-                                        re-agendar cobrança para dia: </p></td>
-                                    <td width="346" bgcolor="#FFFFFF"><input name="reagendamento" type="text" value="" OnKeyPress="formatar(this, '##/##/####'); return Tecla(event);" maxlength=10 id="reagendamento"></td>
-                                  </tr>
-                                  <tr>
-                                    <td bgcolor="#FFFFFF" align="right" width="120" valign="top"><p>Observações:</p></td>
-                                    <td bgcolor="#FFFFFF"><textarea name="observacoes" rows=7 cols=30></textarea></td>
-                                  </tr>
-                                </table>
-                                <br>
-                                </td>
-                            </tr>
-                            <tr>
-                              <td colspan="2"> <div align="center">
-<input name="botao_enviar" type="submit" class=input2 id="submit" value="Amortizar >>" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;">
-                                </div>
-                                </td>
-                            </tr>
-                          </table>
+<script type="text/javascript">
+<!--
+	
+	{literal}
+	
+	function cancelar(id){
+		window.open("admin-clientes.php?op=contrato&tela=faturas&id_cliente="+id,"conteudo");		
+	}	
+	
+	function pagamentoHoje(){
+		var obj = $('data_pagamento');
+		var data = new Date();
+		hoje = data.getDate() +"/"+ (data.getMonth() + 1) + "/" + data.getFullYear();
+		obj.value = hoje;
+	}
+	
+	function pagamentoVencimento(){
+		var obj = $('data_pagamento');		
+		obj.value = '{/literal}{$data}{literal}';
+	}
+	
+	
+	function validaForm() {
+		
+		var observacoes		= $('observacoes');
+		var reagendamento	= $('reagendamento');
+		var reagendar		= $('reagendar');
+		var famortizar		= $('amortizar');
+		var fpagamento		= $('data_pagamento');
+		var fpendente		= $('valor_pendente');
+		
+		if("" == famortizar.value){
+			alert('Informe o valor recebido!');
+			famortizar.focus();
+			return false;
+		}
+		
+		if("" == fpagamento.value){
+			alert('Informe a data do pagamento!');
+			fpagamento.focus();
+			return false;
+		}
+		
+		
+		if( (fpendente.value == 0) && (reagendar.checked) ){
+			alert("Não é possivel re-agendar e quitar a fatura ao mesmo tempo!");
+			return false;
+		}
+		
+		calculaValores();
+		
+		
+		
+		if(reagendar.checked){
+			if("" == reagendamento.value){
+				alert("Informar a data de re-agendamento!");
+				reagendamento.focus();
+				return false;
+			}
+			
+			if("" == observacoes.value){
+				alert("Informar o motivo do re-agendamento!");
+				observacoes.focus();
+				return false;
+			}
+		}    
+		
+		return true;
+	}
+	
+	function calculaValores() {
+		var fpendente		= $('valor_pendente');
+		var frestante		= $('valor_restante');
+		var fstatus			= $('status');
+		var fvalor			= $('valor');
+		var fdesconto		= $('desconto');
+		var fpagto_parcial	= $('pagto_parcial');
+		var facrescimo		= $('acrescimo');
+		var famortizar		= $('amortizar');
+		
+		fdesconto.value = fdesconto.value.replace(",","."); 
+		facrescimo.value = facrescimo.value.replace(",",".");
+		famortizar.value = famortizar.value.replace(",",".");
+	
+		var vtotal		= new Number( fvalor.value );
+		var vdesconto	= new Number( fdesconto.value );
+		var vparcial	= new Number( fpagto_parcial.value );
+		var vacrescimo	= new Number( facrescimo.value );
+		var calculado = new Number(vtotal - vdesconto - vparcial + vacrescimo);
+		frestante.value =  calculado.toFixed(2);
+		
+				
+		var vamortizar	= new Number( famortizar.value );
+		var calculado2 = new Number(calculado - vamortizar);		
+		fpendente.value =  calculado2.toFixed(2);
+		
+		if(calculado2 < 0){
+			alert('Valor a receber excede o valor pendente! '+calculado2);
+		} else {
+			if(fpendente.value == 0 ){				
+				fstatus.value = 'P';
+			} else {
+				if(fpendente.value < frestante.value){					
+					fstatus.value = 'R';
+				} else {					
+					fstatus.value = 'A';
+				}
+			}
+		}
+	}
+	
+	
+	function amortizarTudo(){
+		var vamortizar	= $('amortizar');
+		vamortizar.value = $('valor_restante').value;
+		calculaValores();
+	}
+	
+	{/literal}
+//-->
+</script>
+<br />
+<center>
+<div id=#conteiner_paga>
+<form name="formulario" method="post" action="admin-clientes.php" onsubmit="return validaForm()">
+	<input type="hidden" name="acao" value="alt" />
+	<input type="hidden" name="op" value="contrato" />
+	<input type="hidden" name="tela" value="amortizacao" />
+	<input type="hidden" name="id_cliente" value="{$id_cliente}" />
+	<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}" />
+	<input type="hidden" name="id_cobranca" value="{$id_cobranca}" />
+<table border="0">
+	<tr>
+		<td>
+			<table border="0">
+				<tr>
+					<th colspan="2" class="cellTitle"><strong>Fatura</strong></th>
+				</tr>
+				<tr>
+					<td class="cellLabel">Referente à:</td>
+					<td class="cellInfo">{$descricao}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Vencimento:</td>
+					<td class="cellInfo">{$data}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor Total:</td>
+					<td class="cellInfo"><input type="text" name="valor" id="valor" value="{$valor}" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor já pago(-):</td>
+					<td class="cellInfo"><input type="text" name="pagto_parcial"  id="pagto_parcial" value='{$valor_pago|default:"0.00"}' disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Desconto(-):</td>
+					<td class="cellInfo"><input type="text" name="desconto" id="desconto" value='{$desconto|default:"0.00"}' onblur="javascript:calculaValores();" {if !$editavel}disabled="disabled"{/if} /></td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Acrescimo(+):</td>
+					<td class="cellInfo"><input type="text" name="acrescimo"  id="acrescimo" value='{$acrescimo|default:"0.00"}' onblur="javascript:calculaValores();" {if !$editavel}disabled="disabled"{/if} /></td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor a ser pago(=):</td>
+					<td class="cellInfo"><input type="text" name="valor_restante" id="valor_restante" value="{$valor_restante}" disabled="disabled"  {if !$editavel}disabled="disabled"{/if} /></td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Amortizar(-):</td>
+					<td class="cellInfo">
+						<input type="text" name="amortizar" id="amortizar" value="" onblur="javascript:calculaValores();"  {if !$editavel}disabled="disabled"{/if} />
+						<input type="button" name="hoje" value="Tudo" onclick="javascript:amortizarTudo()" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"  {if !$editavel}disabled="disabled"{/if} />
+					</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor Pendente(=):</td>
+					<td class="cellInfo"><input type="text" name="valor_pendente" id="valor_pendente" value="{$valor_restante}" disabled="disabled"  {if !$editavel}disabled="disabled"{/if} /></td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Status:</td>
+					<td class="cellInfo">
+						<select id="status" name="status" id="status" style="width: 200px;" disabled="disabled">
+							{foreach from=$status_fatura item=v key=k}
+							<option value="{$k}" {if $k == $status}selected="selected"{/if}>{$v}</option>
+							{/foreach}							
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Data do Pagamento:</td>
+					<td class="cellInfo">
+						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento}" maxlength="10"  {if !$editavel}disabled="disabled"{/if} />
+						{* &gt;&gt;"" *}
+						<input type="button" name="hoje" value="Hoje" onclick="javascript:pagamentoHoje();"  style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"  {if !$editavel}disabled="disabled"{/if} />
+						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"  {if !$editavel}disabled="disabled"{/if} />				
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top">
+			<table border="0" dwcopytype="CopyTableRow">
+				<tr>
+					<th colspan="2" class="cellTitle"><strong>Opções</strong></th>
+				</tr>
+				<tr>
+					<td class="cellLabel">
+						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" onclick="javascript:verificaReagendamento();" onchange="javascript:verificaReagendamento();"  {if !$editavel}disabled="disabled"{/if} /> re-agendar cobrança para dia:
+					</td>
+					<td class="cellInfo">
+						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{/if} />
+					</td>
+				</tr>
+				<tr>
+					<td class="cellLabel" valign="top">Observações:</td>
+					<td class="cellInfo">
+						<textarea name="observacoes" id="observacoes" rows="7"  cols="30"  {if !$editavel}disabled="disabled"{/if} >{$observacoes}</textarea>
+					</td>
+				</tr>
+			</table>		
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center">
+			<input name="botao_cancelar" type="button" class="input2" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
+			{if $editavel}	
+			<input name="botao_enviar" type="submit" class="input2" id="submit" value="Amortizar &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
+			{/if}
+		</td>
+	</tr>
+</table>
+</form>
+</div>
+</center>

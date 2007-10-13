@@ -1,9 +1,15 @@
 <?
 
 	class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
+		
+		public static $ABERTA = "A";
+		public static $PAGA = "P";
+		public static $PARCIAL = "R";
+		public static $ESTORNADA = "E";
+		public static $CANCELADA = "C";
 	
 		public function __construct($bd=null) {
-   		parent::__construct();
+   			parent::__construct();
 
 			$this->_campos 		= array("id_cliente_produto", "data", "descricao", "valor", "status", "observacoes", "reagendamento", "pagto_parcial", "data_pagamento", "desconto", "acrescimo", "valor_pago", "id_cobranca", "cod_barra", "anterior", "id_carne", "nosso_numero", "linha_digitavel", "nosso_numero_banco", "tipo_retorno", "email_aviso", "id_forma_pagamento");
 			$this->_chave 		= "id_cobranca";
@@ -25,7 +31,8 @@
 				     to_char (f.data_pagamento,'dd/mm/YYYY') as data_pagamento,
 				     to_char (f.reagendamento,'dd/mm/YYYY') as reagendamento,
 				     f.valor_pago,
-				     f.id_cliente_produto
+				     f.id_cliente_produto,
+				     f.id_cobranca
 				FROM cbtb_faturas f
 			  INNER JOIN cbtb_cliente_produto p ON f.id_cliente_produto = p.id_cliente_produto
 			  
@@ -44,7 +51,18 @@
 			 	
 			 $q .= " WHERE " . implode (" AND ", $where);
 			 return ($this->bd->obtemRegistros ($q)); 
-		}	
+		}
+
+		
+		public function enumStatusFatura(){
+			return array( 
+							PERSISTE_CBTB_FATURAS::$ABERTA => "Aberta",
+							PERSISTE_CBTB_FATURAS::$PAGA => "Paga",
+							PERSISTE_CBTB_FATURAS::$PARCIAL => "Parcial",
+							PERSISTE_CBTB_FATURAS::$ESTORNADA => "Estornada",
+							PERSISTE_CBTB_FATURAS::$CANCELADA => "Cancelada" );
+		}
+		
 	}
 
 ?>

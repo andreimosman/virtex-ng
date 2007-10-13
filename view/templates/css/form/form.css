@@ -51,7 +51,7 @@ form option {
 */
 
 
-#conteiner_contas{
+#conteiner_contas, #conteiner_paga {
 	width: 430px;
 	margin: auto;
 	padding: 0px;

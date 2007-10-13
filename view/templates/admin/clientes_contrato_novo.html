@@ -9,6 +9,7 @@ var BLSelecionado='';
 var DSelecionado='';
 var HSelecionado='';
 
+var cortesia = false;
 
 var LIMITE_PRORATA = {$limite_prorata};
 {literal}
@@ -550,6 +551,8 @@ function contratoAlteraProduto() {
 			} else {
 				frm.tx_instalacao.value = produto.tx_instalacao;
 			}
+		} else {
+			cortesia = true;
 		}
 
 		if( frm.id_cliente_produto.value == '' ) {
@@ -688,48 +691,90 @@ function replaceField(field) {
 
 }
 
-function validacao(frm ) {
 
-	var migracao = false;
+returnStatus = false;
+function checkEnderecoDisponivel(id_nas, endereco){
+	var url = "admin-ajax.php";
+	var pars = "op=contas&output=JSON&query=enderecoDisponivel&id_nas="+id_nas+"&endereco="+endereco;
 
+	var myAjax = new Ajax.Request(
+		url,
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: showResponse,
+			asynchronous: false
+		});
+
+	return returnStatus;
+}
+
+function showResponse(originalRequest) {
+	var r = originalRequest.responseText.evalJSON();
+	if(r.codigo > 0){
+		alert(r.mensagem)
+		returnStatus = false;
+		return false;
+	}
+
+	returnStatus = true;
+	$('endereco_redeip').value = r.endereco;
+}
+
+
+function validacao(frm ) {	
+	var migracao = false;	
+
+	
+		
 	if( $F('tipo') != '' ) {
 		migracao = true;
 		//window.alert($F('id_produto_original'));
 		//window.alert($F('id_produto'));
-
 		if( $F('id_produto_original') == $F('id_produto') ) {
 			window.alert("Você deve escolher outro plano para migrar o contrato.");
 			return false;
 		}
-
-
-
 	}
-
-	if( !migracao ) {
-		username = $('username');
-		criar_email = $('criar_email');
-
-		if($F('tipo') == "BL") {
-			if(!checkDadosConexao()){
-				return false;
+	
+	if( !migracao ) {		
+			username = $('username');
+			criar_email = $('criar_email');
+			
+			if($F('tipo') == "BL") {
+				if(!checkDadosConexao()){
+					return false;
+				}
 			}
-		}
 
-		if(username.value != ""){
-			if(!validaUsername()){
-				return false;
+			if(username.value != ""){
+				if(!validaUsername()){
+					return false;
+				}
 			}
-		}
 
-		if(criar_email.checked){
-			if(!validaEmail()){
-				return false;
-			}
+			if(criar_email.checked){
+				if(!validaEmail()){
+					return false;
+				}
+			}		
+	} else {
+		dia_vencimento = $('dia_vencimento');
+		carencia = $('carencia');
+		
+		if( 1 > dia_vencimento.value){
+			alert("Informe o dia de vencimento!");
+			dia_vencimento.focus();
+			return false;
 		}
-	}
-
-	if ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.cep_cobranca.value == '' ) {
+		
+		if( 1 > carencia.value){
+			alert("Informe a carencia!");
+			carencia.focus();
+			return false;
+		}
+	}	
+	if ( !cortesia && ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.cep_cobranca.value == '') ) {
 		alert('Preencha o endereco de cobranca!');
 		frm.difEnderecoMail.checked = true;
 		checkStatusFields(frm.difEnderecoMail);
@@ -751,6 +796,47 @@ function validacao(frm ) {
 			frm.senha.focus();
 			return false;
 		}
+	}
+	
+	if( $F('tipo') == 'BL' ) {
+		var mac = $('mac');
+		var selecao_redeip = $('selecao_redeip');
+		var endereco_redeip = $('endereco_redeip');
+		var nas = $('id_nas');
+		var pop = $('id_pop');
+
+		if("" == nas.value){
+			alert("Selecione um nas!");
+			nas.focus();
+			return false;
+		}
+
+		if("" == pop.value){
+			alert("Selecione um pop!");
+			pop.focus();
+			return false;
+		}
+
+		if("M" == selecao_redeip.value) {
+			if("" != endereco_redeip.value){				
+				if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
+					return false;
+				}
+			} else {
+				alert("Preencher o campo de endereço IP!");
+				endereco_redeip.focus();
+				return false;
+			}
+		}
+		
+		var nas_text = nas.options[nas.options.selectedIndex].text
+		var nas_type=nas_text.split(":");
+		if( ("IP" == nas_type[0]) && ("" == mac.value) ){
+			if(!confirm("O Não preenchimento do MAC pode facilitar o acesso de usuários não autorizados no sistema. Deseja proceguir mesmo SEM o mac?")){
+				return false;
+			}
+		}
+		
 	}
 
 	return true;
@@ -896,7 +982,7 @@ function validarData(campo){
 <input type="hidden" name="id_cliente" value="{$id_cliente}">
 <input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
 <input type="hidden" name="tipo_produto_original" value="{$contrato.tipo_produto}">
-<input type="hidden" name="id_produto_original" value="{$contrato.id_produto}">
+<input type="hidden" name="id_produto_original" id="id_produto_original" value="{$contrato.id_produto}">
 <input type="hidden" name="id_forma_pagamento" value="{$contrato.id_forma_pagamento}">
 {if $acao == ""}
 	<input type="hidden" name="acao" value="novo_contrato">
@@ -1004,7 +1090,7 @@ function validarData(campo){
 						<td align="right"><label>Dia Venc.:</label></td>
 						<td><input type="text" size="4" maxlength="2" name="dia_vencimento" id="dia_vencimento" value="{$dia_vencimento}" class="fieldWithoutFocus" onFocus="formOnFocus(this);calculaDiaProximaFatura();" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></td>
 						<td align="right"><label>Carência:</label></td>
-						<td><input type="text" size="4" maxlength="2" name="carencia" value="{$carencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>dias</label></td>
+						<td><input type="text" size="4" maxlength="2" name="carencia" id="carencia" value="{$carencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>dias</label></td>
 					</tr>
 					<tr>
 						<td align="right"><label>Pr&oacute;xima Fatura:</label></td>
@@ -1172,7 +1258,7 @@ function validarData(campo){
 						<tr>
 							<td align="right" width="110"><label>POP:</label></td>
 							<td colspan=3>
-								<select name="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<select name="id_pop" id="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="">-- SELECIONE --</option>
 								{foreach item=v from=$listaPOP}
 									<option value="{$v.id_pop}">{$v.nome}</option>
@@ -1413,7 +1499,7 @@ contratoAlteraFormaPagamentoDA();
 			<td width="110" align="right"><strong>Produto:</strong></td>
 			<td>{$contrato.nome_produto}&nbsp;</td>
 			<td width="110" align="right"><strong>Valor:</strong></td>
-			<td>{if $contrato.valor_produto}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
+			<td>{if $contrato.valor_produto > 0}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
 		</tr>
 		{if $contrato.valor_produto}
 		<tr>
@@ -1478,9 +1564,9 @@ contratoAlteraFormaPagamentoDA();
 			<td width="110" align="right"><strong>Produto:</strong></td>
 			<td>{$produto.nome}&nbsp;</td>
 			<td width="110" align="right"><strong>Valor:</strong></td>
-			<td>{if $produto.valor}{$produto.valor|string_format:"%.2f"}{else}cortesia{/if}</td>
+			<td>{if $produto.valor > 0}{$produto.valor|string_format:"%.2f"}{else}cortesia{/if}</td>
 		</tr>
-		{if $produto.valor}
+		{if $produto.valor > 0}
 		<tr>
 			<td width="110" align="right"><strong>Comodato:</strong></td>
 			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
@@ -1660,11 +1746,8 @@ contratoAlteraFormaPagamentoDA();
 
 	</table>
 {/if}
-
-	<br>
-
-
-	<!-- FATURAS QUE SERAO CADASTRADAS -->
+	<br />
+	
 	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
 		<tr>
 			<th colspan=2 style="border-right: solid 2px #000000;">faturas</th>
@@ -1678,21 +1761,38 @@ contratoAlteraFormaPagamentoDA();
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pró-Rata (dias)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Desconto(-)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-bottom: solid 1px #000000;">Tx. Instalação(+)</td>
-		{foreach name=registros item=f from=$faturas}
-		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
-		<tr>
-			<td class='{$estilo}' aling="center" style="border-right: solid 1px #000000;">{$f.data}</td>
-			<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{$f.valor|string_format:"%.2f"}</td>
-			<!-- COMPOSICAO DE VALORES -->
-			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_plano}{$f.composicao.prorata_plano|string_format:"%.2f"}{else}{if $f.composicao.valor}{$f.composicao.valor|string_format:"%.2f"}{else}-{/if}{/if}</td>
-			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
-			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
-			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>
-			<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
 		</tr>
-		{/foreach}
+	{if $produto.valor > 0}
+		<!-- FATURAS QUE SERAO CADASTRADAS -->
+		
+			
+			{foreach name=registros item=f from=$faturas}
+			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+			<tr>
+				<td class='{$estilo}' aling="center" style="border-right: solid 1px #000000;">{$f.data}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{$f.valor|string_format:"%.2f"}</td>
+				<!-- COMPOSICAO DE VALORES -->
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_plano}{$f.composicao.prorata_plano|string_format:"%.2f"}{else}{if $f.composicao.valor}{$f.composicao.valor|string_format:"%.2f"}{else}-{/if}{/if}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>
+				<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
+			</tr>
+			{/foreach}
+		
+	{else}
+		<tr>			
+			<td colspan="7" class='{$estilo}' align="center" style="border-right: solid 2px #000000;"><br /><span style=" color:red; font-weight: bold;">*** Contrato cortesia faturamento não aplicável ***</span><br /><br /> </td>
+			<!-- COMPOSICAO DE VALORES>
+			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+			<td class='{$estilo}' align="center">*</td-->			
+		</tr>
+	{/if}	
 	</table>
-	<br>
+	<br />
 </td>
 </tr>
 </table>
@@ -1713,3 +1813,4 @@ contratoAlteraFormaPagamentoDA();
 
 {/if}
 
+¹

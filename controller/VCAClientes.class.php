@@ -386,6 +386,8 @@
 						$listaD		= $produtos->obtemListaPlanos('D','t');
 						$listaH		= $produtos->obtemListaPlanos('H','t');
 						
+						//die("<pre>".print_r($listaBL,true)."<pre>");
+						
 						$this->_view->atribui("listaBL",MJson::encode($listaBL));
 						$this->_view->atribui("listaD",MJson::encode($listaD));
 						$this->_view->atribui("listaH",MJson::encode($listaH));
@@ -622,6 +624,9 @@
 								$dados_conta = array();
 								$cria_e = 0;
 								
+								$dia_vencimento = @$_REQUEST["dia_vencimento"];
+								$carencia 		= @$_REQUEST["carencia"];
+								
 								/**
 								 * Procedimentos específicos da contratação
 								 */
@@ -646,6 +651,9 @@
 													$quota,$redirecionar_para="")*/
 
 									
+									$prefCobranca	= $this->preferencias->obtemPreferenciasCobranca();
+									$dia_vencimento = ( $dia_vencimento > 0 ) ? $dia_vencimento : $prefCobranca["dia_venc"];
+									$carencia 		= ( $carencia > 0 ) ? $carencia : $prefCobranca["carencia"];
 								}
 
 								$gera_carne = false;
@@ -654,11 +662,10 @@
 								// $listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
 								
 								
-								$novo_id_cliente_produto = $cobranca->novoContrato($_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
-																						$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
-																						$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $_REQUEST["dia_vencimento"], $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $_REQUEST["carencia"],
-																			$_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
-								
+								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
+																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
+																					$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $carencia,																
+																					$_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);																						
 
 								if( $tela == "migrar" ) {
 									// ESTORNAR/MIGRAR AS FATURAS 
@@ -749,17 +756,60 @@
 				
 				case "amortizacao":
 				
-					$id_cliente_produto = $_REQUEST ['id_cliente_produto'];
-					$data = $_REQUEST ['data'];
+					$id_cliente_produto = @$_REQUEST ['id_cliente_produto'];
+					$id_cliente = @$_REQUEST ['id_cliente'];
+					$id_cobranca = @$_REQUEST ['id_cobranca'];
+					$data = @$_REQUEST ['data'];
+					$acao = @$_REQUEST ['acao'];
+					$cobranca = VirtexModelo::factory("cobranca");
 					
-					$cobranca = VirtexModelo::factory("cobranca"); 
-					$fatura = $cobranca->obtemFatura ($id_cliente_produto, $data);
+					if(!$acao) {
+						$fatura = $cobranca->obtemFaturaPorIdCobranca ($id_cobranca);
+						
+						foreach($fatura as $k => $v){
+							if("data"  == $k ) {
+								$v = strftime("%d/%m/%Y",strtotime($v));
+							} 
+							$this->_view->atribui ($k, $v);
+						}
+						
+						$valor_restante = (float) ( (float) $fatura["valor"] - (float) $fatura["desconto"] - (float) $fatura["pagto_parcial"] + (float) $fatura["acrescimo"] );
+						$valor_restante = number_format($valor_restante,2);   
+						$this->_view->atribui ("valor_restante", $valor_restante);
+						
+						
+						if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or 
+							$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
+							$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
+								$this->_view->atribui ("editavel", false);
+						} else {
+							$this->_view->atribui ("editavel", true);
+						}
+						
+						$this->_view->atribui("status_fatura",$cobranca->obtemStatusFatura());
+					} else {
+						
+						$desconto		= @$_REQUEST["desconto"];
+						$acrescimo		= @$_REQUEST["acrescimo"];
+						$amortizar		= @$_REQUEST["amortizar"];
+						$data_pagamento	= @$_REQUEST["data_pagamento"];
+						$reagendar		= @$_REQUEST["reagendar"];
+						$reagendamento	= @$_REQUEST["reagendamento"];
+						$observacoes	= @$_REQUEST["observacoes"];
+						
+						$url = "admin-clientes.php?op=contrato&tela=faturas&id_cliente=$id_cliente";
+						
+						if( $cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
+								$reagendamento, $observacoes) ) {
+								$this->_view->atribui("url",$url);
+								$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
+								$this->_view->atribuiVisualizacao("msgredirect");
+						} else {
+							VirtexView::simpleRedirect($url);
+						}
+						
+					}
 					
-					$d = explode ('-', $fatura ['data']);
-					$data_vencimento = $d[2] . '/' . $d[1] . '/' . $d[0];
-					
-					$this->_view->atribui ("data_vencimento", $data_vencimento);
-					$this->_view->atribui ("descricao", $fatura ['descricao']);
 					break;
 			
 				default:
@@ -1060,11 +1110,6 @@
 							die("não existe mais contas disponiveis!");
 						}
 					}
-						
-						
-					 
-					
-					
 				}
 			} else {
 				// Listagem

@@ -9,7 +9,9 @@
 	[<a href="admin-clientes.php?op=contrato&tela=contratos&id_cliente={$id_cliente}">Voltar</a>]
 	{if $tela == "contrato"}
 		{if $contrato.status != "C" && $contrato.status != "M"}
+			{if $contrato.valor_produto}
 			[<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}&id_forma_pagamento={$formaPagamento.id_forma_pagamento}">Faturas/Carnês</a>]
+			{/if}
 			[<a href="admin-clientes.php?op=contrato&tela=migrar&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Migrar Contrato</a>]
 			[<a href="admin-clientes.php?op=contrato&tela=cancelar_contrato&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Cancelar Contrato</a>]
 		{/if}
@@ -250,5 +252,3 @@
 <br>
 </form>
 {/if}
-
-

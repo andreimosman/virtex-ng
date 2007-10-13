@@ -61,7 +61,7 @@ function abreCarne(id_carne,id_cliente,id_cliente_produto) {
 		</tr>
 		{foreach from=$faturas item=f}
 		<tr>
-			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}">{$f.data}</a></td>
+			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.data}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}">{$f.descricao}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}">{$f.valor}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}">{$f.valor_pago}</a></td>
