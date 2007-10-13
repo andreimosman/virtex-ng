@@ -762,33 +762,9 @@
 					$data = @$_REQUEST ['data'];
 					$acao = @$_REQUEST ['acao'];
 					$cobranca = VirtexModelo::factory("cobranca");
+					$erro = false;
 					
-					if(!$acao) {
-						$fatura = $cobranca->obtemFaturaPorIdCobranca ($id_cobranca);
-						
-						foreach($fatura as $k => $v){
-							if("data"  == $k ) {
-								$v = strftime("%d/%m/%Y",strtotime($v));
-							} 
-							$this->_view->atribui ($k, $v);
-						}
-						
-						$valor_restante = (float) ( (float) $fatura["valor"] - (float) $fatura["desconto"] - (float) $fatura["pagto_parcial"] + (float) $fatura["acrescimo"] );
-						$valor_restante = number_format($valor_restante,2);   
-						$this->_view->atribui ("valor_restante", $valor_restante);
-						
-						
-						if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or 
-							$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
-							$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
-								$this->_view->atribui ("editavel", false);
-						} else {
-							$this->_view->atribui ("editavel", true);
-						}
-						
-						$this->_view->atribui("status_fatura",$cobranca->obtemStatusFatura());
-					} else {
-						
+					if($acao) {
 						$desconto		= @$_REQUEST["desconto"];
 						$acrescimo		= @$_REQUEST["acrescimo"];
 						$amortizar		= @$_REQUEST["amortizar"];
@@ -799,17 +775,55 @@
 						
 						$url = "admin-clientes.php?op=contrato&tela=faturas&id_cliente=$id_cliente";
 						
-						if( $cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
-								$reagendamento, $observacoes) ) {
-								$this->_view->atribui("url",$url);
-								$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
-								$this->_view->atribuiVisualizacao("msgredirect");
-						} else {
-							VirtexView::simpleRedirect($url);
+						try {
+							if( $cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
+									$reagendamento, $observacoes) ) {
+									$this->_view->atribui("url",$url);
+									$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
+									$this->_view->atribuiVisualizacao("msgredirect");
+							} else {
+								VirtexView::simpleRedirect($url);
+							}
+						} catch (ExcecaoModeloValidacao $e ) {
+							$this->_view->atribui ("msg_erro", $e->getMessage());
+							$erro = true;	
 						}
-						
 					}
 					
+					
+					$fatura = $cobranca->obtemFaturaPorIdCobranca ($id_cobranca);
+					
+					foreach($fatura as $k => $v){
+						if("data"  == $k ) {
+							$v = strftime("%d/%m/%Y",strtotime($v));
+						} 
+						$this->_view->atribui ($k, $v);
+					}
+					
+					$valor_restante = (float) ( (float) $fatura["valor"] - (float) $fatura["desconto"] - (float) $fatura["pagto_parcial"] + (float) $fatura["acrescimo"] );
+					$valor_restante = number_format($valor_restante,2);   
+					$this->_view->atribui ("valor_restante", $valor_restante);
+					
+					
+					if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or 
+						$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
+						$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
+							$this->_view->atribui ("editavel", false);
+					} else {
+						$this->_view->atribui ("editavel", true);
+					}
+					
+					$this->_view->atribui("status_fatura",$cobranca->obtemStatusFatura());
+					 
+					if($erro){
+						$this->_view->atribui("desconto",$desconto);	
+						$this->_view->atribui("acrescimo",$acrescimo);
+						$this->_view->atribui("amortizar",$amortizar);
+						$this->_view->atribui("data_pagamento",$data_pagamento);
+						$this->_view->atribui("reagendar",$reagendar);
+						$this->_view->atribui("reagendamento",$reagendamento);
+						$this->_view->atribui("observacoes",$observacoes);
+					}
 					break;
 			
 				default:

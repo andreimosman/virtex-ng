@@ -687,7 +687,7 @@
 					$data["status"] = PERSISTE_CBTB_FATURAS::$PARCIAL;
 					$data["pagto_parcial"] = $data["valor_pago"];	
 				} elseif($amortizar > $totalDevido){
-				//	 throw new ("Valor a receber excede o valor pendente!");
+					 throw new ExcecaoModeloValidacao (1,"Valor a receber excede o valor pendente!");
 				}
 				
 			} elseif($amortizar == 0) {
@@ -697,7 +697,7 @@
 					$data["status"] = $fatura["status"];
 				}
 			} else {
-				// 
+				throw new ExcecaoModeloValidacao (2,"Valor a receber não pode ser negativo!"); 
 			}
 			
 			$data["desconto"] = $desconto;

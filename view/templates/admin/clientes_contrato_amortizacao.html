@@ -48,6 +48,14 @@
 			return false;
 		}
 		
+		if( fpendente.value < 0){
+			alert("Valor a receber excede o valor pendente!");
+			fpendente.focus();
+			return false;
+		}
+		
+		
+		
 		calculaValores();
 		
 		
@@ -96,7 +104,7 @@
 		fpendente.value =  calculado2.toFixed(2);
 		
 		if(calculado2 < 0){
-			alert('Valor a receber excede o valor pendente! '+calculado2);
+			alert('Valor a receber excede o valor pendente! ');
 		} else {
 			if(fpendente.value == 0 ){				
 				fstatus.value = 'P';
@@ -117,6 +125,36 @@
 		calculaValores();
 	}
 	
+	function formatar(src, mask) {
+		var i = src.value.length;
+		var saida = mask.substring(0,1);
+		var texto = mask.substring(i)
+		if (texto.substring(0,1) != saida){
+			src.value += texto.substring(0,1);
+		}
+	}
+
+	function Tecla(e){
+		if (document.all){ // Internet Explorer
+			var tecla = event.keyCode;
+		} else if(document.layers) { // Nestcape
+			var tecla = e.which;
+		}
+		if (tecla != 92 && tecla != 47 && tecla != 45){
+			return true;
+		} else{
+			if (tecla != 8){ // backspace
+				event.keyCode = 0;
+				//return false;
+			} else {
+				return true;
+			}
+		}
+	}
+	
+	function verificaReagendamento() {
+		freagendar.checked = true;
+	}
 	{/literal}
 //-->
 </script>
@@ -131,11 +169,16 @@
 	<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}" />
 	<input type="hidden" name="id_cobranca" value="{$id_cobranca}" />
 <table border="0">
+	{if $msg_erro}
+	<tr>
+		<td colspan='2' class="erro">{$msg_erro}</td>
+	</tr>
+	{/if}
 	<tr>
 		<td>
-			<table border="0">
+			<table border="0" class="lista">
 				<tr>
-					<th colspan="2" class="cellTitle"><strong>Fatura</strong></th>
+					<th colspan="2" ><strong>Fatura</strong></th>
 				</tr>
 				<tr>
 					<td class="cellLabel">Referente à:</td>
@@ -147,39 +190,39 @@
 				</tr>
 				<tr>
 					<td class="cellLabel">Valor Total:</td>
-					<td class="cellInfo"><input type="text" name="valor" id="valor" value="{$valor}" disabled="disabled" /></td>
+					<td class="cellInfo"><input type="text" name="valor" id="valor" value="{$valor}" disabled="disabled" class="disabled" /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Valor já pago(-):</td>
-					<td class="cellInfo"><input type="text" name="pagto_parcial"  id="pagto_parcial" value='{$valor_pago|default:"0.00"}' disabled="disabled" /></td>
+					<td class="cellInfo"><input type="text" name="pagto_parcial"  id="pagto_parcial" value='{$valor_pago|default:"0.00"}' disabled="disabled"  class="disabled" /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Desconto(-):</td>
-					<td class="cellInfo"><input type="text" name="desconto" id="desconto" value='{$desconto|default:"0.00"}' onblur="javascript:calculaValores();" {if !$editavel}disabled="disabled"{/if} /></td>
+					<td class="cellInfo"><input type="text" name="desconto" id="desconto" value='{$desconto|default:"0.00"}' {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if}  /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Acrescimo(+):</td>
-					<td class="cellInfo"><input type="text" name="acrescimo"  id="acrescimo" value='{$acrescimo|default:"0.00"}' onblur="javascript:calculaValores();" {if !$editavel}disabled="disabled"{/if} /></td>
+					<td class="cellInfo"><input type="text" name="acrescimo"  id="acrescimo" value='{$acrescimo|default:"0.00"}' {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if} /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Valor a ser pago(=):</td>
-					<td class="cellInfo"><input type="text" name="valor_restante" id="valor_restante" value="{$valor_restante}" disabled="disabled"  {if !$editavel}disabled="disabled"{/if} /></td>
+					<td class="cellInfo"><input type="text" name="valor_restante" id="valor_restante" value="{$valor_restante}" disabled="disabled" class="disabled" /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Amortizar(-):</td>
 					<td class="cellInfo">
-						<input type="text" name="amortizar" id="amortizar" value="" onblur="javascript:calculaValores();"  {if !$editavel}disabled="disabled"{/if} />
-						<input type="button" name="hoje" value="Tudo" onclick="javascript:amortizarTudo()" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"  {if !$editavel}disabled="disabled"{/if} />
+						<input type="text" name="amortizar" id="amortizar" value="{$amortizar}" {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if} />
+						<input type="button" name="hoje" value="Tudo" onclick="javascript:amortizarTudo()" class="botao"  {if !$editavel}disabled="disabled"{/if} />
 					</td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Valor Pendente(=):</td>
-					<td class="cellInfo"><input type="text" name="valor_pendente" id="valor_pendente" value="{$valor_restante}" disabled="disabled"  {if !$editavel}disabled="disabled"{/if} /></td>
+					<td class="cellInfo"><input type="text" name="valor_pendente" id="valor_pendente" value="{$valor_restante}" disabled="disabled"  class="disabled" /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Status:</td>
 					<td class="cellInfo">
-						<select id="status" name="status" id="status" style="width: 200px;" disabled="disabled">
+						<select id="status" name="status" id="status" style="width: 200px;" disabled="disabled" class="disabled">
 							{foreach from=$status_fatura item=v key=k}
 							<option value="{$k}" {if $k == $status}selected="selected"{/if}>{$v}</option>
 							{/foreach}							
@@ -189,31 +232,31 @@
 				<tr>
 					<td class="cellLabel">Data do Pagamento:</td>
 					<td class="cellInfo">
-						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento}" maxlength="10"  {if !$editavel}disabled="disabled"{/if} />
+						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento}" maxlength="10"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
 						{* &gt;&gt;"" *}
-						<input type="button" name="hoje" value="Hoje" onclick="javascript:pagamentoHoje();"  style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"  {if !$editavel}disabled="disabled"{/if} />
-						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"  {if !$editavel}disabled="disabled"{/if} />				
+						<input type="button" name="hoje" value="Hoje" onclick="javascript:pagamentoHoje();"  class="botao"  {if !$editavel}disabled="disabled"{/if} />
+						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" class="botao"  {if !$editavel}disabled="disabled"{/if} />				
 					</td>
 				</tr>
 			</table>
 		</td>
 		<td valign="top">
-			<table border="0" dwcopytype="CopyTableRow">
+			<table border="0" class="lista" dwcopytype="CopyTableRow">
 				<tr>
-					<th colspan="2" class="cellTitle"><strong>Opções</strong></th>
+					<th colspan="2"><strong>Opções</strong></th>
 				</tr>
 				<tr>
 					<td class="cellLabel">
-						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" onclick="javascript:verificaReagendamento();" onchange="javascript:verificaReagendamento();"  {if !$editavel}disabled="disabled"{/if} /> re-agendar cobrança para dia:
+						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" {if !$editavel}disabled="disabled"{/if} /> re-agendar cobrança para dia:
 					</td>
 					<td class="cellInfo">
-						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{/if} />
+						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
 					</td>
 				</tr>
 				<tr>
 					<td class="cellLabel" valign="top">Observações:</td>
 					<td class="cellInfo">
-						<textarea name="observacoes" id="observacoes" rows="7"  cols="30"  {if !$editavel}disabled="disabled"{/if} >{$observacoes}</textarea>
+						<textarea name="observacoes" id="observacoes" rows="7"  cols="30"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} >{$observacoes}</textarea>
 					</td>
 				</tr>
 			</table>		
@@ -224,13 +267,14 @@
 	</tr>
 	<tr>
 		<td colspan="2" align="center">
-			<input name="botao_cancelar" type="button" class="input2" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
+			<input name="botao_cancelar" type="button" class="botao" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
 			{if $editavel}	
-			<input name="botao_enviar" type="submit" class="input2" id="submit" value="Amortizar &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
+			<input name="botao_enviar" type="submit" class="botao" id="submit" value="Amortizar &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
 			{/if}
 		</td>
 	</tr>
 </table>
 </form>
 </div>
+<script type="text/javascript">calculaValores();</script>
 </center>
