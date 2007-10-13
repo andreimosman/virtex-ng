@@ -72,6 +72,10 @@
 					$retorno = new VVAHome();
 					break;
 				
+				case 'cobranca':
+					$retorno = new VVACobranca();
+					break;
+					
 				default:
 					throw new ExcecaoView(255,"View não disponível");
 					
@@ -83,12 +87,8 @@
 		}
 		
 		public function exibe() {
-		
 			$this->atribui("nomeSessao",$this->nomeSessao);
-			
 			parent::exibe();
-		
-		
 		}
 	
 	}

@@ -50,6 +50,10 @@
 					$retorno = new VCAHome();
 					break;
 					
+				case 'cobranca':
+					$retorno = new VCACobranca();
+					break;
+					
 				default:
 					throw new ExcecaoController(255,"Controller não encontrado");
 			

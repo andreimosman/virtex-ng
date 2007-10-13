@@ -1,0 +1,28 @@
+INSERT INTO cftb_uf VALUES ('AC', 'Acre');
+INSERT INTO cftb_uf VALUES ('AL', 'Alagoas');
+INSERT INTO cftb_uf VALUES ('AM', 'Amazonas');
+INSERT INTO cftb_uf VALUES ('AP', 'Amapá');
+INSERT INTO cftb_uf VALUES ('BA', 'Bahia');
+INSERT INTO cftb_uf VALUES ('CE', 'Ceará');
+INSERT INTO cftb_uf VALUES ('DF', 'Distrito Federal');
+INSERT INTO cftb_uf VALUES ('ES', 'Espírito Santo');
+INSERT INTO cftb_uf VALUES ('GO', 'Goiás');
+INSERT INTO cftb_uf VALUES ('MA', 'Maranhão');
+INSERT INTO cftb_uf VALUES ('MG', 'Minas Gerais');
+INSERT INTO cftb_uf VALUES ('MS', 'Mato Grosso do Sul');
+INSERT INTO cftb_uf VALUES ('MT', 'Mato Grosso');
+INSERT INTO cftb_uf VALUES ('PA', 'Pará');
+INSERT INTO cftb_uf VALUES ('PB', 'Paraíba');
+INSERT INTO cftb_uf VALUES ('PE', 'Pernambuco');
+INSERT INTO cftb_uf VALUES ('PI', 'Piauí');
+INSERT INTO cftb_uf VALUES ('PR', 'Paraná');
+INSERT INTO cftb_uf VALUES ('RJ', 'Rio de Janeiro');
+INSERT INTO cftb_uf VALUES ('RN', 'Rio Grande do Norte');
+INSERT INTO cftb_uf VALUES ('RO', 'Rondônia');
+INSERT INTO cftb_uf VALUES ('RR', 'Roraima');
+INSERT INTO cftb_uf VALUES ('RS', 'Rio Grande do Sul');
+INSERT INTO cftb_uf VALUES ('SC', 'Santa Catarina');
+INSERT INTO cftb_uf VALUES ('SE', 'Sergipe');
+INSERT INTO cftb_uf VALUES ('SP', 'São Paulo');
+INSERT INTO cftb_uf VALUES ('TO', 'Tocantins');
+
