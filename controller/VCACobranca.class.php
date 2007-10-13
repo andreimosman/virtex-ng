@@ -82,7 +82,7 @@
 					
 					$clienteProduto = $this->cobranca->obtemClienteProduto($fatura["id_cliente_produto"]);
 					
-					$url = "admin-clientes.php?op=contrato&tela=amortizacao&id_cliente=".$infoContrato["id_cliente"]."&id_cliente_produto=".$fatura["id_cliente_produto"]."&data=".$fatura["data"]."&id_cobranca=".$fatura["id_cobranca"];
+					$url = "admin-clientes.php?op=contrato&tela=amortizacao&id_cliente=".$clienteProduto["id_cliente"]."&id_cliente_produto=".$fatura["id_cliente_produto"]."&data=".$fatura["data"]."&id_cobranca=".$fatura["id_cobranca"];
 					VirtexView::simpleRedirect($url);
 				}
 				
