@@ -45,6 +45,19 @@
 		}
 		
 		/**
+		 * Clientes por Cidade
+		 */
+		
+		public function obtemClientesPorCidade($id_cidade) {
+			$filtro = array("id_cidade" => $id_cidade);
+			return($this->cltb_cliente->obtem($filtro));
+		}
+		
+		public function countClientesPorCidade() {
+			return($this->cltb_cliente->countClientesPorCidade());
+		}
+		
+		/**
 		 * Cadastra um cliente
 		 */
 		public function cadastra($dados) {

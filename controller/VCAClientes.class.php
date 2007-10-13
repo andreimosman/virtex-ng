@@ -1176,7 +1176,81 @@
 
 		protected function executaRelatorios() {
 			$this->_view->atribuiVisualizacao("relatorios");
-			echo "EXECUTA RELATORIOS<br>\n";
+			
+			$relatorio = @$_REQUEST["relatorio"];
+			$this->_view->atribui("relatorio",$relatorio);
+			
+			
+			
+			switch($relatorio) {
+				case 'geral':
+					$inicial 	= @$_REQUEST["inicial"];
+					$acao 		= @$_REQUEST["acao"];
+					
+					break;
+				case 'cliente_cidade':
+					$id_cidade 	= @$_REQUEST["id_cidade"];
+					$this->_view->atribui("id_cidade",$id_cidade);
+					
+					$registros = array();
+					
+					if( $id_cidade ) {
+						$registros = $this->clientes->obtemClientesPorCidade($id_cidade);
+						$cobranca = VirtexModelo::factory('cobranca');
+						
+						$infoCidade = $this->preferencias->obtemCidadePeloID($id_cidade);
+						$this->_view->atribui("cidade",$infoCidade["cidade"]);
+						$this->_view->atribui("uf",$infoCidade["uf"]);
+						
+						for($i=0;$i<count($registros);$i++) {
+							$contratos = $cobranca->obtemContratos ($registros[$i]["id_cliente"],"A");
+
+							$cbl = 0;
+							$cd  = 0;
+							$ch  = 0;
+							
+							foreach($contratos as $contrato) {
+								switch( trim($contrato["tipo_produto"]) ) {
+									case 'BL':
+										$cbl++;
+										break;
+									case 'D':
+										$cd++;
+										break;
+									case 'H':
+										$ch++;
+										break;
+								}
+							}
+							
+							$registros[$i]["contratos_bl"] = $cbl;
+							$registros[$i]["contratos_d"]  = $cd;
+							$registros[$i]["contratos_h"]  = $ch;
+							
+						}
+						
+
+					} else {
+						$registros = $this->clientes->countClientesPorCidade();
+					}
+					
+					
+					$this->_view->atribui("registros",$registros);
+					
+					break;
+					
+			}
+			
+			
+
+
+
+
+
+
+
+
+
 		}
 
 		protected function executaEliminar() {

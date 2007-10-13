@@ -16,6 +16,22 @@
 			$this->_sequence	= "clsq_id_cliente";
 		}
 		
+		public function countClientesPorCidade() {
+			$sql  = "SELECT ";
+			$sql .= "   cid.id_cidade, cid.cidade, cid.uf, cid.disponivel, count(cl.id_cliente) as count ";
+			$sql .= "FROM ";
+			$sql .= "   cltb_cliente cl FULL OUTER JOIN cftb_cidade cid ON(cl.id_cidade = cid.id_cidade) ";
+			$sql .= "GROUP BY ";
+			$sql .= "   cid.id_cidade, cid.cidade, cid.uf, cid.disponivel ";
+			$sql .= "HAVING (cid.disponivel is true OR count(cl.id_cliente) > 0) ";
+			$sql .= "ORDER BY ";
+			$sql .= "   cid.uf, cid.cidade ";
+			
+			return($this->bd->obtemRegistros($sql));
+			
+		
+		}
+		
 		public static function listaTipoPessoa() {
 			return( array(
                   "F" => "Física",

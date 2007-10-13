@@ -1,0 +1,75 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+
+<br>
+{if $id_cidade}
+	<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th>#</th>
+			<th align="left">Nome/Razão Social</th>
+			<th>Banda Larga</th>
+			<th>Discado</th>
+			<th>Hospedagem</th>
+		</tr>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td class='{$estilo}' width="60" align="right"><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.id_cliente}</a></td>
+			<td class='{$estilo}'><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.nome_razao}</a><br><span style="font-size: 8px; font-family: verdana">{if $r.fone_comercial || $r.fone_residencial || $r.fone_celular}Fone(s): {$r.fone_comercial} {$r.fone_residencial} {$r.fone_celular}{else}Cliente sem telefone cadastrado{/if}</span></td>
+			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&id_cliente={$r.id_cliente}">{if $r.contratos_bl}SIM{else}NÃO{/if}</a></td>
+			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&id_cliente={$r.id_cliente}">{if $r.contratos_d}SIM{else}NÃO{/if}</a></td>
+			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&id_cliente={$r.id_cliente}">{if $r.contratos_h}SIM{else}NÃO{/if}</a></td>
+		</tr>
+		{foreachelse}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>NENHUM CLIENTE CADASTRADO NESTA CIDADE.</B></td>
+		</tr>
+		{/foreach}
+		<tr>
+			<td colspan="5" align="center" style="border-top: solid 1px"><a href="admin-clientes.php?op=relatorios&relatorio=cliente_cidade">voltar</a></td>
+	</table>
+{else}
+	<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th>UF</th>
+			<th align="center">CIDADE</th>
+			<th align="center"># Clientes</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='center' width=40 class='{$estilo}'><a href="admin-clientes.php?op=relatorios&relatorio=cliente_cidade&id_cidade={$r.id_cidade}">{$r.uf}</a></td>
+			<td class='{$estilo}'><a href="admin-clientes.php?op=relatorios&relatorio=cliente_cidade&id_cidade={$r.id_cidade}">{$r.cidade}</a></td>
+			<td class='{$estilo}' align="right" width="80"><a href="admin-clientes.php?op=relatorios&relatorio=cliente_cidade&id_cidade={$r.id_cidade}">{$r.count}</a></td>
+		</tr>
+		{foreachelse}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>Não existem cidades habilitadas ou clientes cadastrados.</B></td>
+		</tr>
+		{/foreach}
+	</table>
+{/if}
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

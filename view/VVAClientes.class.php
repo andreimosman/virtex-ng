@@ -215,8 +215,27 @@
 		
 		
 		protected function exibeRelatorios() {
-			echo "EXIBE RELATORIOS<br>\n";
-			$this->atribuiTitulo();
+			
+			$titulo = "Relatórios";
+			
+			switch($this->obtem("relatorio")) {
+				case 'geral':
+					$titulo .= " :: Listagem Geral ";
+					break;
+
+				case 'cliente_cidade':
+					$titulo .= " ::  Clientes por Cidade";
+					if( $this->obtem("id_cidade") && $this->obtem("cidade") && $this->obtem("uf")) {
+						$titulo .= " :: " . $this->obtem("cidade") . "-" . $this->obtem("uf");
+					}
+					$this->_file = "clientes_relatorios_cidade.html";
+					
+					break;
+			}
+			
+			$this->atribui("titulo",$titulo);
+			
+			
 		}
 		
 		protected function exibeEliminar() {
