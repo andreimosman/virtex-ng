@@ -34,6 +34,10 @@
 
 		}
 		
+		public function obtemClienteProduto($id_cliente_produto) {
+			return($this->cbtb_cliente_produto->obtemUnico(array("id_cliente_produto"=>$id_cliente_produto)));
+		}
+		
 		public function cadastraEnderecoCobranca($id_cliente_produto,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_cliente) {
 			$dados = array(
 							"id_cliente_produto" => $id_cliente_produto,

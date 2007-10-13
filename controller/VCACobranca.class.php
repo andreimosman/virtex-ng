@@ -54,7 +54,7 @@
 			$texto_pesquisa = @$_REQUEST["texto_pesquisa"];
 			$tipo_pesquisa  = @$_REQUEST["tipo_pesquisa"];
 			
-			if(!$tipo_pesquisa) $tipo_pesquisa = "LINHADIGITAVEL";
+			if(!$tipo_pesquisa) $tipo_pesquisa = "CODIGOBARRAS";
 			
 			$this->_view->atribui("texto_pesquisa", $texto_pesquisa);
 			$this->_view->atribui("tipo_pesquisa",$tipo_pesquisa);
@@ -66,11 +66,11 @@
 				switch($tipo_pesquisa) {
 
 					case 'LINHADIGITAVEL':
-						//$fatura = $this->cobranca->obtemFaturaPelaLinhaDigitavel($texto_pesquisa);
+						$fatura = $this->cobranca->obtemFaturaPelaLinhaDigitavel($texto_pesquisa);
 						break;
 						
 					case 'CODIGOBARRAS':
-						//$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($texto_pesquisa);
+						$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($texto_pesquisa);
 						break;
 				}
 				
@@ -80,17 +80,14 @@
 				} else {
 					// Redireciona p/ a fatura.
 					
+					$clienteProduto = $this->cobranca->obtemClienteProduto($fatura["id_cliente_produto"]);
+					
+					$url = "admin-clientes.php?op=contrato&tela=amortizacao&id_cliente=".$infoContrato["id_cliente"]."&id_cliente_produto=".$fatura["id_cliente_produto"]."&data=".$fatura["data"]."&id_cobranca=".$fatura["id_cobranca"];
+					VirtexView::simpleRedirect($url);
 				}
 				
 			}
 			
-			
-			//if( $id_cobranca ) {
-			//	$info = $this->cobranca->obtemFatura($id_cobranca);
-			//	echo "<pre>";
-			//	print_r($info);
-			//	echo "</pre>";
-			//}
 		}
 		
 		protected function executaGerarCobranca() {
