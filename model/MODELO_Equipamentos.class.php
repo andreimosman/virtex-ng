@@ -63,11 +63,15 @@
 		}
 
 		
-		public function obtemListaNAS() {
+		public function obtemListaNAS($disponivel=null,$retornarRas=true) {
 			$filtro = array();
-			//if( $disponivel ) {
-			//	$filtro["disponivel"] = $disponivel;
-			//}
+			if( $disponivel ) {
+				$filtro["disponivel"] = $disponivel;
+			}
+			
+			if( !$retornarRas ) {
+				$filtro["tipo_nas"] = "!=:R";
+			}
 			
 			return($this->cftb_nas->obtem($filtro));
 			
@@ -231,14 +235,21 @@
 			return($this->cftb_rede->obtemAssociacoes($rede));
 		}
 				
-
+		public function obtemPOPsPeloTipo($tipo,$status="") {
+			$filtro = array("tipo" => $tipo );
+			if( $status ) {
+				$filtro["status"] = $status;
+			}
+			return($this->cftb_pop->obtem($filtro));
+		}
 	
-		public function obtemListaPOPs($status="") {
+		public function obtemListaPOPs($status="",$parentId="") {
 			$filtro = array();
 			if( $status ) {
 				$filtro["status"] = $status;
 			}
-			return($this->_obtemPops("",0,$filtro));
+			
+			return($this->_obtemPops($parentId,0,$filtro));
 		}
 		
 		public function obtemPop($id_pop) {

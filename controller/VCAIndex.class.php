@@ -135,8 +135,7 @@
 			$menuConfiguracoesRelatorios	= new MMenu();
 			$menuConfiguracoesRelatorios->addItem("Carga por AP", "admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=ap", $target);
 			$menuConfiguracoesRelatorios->addItem("Carga por POP", "admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=pop", $target);
-			$menuConfiguracoesRelatorios->addItem("Carga por NAs", "admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=nas", $target);
-			$menuConfiguracoesRelatorios->addItem("Clientes por AP", "admin-configuracoes.php?op=relatorios&relatorio=clientes_ap", $target);
+			$menuConfiguracoesRelatorios->addItem("Carga por NAS", "admin-configuracoes.php?op=relatorios&relatorio=carga&tipo=nas", $target);
 			$menuConfiguracoes->addSubmenu("Relatórios", $menuConfiguracoesRelatorios);
 
 			$menu->addSubmenu("Configurações", $menuConfiguracoes);

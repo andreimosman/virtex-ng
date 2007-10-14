@@ -1040,6 +1040,206 @@
 
 		
 		protected function executaRelatorios() {
+			$this->_view->atribuiVisualizacao("relatorios");
+		
+			$contas = VirtexModelo::factory('contas');
+			$equipamentos = VirtexModelo::factory('equipamentos');
+			
+			$relatorio = @$_REQUEST["relatorio"];
+			$tipo = @$_REQUEST["tipo"];
+			
+			$this->_view->atribui("relatorio",$relatorio);
+			$this->_view->atribui("tipo",$tipo);
+
+
+			
+			switch($relatorio) {
+				case 'carga':
+					$listaContas = array();
+					$listaEqpto = array();
+
+					$tiposPop = $equipamentos->obtemTipoPop();
+					$this->_view->atribui("tiposPop",$tiposPop);
+							
+					$tiposNas = $equipamentos->obtemTiposNAS();
+					$this->_view->atribui("tiposNas", $tiposNas);
+
+					switch($tipo) {
+						case 'ap':
+							$id_pop = @$_REQUEST["id"];
+							$this->_view->atribui("id_pop",$id_pop);
+							
+							if($id_pop) {
+								$pop = $equipamentos->obtemPOP($id_pop);
+								$this->_view->atribui("pop",$pop);
+								
+								$listaPops = array($id_pop);
+
+								$tmp = $equipamentos->obtemListaPOPs("",$id_pop);
+								foreach($tmp as $t) {
+									$listaPops[] = $t["id_pop"];
+								}
+								
+								foreach($listaPops as $p) {
+									$listaContas = array_merge($listaContas,$contas->obtemContasBandaLargaPeloPOPNAS($p,false,"A"));
+								}
+								
+							} else {
+								$listaEqpto=$equipamentos->obtemPOPsPeloTipo("AP");
+							}
+						
+						
+							break;
+
+						case 'pop':
+							$id_pop = @$_REQUEST["id"];
+							$this->_view->atribui("id_pop",$id_pop);
+							
+							if( $id_pop ) {
+								$pop = $equipamentos->obtemPOP($id_pop);
+								$this->_view->atribui("pop",$pop);
+								
+								$listaContas = $contas->obtemContasBandaLargaPeloPOPNAS($id_pop,false,"A");
+								print_r($lista_contas);
+							} else {
+								$listaEqpto = $equipamentos->obtemListaPops();
+							}
+							break;
+
+						case 'nas':
+							$id_nas = @$_REQUEST["id"];
+							$this->_view->atribui("id_nas",$id_nas);
+							
+							if( $id_nas ) {
+								$nas = $equipamentos->obtemNAS($id_nas);
+								$this->_view->atribui("nas",$nas);
+								$listaContas = $contas->obtemContasBandaLarga($id_nas,"A");
+							} else {
+								$listaEqpto = $equipamentos->obtemListaNAS(null,false);
+							}
+							break;
+						
+					
+					}
+					
+					if( @$listaEqpto && count($listaEqpto) ) {
+						$contas_ativas = 0;
+						$soma_upload = 0;
+						$soma_download = 0;
+
+						for($i=0;$i<count($listaEqpto);$i++) {
+							$id_pop = $tipo == "pop" || $tipo == "ap" ? $listaEqpto[$i]["id_pop"] : null;
+							$id_nas = $tipo == "nas" ? $listaEqpto[$i]["id_nas"] : null;
+							
+							$listaEqpto[$i]["id"] = $tipo == "nas" ? $id_nas : $id_pop;
+							
+							$listaPops = array($id_pop);
+							if( $tipo == "ap" ) {
+								// $tipo == pop --> Pegar os "childs" do pop
+								$tmp = $equipamentos->obtemListaPOPs("",$id_pop);
+								foreach($tmp as $t) {
+									$listaPops[] = $t["id_pop"];
+								}
+								
+							}
+							
+							$listaEqpto[$i]["contas_ativas"] = 0;
+							$listaEqpto[$i]["soma_upload"] = 0;
+							$listaEqpto[$i]["soma_download"] = 0;
+							
+							foreach($listaPops as $p) {
+								$lc = $contas->obtemContasBandaLargaPeloPOPNAS($p,$id_nas,"A");
+
+								foreach($lc as $conta) {
+									$listaEqpto[$i]["contas_ativas"]++;
+									$listaEqpto[$i]["soma_upload"] += $conta["upload_kbps"];
+									$listaEqpto[$i]["soma_download"] += $conta["download_kbps"];										
+								}
+								$contas_ativas += $listaEqpto[$i]["contas_ativas"];
+								$soma_upload += $listaEqpto[$i]["soma_upload"];
+								$soma_download += $listaEqpto[$i]["soma_download"];
+							}
+
+							$this->_view->atribui("contas_ativas",$contas_ativas);
+							$this->_view->atribui("soma_upload",$soma_upload);
+							$this->_view->atribui("soma_download",$soma_download);
+						}					
+					}
+					
+					$clientes = VirtexModelo::factory("clientes");
+					
+					if( @$listaContas && count($listaContas) ) {
+						$cache_nas = array();
+						foreach($equipamentos->obtemListaNas() as $n) {
+							$cache_nas[$n["id_nas"]] = $n;
+						}
+
+						$cache_pop = array();
+
+						$soma_upload = 0;
+						$soma_download = 0;
+						
+						$cache_cliente = array();
+						$cache_cidade = array();
+
+						for($i=0;$i<count($listaContas);$i++) {
+							$listaContas[$i]["nas"] = $cache_nas[ $listaContas[$i]["id_nas"] ];
+
+							if( !@$cache_pop[ $listaContas[$i]["id_pop"] ] ) {
+								$cache_pop[ $listaContas[$i]["id_pop"] ] = $equipamentos->obtemPop( $listaContas[$i]["id_pop"] );
+							}
+							
+							if( !@$cache_cliente[ $listaContas[$i]["id_cliente"] ] ) {
+								$cache_cliente[ $listaContas[$i]["id_cliente"] ] = $clientes->obtemPeloID($listaContas[$i]["id_cliente"]);
+								
+								if( !@$cache_cidade[ $cache_cliente[ $listaContas[$i]["id_cliente"] ]["id_cidade"] ] ) {
+									$cache_cidade[ $cache_cliente[ $listaContas[$i]["id_cliente"] ]["id_cidade"] ] = $this->preferencias->obtemCidadePeloId( $cache_cliente[ $listaContas[$i]["id_cliente"] ]["id_cidade"] );
+								}
+								$cache_cliente[ $listaContas[$i]["id_cliente"] ]["cidade"] = $cache_cidade[ $cache_cliente[ $listaContas[$i]["id_cliente"] ]["id_cidade"] ];
+							}
+							$listaContas[$i]["cliente"] = $cache_cliente[ $listaContas[$i]["id_cliente"] ];
+
+							$listaContas[$i]["pop"] = $cache_pop[ $listaContas[$i]["id_pop"] ];
+
+							$soma_upload += $listaContas[$i]["upload_kbps"];
+							$soma_download += $listaContas[$i]["download_kbps"];
+
+							$this->_view->atribui("soma_upload",$soma_upload);
+							$this->_view->atribui("soma_download",$soma_download);
+						}
+						
+						//echo "<pre>";
+						//print_r($cache_cliente);
+						//print_r($cache_cidade);
+						//echo "</pre>";
+
+						$this->_view->atribui("listaContas",$listaContas);					
+					}
+					
+					$this->_view->atribui("listaEqpto",$listaEqpto);
+					
+					//echo "<pre>";
+					//print_r($listaNas);
+					//echo "</pre>";
+				
+				
+				
+				
+				
+				
+				
+				
+				
+					break;
+				case 'clientes_ap':
+				
+					break;
+			
+			}
+			
+		
+		
+		
 		
 		}
 	

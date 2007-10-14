@@ -244,7 +244,37 @@
 		}
 		
 		protected function exibeRelatorios() {
-		
+			switch($this->obtem("relatorio")) {
+				case 'carga':
+					$this->_file = "configuracoes_relatorios_carga.html";
+					
+					$titulo = "Carga";
+					
+					switch($this->obtem("tipo")) {
+						case 'nas':
+							$titulo .= " :: Por NAS";
+							if($this->obtem("id_nas")) {
+								$nas = $this->obtem("nas");
+								$tiposNas = $this->obtem("tiposNas");
+								$titulo .= " :: " . $nas["id_nas"] . " - " . $nas["nome"] . " (" . $tiposNas[$nas["tipo_nas"]] . ")";
+							}
+							break;
+						case 'pop':
+						case 'ap':
+							$titulo .= $this->obtem("tipo") == "pop" ? " :: Por POP" : " :: Por AP";
+							if($this->obtem("id_pop")) {
+								$pop = $this->obtem("pop");
+								$tiposPop = $this->obtem("tiposPop");
+								$titulo .= " :: " . $pop["id_pop"] . " - " . $pop["nome"] . " (" . $tiposPop[$pop["tipo"]] . ")";
+							}
+							break;
+							break;
+					
+					}
+					
+					$this->atribui("titulo",$titulo);
+					break;
+			}
 		}
 	
 	}
