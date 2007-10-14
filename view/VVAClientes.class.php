@@ -219,8 +219,12 @@
 			$titulo = "Relatórios";
 			
 			switch($this->obtem("relatorio")) {
-				case 'geral':
+				case 'lista_geral':
 					$titulo .= " :: Listagem Geral ";
+					
+					
+					$this->_file = "clientes_relatorios_geral.html";
+					
 					break;
 
 				case 'cliente_cidade':
