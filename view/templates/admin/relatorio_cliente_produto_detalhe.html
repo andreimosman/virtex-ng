@@ -1,0 +1,55 @@
+{include file="relatorio_header.html"}
+<script type="text/javascript">
+<!--
+{literal}	
+	
+	function filtro(filtro){
+		window.open("admin-cobranca.php?op=relatorios&relatorio=atrasos&periodo="+filtro.value,"conteudo");
+		
+	}
+{/literal}
+//-->
+</script>
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
+	<tr>
+		<th align="left" width="70%" >Cliente</th>
+		<th>Contas</th>
+	</tr>
+	{foreach from=$clientes item=c name=cl}
+	{if ($smarty.foreach.cl.iteration%2) }{assign var=estilo value='linhai'}{else}{assign var=estilo value='linhap'}{/if}
+	<tr class='{$estilo}'>
+		<td class="cellInfoLeft" colspan='2'> {$c.nome_razao}</td>				
+	</tr>
+	<tr class='{$estilo}'>
+		<td class="cellInfoLeft" valign='top'>
+			<table>
+				<tr>
+					<td>Endereço:</td>
+					<td>{$c.endereco}</td>
+				</tr>
+				<tr>
+					<td>Telefone:</td>
+					<td>{$c.fone_comercial}</td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			{foreach from=$c.contas key=id item=conta}
+				<table>
+					<tr>
+						<td>Username:</td>
+						<td>{$conta.username}</td>
+					</tr>
+					<tr>
+						<td nowrap>Data contratação:</td>
+						<td>{$conta.data_contratacao}</td>
+					</tr>
+				</table>
+			{/foreach}
+		</td>				
+	</tr>
+	{/foreach}
+</table>
+<br />
+{include file="relatorio_footer.html"}

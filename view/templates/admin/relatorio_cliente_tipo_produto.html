@@ -1,0 +1,27 @@
+{include file="relatorio_header.html"}
+<script type="text/javascript">
+<!--
+{literal}	
+	
+	function filtro(filtro){
+		window.open("admin-cobranca.php?op=relatorios&relatorio=cliente_tipo_produto_detalhe&tipo_produto="+filtro,"conteudo");
+		
+	}
+{/literal}
+//-->
+</script>
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
+	<tr>
+		<th align="left" width="95%" >Tipo de Produto</th>
+		<th>Contratos</th>
+	</tr>
+	{foreach from=$produto item=p}
+	<tr class='{cycle values="linhai,linhap"} link' onclick="filtro('{$p.tipo}')" >
+		<td class="cellInfoLeft">&nbsp;&nbsp;{$p.tipo}</td>		
+		<td class="cellInfoCenter">{$p.num_contratos|default:0}</td>
+	</tr>
+	{/foreach}
+</table>
+<br />
+{include file="relatorio_footer.html"}

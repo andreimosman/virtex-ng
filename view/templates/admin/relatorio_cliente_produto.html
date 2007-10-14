@@ -1,0 +1,27 @@
+{include file="relatorio_header.html"}
+<script type="text/javascript">
+<!--
+{literal}	
+	
+	function detalhes(filtro){
+		window.open("admin-cobranca.php?op=relatorios&relatorio=cliente_produto_detalhe&id_produto="+filtro,"conteudo");
+		
+	}
+{/literal}
+//-->
+</script>
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
+	<tr>
+		<th align="left" width="95%" >Produto</th>
+		<th>Contratos</th>
+	</tr>
+	{foreach from=$produto item=p}
+	<tr class='{cycle values="linhai,linhap"} link' onclick="detalhes({$p.id_produto})">
+		<td class="cellInfoLeft">{$p.nome}</td>		
+		<td class="cellInfoCenter">{$p.num_contratos|default:0}</td>
+	</tr>
+	{/foreach}
+</table>
+<br />
+{include file="relatorio_footer.html"}

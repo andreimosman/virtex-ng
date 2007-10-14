@@ -191,6 +191,57 @@
 		public function obtemContasCortesiaDeCadaTipo($tipo_conta = false){
 			return $this->cntb_conta->obtemContasDeCadaTipo(true,$tipo_conta);
 		}
+		
+		
+		/**
+		 * Retorna uma lista de clientes com contas do tipo informado e
+		 * status informado.
+		 *
+		 * @param integer $tipo_conta
+		 * @param char $status
+		 * @return array
+		 */
+		public function obtemClientesPorTipoConta($tipo_conta,$status = "A"){
+			$rs =  $this->cntb_conta->obtemClientesPorTipoConta($tipo_conta,$status);
+			$return = array();
+			foreach($rs as $row){
+				$id_cliente = $row["id_cliente"];
+				$id_cliente_produto = $row["id_cliente_produto"];
+				
+				$return[$id_cliente]["nome_razao"] = $row["nome_razao"]; 
+				$return[$id_cliente]["endereco"] = $row["endereco"];
+				$return[$id_cliente]["fone_comercial"] = $row["fone_comercial"];
+				
+				$return[$id_cliente]["contas"][$id_cliente_produto]["data_contratacao"] = $row["data_contratacao"];	
+				$return[$id_cliente]["contas"][$id_cliente_produto]["id_produto"] = $row["id_produto"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["nome_produto"] = $row["nome_produto"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["tipo"] = $row["tipo"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["username"] = $row["username"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["dominio"] = $row["dominio"];
+			}
+			return $return;
+		}
+		
+		public function obtemClientesPorProduto($id_produto,$status = "A"){
+			$rs =  $this->cntb_conta->obtemClientesPorPorduto($id_produto,$status);			
+			$return = array();
+			foreach($rs as $row){
+				$id_cliente = $row["id_cliente"];
+				$id_cliente_produto = $row["id_cliente_produto"];
+				
+				$return[$id_cliente]["nome_razao"] = $row["nome_razao"]; 
+				$return[$id_cliente]["endereco"] = $row["endereco"];
+				$return[$id_cliente]["fone_comercial"] = $row["fone_comercial"];
+				
+				$return[$id_cliente]["contas"][$id_cliente_produto]["data_contratacao"] = $row["data_contratacao"];	
+				$return[$id_cliente]["contas"][$id_cliente_produto]["id_produto"] = $row["id_produto"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["nome_produto"] = $row["nome_produto"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["tipo"] = $row["tipo"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["username"] = $row["username"];
+				$return[$id_cliente]["contas"][$id_cliente_produto]["dominio"] = $row["dominio"];
+			}
+			return $return;
+		}
 
 		
 		/**

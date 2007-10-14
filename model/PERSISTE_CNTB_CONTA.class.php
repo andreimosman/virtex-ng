@@ -68,7 +68,15 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 		return $this->_obtemContasDeCadaTipo($cortesia,false, $tipo_conta);		
 	}
 	
-	protected function _obtemContasDeCadaTipo($cortesia = false, $quantidade = false, $tipo_conta = false){
+	public function obtemClientesPorTipoConta($tipo_conta,$status){
+		return $this->_obtemContasDeCadaTipo(false,false,$tipo_conta,false,$status);	
+	}
+	
+	public function obtemClientesPorPorduto($id_produto,$status){
+		return $this->_obtemContasDeCadaTipo(false,false,false,$id_produto,$status);	
+	}
+	   
+	protected function _obtemContasDeCadaTipo($cortesia = false, $quantidade = false, $tipo_conta = false, $produto = false, $status = false){
 		$sql = " SELECT \n";
 		if($quantidade){
 			$sql.= "	cnt.tipo_conta,\n";
@@ -76,13 +84,16 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 		} else {
 			$sql.= "	cl.id_cliente,\n";
 			$sql.= "	cl.nome_razao,\n";
-			$sql.= "	to_char(ct.data_contratacao,'DD/MM/YYYY') as data_contratacao,\n";
+			$sql.= "	cl.endereco,\n";
+			$sql.= "	cl.fone_comercial,\n";
+			$sql.= "	to_char(ct.data_contratacao,'DD/MM/YYYY') as data_contratacao,\n";  //
 			$sql.= "	pr.id_produto,\n";
 			$sql.= "	pr.nome as nome_produto,\n";
 			$sql.= "	pr.tipo,\n";
 			$sql.= "	cnt.username,\n";
 			$sql.= "	cnt.dominio,\n";
-			$sql.= "	cp.id_cliente_produto\n";
+			$sql.= "	cp.id_cliente_produto, \n";
+			$sql.= "	pr.id_produto\n";
 		}
 		$sql.= " FROM \n";
 		$sql.= "	cntb_conta cnt\n";
@@ -95,11 +106,21 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 		$sql.= "	AND pr.id_produto = cp.id_produto \n";
 		$sql.= "	AND ct.id_cliente_produto = cp.id_cliente_produto \n";
 		$sql.= "	AND cnt.id_cliente_produto = cp.id_cliente_produto \n";
+		
 		$sql.= "	AND cnt.tipo_conta = pr.tipo \n";
+		
 		$sql.= "	AND cnt.conta_mestre is true \n";
 		
 		if($tipo_conta){
 			$sql.= "	AND cnt.tipo_conta = '$tipo_conta' \n";
+		}
+		
+		if($produto) {
+			$sql.= "	AND pr.id_produto = '$produto' \n";
+		}
+		
+		if($status){
+			$sql.= "	AND ct.status = '$status' \n";
 		}
 		
 		if($cortesia){
@@ -109,8 +130,10 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 		if($quantidade){
 			$sql.= " GROUP BY \n";
 			$sql.= "	cnt.tipo_conta \n";
-		}
-		
+		} else {
+			$sql.= " ORDER BY \n";
+			$sql.= "	cl.nome_razao \n";
+		}		
 		return $this->bd->obtemRegistros($sql);
 	}
 

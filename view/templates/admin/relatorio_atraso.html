@@ -21,12 +21,12 @@
 </p>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
 	<tr>
-		<th>Período</th>
+		<th align="left" width="95%" >Período</th>
 		<th>Atrasados</th>
 	</tr>
 	{foreach from=$meses key=p item=m}
 	<tr class='{cycle values="linhai,linhap"}'>
-		<td class="cellInfoCenter">{$p}</td>		
+		<td class="cellInfoLeft">{$p}</td>		
 		<td class="cellInfoCenter">{$atrasos[$m.ano][$m.mes]|default:0}</td>
 	</tr>
 	{/foreach}

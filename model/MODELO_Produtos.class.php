@@ -138,6 +138,15 @@
 			}
 			return($ret);		
 		}
+		
+		
+		public function obtemQtdeContratosPorProduto(){
+			return $this->prtb_produto->obtemQtdeContratosPorProduto();	
+		}
+		
+		public function obtemQtdeContratosPorTipoDeProduto(){
+			return $this->prtb_produto->obtemQtdeContratosPorTipoDeProduto();	
+		}
 			
 	}
 	

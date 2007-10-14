@@ -73,7 +73,24 @@
 				case "atrasos":					
 					$this->_file = "relatorio_atraso.html";	
 					$this->atribui("titulo", $titulo."Atrasos");	
-					break;		
+					break;
+				case "cliente_produto":					
+					$this->_file = "relatorio_cliente_produto.html";	
+					$this->atribui("titulo", $titulo."Contratos por produto");	
+					break;
+				case "cliente_produto_detalhe":					
+					$this->_file = "relatorio_cliente_produto_detalhe.html";	
+					$this->atribui("titulo", $titulo."Clientes por produto");	
+					break;
+				case "cliente_tipo_produto":					
+					$this->_file = "relatorio_cliente_tipo_produto.html";	
+					$this->atribui("titulo", $titulo."Contratos por tipo de produto");	
+					break;	
+				case "cliente_tipo_produto_detalhe":					
+					$this->_file = "relatorio_cliente_tipo_produto_detalhe.html";	
+					$this->atribui("titulo", $titulo."Clientes por tipo de produto");	
+					break;	
+					
 				default:
 					die("erro");	
 			}
