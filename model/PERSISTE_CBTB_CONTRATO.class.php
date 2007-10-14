@@ -21,6 +21,23 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$this->_chave 		= "id_cliente_produto";
 
 	}
+	
+	public function obtemAdesoesPorPeriodo($intervalo){
+		//TODO: Essa query não está correta e deve ser refeita. O retorno dessa função deve ser a quantidade de novo contratos por tipo de produto 
+		
+		$sql = " SELECT \n";
+		$sql.= " 	id_cliente_produto, \n";
+		$sql.= " 	data_contratacao(cbtb_contrato.id_cliente_produto) as data_contratacao, \n";
+		$sql.= " 	tipo_produto \n";
+		$sql.= " FROM  \n";
+		$sql.= " 	cbtb_contrato \n";
+		$sql.= " WHERE \n";
+		$sql.= " 	status = 'A' and \n";
+		$sql.= "	data_contratacao(id_cliente_produto) between now() - INTERVAL '$intervalo months' AND now() \n";
+		
+		return $this->bd->obtemRegistros($sql);
+			
+	}
 
 	public function obtemCanceladosPorPeriodo($intervalo){
 		

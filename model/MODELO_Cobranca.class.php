@@ -509,6 +509,18 @@
 			return($res);
 		}
 		
+		public function obtemContratosIncluidosPorPeriodo($periodo){
+			$rs = $this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo);
+			$return = array();
+			foreach($rs as $row){
+				$tipo = $row["tipo_produto"];
+				list($ano,$mes,$dia) = $row["data_contratacao"];
+				$return[$ano][$mes][$tipo] = $row["num_contratos"];
+				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];  		
+			}
+			return $return;
+		}
+		
 		public function obtemContratosCanceladosPorPeriodo($periodo){
 			$rs = $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo);
 			$return = array();

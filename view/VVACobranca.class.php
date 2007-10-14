@@ -89,7 +89,11 @@
 				case "cliente_tipo_produto_detalhe":					
 					$this->_file = "relatorio_cliente_tipo_produto_detalhe.html";	
 					$this->atribui("titulo", $titulo."Clientes por tipo de produto");	
-					break;	
+					break;
+				case "adesoes":
+					$this->_file = "relatorio_adesoes.html";	
+					$this->atribui("titulo", $titulo."Adesões");
+					break;		
 					
 				default:
 					die("erro");	
