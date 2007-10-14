@@ -60,12 +60,16 @@
 		
 		protected function exibeRelatorios() {
 			$relatorio = @$_REQUEST["relatorio"];
-			
+			$titulo = "Relatório :: ";
 			switch($relatorio) {
 				case "cortesias":					
 					$this->_file = "relatorio_cortesia.html";	
-					$this->atribui("titulo", "Cortesias");	
+					$this->atribui("titulo", $titulo."Cortesias");	
 					break;
+				case "cancelamentos":					
+					$this->_file = "relatorio_cancelamento.html";	
+					$this->atribui("titulo", $titulo."Cancelamentos");	
+					break;	
 				default:
 					die("erro");	
 			}

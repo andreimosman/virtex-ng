@@ -509,6 +509,19 @@
 			return($res);
 		}
 		
+		public function obtemContratosCanceladosPorPeriodo($periodo){
+			$rs = $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo);
+			$return = array();
+			foreach($rs as $row){
+				$tipo = $row["tipo_produto"];
+				$ano = $row["ano"];
+				$mes = $row["mes"];
+				$return[$ano][$mes][$tipo] = $row["num_contratos"];
+				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];  		
+			}
+			return $return;
+		}
+		
 		public function estornaFatura($id_cobranca) {
 			$filtro = array("id_cobranca" => $id_cobranca);
 			$dados = array("status" => "E");

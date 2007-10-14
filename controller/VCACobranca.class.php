@@ -100,12 +100,13 @@
 		
 		protected function executaRelatorios() {
 		
-			$contas = VirtexModelo::factory("contas");
+			
 			
 			
 			$relatorio = @$_REQUEST["relatorio"];
 			
 			if("cortesias" == $relatorio){
+				$contas = VirtexModelo::factory("contas");
 				$rs = $contas->obtemQtdeContasCortesiaDeCadaTipo();
 				$resumo["total"] = 0;
 				foreach($rs as $row){
@@ -126,6 +127,20 @@
 				$this->_view->atribui("contas", $rs);
 				
 				$this->_view->atribui("filtro", $tipo);
+			} elseif("cancelamentos" == $relatorio) {
+				$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
+				$this->_view->atribui("periodo", $periodo); 
+				$cobranca = VirtexModelo::factory("cobranca"); 
+				$cancelados = $cobranca->obtemContratosCanceladosPorPeriodo($periodo);
+				$this->_view->atribui("cancelados", $cancelados);
+				
+				$i = ( $periodo * -1 ) + 1;
+				$meses = array();
+				for(;$i<=0;$i++){
+					$data = MData::calculaPeriodo(mktime(),$i,"m/Y");
+					list($meses[$data]["mes"],$meses[$data]["ano"]) = split("/",$data);
+				}
+				$this->_view->atribui("meses", $meses);								
 			}
 			
 		}
