@@ -9,7 +9,7 @@
 	[<a href="admin-clientes.php?op=contrato&tela=contratos&id_cliente={$id_cliente}">Voltar</a>]
 	{if $tela == "contrato"}
 		{if $contrato.status != "C" && $contrato.status != "M"}
-			{if $contrato.valor_produto}
+			{if $contrato.valor_produto > 0}
 			[<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}&id_forma_pagamento={$formaPagamento.id_forma_pagamento}">Faturas/Carnês</a>]
 			{/if}
 			[<a href="admin-clientes.php?op=contrato&tela=migrar&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Migrar Contrato</a>]
@@ -83,9 +83,9 @@
 			<td width="110" align="right"><strong>Produto:</strong></td>
 			<td>{$contrato.nome_produto}&nbsp;</td>
 			<td width="110" align="right"><strong>Valor:</strong></td>
-			<td>{if $contrato.valor_produto}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
+			<td>{if $contrato.valor_produto > 0}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
 		</tr>
-		{if $contrato.valor_produto}
+		{if $contrato.valor_produto > 0}
 		<tr>
 			<td width="110" align="right"><strong>Comodato:</strong></td>
 			<td>{$contrato.valor_comodato|string_format:"%.2f"}&nbsp;</td>

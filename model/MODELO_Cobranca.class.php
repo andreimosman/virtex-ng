@@ -12,7 +12,7 @@
 		protected $cbtb_contrato;
 		protected $cbtb_carne;
 		protected $pftb_forma_pagamento;
-		protected $cbtb_fatura;
+		protected $cbtb_fatura;		
 		protected $preferencias;
 		
 		protected $cbtb_endereco_cobranca;
@@ -268,7 +268,8 @@
 			echo "endereco_instalacao\t\t\t=\t".print_r($endereco_instalacao,true)."\n";
 			echo "dados_conta\t\t\t=\t".print_r($dados_conta,true)."\n";
 			echo "gera_carne\t\t\t=\t".print_r($gera_carne,true)."\n";			
-			echo "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</pre>";	*/
+			echo "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</pre>";
+			/*exit;*/
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
 				
@@ -353,8 +354,7 @@
 							
 			if( $id_forma_pagamento ) {
 				$dados["id_forma_pagamento"]=$id_forma_pagamento;
-			}
-
+			}						
 			$this->cbtb_contrato->insere($dados);
 			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata) : array();
 			
@@ -714,6 +714,7 @@
 			
 			return true;
 		}
+		
 	}
 
 

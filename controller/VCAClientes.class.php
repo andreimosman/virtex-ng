@@ -331,12 +331,12 @@
 				
 				case 'migrar':
 				case 'novo_contrato':
-					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
-					
+					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];					
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 				
 					$produtos     = VirtexModelo::factory("produtos");
 					$equipamentos = VirtexModelo::factory("equipamentos");
+					//die("<pre>".print_r($produto,true)."</pre>");
 
 					// Dados comuns
 					$tiposFormaPgto = $this->preferencias->obtemTiposFormaPagamento();
@@ -560,6 +560,10 @@
 								$this->_view->atribui("formaPagamento",$formaPagamento);
 							}
 							
+							$form_post = @$_REQUEST;
+							$form_post["acao"] = "gravar_novo_contrato";
+							$this->_view->atribui("form_post",$form_post);
+							
 							
 							// Seleção de dados para exibição na tela de confirmação.
 							
@@ -660,7 +664,6 @@
 								$this->_view->atribui ("gera_carne", $gera_carne);
 								
 								// $listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
-								
 								
 								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],

@@ -100,6 +100,34 @@
 		
 		protected function executaRelatorios() {
 		
+			$contas = VirtexModelo::factory("contas");
+			
+			
+			$relatorio = @$_REQUEST["relatorio"];
+			
+			if("cortesias" == $relatorio){
+				$rs = $contas->obtemQtdeContasCortesiaDeCadaTipo();
+				$resumo["total"] = 0;
+				foreach($rs as $row){
+					$resumo[$row["tipo_conta"]] = $row["num_contas"];
+					$resumo["total"]+=$row["num_contas"];
+				}
+				$this->_view->atribui("resumo", $resumo);
+				
+				$tipoContas = $contas->obtemTiposConta();
+				asort($tipoContas);
+				$this->_view->atribui("tipoContas", $tipoContas);
+				
+				
+				$tipo = @$_REQUEST["filtro"];				
+				$rs = $contas->obtemContasCortesiaDeCadaTipo($tipo);
+				
+				//die("<pre>".print_r($rs,true)."</pre>");
+				$this->_view->atribui("contas", $rs);
+				
+				$this->_view->atribui("filtro", $tipo);
+			}
+			
 		}
 		
 		

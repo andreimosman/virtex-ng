@@ -36,6 +36,14 @@
 		
 		}
 		
+		public function obtemContas(){
+			return $this->cntb_conta->obtem();
+		}
+		
+		public function obtemContasCortesia(){
+			return $this->cntb_conta->obtem(true);
+		}
+		
 		/**
 		 * obtemContaPeloId
 		 * Retorna as informações de uma conta especificada.
@@ -155,6 +163,35 @@
 		public function obtemQtdeContasPorContrato($id_cliente_produto,$tipo) {
 			return($this->cntb_conta->obtemQuantidadePorTipo($id_cliente_produto, $tipo));
 		}
+		
+		/**
+		 * Retorna a quantidade de contas agrupas por tipo
+		 *
+		 * @param integer $id_cliente_produto
+		 * @return array
+		 */
+		public function obtemQtdeContasDeCadaTipo(){
+			return $this->cntb_conta->obtemQuantidadeContasDeCadaTipo();
+		}
+		
+		/**
+		 * Retorna a quantidade de contas cortesia agrupas por tipo
+		 *
+		 * @return array
+		 */
+		public function obtemQtdeContasCortesiaDeCadaTipo(){
+			return $this->cntb_conta->obtemQuantidadeContasDeCadaTipo(true);
+		}
+		
+		/**
+		 * Retorna lista de contas cortesia agrupas por tipo
+		 *
+		 * @return array
+		 */
+		public function obtemContasCortesiaDeCadaTipo($tipo_conta = false){
+			return $this->cntb_conta->obtemContasDeCadaTipo(true,$tipo_conta);
+		}
+
 		
 		/**
 		 * obtemContasPorCliente()
@@ -615,6 +652,10 @@
 			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
 			
 			// Não se altera nada além dos dados comuns na hospedagem.
+		}
+		
+		public function obtemTiposConta(){
+			return $this->cntb_conta->enumTiposConta();
 		}
 	
 	}

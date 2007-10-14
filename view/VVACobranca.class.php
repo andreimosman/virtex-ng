@@ -59,7 +59,16 @@
 		}
 		
 		protected function exibeRelatorios() {
-		
+			$relatorio = @$_REQUEST["relatorio"];
+			
+			switch($relatorio) {
+				case "cortesias":					
+					$this->_file = "relatorio_cortesia.html";	
+					$this->atribui("titulo", "Cortesias");	
+					break;
+				default:
+					die("erro");	
+			}
 		}
 		
 	}
