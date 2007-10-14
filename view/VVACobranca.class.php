@@ -69,7 +69,11 @@
 				case "cancelamentos":					
 					$this->_file = "relatorio_cancelamento.html";	
 					$this->atribui("titulo", $titulo."Cancelamentos");	
-					break;	
+					break;
+				case "atrasos":					
+					$this->_file = "relatorio_atraso.html";	
+					$this->atribui("titulo", $titulo."Atrasos");	
+					break;		
 				default:
 					die("erro");	
 			}

@@ -661,6 +661,17 @@
 			//
 		}
 		
+		public function obtemFaturasAtrasadasPorPeriodo($periodo){
+			$rs = $this->cbtb_fatura->obtemFaturasAtrasadasPorPeriodo($periodo);			
+			$return = array();
+			foreach($rs as $row){				
+				$ano = $row["ano"];
+				$mes = $row["mes"];
+				$return[$ano][$mes] = $row["num_contratos"];
+			}
+			return $return;
+		}
+		
 		public function obtemStatusFatura(){
 			return $this->cbtb_fatura->enumStatusFatura();
 		}

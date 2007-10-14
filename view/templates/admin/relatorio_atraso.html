@@ -1,0 +1,35 @@
+{include file="relatorio_header.html"}
+<script type="text/javascript">
+<!--
+{literal}	
+	
+	function filtro(filtro){
+		window.open("admin-cobranca.php?op=relatorios&relatorio=atrasos&periodo="+filtro.value,"conteudo");
+		
+	}
+{/literal}
+//-->
+</script>
+<br />
+<p>Período:&nbsp; 
+<select name="periodo" onchange="filtro(this)">
+<option value="12" {if $periodo == 12}selected='selected'{/if}>Ultimos 12 meses</option>
+<option value="6" {if $periodo == 6}selected='selected'{/if}>Ultimos 6 meses</option>
+<option value="3" {if $periodo == 3}selected='selected'{/if}>Ultimos 3 meses</option>
+<option value="2" {if $periodo == 2}selected='selected'{/if}>Ultimos 2 meses</option>
+</select>
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
+	<tr>
+		<th>Período</th>
+		<th>Atrasados</th>
+	</tr>
+	{foreach from=$meses key=p item=m}
+	<tr class='{cycle values="linhai,linhap"}'>
+		<td class="cellInfoCenter">{$p}</td>		
+		<td class="cellInfoCenter">{$atrasos[$m.ano][$m.mes]|default:0}</td>
+	</tr>
+	{/foreach}
+</table>
+<br />
+{include file="relatorio_footer.html"}

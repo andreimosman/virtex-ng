@@ -141,6 +141,24 @@
 					list($meses[$data]["mes"],$meses[$data]["ano"]) = split("/",$data);
 				}
 				$this->_view->atribui("meses", $meses);								
+			}elseif("atrasos" == $relatorio) {
+				$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
+				
+				
+				$this->_view->atribui("periodo", $periodo); 
+				$cobranca = VirtexModelo::factory("cobranca"); 
+				$atrasos = $cobranca->obtemFaturasAtrasadasPorPeriodo($periodo);
+				$this->_view->atribui("atrasos", $atrasos);
+				
+				$i = ( $periodo * -1 ) + 1;
+				$meses = array();
+				for(;$i<=0;$i++){
+					$data = MData::calculaPeriodo(mktime(),$i,"m/Y");
+					list($m,$a) = split("/",$data);
+					$meses[$data]["mes"] = (int) $m;
+					$meses[$data]["ano"] = (int) $a;
+				}
+				$this->_view->atribui("meses", $meses);												
 			}
 			
 		}
