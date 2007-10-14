@@ -20,8 +20,16 @@
 		{foreach name=registros item=r from=$registros}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td class='{$estilo}' width="60" align="right"><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.id_cliente}</a></td>
-			<td class='{$estilo}'><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.nome_razao}</a><br><span style="font-size: 8px; font-family: verdana">{if $r.fone_comercial || $r.fone_residencial || $r.fone_celular}Fone(s): {$r.fone_comercial} {$r.fone_residencial} {$r.fone_celular}{else}Cliente sem telefone cadastrado{/if}</span></td>
+			<td class='{$estilo}' width="60" align="right"><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.id_cliente|string_format:"%05d"}</a></td>
+			<td class='{$estilo}'>
+				<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.nome_razao}</a>
+				<br>
+				<span style="font-size: 8px; font-family: verdana">
+				{$r.endereco}{if $r.complemento} - {$r.complemento}{/if}{if $r.bairro} - {$r.bairro}{/if}<br>
+				{$cidade} - {$uf}<br>
+				{if $r.fone_comercial || $r.fone_residencial || $r.fone_celular}Fone(s): {$r.fone_comercial} {$r.fone_residencial} {$r.fone_celular}{else}Cliente sem telefone cadastrado{/if}
+				</span>
+			</td>
 			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&id_cliente={$r.id_cliente}">{if $r.contratos_bl}SIM{else}NÃO{/if}</a></td>
 			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&id_cliente={$r.id_cliente}">{if $r.contratos_d}SIM{else}NÃO{/if}</a></td>
 			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&id_cliente={$r.id_cliente}">{if $r.contratos_h}SIM{else}NÃO{/if}</a></td>
@@ -31,8 +39,14 @@
 			<td height=110 valign="middle" align="center"><B>NENHUM CLIENTE CADASTRADO NESTA CIDADE.</B></td>
 		</tr>
 		{/foreach}
+		{if count($registros)}
+			<td colspan="4" align="right" style="border-top: solid 1px #000000"><strong>TOTAL DE CLIENTES CADATRADOS NESTA CIDADE: </strong></td>
+			<td align="right" style="border-top: solid 1px #000000"><strong>{$numClientes}</strong></td>
+		{/if}
+
 		<tr>
 			<td colspan="5" align="center" style="border-top: solid 1px"><a href="admin-clientes.php?op=relatorios&relatorio=cliente_cidade">voltar</a></td>
+		</tr>
 	</table>
 {else}
 	<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center">
@@ -55,6 +69,10 @@
 			<td height=110 valign="middle" align="center"><B>Não existem cidades habilitadas ou clientes cadastrados.</B></td>
 		</tr>
 		{/foreach}
+		{if count($registros)}
+			<td colspan="2" align="right" style="border-top: solid 1px #000000"><strong>TOTAL DE CLIENTES CADATRADOS: </strong></td>
+			<td align="right" style="border-top: solid 1px #000000"><strong>{$numClientes}</strong></td>
+		{/if}
 	</table>
 {/if}
 <br>

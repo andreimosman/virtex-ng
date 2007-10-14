@@ -127,6 +127,20 @@
 			return($this->cltb_cliente->obtem(array(),"id_cliente DESC",$maxClientes));
 		}
 		
+		public function obtemPelaInicial($inicial) {
+			$filtro = array();
+			
+			if( $inicial == "0-9" ) {
+				// SIMILAR TO (regex)
+				$filtro["nome_razao"] = '~*:^[0-9]+(.*)';
+			} else {
+				// ILIKE
+				$filtro["nome_razao"] = '%:'.$inicial.'%';
+			}
+
+			return($this->cltb_cliente->obtem($filtro));
+		
+		}
 		
 		
 		public function pesquisaClientesPorConta($textoPesquisa) {

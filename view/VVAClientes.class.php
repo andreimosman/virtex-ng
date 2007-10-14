@@ -222,6 +222,14 @@
 				case 'lista_geral':
 					$titulo .= " :: Listagem Geral ";
 					
+					if( $this->obtem("inicial") ) {
+						$titulo .= " :: " . $this->obtem("inicial");
+					} elseif( $this->obtem("acao") == "TODOS" ) {
+						$titulo .= " :: Listagem Completa";
+					} else {
+						$titulo .= " :: Últimos Cadastrados";
+					}
+					
 					
 					$this->_file = "clientes_relatorios_geral.html";
 					

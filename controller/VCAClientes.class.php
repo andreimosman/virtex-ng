@@ -1181,13 +1181,70 @@
 			$this->_view->atribui("relatorio",$relatorio);
 			
 			
+			$cobranca = VirtexModelo::factory('cobranca');
 			
 			switch($relatorio) {
-				case 'geral':
+				case 'lista_geral':
 					$inicial 	= @$_REQUEST["inicial"];
 					$acao 		= @$_REQUEST["acao"];
 					
+					$this->_view->atribui("acao",$acao);
+					$this->_view->atribui("inicial",$inicial);
+					
+					$iniciais = array("0-9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","Y","X","Z");
+					$this->_view->atribui("iniciais",$iniciais);
+					
+					$listaClientes = array();
+					
+					if( !$acao && !$inicial ) {
+						// Últimos Cadastrados
+						$listaClientes = $this->clientes->obtemUltimos(5);
+					} elseif($inicial) {
+						// Letra Inicial
+						$listaClientes = $this->clientes->obtemPelaInicial($inicial);
+					} elseif($acao == "TODOS") {
+						// TODOS
+						$listaClientes = $this->clientes->obtem(array());
+					}
+					
+					$cache_cidades = array();
+					
+					for($i=0;$i<count($listaClientes);$i++) {
+						if( !@$cache_cidades[$listaClientes[$i]["id_cidade"]] ) {
+							$cache_cidades[$listaClientes[$i]["id_cidade"]] = $this->preferencias->obtemCidadePeloID($listaClientes[$i]["id_cidade"]);
+						}
+						
+						$listaClientes[$i]["cidade"] = $cache_cidades[$listaClientes[$i]["id_cidade"]];					
+
+						$contratos = $cobranca->obtemContratos ($listaClientes[$i]["id_cliente"],"A");
+
+						$cbl = 0;
+						$cd  = 0;
+						$ch  = 0;
+
+						foreach($contratos as $contrato) {
+							switch( trim($contrato["tipo_produto"]) ) {
+								case 'BL':
+									$cbl++;
+									break;
+								case 'D':
+									$cd++;
+									break;
+								case 'H':
+									$ch++;
+									break;
+							}
+						}
+
+						$listaClientes[$i]["contratos_bl"] = $cbl;
+						$listaClientes[$i]["contratos_d"]  = $cd;
+						$listaClientes[$i]["contratos_h"]  = $ch;
+
+					}
+					
+					$this->_view->atribui("listaClientes",$listaClientes);					
 					break;
+
 				case 'cliente_cidade':
 					$id_cidade 	= @$_REQUEST["id_cidade"];
 					$this->_view->atribui("id_cidade",$id_cidade);
@@ -1196,7 +1253,6 @@
 					
 					if( $id_cidade ) {
 						$registros = $this->clientes->obtemClientesPorCidade($id_cidade);
-						$cobranca = VirtexModelo::factory('cobranca');
 						
 						$infoCidade = $this->preferencias->obtemCidadePeloID($id_cidade);
 						$this->_view->atribui("cidade",$infoCidade["cidade"]);
@@ -1229,10 +1285,19 @@
 							
 						}
 						
+						$numClientes = count($registros);
+						
 
 					} else {
 						$registros = $this->clientes->countClientesPorCidade();
+						$numClientes = 0;
+						for($i=0;$i<count($registros);$i++) {
+							$numClientes += $registros[$i]["count"];
+						}
+						
 					}
+
+					$this->_view->atribui("numClientes",$numClientes);
 					
 					
 					$this->_view->atribui("registros",$registros);
