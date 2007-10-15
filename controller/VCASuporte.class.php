@@ -22,6 +22,9 @@
 				case 'graficos':
 					$this->executaGraficos();
 					break;
+				case 'links':
+					$this->executaLinks();
+					break;
 				case 'relatorios':
 					$this->executaRelatorios();
 					break;
@@ -208,6 +211,14 @@
 				}
 			
 			}
+			
+		}
+		
+		protected function executaLinks() {
+			$this->_view->atribuiVisualizacao("links");
+			
+			$links = $this->preferencias->obtemListaLinks();
+			$this->_view->atribui("links",$links);
 			
 		}
 		

@@ -23,6 +23,9 @@
 				case 'graficos':
 					$this->exibeGraficos();
 					break;
+				case 'links':
+					$this->exibeLinks();
+					break;
 				case 'relatorios':
 					$this->exibeRelatorios();
 					break;
@@ -61,6 +64,11 @@
 			$this->_file = "suporte_graficos.html";
 			$this->atribui("titulo","Gráficos");
 			
+		}
+		
+		protected function exibeLinks() {
+			$this->_file = "suporte_links.html";
+			$this->atribui("titulo","Links Externos");
 		}
 		
 		protected function exibeRelatorios() {

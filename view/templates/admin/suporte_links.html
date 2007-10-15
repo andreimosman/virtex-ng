@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="refresh" content="60" /></head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="suporte_header.html"}
+<br>
+<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+	{if count($links)}
+	<tr>
+		<th align="center">COD</th>
+		<th align="center">TITULO / URL</th>
+	</th>
+	{/if}
+	{foreach name=links item=r from=$links}
+	{if ($smarty.foreach.links.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr>
+		<td align='center' width=70 class='{$estilo}'><a href="{$r.url}" target="{$r.target}">{$r.id_link|string_format:"%05d"}</a></td>
+		<td align='left' class='{$estilo}'><b><a href="{$r.url}" target="{$r.target}">{$r.titulo|upper}</a></b><br><small><a href="{$r.url}" target="{$r.target}">{$r.url}</a></small></td>
+	</tr>
+	{foreachelse}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>NÃO EXISTEM LINKS EXTERNOS CADASTRADOS.</B></td>
+		</tr>
+	{/foreach}
+</table>
+
+
+</body>
+</html>

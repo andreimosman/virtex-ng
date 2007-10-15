@@ -38,8 +38,8 @@
 			$menuClientesRelatorios->addItem("Clientes por Cidade","admin-clientes.php?op=relatorios&relatorio=cliente_cidade",$target);
 			$menuClientes->addSubmenu("Relatórios", $menuClientesRelatorios);
 
-			$menuClientes->addSeparator();
-			$menuClientes->addItem("Eliminar","admin-clientes.php?op=eliminar", $target);
+			// $menuClientes->addSeparator();
+			// $menuClientes->addItem("Eliminar","admin-clientes.php?op=eliminar", $target);
 
 			$menu->addSubmenu("Clientes",$menuClientes);
 
@@ -85,6 +85,9 @@
 			$menuSuporte = new MMenu();
 			$menuSuporte->addItem("Gráficos", "admin-suporte.php?op=graficos", $target);
 			$menuSuporte->addItem("Monitoramento", "admin-suporte.php?op=monitoramento", $target);
+			
+			$menuSuporte->addSeparator();
+			$menuSuporte->addItem("Links Externos", "admin-suporte.php?op=links", $target);
 
 			$menuSuporte->addSeparator();
 			$menuSuporteFerramentas = new MMenu();
@@ -152,7 +155,7 @@
 
 			$menuAdministracao->addSeparator();
 			$menuAdministracaoFerramentas = new MMenu();
-			$menuAdministracaoFerramentas->addItem("Backup & Restore", "admin-administracao.php?op=backup", $target);
+			$menuAdministracaoFerramentas->addItem("Backup & Restore", "admin-administracao.php?op=ferramentas&ferramenta=backup", $target);
 			$menuAdministracao->addSubmenu("Ferramentas", $menuAdministracaoFerramentas);
 
 			$menuAdministracao->addSeparator();

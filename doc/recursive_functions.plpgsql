@@ -1,0 +1,59 @@
+/**
+ * Não se esqueça de executar o:
+ *  createlang -U pgsql plpgsql template1
+ */
+
+
+
+
+
+DROP FUNCTION origem_contrato_migrado(id_contrato integer);
+
+CREATE FUNCTION
+   origem_contrato_migrado(id_contrato integer) RETURNS integer AS $$
+DECLARE
+	r record;
+	retorno integer;
+BEGIN
+   SELECT id_cliente_produto INTO r FROM cbtb_contrato WHERE migrado_para = id_contrato;
+
+   IF r.id_cliente_produto is null  THEN 
+      RETURN id_contrato;
+   END IF;
+
+   RETURN origem_contrato_migrado(r.id_cliente_produto);
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+DROP FUNCTION data_contratacao(id_contrato integer);
+
+CREATE FUNCTION data_contratacao(id_contrato integer) RETURNS date AS $$
+DECLARE
+	r record;
+	id_contrato_original integer;
+BEGIN
+	id_contrato_original := origem_contrato_migrado(id_contrato);
+	
+	SELECT data_contratacao INTO r FROM cbtb_contrato WHERE id_cliente_produto = id_contrato_original;
+	
+	RETURN r.data_contratacao;
+
+END
+$$ LANGUAGE plpgsql;
+
+/** 
+ * TESTES
+ 
+SELECT origem_contrato_migrado(209);
+SELECT origem_contrato_migrado(208);
+SELECT data_contratacao(209);
+SELECT data_contratacao(208);
+
+SELECT id_cliente_produto,migrado_para FROM cbtb_contrato;
+
+*/
+

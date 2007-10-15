@@ -109,13 +109,15 @@
 				// Pagamento pós pago
 
         		$composicao = array();
-
-        		if( $tx_instalacao ) {
+        		
+        		if( ((float)$tx_instalacao) > 0 ) {
+        			echo "TX!!";
 					// Gerar fatura 0 com a taxa de instalaçao
 					$composicao["instalacao"] = $tx_instalacao;
 					$faturas[] = array("data"=>$data_contratacao,"valor" => $tx_instalacao,"composicao"=>$composicao);
+					$meses_cobrados++;
 				}
-				$meses_cobrados++;
+				
 				
 
 			} else {
@@ -142,7 +144,7 @@
 					$composicao["comodato"] = $valor_comodato;
 				}
 
-        		if( $tx_instalacao ) {
+        		if( ((float)$tx_instalacao) > 0) {
 					$valor_fatura += $tx_instalacao;
 					$composicao["instalacao"] = $tx_instalacao;
 				}

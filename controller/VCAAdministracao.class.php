@@ -329,7 +329,23 @@
 		}
 		
 		protected function executaFerramentas() {
-		
+			$ferramenta = @$_REQUEST["ferramenta"];
+			$this->_view->atribuiVisualizacao("ferramentas");
+			
+			switch($ferramenta) {
+				case 'backup':
+					/**
+					 * Rotina de backup
+					 */
+					
+					
+					
+					
+					
+					
+					break;
+			
+			}
 		}
 		
 		protected function executaRelatorios() {

@@ -127,7 +127,13 @@
 		}
 		
 		protected function exibeFerramentas() {
-		
+			// echo "EF";
+			$this->_file = "administracao_backup.html";
+			
+			$titulo = "Backup";
+			
+			
+			$this->atribui("titulo", $titulo);
 		}
 		
 		protected function exibeRelatorios() {

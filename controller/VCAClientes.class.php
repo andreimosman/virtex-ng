@@ -336,7 +336,6 @@
 				
 					$produtos     = VirtexModelo::factory("produtos");
 					$equipamentos = VirtexModelo::factory("equipamentos");
-					//die("<pre>".print_r($produto,true)."</pre>");
 
 					// Dados comuns
 					$tiposFormaPgto = $this->preferencias->obtemTiposFormaPagamento();
@@ -386,8 +385,6 @@
 						$listaD		= $produtos->obtemListaPlanos('D','t');
 						$listaH		= $produtos->obtemListaPlanos('H','t');
 						
-						//die("<pre>".print_r($listaBL,true)."<pre>");
-						
 						$this->_view->atribui("listaBL",MJson::encode($listaBL));
 						$this->_view->atribui("listaD",MJson::encode($listaD));
 						$this->_view->atribui("listaH",MJson::encode($listaH));
@@ -421,7 +418,8 @@
 						
 						$listaNAS = $equipamentos->obtemListaNAS();
 						$this->_view->atribui("listaNAS",$listaNAS);
-						$listaPOP = $equipamentos->obtemListaPOPs('A');
+						// $listaPOP = $equipamentos->obtemListaPOPs('A');
+						$listaPOP = $equipamentos->obtemListaPOPs();
 						$this->_view->atribui("listaPOP",$listaPOP);
 						
 						// Valores Padrão
@@ -553,13 +551,7 @@
 							$cidade = $this->preferencias->obtemCidadePeloId($cliente["id_cidade"]);
 							$cliente["cidade"] = $cidade["cidade"] . "-" . $cidade["uf"];
 							$this->_view->atribui("cliente",$cliente);
-							
-							$id_forma_pagamento = @$_REQUEST["id_forma_pagamento_" . @$_REQUEST["forma_pagamento"]];
-							if( $id_forma_pagamento ) {
-								$formaPagamento = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-								$this->_view->atribui("formaPagamento",$formaPagamento);
-							}
-							
+
 							$form_post = @$_REQUEST;
 							$form_post["acao"] = "gravar_novo_contrato";
 							$this->_view->atribui("form_post",$form_post);
@@ -569,8 +561,19 @@
 							
 						}
 						
-						if( $acao == "gravar_novo_contrato" ) {
 
+						if( !$id_forma_pagamento ) {
+							$id_forma_pagamento = @$_REQUEST["id_forma_pagamento_" . @$_REQUEST["forma_pagamento"]];
+							if( $id_forma_pagamento ) {
+								$formaPagamento = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+								$this->_view->atribui("formaPagamento",$formaPagamento);
+							}
+						}
+							
+
+
+						if( $acao == "gravar_novo_contrato" ) {
+						
 							$erro = "";
 
 							$senha_admin = @$_REQUEST["senha_admin"];
@@ -667,8 +670,8 @@
 								
 								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
-																					$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $carencia,																
-																					$_REQUEST["id_prduto"], $_REQUEST["id_forma_pagamento"], $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);																						
+																					$_REQUEST["desconto_promo"], $_REQUEST["desconto_periodo"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $carencia,
+																					$_REQUEST["id_produto"], $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
 
 								if( $tela == "migrar" ) {
 									// ESTORNAR/MIGRAR AS FATURAS 
@@ -974,8 +977,6 @@
 					
 					if($id_conta) {  // alteração
 						if("BL" == $tipo){
-							//die("MODELO_Contas::alteraContaBandaLarga $id_conta,$senha, $status,$observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco,$alterar_endereco<br />");
-							
 							
 							$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
 									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
@@ -1064,8 +1065,9 @@
 				} else {
 					$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
 					$listaNAS = $equipamentos->obtemListaNAS();
-					$this->_view->atribui("listaNAS",$listaNAS);					
-					$listaPOP = $equipamentos->obtemListaPOPs('A');
+					$this->_view->atribui("listaNAS",$listaNAS);
+					// $listaPOP = $equipamentos->obtemListaPOPs('A');
+					$listaPOP = $equipamentos->obtemListaPOPs();
 					$this->_view->atribui("listaPOP",$listaPOP);
 					$tiposNas = $equipamentos->obtemTiposNAS();					
 					$this->_view->atribui("tiposNAS",$tiposNas);
