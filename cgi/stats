@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# $Id: stats,v 1.1 2007/09/30 23:01:49 mosman Exp $
+# $Id: stats,v 1.2 2007/10/15 20:53:25 mosman Exp $
 #
 # mrtg-rrd.cgi: The script for generating graphs for MRTG statistics.
 #
@@ -1011,7 +1011,7 @@ and&nbsp;<a HREF="http://www.bungi.com">Dave&nbsp;Rand</a>&nbsp;<a HREF="mailto:
 </tr>
 </table>
 EOF
-	print '<!--$Id: stats,v 1.1 2007/09/30 23:01:49 mosman Exp $-->', "\n";
+	print '<!--$Id: stats,v 1.2 2007/10/15 20:53:25 mosman Exp $-->', "\n";
 }
 
 sub dump_targets() {
