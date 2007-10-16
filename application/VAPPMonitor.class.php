@@ -91,6 +91,12 @@
 				}
 			}
 			
+			foreach($cacheServidores as $k => $v) {
+				$cacheServidores[$k]["conn"]->close();
+			}
+			
+			unset($cacheServidores);
+			
 		
 		}
 	

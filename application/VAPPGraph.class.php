@@ -138,6 +138,8 @@
 					
 					fwrite($fh,$comm->getStats());
 					
+					$comm->close();
+					
 				}			
 			}
 
