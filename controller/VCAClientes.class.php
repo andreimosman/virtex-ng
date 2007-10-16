@@ -378,7 +378,8 @@
 						$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
 						
 						//Limite Prorata - criar funcao pra puxar do banco ex.: $this->preferencias->getLimiteProrata();
-						$this->_view->atribui("limite_prorata", 20);
+						$prefCobranca = $this->preferencias->obtemPreferenciasCobranca();
+						$this->_view->atribui("limite_prorata", ((int)$prefCobranca["dias_minimo_cobranca"]));
 						
 						// Lista de produtos disponíveis por tipo.
 						$listaBL 	= $produtos->obtemListaPlanos('BL','t');
