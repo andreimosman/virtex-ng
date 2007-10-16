@@ -94,7 +94,7 @@ function openLinkPOP(id_pop) {
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
 			<td align='right' width=40 class='{$estilo}'><label class="{$estilo_fonte}"><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.id_pop|string_format:"%05d"}</a></label></td>
-			<td class='{$estilo}'><p class="nivel_{$r.nivel}">{if $r.nivel > 0}<img class="imagem" src="view/templates/imagens/hier-connector.gif" border=0>{/if}<label class="{$estilo_fonte}">{$r.nome|upper}</label></p></td>
+			<td class='{$estilo}'><p class="nivel_{$r.nivel}">{if $r.nivel > 0}<img class="imagem" src="view/templates/imagens/hier-connector.gif" border=0>{/if}<label class="{$estilo_fonte}">{$r.nome|upper}</label><br><span style="font-size: 8px;">&nbsp; &nbsp;&nbsp; &nbsp; {$r.ipaddr}&nbsp;</span></p></td>
 			<td class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')"><label class="{$estilo_fonte}">{$r.tipo|upper}</label></a></td>
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{if $r.ativar_monitoramento == 't' && $r.ipaddr}SIM{else}NÃO{/if}</label></td>
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$r.num_ping}</label></td>
@@ -103,6 +103,7 @@ function openLinkPOP(id_pop) {
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$maximo}</label></td>
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$media}</label></td>
 		</tr>
+
 		{foreachelse}
 		{if $texto_pesquisa && $tipo_pesquisa}
 		<tr>

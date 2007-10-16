@@ -162,6 +162,7 @@
 			$equipamentos = VirtexModelo::factory('equipamentos');
 			$registros = $equipamentos->obtemListaPOPs();
 			
+			//
 			$resumo = array("ERR" => 0, "WRN" => 0, "OK" => 0);
 			
 			for($i=0;$i<count($registros);$i++) {
@@ -174,7 +175,6 @@
 						$st = $status["status"] == "IER" ? "ERR" : $status["status"];
 						$resumo[ $st ]++;
 					}
-					
 				}
 			}
 			
