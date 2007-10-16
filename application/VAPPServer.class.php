@@ -44,9 +44,9 @@
 				// pcntl_wait($signal);
 			} else {
 				//
-				//while(true) {
-				$this->executa();
-				//}
+				while(true) {
+					$this->executa();
+				}
 			}
 
 		}
