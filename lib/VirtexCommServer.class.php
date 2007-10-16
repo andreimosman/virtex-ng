@@ -172,8 +172,28 @@
 
 		}
 
-
-
+		public function acceptConn() {
+			$this->conn = @stream_socket_accept($socket);
+			if( $this->conn ) {
+				$p = pcntl_fork();
+				if( $p === -1 ) {
+					// Erro
+				} elseif( $p ) {
+					pcntl_wait($st);
+					// while( $this->conn = @stream_socket_accept($socket) ) {
+					//	$this->connChild();
+					//return;
+				} else {
+					$this->serverDialog();
+					fclose($this->conn);
+				}
+				echo "AC: false\n";
+				return false;
+			}
+			
+			echo "AC: true\n";
+			return(true);
+		}
 
 
 		public function start() {
@@ -186,50 +206,36 @@
 				echo "$errstr ($errno)\n";
 				exit(-1);
 			} else {
-				$pid = -1;
-
 				/**
 				 * Loop Principal
 				 */
-				// while( true ) {
-				for($i=0;$i<10;$i++) {
-					$p = pcntl_fork();
-					
-					if( $p === -1 ) {
-						// Erro
-					} elseif( $p ) {
+				
+				while(true) {
+					$pid = pcntl_fork();
+					if($p === -1) {
 						
+					} elseif($pid) {
+						// Parent
+						pcntl_wait($status);
 					} else {
-						while( $this->conn = @stream_socket_accept($socket) ) {
-
-							$pid = pcntl_fork();
-							if( $pid === -1 ) {
-								// Erro
-							} elseif( $pid ) {
-								// Parent
-								pcntl_wait($status);
-								//return(0);
+						while($this->conn = @stream_socket_accept($socket)) {
+							$p = pcntl_fork();
+							
+							if( $p === -1 ) {
+								return;
+							} elseif ($p) {
+								return;
 							} else {
-								/**
-								 * Conversa
-								 */
 								$this->serverDialog();
-
-								/**
-								 * Fecha a conexXo
-								 */
 								fclose($this->conn);
-
-								// Libera o fork
-								return(0);
+								return;
 							}
-
 						}
 					}
-
 				}
-
+				
 				fclose($socket);
+
 			}
 
 		}
