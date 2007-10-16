@@ -9,8 +9,11 @@
 		
 		protected $userbase;
 		
+		protected $forks;
+		
 		public function __construct($chave,$host="0.0.0.0",$port="11000",$userbase=array()) {
 			$this->initVars();
+			$forks = array();
 
 			$this->chave    = trim($chave);
 			$this->host     = trim($host);
@@ -178,30 +181,54 @@
 			$server_str = "tcp://" . $this->host . ":" . $this->port;
 
 			$socket = @stream_socket_server($server_str, $errno, $errstr);
-
+			
 			if( !$socket ) {
 				echo "$errstr ($errno)\n";
 				exit(-1);
 			} else {
+				$pid = -1;
+
 				/**
 				 * Loop Principal
 				 */
-				while( true ) {
-					while( $this->conn = @stream_socket_accept($socket) ) {
+				// while( true ) {
+				for($i=0;$i<10;$i++) {
+					$p = pcntl_fork();
+					
+					if( $p === -1 ) {
+						// Erro
+					} elseif( $p ) {
+						
+					} else {
+						while( $this->conn = @stream_socket_accept($socket) ) {
 
-						/**
-						 * Conversa
-						 */
-						$this->serverDialog();
+							$pid = pcntl_fork();
+							if( $pid === -1 ) {
+								// Erro
+							} elseif( $pid ) {
+								// Parent
+								pcntl_wait($status);
+								//return(0);
+							} else {
+								/**
+								 * Conversa
+								 */
+								$this->serverDialog();
 
+								/**
+								 * Fecha a conexXo
+								 */
+								fclose($this->conn);
 
-						/**
-						 * Fecha a conexXo
-						 */
-						fclose($this->conn);
+								// Libera o fork
+								return(0);
+							}
 
+						}
 					}
+
 				}
+
 				fclose($socket);
 			}
 

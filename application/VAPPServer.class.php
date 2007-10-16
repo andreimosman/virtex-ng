@@ -41,12 +41,12 @@
 				die("O sistema não pode operar em modo 'daemon'");
 			} elseif($pid) {
 				// Parent
-				
+				// pcntl_wait($signal);
 			} else {
 				//
-				while(true) {
-					$this->executa();
-				}
+				//while(true) {
+				$this->executa();
+				//}
 			}
 
 		}

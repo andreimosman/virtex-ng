@@ -8,7 +8,6 @@
 	
 	$app = new VAPPServer();
 	
-	// print_r($app);
 	exit($app->daemon());
 
 ?>
