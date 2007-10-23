@@ -86,7 +86,6 @@
 			}
 
 			foreach($this->nasConfig->config as $nas => $dados) {
-				// echo "NAS: " . $nas . "\n";
 				@list($tipo,$id_nas) = explode(":",$nas);
 				
 				if( ((int)$dados["enabled"]) && trim($dados["interface"]) ) {

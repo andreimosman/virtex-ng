@@ -266,7 +266,10 @@
 		
 		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento) {
 			$filtro = array("id_pop"=>$id_pop);
-			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "status" => $status);			
+			$dados = array("nome"=>$nome, "info"=>$info, "status" => $status);
+			if( $tipo ) {
+				$dados["tipo"] = $tipo;
+			}
 			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
 			$dados["ipaddr"] = $ipaddr ? $ipaddr : null; 			
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			

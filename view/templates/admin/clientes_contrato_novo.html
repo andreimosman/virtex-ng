@@ -81,7 +81,9 @@ function validaUsername(){
 function showResponseUsername(originalRequest) {
 	if ( !getReturn(originalRequest.responseText)){
 		$('username').value = "";
-		$('username').focus();
+		if( $('username').enabled ) {
+			$('username').focus();
+		}
 		returnStatusUsername = false;
 	} else {
 		returnStatusUsername = true;
@@ -639,29 +641,58 @@ function checkStatusFields(tag) {
 
 function calculaDiaProximaFatura() {
 
+	// window.alert("CALCULA!!!");
+
+
+	// year, mount, date
+	var sD = $F('data_contratacao').split("/");
    	var frm = document.contratacao;
 
     var dia_ven = document.getElementById("dia_vencimento").value;
-    var today = new Date();
+    // var data_base = new Date();
+    var data_base = new Date(sD[2],parseInt(sD[1]) - 1,sD[0]);
 
-    dif =(parseInt(dia_ven)+30)-parseInt(today.getDate());
+    dif =(parseInt(dia_ven)+30)-parseInt(data_base.getDate());
+
+
+
     //alert(dif);
     if ( dif >= LIMITE_PRORATA ) {
-      today.setMonth(today.getMonth()+2);
+      data_base.setMonth(data_base.getMonth()+1);
     }
     else {
-      today.setMonth(today.getMonth()+3);
+      data_base.setMonth(data_base.getMonth()+2);
     }
+
+    mes = data_base.getMonth()+1;
+
+    data_base.setDate(dia_ven);
+    t_dia = data_base.getDate();
+
+
+    for( t_dia = data_base.getDate(); t_dia != dia_ven; ) {
+    	--dia_ven;
+    	data_base.setDate(dia_ven);
+    	data_base.setMonth(mes - 1);
+    	t_dia = data_base.getDate();
+
+    	if( t_dia == 0 || dia_ven == 0 ) {
+    		break;
+    	}
+    }
+
+
+    if ( mes < 10 )
+       mes = "0"+mes;
 
     if ( dia_ven < 10 )
        dia_ven = "0"+dia_ven;
 
-    mes = today.getMonth();
-    if ( mes < 10 )
-       mes = "0"+mes;
 
-    frm.primeiro_vencimento_input.value = dia_ven+"/"+mes+"/"+today.getYear();
-    frm.primeiro_vencimento.value = dia_ven+"/"+mes+"/"+today.getYear();
+
+
+    frm.primeiro_vencimento_input.value = dia_ven+"/"+mes+"/"+data_base.getYear();
+    frm.primeiro_vencimento.value = dia_ven+"/"+mes+"/"+data_base.getYear();
 }
 
 function replaceField(field) {
@@ -722,25 +753,31 @@ function showResponse(originalRequest) {
 }
 
 
-function validacao(frm ) {	
-	var migracao = false;	
+function validacao(frm ) {
+	var migracao = false;
 
-	
-		
-	if( $F('tipo') != '' ) {
+	if( !$F('tipo') ) {
+		window.alert("É necessário escolher o tipo de contrato.");
+		return false;
+	}
+
+
+
+
+
+
+	if( $F('tipo') != '' && $F('id_produto_original') != '') {
 		migracao = true;
-		//window.alert($F('id_produto_original'));
-		//window.alert($F('id_produto'));
 		if( $F('id_produto_original') == $F('id_produto') ) {
 			window.alert("Você deve escolher outro plano para migrar o contrato.");
 			return false;
 		}
 	}
-	
-	if( !migracao ) {		
+
+	if( !migracao ) {
 			username = $('username');
 			criar_email = $('criar_email');
-			
+
 			if($F('tipo') == "BL") {
 				if(!checkDadosConexao()){
 					return false;
@@ -757,23 +794,29 @@ function validacao(frm ) {
 				if(!validaEmail()){
 					return false;
 				}
-			}		
+			}
 	} else {
 		dia_vencimento = $('dia_vencimento');
 		carencia = $('carencia');
-		
+
 		if( 1 > dia_vencimento.value){
 			alert("Informe o dia de vencimento!");
-			dia_vencimento.focus();
+			if( dia_vencimento.enabled ) {
+				dia_vencimento.focus();
+			}
 			return false;
 		}
-		
+
 		if( 1 > carencia.value){
 			alert("Informe a carencia!");
-			carencia.focus();
+			if( carencia.enabled ) {
+				carencia.focus();
+			}
 			return false;
 		}
-	}	
+	}
+
+
 	if ( !cortesia && ( frm.endereco_cobranca.value == '' || frm.bairro_cobranca.value == '' || frm.cep_cobranca.value == '') ) {
 		alert('Preencha o endereco de cobranca!');
 		frm.difEnderecoMail.checked = true;
@@ -793,11 +836,13 @@ function validacao(frm ) {
 	if( !migracao ) {
 		if ( frm.senha.value != frm.confsenha.value ) {
 			alert('Verifique a senha!');
-			frm.senha.focus();
+			if( frm.senha.enabled ) {
+				frm.senha.focus();
+			}
 			return false;
 		}
 	}
-	
+
 	if( $F('tipo') == 'BL' ) {
 		var mac = $('mac');
 		var selecao_redeip = $('selecao_redeip');
@@ -807,28 +852,34 @@ function validacao(frm ) {
 
 		if("" == nas.value){
 			alert("Selecione um nas!");
-			nas.focus();
+			if( nas.enabled ) {
+			   nas.focus();
+			}
 			return false;
 		}
 
 		if("" == pop.value){
 			alert("Selecione um pop!");
-			pop.focus();
+			if( pop.enabled ) {
+				pop.focus();
+			}
 			return false;
 		}
 
 		if("M" == selecao_redeip.value) {
-			if("" != endereco_redeip.value){				
+			if("" != endereco_redeip.value){
 				if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
 					return false;
 				}
 			} else {
 				alert("Preencher o campo de endereço IP!");
-				endereco_redeip.focus();
+				if( endereco_redeip.enabled ) {
+					endereco_redeip.focus();
+				}
 				return false;
 			}
 		}
-		
+
 		var nas_text = nas.options[nas.options.selectedIndex].text
 		var nas_type=nas_text.split(":");
 		if( ("IP" == nas_type[0]) && ("" == mac.value) ){
@@ -836,7 +887,7 @@ function validacao(frm ) {
 				return false;
 			}
 		}
-		
+
 	}
 
 	return true;
@@ -864,7 +915,9 @@ function checkDadosConexao(){
 				}
 			} else {
 				alert("Preencher o campo de endereço IP!");
-				endereco_redeip.focus();
+				if( endereco_redeip.enabled ) {
+					endereco_redeip.focus();
+				}
 				return false;
 			}
 		}
@@ -1696,7 +1749,7 @@ contratoAlteraFormaPagamentoDA();
 	</table>
 {/if}
 	<br />
-	
+
 	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
 		<tr>
 			<th colspan=2 style="border-right: solid 2px #000000;">faturas</th>
@@ -1713,8 +1766,8 @@ contratoAlteraFormaPagamentoDA();
 		</tr>
 	{if $produto.valor > 0}
 		<!-- FATURAS QUE SERAO CADASTRADAS -->
-		
-			
+
+
 			{foreach name=registros item=f from=$faturas}
 			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 			<tr>
@@ -1728,18 +1781,18 @@ contratoAlteraFormaPagamentoDA();
 				<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
 			</tr>
 			{/foreach}
-		
+
 	{else}
-		<tr>			
+		<tr>
 			<td colspan="7" class='{$estilo}' align="center" style="border-right: solid 2px #000000;"><br /><span style=" color:red; font-weight: bold;">*** Contrato cortesia faturamento não aplicável ***</span><br /><br /> </td>
 			<!-- COMPOSICAO DE VALORES>
 			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
 			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
 			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
 			<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
-			<td class='{$estilo}' align="center">*</td-->			
+			<td class='{$estilo}' align="center">*</td-->
 		</tr>
-	{/if}	
+	{/if}
 	</table>
 	<br />
 </td>

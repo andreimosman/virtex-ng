@@ -278,7 +278,7 @@
 					
 					$exibir_enderecos = @$_REQUEST["exibir_enderecos"];
 					$this->_view->atribui("exibir_enderecos",$exibir_enderecos);
-					
+										
 					if( $exibir_enderecos ) {
 						if( $info["tipo_nas"] == "I" ) {
 							// NAS IP
@@ -331,6 +331,8 @@
 								$this->_view->atribui("rede_inicial",$rede_inicial);
 								
 								try {
+								
+								
 									for($ip = new MInet($rede_inicial,$rede_origem),$c=0; $ip->obtemRede() != "" && $c<$maximo_redes; $ip = $ip->proximaRede(),$c++) {
 										//
 										// 1) Verificar se a rede que está tentando cadastrar não está cadastrada. 
@@ -351,6 +353,7 @@
 										$equipamentos->cadastraRedeIPNAS($id_nas,$nova_rede,$tipo_rede);
 
 									}
+
 								} catch(MException $e) {
 									$this->_view->atribui("erro_inet",$e->getMessage());
 								}
