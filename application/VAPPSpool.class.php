@@ -21,13 +21,13 @@
 		}
 		
 		public function executa() {
-			print_r($this->options);
+			// print_r($this->options);
 			if( @is_array($this->options[0]) && (in_array("b",@$this->options[0]) || in_array("--boot",@$this->options[0])) ) {
 				// Rotina de Boot
 
-				//$this->bootNetwork();
+				$this->bootNetwork();
 				$this->bootInfraestrutura();
-				//$this->bootClientes();
+				$this->bootClientes();
 				//$this->bootPPPoE();
 				//$this->bootPPTP();
 				
