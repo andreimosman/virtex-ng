@@ -1,5 +1,12 @@
 /**
  * TABELAS DE PRODUTO
+ *
+ *
+ *
+ * pg_dump -DaU virtex -t tmp_pr_bl | sed -E 's/tmp_pr_bl/prtb_produto_bandalarga/g' | psql -U virtex-ng
+ * pg_dump -DaU virtex -t tmp_pr_h | sed -E 's/tmp_pr_h/prtb_produto_hospedagem/g' | psql -U virtex-ng
+ * pg_dump -DaU virtex -t tmp_pr_d | sed -E 's/tmp_pr_d/prtb_produto_discado/g' | psql -U virtex-ng
+ *
  */
 
 CREATE TABLE tmp_pr_bl AS
@@ -34,6 +41,13 @@ FROM
 
 /**
  * TABELAS DE CONTAS
+ *
+ *
+ * pg_dump -DaU virtex -t tmp_cn_bl | sed -E 's/tmp_cn_bl/cntb_conta_bandalarga/g' | psql -U virtex-ng
+ * pg_dump -DaU virtex -t tmp_cn_d | sed -E 's/tmp_cn_d/cntb_conta_discado/g' | psql -U virtex-ng
+ * pg_dump -DaU virtex -t tmp_cn_e | sed -E 's/tmp_cn_e/cntb_conta_email/g' | psql -U virtex-ng
+ * pg_dump -DaU virtex -t tmp_cn_h | sed -E 's/tmp_cn_h/cntb_conta_hospedagem/g' | psql -U virtex-ng
+ *
  */
 CREATE TABLE tmp_cn_bl AS
 SELECT
