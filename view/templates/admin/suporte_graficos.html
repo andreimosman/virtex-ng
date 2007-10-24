@@ -99,9 +99,9 @@ label {
 {else}
 <script language="JavaScript">
 {literal}
-function abreEstatisticas(user) {
+function abreEstatisticas(user,id) {
 	var url="/virtex-cgi/stats/"+user+".html";
-	window.open(url,"grafico"+user,'scrollbars=yes,width=550,height=500');
+	window.open(url,"grafico"+id,'scrollbars=yes,width=550,height=500');
 }
 {/literal}
 </script>
@@ -121,7 +121,7 @@ function abreEstatisticas(user) {
 				<td style="border-bottom: dashed 1px #000000;" width="35%" class='{$estilo}'><strong>Endereço: </strong>{if $conta.rede}{$conta.rede}{else}{$conta.ipaddr}{/if}</td>
 			</tr>
 			<tr>
-				<td colspan=3 align="center" class='{$estilo}' style="border-bottom: solid 2px #000000;"><a href="javascript:abreEstatisticas('{$conta.username}')"><img border=0 src="/virtex-cgi/stats/{$conta.username}-day.png"></a></td>
+				<td colspan=3 align="center" class='{$estilo}' style="border-bottom: solid 2px #000000;"><a href="javascript:abreEstatisticas('{$conta.username}','{$conta.id_conta}')"><img border=0 src="/virtex-cgi/stats/{$conta.username}-day.png"></a></td>
 			</tr>
 			{/foreach}
 		</table>
