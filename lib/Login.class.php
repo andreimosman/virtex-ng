@@ -93,11 +93,11 @@
 		}
 		
 		public function podeLer($privilegio) {
-			return(@$this->listaPodeLer($privilegio));
+			return(@$this->listaPodeLer[$privilegio]);
 		}
 
 		public function podeGravar($privilegio) {
-			return(@$this->listaPodeGravar($privilegio));
+			return(@$this->listaPodeGravar[$privilegio]);
 		}
 
 

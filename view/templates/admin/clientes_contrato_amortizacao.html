@@ -1,82 +1,81 @@
-
 <script type="text/javascript">
 <!--
-	
+
 	{literal}
-	
+
 	function cancelar(id){
-		window.open("admin-clientes.php?op=contrato&tela=faturas&id_cliente="+id,"conteudo");		
-	}	
-	
+		window.open("admin-clientes.php?op=contrato&tela=faturas&id_cliente="+id,"conteudo");
+	}
+
 	function pagamentoHoje(){
 		var obj = $('data_pagamento');
 		var data = new Date();
 		hoje = data.getDate() +"/"+ (data.getMonth() + 1) + "/" + data.getFullYear();
 		obj.value = hoje;
 	}
-	
+
 	function pagamentoVencimento(){
-		var obj = $('data_pagamento');		
+		var obj = $('data_pagamento');
 		obj.value = '{/literal}{$data}{literal}';
 	}
-	
-	
+
+
 	function validaForm() {
-		
+
 		var observacoes		= $('observacoes');
 		var reagendamento	= $('reagendamento');
 		var reagendar		= $('reagendar');
 		var famortizar		= $('amortizar');
 		var fpagamento		= $('data_pagamento');
 		var fpendente		= $('valor_pendente');
-		
+
 		if("" == famortizar.value){
 			alert('Informe o valor recebido!');
 			famortizar.focus();
 			return false;
 		}
-		
+
 		if("" == fpagamento.value){
 			alert('Informe a data do pagamento!');
 			fpagamento.focus();
 			return false;
 		}
-		
-		
+
+
 		if( (fpendente.value == 0) && (reagendar.checked) ){
 			alert("Não é possivel re-agendar e quitar a fatura ao mesmo tempo!");
 			return false;
 		}
-		
+
 		if( fpendente.value < 0){
 			alert("Valor a receber excede o valor pendente!");
 			fpendente.focus();
 			return false;
 		}
-		
-		
-		
+
+
+
 		calculaValores();
-		
-		
-		
+
+
+
 		if(reagendar.checked){
 			if("" == reagendamento.value){
 				alert("Informar a data de re-agendamento!");
 				reagendamento.focus();
 				return false;
 			}
-			
+
 			if("" == observacoes.value){
 				alert("Informar o motivo do re-agendamento!");
 				observacoes.focus();
 				return false;
 			}
-		}    
-		
+		}
+
 		return true;
 	}
-	
+
 	function calculaValores() {
 		var fpendente		= $('valor_pendente');
 		var frestante		= $('valor_restante');
@@ -86,45 +85,45 @@
 		var fpagto_parcial	= $('pagto_parcial');
 		var facrescimo		= $('acrescimo');
 		var famortizar		= $('amortizar');
-		
-		fdesconto.value = fdesconto.value.replace(",","."); 
+
+		fdesconto.value = fdesconto.value.replace(",",".");
 		facrescimo.value = facrescimo.value.replace(",",".");
 		famortizar.value = famortizar.value.replace(",",".");
-	
+
 		var vtotal		= new Number( fvalor.value );
 		var vdesconto	= new Number( fdesconto.value );
 		var vparcial	= new Number( fpagto_parcial.value );
 		var vacrescimo	= new Number( facrescimo.value );
 		var calculado = new Number(vtotal - vdesconto - vparcial + vacrescimo);
 		frestante.value =  calculado.toFixed(2);
-		
-				
+
+
 		var vamortizar	= new Number( famortizar.value );
-		var calculado2 = new Number(calculado - vamortizar);		
+		var calculado2 = new Number(calculado - vamortizar);
 		fpendente.value =  calculado2.toFixed(2);
-		
+
 		if(calculado2 < 0){
 			alert('Valor a receber excede o valor pendente! ');
 		} else {
-			if(fpendente.value == 0 ){				
+			if(fpendente.value == 0 ){
 				fstatus.value = 'P';
 			} else {
-				if(fpendente.value < frestante.value){					
+				if(fpendente.value < frestante.value){
 					fstatus.value = 'R';
-				} else {					
+				} else {
 					fstatus.value = 'A';
 				}
 			}
 		}
 	}
-	
-	
+
+
 	function amortizarTudo(){
 		var vamortizar	= $('amortizar');
 		vamortizar.value = $('valor_restante').value;
 		calculaValores();
 	}
-	
+
 	function formatar(src, mask) {
 		var i = src.value.length;
 		var saida = mask.substring(0,1);
@@ -151,7 +150,7 @@
 			}
 		}
 	}
-	
+
 	function verificaReagendamento() {
 		freagendar.checked = true;
 	}
@@ -198,7 +197,7 @@
 				</tr>
 				<tr>
 					<td class="cellLabel">Desconto(-):</td>
-					<td class="cellInfo"><input type="text" name="desconto" id="desconto" value='{$desconto|default:"0.00"}' {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if}  /></td>
+					<td class="cellInfo"><input type="text" name="desconto" id="desconto" value='{$desconto|default:"0.00"}' {if !$podeConcederDesconto || !$editavel}disabled="disabled" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if}/></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Acrescimo(+):</td>
@@ -225,7 +224,7 @@
 						<select id="status" name="status" id="status" style="width: 200px;" disabled="disabled" class="disabled">
 							{foreach from=$status_fatura item=v key=k}
 							<option value="{$k}" {if $k == $status}selected="selected"{/if}>{$v}</option>
-							{/foreach}							
+							{/foreach}
 						</select>
 					</td>
 				</tr>
@@ -235,7 +234,7 @@
 						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento}" maxlength="10"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
 						{* &gt;&gt;"" *}
 						<input type="button" name="hoje" value="Hoje" onclick="javascript:pagamentoHoje();"  class="botao"  {if !$editavel}disabled="disabled"{/if} />
-						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" class="botao"  {if !$editavel}disabled="disabled"{/if} />				
+						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" class="botao"  {if !$editavel}disabled="disabled"{/if} />
 					</td>
 				</tr>
 			</table>
@@ -259,7 +258,7 @@
 						<textarea name="observacoes" id="observacoes" rows="7"  cols="30"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} >{$observacoes}</textarea>
 					</td>
 				</tr>
-			</table>		
+			</table>
 		</td>
 	</tr>
 	<tr>
@@ -268,7 +267,7 @@
 	<tr>
 		<td colspan="2" align="center">
 			<input name="botao_cancelar" type="button" class="botao" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
-			{if $editavel}	
+			{if $editavel}
 			<input name="botao_enviar" type="submit" class="botao" id="submit" value="Amortizar &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
 			{/if}
 		</td>

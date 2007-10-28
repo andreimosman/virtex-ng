@@ -75,6 +75,10 @@
 				case 'cobranca':
 					$retorno = new VVACobranca();
 					break;
+				
+				case 'erro':
+					$retorno = new VVAErro();
+					break;
 					
 				default:
 					throw new ExcecaoView(255,"View não disponível");

@@ -205,10 +205,6 @@
 					} else {
 					
 						$admin = $this->administradores->obtemAdminPeloId($id_admin);
-						//echo "<pre>";
-						//print_r($admin);
-						//echo "</pre>";
-					
 						$privilegios = $this->administradores->obtemPrivilegios();
     					
     					$privilegiosUsuario = $this->administradores->obtemPrivilegiosUsuario($id_admin);
@@ -230,6 +226,12 @@
 
     					$acessos = $this->administradores->obtemAcessos();
     					$this->_view->atribui("acessos",$acessos);
+
+						//echo "<pre>";
+						//print_r($privilegios);
+						//print_r($acessos);
+						//echo "</pre>";
+						
 					}
 										
 				break;						

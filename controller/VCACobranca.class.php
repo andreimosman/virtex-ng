@@ -40,6 +40,7 @@ class VCACobranca extends VirtexControllerAdmin {
 	}
 
 	protected function executaAmortizacao() {
+		$this->requirePrivGravacao("_COBRANCA_AMORTIZACAO");
 		$id_cobranca = @$_REQUEST["id_cobranca"];
 			
 		$texto_pesquisa = @$_REQUEST["texto_pesquisa"];

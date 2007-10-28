@@ -123,6 +123,38 @@
 		}
 		
 		
+		protected function acessoNegado() {		
+			$this->_view = VirtexViewAdmin::factory("erro");
+			$this->_view->atribui("tipo","acessonegado");
+			$this->_view->exibe();
+			exit(0);
+		}
+
+		
+		protected function requirePrivLeitura($privilegio,$stop=true) {
+			if( !$this->_login->podeLer($privilegio) ) {
+				if( $stop ) {
+					$this->acessoNegado();
+				}
+				return(false);
+			}
+			return(true);
+		}
+		
+		protected function requirePrivGravacao($privilegio,$stop=true) {
+			if( !$this->_login->podeGravar($privilegio) ) {
+				if( $stop ) {
+					$this->acessoNegado();
+				}
+				return(false);
+			}
+			return(true);
+		}
+	
+	
+
+
+		
 	}
 
 

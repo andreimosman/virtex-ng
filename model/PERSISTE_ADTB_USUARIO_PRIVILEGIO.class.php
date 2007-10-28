@@ -13,7 +13,7 @@
 
 		public function obtemPrivilegiosUsuario($id_admin) {
 			$where = "WHERE ".$this->_tabela.".id_admin = '" . $this->bd->escape($id_admin) ."'";
-			$sql = "SELECT " . implode(",",$this->obtemCamposComTabela()) . ", p.cod_priv, p.nome FROM " . $this->_tabela . " INNER JOIN adtb_privilegio p USING (id_priv) " . $where;
+			$sql = "SELECT " . implode(",",$this->obtemCamposComTabela()) . ", p.cod_priv, p.nome, p.tem_leitura, p.tem_gravacao, p.descricao_leitura, p.descricao_gravacao FROM " . $this->_tabela . " INNER JOIN adtb_privilegio p USING (id_priv) " . $where;
 
 			return($this->bd->obtemRegistros($sql));
 

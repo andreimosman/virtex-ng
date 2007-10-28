@@ -61,12 +61,26 @@
 		}
 
 		protected function executaCadastro() {
+			
 			$this->_view->atribuiVisualizacao("cadastro");
 			$this->_view->atribui("extra_op",$this->extra_op);
 			$this->_view->atribui("lista_tp_pessoa",$this->clientes->listaTipoPessoa());
 			$this->_view->atribui("lista_status",$this->clientes->listaStatusCliente());
 			$this->_view->atribui("lista_dia_pagamento",$this->clientes->listaDiaPagamento());
 			$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
+			
+			if( $this->id_cliente ) {
+				if( $this->extra_op ) {
+					// Tela de ficha
+					$this->requirePrivLeitura("_CLIENTES");
+				} else {
+					// Tela de alteração
+					$this->requirePrivGravacao("_CLIENTES");
+				}
+			} else {
+				// Tela de cadastro
+				$this->requirePrivGravacao("_CLIENTES");
+			}
 			
 			if( $this->id_cliente && !$this->acao ) {
 				// Tem o id do cliente e não tem ação, pegar do banco
@@ -84,6 +98,7 @@
 			}
 			
 			if( !$this->extra_op && $this->_acao ) {
+				$this->requirePrivGravacao("_CLIENTES");
 				try {
 					if( $this->id_cliente ) {
 						$this->clientes->altera($this->id_cliente,@$_REQUEST);
@@ -112,6 +127,8 @@
 		}
 		
 		protected function executaPesquisa() {
+			$this->requirePrivLeitura("_CLIENTES");
+		
 			$this->_view->atribuiVisualizacao("pesquisa");
 			
 			$tipo_pesquisa  = @$_REQUEST["tipo_pesquisa"];
@@ -185,6 +202,8 @@
 			
 			switch($tela) {
 				case 'imprime_carne':
+					$this->requirePrivLeitura("_CLIENTES_FATURAS");
+					
 					$id_carne = @$_REQUEST["id_carne"];
 					$id_cliente = @$_REQUEST["id_cliente"];
 					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
@@ -221,7 +240,11 @@
 					break;
 				
 				case 'cancelar_contrato':
+					$this->requirePrivGravacao("_CLIENTES_CONTRATOS_CANCELAMENTO");
+
 				case 'contrato':
+					$this->requirePrivLeitura("_CLIENTES_CONTRATOS");
+					
 					// TELA DE DETALHES DO CONTRATO
 					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
@@ -331,6 +354,9 @@
 				
 				case 'migrar':
 				case 'novo_contrato':
+				
+					$this->requirePrivGravacao("_CLIENTES_CONTRATOS");
+				
 					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];					
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 				
@@ -733,13 +759,16 @@
 					break;
 				
 				case "contratos":
+					$this->requirePrivLeitura("_CLIENTES_CONTRATOS");
 					$cobranca = VirtexModelo::factory("cobranca");
 					$contratos = $cobranca->obtemContratos ($_REQUEST ["id_cliente"]);
 					$this->_view->atribui ('contratos', $contratos);
-				break;
+					break;
 				
 				
 				case "faturas":
+				
+					$this->requirePrivLeitura("_CLIENTES_FATURAS");
 					
 					$tem_carne = "";
 					$cobranca = VirtexModelo::factory("cobranca"); 
@@ -762,7 +791,15 @@
 					break;
 				
 				case "amortizacao":
-				
+					
+					if( !($this->requirePrivLeitura("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_COBRANCA_AMORTIZACAO",false)) ) {
+						$this->acessoNegado();
+					}
+					
+					if( $this->requirePrivGravacao("_CLIENTES_FATURAS_DESCONTO",false)) {
+						$this->_view->atribui("podeConcederDesconto", true);
+					}
+					
 					$id_cliente_produto = @$_REQUEST ['id_cliente_produto'];
 					$id_cliente = @$_REQUEST ['id_cliente'];
 					$id_cobranca = @$_REQUEST ['id_cobranca'];
@@ -771,7 +808,7 @@
 					$cobranca = VirtexModelo::factory("cobranca");
 					$erro = false;
 					
-					if($acao) {
+					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_COBRANCA_AMORTIZACAO",false))) {
 						$desconto		= @$_REQUEST["desconto"];
 						$acrescimo		= @$_REQUEST["acrescimo"];
 						$amortizar		= @$_REQUEST["amortizar"];
@@ -812,8 +849,9 @@
 					$this->_view->atribui ("valor_restante", $valor_restante);
 					
 					
-					if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or 
-						$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
+					if(	!$this->requirePrivGravacao("_CLIENTES_FATURAS",false) ||
+						$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA || 
+						$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA || 
 						$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
 							$this->_view->atribui ("editavel", false);
 					} else {
@@ -851,6 +889,25 @@
 			$this->_view->atribuiVisualizacao("conta");
 			$tipo = trim($_REQUEST["tipo"]);
 			$this->_view->atribui("tipo",$tipo);
+			
+			$privReq = "";
+			
+			switch($tipo) {
+				case 'BL':
+					$privReq = "_CLIENTES_BANDALARGA";
+					break;
+				case'D':
+					$privReq = "_CLIENTES_DISCADO";
+					break;
+				case 'E':
+					$privReq = "_CLIENTES_EMAIL";
+					break;
+				case 'H':
+					$privReq = "_CLIENTES_HOSPEDAGEM";
+					break;
+			}
+			
+			$this->requirePrivLeitura($privReq);
 
 			$this->_view->atribui("id_cliente",$this->id_cliente);
 			
@@ -864,6 +921,16 @@
 
 			
 			$tela 		= @$_REQUEST["tela"];
+			
+			if( $tela == "cadastro" ) {
+				// Precisa de Privilégio de Gravação
+				
+				$this->requirePrivGravacao($privReq);
+				
+			}
+			
+			
+			
 			$id_conta 	= @$_REQUEST["id_conta"];
 			$acao 		= @$_REQUEST["acao"];
 			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
@@ -1181,6 +1248,12 @@
 		}
 
 		protected function executaRelatorios() {
+			
+			$this->requirePrivLeitura("_CLIENTES_RELATORIOS");
+
+
+
+		
 			$this->_view->atribuiVisualizacao("relatorios");
 			
 			$relatorio = @$_REQUEST["relatorio"];
