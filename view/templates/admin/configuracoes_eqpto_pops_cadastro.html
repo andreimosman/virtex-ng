@@ -25,31 +25,31 @@ label {
 
 
 </style>
-
 <script language="JavaScript">
-	var parent_pops = eval({/literal}{$parent_pops}{literal});	
-	var id_pop_ap = '{/literal}{$id_pop_ap}{literal}';		
-	
+	var podeGravar={/literal}{if $podeGravar}true{else}false{/if}{literal};
+	var parent_pops = eval({/literal}{$parent_pops}{literal});
+	var id_pop_ap = '{/literal}{$id_pop_ap}{literal}';
+
 	function habilita_monitor(){
 		tB = document.getElementById("tabela_monitor");
-		ativar_monitor = document.getElementById("ativar_monitoramento");		
+		ativar_monitor = document.getElementById("ativar_monitoramento");
 		tB.className =  ativar_monitor.checked ?  "box_aberta" :  "box_fechada";
 	}
 
 	function preenchePopAp(){
 		var pType = document.getElementById("tipo");
-		
+
 		var option_index = 1;
 		for(var i=0;i<parent_pops.length;i++){
 			var selected = parent_pops[i].id_pop == id_pop_ap ? true : false;
-			switch(pType.value){				
-				case 'AP':					
-				case 'B':	
+			switch(pType.value){
+				case 'AP':
+				case 'B':
 					if( (parent_pops[i].tipo == 'C') || ( parent_pops[i].tipo == 'B') ){
 						preencheCombo("id_pop_ap",option_index,parent_pops[i].id_pop,parent_pops[i].nome,selected);
 						option_index++;
 					}
-				break;	
+				break;
 				case 'C':
 					if( parent_pops[i].tipo != 'AP' ){
 						preencheCombo("id_pop_ap",option_index,parent_pops[i].id_pop,parent_pops[i].nome,selected);
@@ -57,7 +57,7 @@ label {
 					}
 				break;
 				case 'CL':
-					if(parent_pops[i].tipo == 'AP'){			
+					if(parent_pops[i].tipo == 'AP'){
 							preencheCombo("id_pop_ap",option_index,parent_pops[i].id_pop,parent_pops[i].nome,selected);
 							option_index++;
 					}
@@ -65,58 +65,58 @@ label {
 			}
 		}
 	}
-	
+
 	function preencheCombo(id_combo,option_index, value, text, selected){
 		var e =  document.getElementById(id_combo);
 		e.options[option_index] = new Option(text,value);
-		e.options[option_index].selected = selected;		
+		e.options[option_index].selected = selected;
 	}
-	
+
 	function voltar() {
-		if( window.confirm("Deseja abandonar este registro?") ) {
+		if( !podeGravar || window.confirm("Deseja abandonar este registro?") ) {
 			window.open('admin-configuracoes.php?op=equipamentos&tela=pops&subtela=listagem','conteudo');
 		}
 	}
-	
-	function valida_ip(ip){	
+
+	function valida_ip(ip){
 		if(!ipValido(ip.value)){
-			alert('o IP '+ip.value+' não é válido.'); 
-			  ip.focus();			  
-			  return false; 
-		} 
-		return true; 
-	} 
-	
+			alert('o IP '+ip.value+' não é válido.');
+			  ip.focus();
+			  return false;
+		}
+		return true;
+	}
+
 	function popValidaForm(){
-	
+
 		var nome = document.getElementById("nome");
 		var tipo = document.getElementById("tipo");
 		var status = document.getElementById("status");
 		var monitor = document.getElementById("ativar_monitoramento");
 		var ipaddr = document.getElementById("ipaddr");
 		var id_servidor = document.getElementById("id_servidor");
-		
+
 		if(estaVazio(nome.value)) {
 			alert("O campo nome deve ser preenchido.");
 			nome.value="";
 			nome.focus();
 			return false;
 		}
-		
+
 		if(estaVazio(tipo.value)) {
 			alert("Um tipo deve ser selecionado.");
 			tipo.value="";
 			tipo.focus();
 			return false;
 		}
-		
+
 		if(estaVazio(status.value)) {
 			alert("Um status deve ser selecionado.");
 			status.value="";
 			status.focus();
 			return false;
 		}
-		
+
 		if(monitor.checked){
 			if(estaVazio(ipaddr.value)) {
 				alert("O campo ip deve ser preenchido.");
@@ -134,7 +134,6 @@ label {
 	}
 </script>
 {/literal}
-
 <center>
 <form method="post" name="formulario" id="formulario" action="admin-configuracoes.php" onsubmit="return popValidaForm();">
 <input type="hidden" name="op" value="{$op}">
@@ -147,36 +146,36 @@ label {
 		<tr>
 		  <td height="3px" colspan="4">&nbsp;</td>
 		</tr>
-		<tr>		  
+		<tr>
 		  <td width="100" align="right" nowrap><label>Nome:</label></td>
-		  <td colspan="3"><input name="nome" type="text" id="nome" value="{$nome}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" /></td>
+		  <td colspan="3"><input name="nome" type="text" id="nome" value="{$nome}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} /></td>
 		</tr>
 		<tr>
 		  <td width="100" align="right" nowrap><label>Info:</label></td>
-		  <td colspan="4"><textarea name="info" cols="50" rows="6" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >{$info}</textarea></td>
+		  <td colspan="4"><textarea name="info" cols="50" rows="6" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} >{$info}</textarea></td>
 		</tr>
 		<tr>
 			<td width="100" align="right" nowrap><label>Tipo:</label></td>
 			<td width="24%">
-				<select name="tipo" id="tipo" onChange="preenchePopAp();" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $id_pop}disabled='disabled'{/if} >
+				<select name="tipo" id="tipo" onChange="preenchePopAp();" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} {if $id_pop}disabled='disabled'{/if} >
 				{foreach key=id item=nome from=$tipo_pop}
 				<option value='{$id}'{if $id == $tipo}selected{/if}>{$nome} </option>
 				{/foreach}
 			</select>
 			</td>
 			<td width="100" align="right" nowrap><label>Conectado em:</label></td>
-			<td>		
-				<select name="id_pop_ap" id="id_pop_ap" style="width: 170px;" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-					<option id="opcoes" value=""> </option>					
+			<td>
+				<select name="id_pop_ap" id="id_pop_ap" style="width: 170px;" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+					<option id="opcoes" value=""> </option>
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td width="100" align="right" nowrap><label>Status:</label></td>
 			<td colspan="4">
-				<select name="status" id="status"  onChange="ProcessLoop(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-				{foreach key=id item=valor from=$status_pop}				
-				<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>				
+				<select name="status" id="status"  onChange="ProcessLoop(this.value);" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} >
+				{foreach key=id item=valor from=$status_pop}
+				<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -196,7 +195,7 @@ label {
 	</table>
 	<br />
 	<span>
-		<label><input type="checkbox" value="t" id="ativar_monitoramento" name="ativar_monitoramento" {if $ativar_monitoramento=='t'}checked='checked'{/if} class="checkbox" onClick="habilita_monitor();">Ativar Monitoramento</label>
+		<label><input type="checkbox" value="t" id="ativar_monitoramento" name="ativar_monitoramento" {if !$podeGravar}disabled="true"{/if}{if $ativar_monitoramento=='t'}checked='checked'{/if} class="checkbox" onClick="habilita_monitor();">Ativar Monitoramento</label>
 	</span>
 	<div id="tabela_monitor" class="box_fechada">
 		<table  width='100%' border="0" style="border:1px solid #CCCCCC;">
@@ -208,10 +207,10 @@ label {
 			</tr>
 			<tr>
 				<td width="100" align="right" nowrap><label>IP:</label></td>
-				<td><input type="text" name="ipaddr" id="ipaddr" value="{$ipaddr}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:valida_ip(this);formOnBlur(this)" /></td>
+				<td><input type="text" name="ipaddr" id="ipaddr" value="{$ipaddr}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:valida_ip(this);formOnBlur(this)"{/if} /></td>
 				<td width="100" align="right" nowrap><label>Monitorado por:</label></td>
 				<td>
-					<select name="id_servidor" id="id_servidor" style="width:130px;"class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this)" >
+					<select name="id_servidor" id="id_servidor" style="width:130px;" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this)"{/if} >
 					<option value=""></option>
 					{foreach item=s from=$servidores}
 						<option value="{$s.id_servidor}" {if $s.id_servidor == $id_servidor}SELECTED{/if}>{$s.hostname}</option>
@@ -251,16 +250,16 @@ label {
 				</div>
 			  </p></td>
 			</tr>*}
-		</table>	
+		</table>
 	</div>
 	<br />
 	<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
-	<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao">
-</div>	
+	<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao" {if !$podeGravar}disabled=true{/if}>
+</div>
 </form>
 </center>
 <script language="JavaScript">
-	habilita_monitor();	
+	habilita_monitor();
 	preenchePopAp();
-</script>	
+</script>
 </html>

@@ -7,6 +7,9 @@
 
 
 <script language="JavaScript">
+
+var podeGravar={if $podeGravar}true{else}false{/if};
+
 {literal}
 
 function exibirEnderecos() {
@@ -24,7 +27,7 @@ function ocultarEnderecos() {
 }
 
 function voltar() {
-	if( window.confirm("Deseja abandonar este registro?") ) {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro?") ) {
 		window.open("admin-configuracoes.php?op=equipamentos&tela=nas","conteudo");
 	}
 }
@@ -199,29 +202,29 @@ label {
 		<!-- IP: CADASTRA AS SUBREDES ESPECIFICADAS -->
 			<tr>
 				<td width="110" align="right"><label>Rede de Origem:</label></td>
-				<td colspan=3><input name="rede_origem" value="{$rede_origem}" type="text" size=20 maxlength=18 class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>(ex: 192.168.0.0/16)</label></td>
+				<td colspan=3><input name="rede_origem" value="{$rede_origem}" type="text" size=20 maxlength=18 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>(ex: 192.168.0.0/16)</label></td>
 			</tr>
 			<tr>
 				<td width="110" align="right"><label>Iniciar Em:</label></td>
-				<td colspan=3><input name="rede_inicial" value="{$rede_inicial}" type="text" size=20 maxlength=18 class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>(ex: 192.168.0.0/30)</label></td>
+				<td colspan=3><input name="rede_inicial" value="{$rede_inicial}" type="text" size=20 maxlength=18 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>(ex: 192.168.0.0/30)</label></td>
 			</tr>
 			<tr>
 				<td width="110" align="right"><label>Criar Redes:</label></td>
-				<td>&nbsp;<label>/<input name="bits_rede" value="{$bits_rede}" type="text" size=4 maxlength=2 class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">(ex: /30)</label></td>
+				<td>&nbsp;<label>/<input name="bits_rede" value="{$bits_rede}" type="text" size=4 maxlength=2 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>(ex: /30)</label></td>
 				<td width="120" align="right"><label>Máximo de Redes:</label></td>
-				<td><input name="maximo_redes" value="{$maximo_redes}" type="text" size=4 maxlength=4 class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+				<td><input name="maximo_redes" value="{$maximo_redes}" type="text" size=4 maxlength=4 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 			</tr>
 		{/if}
 		{if $tipo_nas == "P"}
 			<tr>
 				<td width="110" align="right"><label>Rede:</label></td>
-				<td colspan=3><input name="endereco" value="{$endereco}" type="text" size=20 maxlength=18 class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>(ex: 192.168.0.0/24)</label></td>
+				<td colspan=3><input name="endereco" value="{$endereco}" type="text" size=20 maxlength=18 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>(ex: 192.168.0.0/24)</label></td>
 			</tr>
 		{/if}
 			<tr>
 				<td width="110" align="right"><label>Tipo:</label></td>
 				<td colspan=3>
-				   <select name="tipo_rede" type="text" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				   <select name="tipo_rede" type="text" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 					<option value="C">Cliente</option>
 					<option value="I">Infra-estrutura</option>
 					<option value="S">Suporte</option>
@@ -231,7 +234,7 @@ label {
 			<tr>
 				<td colspan=4 style="border-top: dotted 1px #000000;" align="center">
 					<input type="button" name="cancelar" value="Cancelar" onClick="javascript:voltar()" class="botao">
-					<input type="Submit" name="submit" value="Cadastrar" class="botao">
+					<input type="Submit" name="submit" value="Cadastrar" class="botao" {if !$podeGravar}disabled="true"{/if}>
 				</td>
 			</tr>
 

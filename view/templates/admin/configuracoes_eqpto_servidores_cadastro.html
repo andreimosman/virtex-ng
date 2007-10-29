@@ -15,6 +15,7 @@ label {
 {/literal}
 </style>
 <script language="JavaScript">
+var podeGravar={if $podeGravar}true{else}false{/if};
 {literal}
 
 function servidorValidaForm() {
@@ -88,7 +89,7 @@ function servidorValidaForm() {
 
 
 function voltar() {
-	if( window.confirm("Deseja abandonar este registro?") ) {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro?") ) {
 		window.open('admin-configuracoes.php?op=equipamentos&tela=servidores&subtela=listagem','conteudo');
 	}
 }
@@ -105,32 +106,32 @@ function voltar() {
 <table cellspacing=0 cellpadding=0 border=0 align="center">
 	<tr>
 		<td width="130" align="right"><label>Hostname/Apelido:</label></td>
-		<td><input type="text" size="30" maxlength="20" name="hostname" id="hostname" value="{$hostname}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		<td><input type="text" size="30" maxlength="20" name="hostname" id="hostname" value="{$hostname}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
 		<td width="130" align="right"><label>IP:</label></td>
-		<td><input type="text" size="30" maxlength="15" name="ip" id="ip" value="{$ip}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">: <input type="text" size="10" maxlength="15" name="porta" value="{$porta}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		<td><input type="text" size="30" maxlength="15" name="ip" id="ip" value="{$ip}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>: <input type="text" size="10" maxlength="15" name="porta" value="{$porta}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
 		<td width="130" align="right"><label>Chave:</label></td>
-		<td><input type="text" size="30" maxlength="64" name="chave" id="chave" value="{$chave}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		<td><input type="text" size="30" maxlength="64" name="chave" id="chave" value="{$chave}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
 		<td width="130" align="right"><label>Usuário:</label></td>
-		<td><input type="text" size="30" maxlength="64" name="usuario" id="usuario" value="{$usuario}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		<td><input type="text" size="30" maxlength="64" name="usuario" id="usuario" value="{$usuario}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
 		<td width="130" align="right"><label>Senha:</label></td>
-		<td><input type="password" size="30" maxlength="64" name="senha" id="senha" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		<td><input type="password" size="30" maxlength="64" name="senha" id="senha" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
 		<td width="130" align="right"><label>Confirme:</label></td>
-		<td><input type="password" size="30" maxlength="64" name="confsenha" id="confsenha" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+		<td><input type="password" size="30" maxlength="64" name="confsenha" id="confsenha" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
 		<td width="130" align="right"><label>Disponível:</label></td>
 		<td>
-			<select name="disponivel" id="disponivel" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+			<select name="disponivel" id="disponivel" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 				{foreach item=d from=$lista_boolean}
 				<option value='{$d.id}' {if $d.id == $disponivel}SELECTED{/if}>{$d.nome}</option>
 				{/foreach}
@@ -140,7 +141,7 @@ function voltar() {
 	<tr>
 		<td colspan=2 align="center" style="border-top: dotted 1px #000000;">
 		<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
-		<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao">
+		<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao" {if !$podeGravar}disabled="true"{/if}>
 		</td>
 	</tr>
 </table>
