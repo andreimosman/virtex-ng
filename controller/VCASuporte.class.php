@@ -57,6 +57,8 @@
 		}
 		
 		protected function executaIPCalc() {
+			$this->requirePrivLeitura("_SUPORTE_FERRAMENTAS_CALCULADORA_IP");
+		
 			$ip = @$_REQUEST["ip"];
 			$mascara = @$_REQUEST["mascara"];
 			
@@ -74,6 +76,8 @@
 		}
 		
 		protected function executaARP() {
+			$this->requirePrivLeitura("_SUPORTE_FERRAMENTAS_ARP");
+		
 			$equipamentos = VirtexModelo::factory('equipamentos');
 			$servidores = $equipamentos->obtemListaServidores(true);
 			
@@ -106,6 +110,8 @@
 		}
 		
 		protected function executaPing() {
+			$this->requirePrivLeitura("_SUPORTE_FERRAMENTAS_PING");
+			
 			$equipamentos = VirtexModelo::factory('equipamentos');
 			$servidores = $equipamentos->obtemListaServidores(true);
 			
@@ -155,6 +161,8 @@
 		
 		
 		protected function executaMonitoramento() {
+			$this->requirePrivLeitura("_SUPORTE_MONITORAMENTO");
+			
 			$this->_view->atribuiVisualizacao("monitoramento");
 			$tela = @$_REQUEST["tela"];
 			$this->_view->atribui("tela",$tela);
@@ -184,6 +192,8 @@
 		}
 		
 		protected function executaGraficos() {
+			$this->requirePrivLeitura("_SUPORTE_GRAFICOS");
+			
 			$this->_view->atribuiVisualizacao("graficos");
 			
 			$contas			= VirtexModelo::factory('contas');
@@ -215,6 +225,7 @@
 		}
 		
 		protected function executaLinks() {
+			$this->requirePrivLeitura("_SUPORTE_LINKS");
 			$this->_view->atribuiVisualizacao("links");
 			
 			$links = $this->preferencias->obtemListaLinks();
@@ -223,6 +234,7 @@
 		}
 		
 		protected function executaRelatorios() {
+			$this->requirePrivLeitura("_SUPORTE_RELATORIOS");
 			$relatorio = @$_REQUEST["relatorio"];
 			$this->_view->atribuiVisualizacao("relatorios");
 			$this->_view->atribui("relatorio",$relatorio);

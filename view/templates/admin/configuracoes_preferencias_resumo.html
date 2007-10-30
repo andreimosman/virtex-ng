@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -11,8 +11,7 @@
 <form name=prefs method="post" action="{$smarty.server.PHP_SELF}">
   <input type="hidden" name="op" id="op" value="resumo" />
 </form>
-
-<h4 class='resumoTitle'>Resumo de Prefer&ecirc;ncias</h4><br />
+<br>
 <table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
     <tr>
 		<th colspan="6" class="resumoCellTitle">Prefer&ecirc;ncia Geral</th>
@@ -25,15 +24,15 @@
 		<th width="110" class="resumoCellSub">Servidor de E-Mail</th>
 		<th width="16" class="resumoCellSub">&nbsp;</th>
     </tr>
-	<tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=geral'" class='link'> 
-	{if $geral.dominio_padrao}    
+	<tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=geral'" class='link'>
+	{if $geral.dominio_padrao}
 		<td class="resumoCellInfol">{$geral.dominio_padrao}</td>
 		<td class="resumoCellInfol">{$geral.nome}</td>
 		<td class="resumoCellInfo">{$geral.radius_server}</td>
 		<td class="resumoCellInfo">{$geral.hosp_server}</td>
 		<td class="resumoCellInfo">{$geral.mail_server}</td>
 		<td class="resumoCellInfo"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></td>
-	{else}	
+	{else}
 		<td colspan="6" class="resumoCellInfo">Não Configurado!</td>
 	{/if}
 	</tr>
@@ -43,7 +42,7 @@
 	<tr>
 		<th colspan="6" class="resumoCellTitle">Prefer&ecirc;ncia do Provedor</td>
 	</tr>
-    <tr> 
+    <tr>
       <th width="254" class="resumoCellSub">Endere&ccedil;o</th>
       <th width="120" class="resumoCellSub">Localidade</th>
       <th width="80"  class="resumoCellSub">CEP</th>
@@ -52,16 +51,16 @@
 	  <th width="16" class="resumoCellSub">&nbsp;</th>
     </tr>
     <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=provedor'" class='link'>
-	{if $provedor.endereco}	
+	{if $provedor.endereco}
       <td class="resumoCellInfol">{$provedor.endereco}</td>
       <td class="resumoCellInfo">{$provedor.localidade}</td>
       <td class="resumoCellInfo">{$provedor.cep}</td>
       <td class="resumoCellInfo">{$provedor.cnpj}</td>
 	  <td class="resumoCellInfo">{$provedor.fone}</td>
 	  <td class="resumoCellInfo"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></td>
-	{else}	
+	{else}
 		<td colspan="6" class="resumoCellInfo">Não Configurado!</td>
-	{/if}  
+	{/if}
     </tr>
   </table>
   <br />
@@ -69,7 +68,7 @@
 	<tr>
 		<th colspan="8" class="resumoCellTitle">Prefer&ecirc;ncia de Cobran&ccedil;a</th>
 	</tr>
-    <tr> 
+    <tr>
     	<th width="115" class="resumoCellSub">Dia de Vencimento</th>
     	<th width="115" class="resumoCellSub">Car&ecirc;ncia</th>
 		<th width="115" class="resumoCellSub">Enviar E-Mail </th>
@@ -78,25 +77,25 @@
     	<th width="115" class="resumoCellSub">Pagamento</th>
 		<th width="16"  class="resumoCellSub">&nbsp;</th>
     </tr>
-    <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=cobranca'" class='link'> 
-	{if $cobranca.dia_venc}	
+    <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=cobranca'" class='link'>
+	{if $cobranca.dia_venc}
 	    <td class="resumoCellInfo">{$cobranca.dia_venc}</td>
     	<td class="resumoCellInfo">{$cobranca.carencia} dias </td>
-		<td class="resumoCellInfo">{if $cobranca.enviar_email == 't'}Sim{else}Não{/if} 
+		<td class="resumoCellInfo">{if $cobranca.enviar_email == 't'}Sim{else}Não{/if}
 		<td class="resumoCellInfo">{$cobranca.tx_juros} % </td>
     	<td class="resumoCellInfo">{$cobranca.multa} % </td>
     	<td class="resumoCellInfo">{if $cobranca.pagamento=="PRE"}Pr&eacute;-Pago{elseif $cobranca.pagamento=="POS"}P&oacute;s-Pago{/if}</td>
 		<td class="resumoCellInfo"><img src="view/templates/imagens/gif_alterar.gif" border="0" alt="alterar" /></td>
-	{else}	
+	{else}
 		<td colspan="8" class="resumoCellInfo">Não Configurado!</td>
-	{/if}  
+	{/if}
     </tr>
   </table>
   <br />
   <table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
   	<tr>
 		<td colspan="6" class="resumoCellTitle">Formas de pagamento <span style="color:#999999;">(Cobran&ccedil;a)</span></td>
-	</tr>				
+	</tr>
 	<tr>
 		<th class="resumoCellSub">TIPO</th>
 		<th class="resumoCellSub">BANCO</th>
@@ -104,7 +103,7 @@
 		<th class="resumoCellSub">CONTA</th>
 		<th class="resumoCellSub">CARNÊ</th>
 		<th class="resumoCellSub">DISPONÍVEL</th>
-	</th>	
+	</th>
 	{foreach name=registros item=r from=$formas}
 	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 	<tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=cobranca&subtela=forma_pagamento&id_forma_pagamento={$r.id_forma_pagamento}'" class='link'>
@@ -120,7 +119,7 @@
 			<td colspan="6" class="resumoCellInfo"><B>NENHUMA FORMA DE PAGAMENTO CADASTRADA ATÉ O MOMENTO.</B></td>
 		</tr>
 	{/foreach}
-  </table>	
+  </table>
 </div>
 </center>
 <br />

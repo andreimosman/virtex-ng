@@ -108,7 +108,7 @@ label {
 			<td align='center' width=50 class='{$estilo}'>{$r.id_cidade|string_format:"%05d"}</td>
 			<td class='{$estilo}'>{$r.cidade|upper} - {$r.uf|upper}</td>
 			<td class='{$estilo}' align="right">
-			<select name="disponivel[{$r.id_cidade}]" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+			<select name="disponivel[{$r.id_cidade}]" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 				{foreach item=d from=$lista_boolean}
 				<option value='{$d.id}' {if $d.id == $r.disponivel}SELECTED{/if}>{$d.nome}</option>
 				{/foreach}
@@ -129,7 +129,7 @@ label {
 		{/foreach}
 		{if count($registros)}
 		<tr>
-			<td class='{if $estilo=="par"}impar{else}par{/if}' colspan=3 align="right"><input type="submit" name="submit" value="Alterar Disponibilidade" class="botao"></td>
+			<td class='{if $estilo=="par"}impar{else}par{/if}' colspan=3 align="right"><input type="submit" name="submit" value="Alterar Disponibilidade" class="botao" {if !$podeGravar}disabled="true"{/if}></td>
 		</tr>
 		{/if}
 	</table>

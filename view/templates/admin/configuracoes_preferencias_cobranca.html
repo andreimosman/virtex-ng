@@ -26,9 +26,10 @@ label {
 </style>
 
 <script language="JavaScript">
+var podeGravar = {if $podeGravar}true{else}false{/if};
 {literal}
 function voltar() {
-	if( window.confirm("Deseja abandonar este registro") ) {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro") ) {
 		window.open("admin-configuracoes.php?op=preferencias&tela=cobranca","conteudo");
 	}
 }
@@ -53,7 +54,7 @@ function desabilita(campo) {
 function alteraEnviarEmail() {
 	frm = document.cobranca;
 
-	if( frm.enviar_email.checked ) {
+	if( podeGravar && frm.enviar_email.checked ) {
 		habilita(frm.mensagem_email);
 		habilita(frm.email_remetente);
 
@@ -72,55 +73,55 @@ function alteraEnviarEmail() {
 <input type="hidden" name="op" value="{$op}">
 <input type="hidden" name="tela" value="{$tela}">
 <input type="hidden" name="subtela" value="{$subtela}">
-<input type="hidden" name="acao" value="{if !$acao}editar{else}alterar{/if}">
+<input type="hidden" name="acao" value="{if !$podeGravar || !$acao}editar{else}alterar{/if}">
 	<table cellspacing=0 cellpadding=0 border=0 align="center">
 		<tr>
 			<td width="130" align="right"><label>Taxa de Juros:</label></td>
-			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="5" name="tx_juros" value="{$tx_juros}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>% a.m.</label></td>
+			<td><input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="5" maxlength="5" name="tx_juros" value="{$tx_juros}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>% a.m.</label></td>
 			<td width="130" align="right"><label>Multa:</label></td>
-			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="5" name="multa" value="{$multa}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>%</label></td>
+			<td><input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="5" maxlength="5" name="multa" value="{$multa}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>%</label></td>
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>Dia de Vencimento:</label></td>
-			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="dia_venc" value="{$dia_venc}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="dia_venc" value="{$dia_venc}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 			<td width="130" align="right"><label>Carência:</label></td>
-			<td><input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="carencia" value="{$carencia}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="carencia" value="{$carencia}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>Faturas parciais:</label></td>
-			<td colspan=3><label>mínimo de <input {if !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="dias_minimo_cobranca" value="{$dias_minimo_cobranca}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}> dias para geração/manipulação.</label></td>
+			<td colspan=3><label>mínimo de <input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="5" maxlength="2" name="dias_minimo_cobranca" value="{$dias_minimo_cobranca}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}> dias para geração/manipulação.</label></td>
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>Pagamento:</label></td>
 			<td>
-				<select {if !$acao}disabled=true{/if} name="pagamento" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+				<select {if !$podeGravar || !$acao}disabled=true{/if} name="pagamento" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 				{foreach key=k item=v from=$tipos}
 					<option value="{$k}" {if $pagamento == $k}SELECTED{/if}>{$v}</option>
 				{/foreach}
 				</select>
 			</td>
 			<td width="130" align="right"><label>Path Contrato:</label></td>
-			<td><input {if !$acao}disabled=true{/if} type="text" size="40" maxlength="255" name="path_contrato" value="{$path_contrato}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="40" maxlength="255" name="path_contrato" value="{$path_contrato}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>Observações</label></td>
-			<td colspan="3"><textarea {if !$acao}disabled=true{/if} cols=83 rows=4 name="observacoes" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$observacoes}</textarea></td>
+			<td colspan="3"><textarea {if !$podeGravar || !$acao}disabled=true{/if} cols=83 rows=4 name="observacoes" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$observacoes}</textarea></td>
 		</td>
 		<tr>
-			<td width="130" align="right"><input {if !$acao}disabled=true{/if} type="checkbox" name="enviar_email" value="t" {if $enviar_email=='t'}checked{/if} onClick="javascript:alteraEnviarEmail();"></td>
+			<td width="130" align="right"><input {if !$podeGravar || !$acao}disabled=true{/if} type="checkbox" name="enviar_email" value="t" {if $enviar_email=='t'}checked{/if} onClick="javascript:alteraEnviarEmail();"></td>
 			<td colspan="3"><label>Enviar e-mail aos clientes que serão bloqueados.</label></td>
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>email do remetente:</label></td>
-			<td colspan="3"><input {if !$acao}disabled=true{/if} type="text" size="85" maxlength="255" name="email_remetente" value="{$email_remetente}" {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td colspan="3"><input {if !$podeGravar || !$acao}disabled=true{/if} type="text" size="85" maxlength="255" name="email_remetente" value="{$email_remetente}" {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>Mensagem padrão:</label></td>
-			<td colspan="3"><textarea name="mensagem_email" cols=83 rows=4 {if !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$mensagem_email}</textarea></td>
+			<td colspan="3"><textarea name="mensagem_email" cols=83 rows=4 {if !$podeGravar || !$acao}disabled=true class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$mensagem_email}</textarea></td>
 		</tr>
 		<tr>
 			<td colspan=4 style="border-top: dotted 1px #000000" align="center">
-				{if $acao}<input type="button" name="Voltar" value="Voltar" class="botao" onClick="javascript:voltar();"> {/if}<input type="submit" name="Submit" value="{if !$acao}Editar{else}Alterar{/if}" class='botao'>
+				{if $acao}<input type="button" name="Voltar" value="Voltar" class="botao" onClick="javascript:voltar();"> {/if}<input type="submit" name="Submit" value="{if !$podeGravar || !$acao}Editar{else}Alterar{/if}" class='botao' {if !$podeGravar}disabled="true"{/if}>
 			</td>
 		</tr>
 	</table>
@@ -297,8 +298,11 @@ alteraEnviarEmail();
 		desabilita(frm.codigo_banco);
 		desabilita(frm.agencia);
 		desabilita(frm.conta);
-		//desabilita(frm.nossonumero_inicial);
-		//desabilita(frm.nossonumero_final);
+		if( !podeGravar ) {
+			desabilita(frm.nossonumero_inicial);
+			desabilita(frm.nossonumero_final);
+			desabilita(frm.disponivel);
+		}
 		desabilita(frm.carne);
 	}
 
@@ -345,7 +349,7 @@ alteraEnviarEmail();
 	<input type="hidden" name="op" value="{$op}">
 	<input type="hidden" name="tela" value="{$tela}">
 	<input type="hidden" name="subtela" value="{$subtela}">
-	<input type="hidden" name="acao" value="{if !$acao}editar{else}alterar{/if}">
+	<input type="hidden" name="acao" value="{if !$podeGravar || !$acao}editar{else}alterar{/if}">
 	<input type="hidden" name="id_forma_pagamento" value="{$id_forma_pagamento}">
 
 	<table _width="600" align="center" cellpadding=2 cellspacing=0 border=0 style="border: solid 1px #000000;">
@@ -435,7 +439,7 @@ alteraEnviarEmail();
 		</tr>
 		<tr>
 			<td colspan=4 style="border-top: dotted 1px #000000;" align="center">
-				<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao"> <input type="submit" name="Submit" value="{if $id_forma_pagamento}Alterar{else}Cadastrar{/if}" class="botao">
+				<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao"> <input type="submit" name="Submit" value="{if $id_forma_pagamento}Alterar{else}Cadastrar{/if}" class="botao" {if !$podeGravar}disabled="true"{/if}>
 			</td>
 		</tr>
 	</table>

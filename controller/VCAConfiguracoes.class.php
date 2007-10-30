@@ -19,14 +19,17 @@
 		
 			switch($this->_op) {
 				case 'equipamentos':
+					$this->requirePrivLeitura("_CONFIGURACOES_EQUIPAMENTOS");
 					$this->executaEquipamentos();
 					break;
 					
 				case 'preferencias':
+					$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS");
 					$this->executaPreferencias();
 					break;
 					
 				case 'relatorios':
+					$this->requirePrivLeitura("_CONFIGURACOES_RELATORIOS");
 					$this->executaRelatorios();
 					break;
 					
@@ -47,7 +50,7 @@
 			
 			$this->_view->atribuiVisualizacao("equipamentos");
 			$this->_view->atribui("tela",$tela);
-			
+						
 			switch( $tela ) {
 				case 'servidores':
 					$this->executaEquipamentosServidores();
@@ -103,8 +106,14 @@
 							while(list($vr,$vl)=each($info)) {
 								$this->_view->atribui($vr,$vl);
 							}
+							
+							if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
+								$this->_view->atribui("podeGravar",false);
+							}
+							
 						} else {
-							// Processar alteração			
+							// Processar alteração
+							$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
 							$equipamentos->atualizaServidor($id_servidor, $hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Servidor atualizado com sucesso.");
@@ -113,6 +122,8 @@
 						}
 					} else {
 						// Cadastro
+						$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+						$this->_view->atribui("podeGravar",true);
 						if( $acao ) {
 							// Cadastrar
 							$id_servidor = $equipamentos->cadastraServidor($hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel);
@@ -181,6 +192,11 @@
 								while(list($vr,$vl)=each($info)) {
 									$this->_view->atribui($vr,$vl);
 								}
+
+								if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
+									$this->_view->atribui("podeGravar",false);
+								}
+
 							}
 						} else {
 							// Processar alteração								
@@ -190,6 +206,9 @@
 							$this->_view->atribuiVisualizacao("msgredirect");
 						}
 					} else {
+						$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+						$this->_view->atribui("podeGravar",true);
+
 						if( $acao ) {
 							// Cadastrar							
 							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento);
@@ -243,9 +262,13 @@
 							while(list($vr,$vl)=each($dados)) {
 								$this->_view->atribui($vr,$vl);
 							}
+							if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
+								$this->_view->atribui("podeGravar",false);
+							}
 							
 						} else {
-							//ALTERAR							
+							//ALTERAR
+							$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
 							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao);
 							
 							$url = "admin-configuracoes.php?op=equipamentos&tela=nas";
@@ -256,6 +279,9 @@
 						
 					} else {
 						// echo "CADASTRO<br>\n";
+						$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+						$this->_view->atribui("podeGravar",true);
+						
 						if( $acao ) {
 							//CADASTRAR							
 							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao);
@@ -294,6 +320,12 @@
 						$this->_view->atribui("registros",$registros);
 					} else {
 						// Cadastro
+						if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
+							$this->_view->atribui("podeGravar",false);
+						} else {
+							$this->_view->atribui("podeGravar",true);
+						}
+
 						if( $info["tipo_nas"] == "I" ) {
 							// IP
 							$bits_rede = @$_REQUEST["bits_rede"];
@@ -427,6 +459,17 @@
 			$this->_view->atribui("tela",$tela);
 			$this->_view->atribuiVisualizacao("preferencias");
 			
+			if($tela != "registro") {
+				$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS");
+			} else {
+				if( $this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS",false)  ) {
+					$this->_view->atribui("podeGravar",true);
+				} else {
+					$this->_view->atribui("podeGravar",false);
+				}
+			}
+			
+			
 			switch($tela) {
 				case 'geral':
 					$this->executaPreferenciasGeral();
@@ -453,6 +496,7 @@
 					$this->executaPreferenciasModeloContrato();
 					break;
 				case 'registro':
+					$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS_REGISTRO");
 					$this->executaPreferenciasRegistro();
 					break;
 				case 'resumo':
@@ -506,8 +550,15 @@
 
 			$url = "admin-configuracoes.php?op=preferencias&tela=registro";
 			
+			if( $this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS_REGISTRO",false) ) {
+				$this->_view->atribui("podeGravar",true);
+			} else {
+				$this->_view->atribui("podeGravar",false);
+			}
+			
 			
 			if ($acao == "upload"){
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS_REGISTRO");
 				$diretorio = "./etc";
 				$nome_aceitavel = "virtex.lic";
 				$file = $_FILES["arquivo_registro"];
@@ -605,6 +656,8 @@
 						$this->_view->atribui($vr,$vl);
 					}
 				} else {
+					$this->requirePrivGravacao("_COBRANCA_PREFERENCIAS");
+
 					if( $acao ) {
 						if( $id_modelo_contrato ) {
 							// Alterar.
@@ -687,6 +740,8 @@
 					$this->_view->atribui($vr,$vl);
 				}
 			} else {
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				
 				/**
 				 * Processar alterações
 				 */
@@ -726,6 +781,7 @@
 					$this->_view->atribui($vr,$vl);
 				}
 			} else {
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 				$this->preferencias->atualizaPreferenciasProvedor(
 																	@$_REQUEST["endereco"],
 																	@$_REQUEST["localidade"],
@@ -778,6 +834,7 @@
 				if( $acao == "alterar" ) {
 					// Rotina de alteração.
 					// echo "Alterar!!!<br>\n";
+					$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 					
 					$tx_juros = @$_REQUEST["tx_juros"];
 					$multa = @$_REQUEST["multa"];
@@ -794,8 +851,6 @@
 					$this->preferencias->atualizaPreferenciasCobranca($tx_juros,$multa,$dia_venc,$pagamento,$carencia,$path_contrato,$observacoes,$enviar_email,$email_remetente,$mensagem_email,$dias_minimo_cobranca);
 					$this->_view->atribui("mensagem","Preferências atualizadas com sucesso.");
 					$this->_view->atribuiVisualizacao("msgredirect");
-					
-
 
 				}
 			} else {
@@ -816,9 +871,11 @@
 				if( !$id_forma_pagamento ) {
 					$this->_view->atribui("nossonumero_inicial", 1);
 					$this->_view->atribui("nossonumero_final", 10000000);
+					$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 				}
 				
 				if( $acao ) {
+					$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 					
 					if( $id_forma_pagamento ) {
 						// Alteração
@@ -858,6 +915,7 @@
 			$acao = @$_REQUEST["acao"];
 			
 			if( $acao == "atualiza" ) {
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 				// Executa a atualização
 				$disponivel = @$_REQUEST["disponivel"];
 				
@@ -913,6 +971,7 @@
 
 			
 			if( $acao == "cadastra" ) {
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 				// Cadastra
 				$this->preferencias->cadastraBanda($valor_banda,$descricao_banda);
 				$this->_view->atribui("mensagem","Banda cadastrada com sucesso.");
@@ -934,6 +993,7 @@
 						}
 
 					} else {
+						$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 						if( $acao == "atualiza" ) {
 							// Update
 							$this->preferencias->atualizaBanda($id,$valor_banda,$descricao_banda);
@@ -966,6 +1026,7 @@
 					$this->_view->atribui($vr,$vl);
 				}
 			} else {
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 				$this->preferencias->atualizaMonitoramento($_REQUEST);
 				$this->_view->atribui("url","admin-configuracoes.php?op=preferencias&tela=monitoramento");
 				$this->_view->atribui("mensagem","Preferência atualizada com sucesso.");
@@ -996,6 +1057,7 @@
 			$url_redir = "admin-configuracoes.php?op=preferencias&tela=links";
 			
 			if( $acao == "cadastra" ) {
+				$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 				// Cadastra
 				$this->preferencias->cadastraLink($titulo_link,$url,$descricao,$target);
 				$this->_view->atribui("url",$url_redir);
@@ -1016,6 +1078,7 @@
 						}
 						
 					} else {
+						$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
 						if($acao == "atualiza") {
 							$this->preferencias->atualizaLink($id_link,$titulo_link,$url,$descricao,$target);
 							$mensagem = "Link externo alterado com sucesso.";
@@ -1029,7 +1092,7 @@
 						$this->_view->atribuiVisualizacao("msgredirect");
 
 					}
-				}
+				} 
 			}
 		}
 
@@ -1043,6 +1106,7 @@
 
 		
 		protected function executaRelatorios() {
+			
 			$this->_view->atribuiVisualizacao("relatorios");
 		
 			$contas = VirtexModelo::factory('contas');

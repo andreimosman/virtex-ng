@@ -34,9 +34,9 @@ label {
 				</tr>
 				<tr>
 					<td width="5px"  height="5"></td>
-					<td><input name="dominio_padrao" type="text" id="dominio_padrao" value="{$dominio_padrao}" size="35" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-					<td><input name="nome" type="text" id="nome" value="{$nome}" size="35" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-					<td><input name="radius_server" type="text" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$radius_server}" size="30"></td>
+					<td><input name="dominio_padrao" type="text" id="dominio_padrao" value="{$dominio_padrao}" size="35" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+					<td><input name="nome" type="text" id="nome" value="{$nome}" size="35" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+					<td><input name="radius_server" type="text" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} value="{$radius_server}" size="30"></td>
 				</tr>
 				<tr>
 					<td  height="5"></td>
@@ -57,25 +57,25 @@ label {
 								<td width="186"><p><label>Servidor de Hospedagem:</label></p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><input name="hosp_server" type="text" id="hosp_server" value="{$hosp_server}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></p></td>
+								<td width="186"><p><input name="hosp_server" type="text" id="hosp_server" value="{$hosp_server}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></p></td>
 							</tr>
 							<tr>
 								<td width="186" height="5"></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label>NS1 <input name="hosp_ns1" type="text" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$hosp_ns1}" size="30"></label></p></td>
+								<td width="186"><p><label>NS1 <input name="hosp_ns1" type="text" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} value="{$hosp_ns1}" size="30"></label></p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label>NS2 <input name="hosp_ns2" type="text" id="hosp_ns2" value="{$hosp_ns2}" size="30" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label> </p></td>
+								<td width="186"><p><label>NS2 <input name="hosp_ns2" type="text" id="hosp_ns2" value="{$hosp_ns2}" size="30" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label> </p></td>
 							</tr>
 							<tr>
 								<td width="186" height="5"></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label>UID Hospedagem <input name="hosp_uid" type="text" id="hosp_uid" value="{$hosp_uid}" size="10" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label></p></td>
+								<td width="186"><p><label>UID Hospedagem <input name="hosp_uid" type="text" id="hosp_uid" value="{$hosp_uid}" size="10" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label></p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label>GID Hospedagem <input name="hosp_gid" type="text" id="hosp_gid" value="{$hosp_gid}" size="10" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label> </p></td>
+								<td width="186"><p><label>GID Hospedagem <input name="hosp_gid" type="text" id="hosp_gid" value="{$hosp_gid}" size="10" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label> </p></td>
 							</tr>
 							<tr>
 								<td width="186" height="5"></td>
@@ -84,13 +84,13 @@ label {
 								<td width="186"><p><label>Diret&oacute;rio base de Hosp.</label> </p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label><input name="hosp_base" type="text" id="hosp_base" value="{$hosp_base}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label> </p></td>
+								<td width="186"><p><label><input name="hosp_base" type="text" id="hosp_base" value="{$hosp_base}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label> </p></td>
 							</tr>
 							<tr>
 								<td width="186"><p><label>Diret&oacute;rio base de E-Mail</label> </p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><input name="email_base" type="text" id="email_base" value="{$email_base}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" ></p></td>
+								<td width="186"><p><input name="email_base" type="text" id="email_base" value="{$email_base}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} ></p></td>
 							</tr>
 							<tr>
 								<td height="5"></td>
@@ -112,16 +112,16 @@ label {
 								<td width="186" height="22" valign="top"><p><label>Servidor de E-Mail</label></p></td>
 							</tr>
 							<tr>
-								<td width="186" valign="top"><p><input name="mail_server" type="text" id="mail_server" value="{$mail_server}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></p></td>
+								<td width="186" valign="top"><p><input name="mail_server" type="text" id="mail_server" value="{$mail_server}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></p></td>
 							</tr>
 							<tr>
 								<td width="186" height="5"></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label>UID E-mail <input name="mail_uid" type="text" id="mail_uid" value="{$mail_uid}" size="10" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label></p></td>
+								<td width="186"><p><label>UID E-mail <input name="mail_uid" type="text" id="mail_uid" value="{$mail_uid}" size="10" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label></p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label>GID E-mail <input name="mail_gid" type="text" id="mail_gid" value="{$mail_gid}" size="10" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label> </p></td>
+								<td width="186"><p><label>GID E-mail <input name="mail_gid" type="text" id="mail_gid" value="{$mail_gid}" size="10" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label> </p></td>
 							</tr>
 							<tr>
 								<td width="186" height="5"></td>
@@ -130,13 +130,13 @@ label {
 								<td width="186"><p><label>POP</label></p></td>
 							</tr>
 							<tr>
-								<td width="186"><p><label><input name="pop_host" type="text" id="pop_host" value="{$pop_host}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></label> </p></td>
+								<td width="186"><p><label><input name="pop_host" type="text" id="pop_host" value="{$pop_host}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></label> </p></td>
 							</tr>
 							<tr>
 								<td width="186"><p><label>SMTP</label> </p></td>
 							</tr>
 							<tr>
-								<td width="186" height="22"><p><input name="smtp_host" type="text" id="smtp_host" value="{$smtp_host}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></p></td>
+								<td width="186" height="22"><p><input name="smtp_host" type="text" id="smtp_host" value="{$smtp_host}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></p></td>
 							</tr>
 							<tr>
 								<td width="186" height="2"></td>
@@ -145,7 +145,7 @@ label {
 								<td width="186"><p><label>Agrupar Clientes por cidade</label></p></td>
 							</tr>
 							<tr>
-								<td width="186" height="26"><p><input name="agrupar" type="text" value="{$agrupar}" size="20" maxlength="5" id="agrupar" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></p></td>
+								<td width="186" height="26"><p><input name="agrupar" type="text" value="{$agrupar}" size="20" maxlength="5" id="agrupar" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></p></td>
 							</tr>
 							<tr>
 								<td height="5"></td>
@@ -161,7 +161,7 @@ label {
 			<table align="center">
 				<tr align="center">
 					<!--td><input type="button" name="voltar" value="Voltar" onClick="javascript: location='configuracao.php?op=resumo';"></td-->
-					<td><input type="submit" name="Submit" value="Alterar" class='botao'></td>
+					<td><input type="submit" name="Submit" value="Alterar" class='botao' {if !$podeGravar}disabled="true"{/if}></td>
 				</tr>
 			</table>
 		</td>

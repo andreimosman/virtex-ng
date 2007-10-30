@@ -5,6 +5,7 @@
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="configuracoes_header.html"}
 <script language="JavaScript">
+var podeGravar={if $podeGravar}true{else}false{/if};
 {literal}
 
 function listaLinks() {
@@ -24,7 +25,7 @@ function excluirLink(id) {
 function formLinkCancela() {
 	form = document.cadastro_link;
 
-	if( window.confirm("Deseja abandonar este registro?") ) {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro?") ) {
 		if( form.id_link.value != '' ) {
 			listaLinks();
 		} else {
@@ -92,17 +93,17 @@ label {
 		<table cellspacing=0 cellpadding=0 align="center">
 			<tr>
 				<td align="right" width="70"><label>Título:</label>
-				<td align="left"><input type='text' size=20 name='titulo_link' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$titulo_link}"></td>
+				<td align="left"><input type='text' size=20 name='titulo_link' {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} value="{$titulo_link}"></td>
 				<td align="right" width="70"><label>URL:</label>
-				<td align="left"><input type='text' size=20 name='url' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$url}"></td>
+				<td align="left"><input type='text' size=20 name='url' {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} value="{$url}"></td>
 			</tr>
 
 			<tr>
 				<td align="right" width="70"><label>Descrição:</label>
-				<td align="left"><textarea name='descricao' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$descricao}</textarea></td>
+				<td align="left"><textarea name='descricao' {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$descricao}</textarea></td>
 				<td align="right" width="70"><label>Abrir em:</label>
 				<td align="left">
-					<select name="target" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+					<select name="target" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 					{foreach item=r from=$targets}
 						<option value="{$r.id}" {if $r.id == $target}SELECTED{/if}>{$r.nome}</option>
 					{/foreach}
@@ -112,7 +113,7 @@ label {
 			<tr>
 				<td align=center style="padding-bottom: 5px;" colspan=4>
 					<input type='button' name='Cancela' value='Cancelar' onClick='javascript:formLinkCancela()' class='botao'>
-					<input type='submit' name='Submit' value='{if !$id_link}Cadastra{else}Altera{/if}' class='botao'>
+					<input type='submit' name='Submit' value='{if !$id_link}Cadastra{else}Altera{/if}' class='botao' {if !$podeGravar}disabled="true"{/if}>
 
 				</td>
 			</tr>
@@ -135,7 +136,7 @@ label {
 		<tr>
 			<td align='center' width=70 class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}'>{$r.id_link|string_format:"%05d"}</td>
 			<td align='left' class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}'><b>{$r.titulo|upper}</b><br><small>{$r.url}</small></td>
-			<td class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}' width='100'>{if !$id_link}[<a href='javascript:editarLink({$r.id_link});'>editar</a>] [<a href='javascript:excluirLink({$r.id_link})'>excluir</a>]{else}{if $r.id_link == $id_link}editando...{/if}{/if}</td>
+			<td class='{if $r.id_link == $id_link}marcadoParaEdicao{else}{$estilo}{/if}' width='100'>{if !$id_link}[<a href='javascript:editarLink({$r.id_link});'>editar</a>] {if $podeGravar}[<a href='javascript:excluirLink({$r.id_link})'>excluir</a>]{/if}{else}{if $r.id_link == $id_link}editando...{/if}{/if}</td>
 		</tr>
 		{foreachelse}
 			<tr>

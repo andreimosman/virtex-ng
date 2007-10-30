@@ -42,9 +42,10 @@ table.mensagemErro td {
 {/literal}
 </style>
 <script language="JavaScript">
+var podeGravar={if $podeGravar}true{else}false{/if};
 {literal}
 function voltar() {
-	if( window.confirm("Deseja abandonar este registro") ) {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro") ) {
 		window.open("admin-configuracoes.php?op=preferencias&tela=modelos","conteudo");
 	}
 }
@@ -159,7 +160,7 @@ function validaFormModelo() {
 		<tr>
 			<td width="130" align="right"><label>Tipo:</label></td>
 			<td colspan="3">
-				<select name="tipo" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				<select name="tipo" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 				{foreach key=k item=v from=$tipos}
 					<option value="{$k}" {if $tipo == $k}SELECTED{/if}>{$v}</option>
 				{/foreach}
@@ -168,18 +169,18 @@ function validaFormModelo() {
 		</tr>
 		<tr>
 			<td width="130" align="right"><label>Descricao:</label></td>
-			<td colspan=3><input type="text" size="50" maxlength="50" name="descricao" value="{$descricao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td colspan=3><input type="text" size="50" maxlength="50" name="descricao" value="{$descricao}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		{if !$id_modelo_contrato}
 		<tr>
 			<td width="130" align="right"><label>Arquivo:</label></td>
-			<td colspan=3><input type="file" size="36" name="arquivo" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td colspan=3><input type="file" size="36" name="arquivo" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		{/if}
 		<tr>
 			<td width="130" align="right"><label>Padrão:</label></td>
 			<td>
-				<select name="padrao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				<select name="padrao" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 					{foreach item=d from=$lista_boolean}
 					<option value='{$d.id}' {if $d.id == $padrao}SELECTED{/if}>{$d.nome}</option>
 					{/foreach}
@@ -187,7 +188,7 @@ function validaFormModelo() {
 			</td>
 			<td width="130" align="right"><label>Disponível:</label></td>
 			<td>
-				<select name="disponivel" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				<select name="disponivel" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 					{foreach item=d from=$lista_boolean}
 					<option value='{$d.id}' {if $d.id == $disponivel}SELECTED{/if}>{$d.nome}</option>
 					{/foreach}
@@ -196,7 +197,7 @@ function validaFormModelo() {
 		</tr>
 		<tr>
 			<td colspan=4 style="border-top: dotted 1px #000000" align="center">
-				<input type="button" name="Voltar" value="Voltar" class="botao" onClick="javascript:voltar();"> <input type="submit" name="Submit" value="{if $id_modelo_contrato}Alterar{else}Cadastrar{/if}" class='botao'>
+				<input type="button" name="Voltar" value="Voltar" class="botao" onClick="javascript:voltar();"> <input type="submit" name="Submit" value="{if $id_modelo_contrato}Alterar{else}Cadastrar{/if}" class='botao' {if !$podeGravar}disabled="true"{/if}>
 			</td>
 		</tr>
 	</table>

@@ -124,7 +124,7 @@
 			$menuConfiguracoesPreferencias->addItem("Preferências Provedor","admin-configuracoes.php?op=preferencias&tela=provedor", $target);
 			$menuConfiguracoesPreferencias->addItem("Preferencias Cobrança","admin-configuracoes.php?op=preferencias&tela=cobranca", $target);
 			$menuConfiguracoesPreferencias->addSeparator();
-			$menuConfiguracoesPreferencias->addItem("Modelos de Contrato","admin-configuracoes.php?op=preferencias&tela=modelo", $target);
+			$menuConfiguracoesPreferencias->addItem("Modelos de Contrato","admin-configuracoes.php?op=preferencias&tela=modelos", $target);
 			$menuConfiguracoesPreferencias->addSeparator();
 			$menuConfiguracoesPreferencias->addItem("Cidades","admin-configuracoes.php?op=preferencias&tela=cidades", $target);
 			$menuConfiguracoesPreferencias->addItem("Faixas de Banda","admin-configuracoes.php?op=preferencias&tela=banda", $target);
