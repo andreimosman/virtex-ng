@@ -44,9 +44,84 @@
 			switch($this->op) {
 				case 'contas':
 					$this->executaContas();
-					break;				
+					break;
+				case 'pingConta':
+					$this->executaColetaServidorConta("ping");
+					break;
+				case 'arpConta':
+					$this->executaColetaServidorConta("arp");
+					break;
 			}
 		
+		}
+		
+		protected function executaColetaServidorConta($tipo) {
+			$contas			= VirtexModelo::factory('contas');
+			$equipamentos 	= VirtexModelo::factory('equipamentos');
+			
+			$id_conta = @$_REQUEST["id_conta"];
+			
+			$retorno = array("codigo" => 0, "mensagem" => "", "resposta" => array(), "endereco" => null);
+			
+			try{
+				if( !$id_conta ) throw new MException("ID da Conta não fornecido");
+
+				$conta = $contas->obtemContaPeloId($id_conta);
+				if( !count($conta) ) throw new MException("Conta não encontrada");				
+
+				$nas = $equipamentos->obtemNas($conta["id_nas"]);
+				if( !count($nas) ) throw new MException("NAS não definido");
+				if( !$nas["id_servidor"] ) throw new MException("Servidor não definido");
+
+				$servidor = $equipamentos->obtemServidor($nas["id_servidor"]);				
+				if( !count($servidor) ) throw new MException("Servidor não encontrato");
+				
+				$endereco = $conta["tipo_bandalarga"] == "I" ? $conta["rede"] : $conta["ipaddr"];
+				if( !$endereco ) throw new MException("IP ou Rede não atribuída");
+				
+				
+				if( $conta["tipo_bandalarga"] == "I" ) {
+					$inet = new MInet($endereco);
+					$endereco = $inet->obtemUltimoIP();
+				}
+				
+				$endereco = "192.168.0.110";
+				
+				$retorno["endereco"] = $endereco;
+
+				
+				$conn = new VirtexCommClient();
+				if(@!$conn->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"])) {
+					throw new MException("Erro de conexão com o servidor");
+				} else {
+					if( $conn->estaConectado() ) {
+						switch($tipo) {
+							case 'ping':
+								$pacotes = @$_REQUEST["pacotes"];
+								$tamanho = @$_REQUEST["tamanho"];
+
+								if( !$pacotes ) $pacotes = 4;
+								if( !$tamanho ) $tamanho = 32;
+								$retorno["resposta"] = $conn->getFPING($endereco,$pacotes,$tamanho);
+								break;
+							case 'arp':
+								$retorno["resposta"] = $conn->getARP($endereco);
+								break;
+								
+						}
+					} else {
+						throw new MException("Conexão com o servidor encerrada prematuramente");
+					}
+
+				}
+
+			} catch(MException $e) {
+				$retorno["codigo"] = 255;
+				$retorno["mensagem"] = $e->getMessage();
+			}
+			
+			$this->retorna($retorno);
+			
 		}
 		
 		/**

@@ -1,0 +1,106 @@
+
+_CLIENTES
+	leitura: Pesquisa/Visualização de clientes
+	gravação: Cadastro/Alteração de Clientes
+	
+_CLIENTES_RELATÓRIOS
+	leitura: Visualização dos Relatórios
+	
+_CLIENTES_BANDALARGA
+_CLIENTS_DISCADO
+_CLIENTES_EMAIL
+_CLIENTES_HOSPEDAGEM
+	leitura: Visualização das contas do tipo especificado
+	gravação: Alteração dos dados das contas do tipo especificado
+	
+_CLIENTES_CONTRATOS:
+	leitura: Visualização dos Contratos.
+	gravaçao: Cadastro e Migração de Contratos.
+
+_CLIENTES_CONTRATOS_CANCELAMENTO:
+	gravação: Efetuar o cancelamento de contrato.
+
+_CLIENTES_FATURAS:
+	leitura: Visualização das faturas.
+	gravação: Amortização das faturas.
+
+_CLIENTES_FATURAS_DESCONTO:
+	gravação: Concessão de Descontos em Pagamentos.
+
+
+
+_COBRANCA_BLOQUEIOS:
+	leitura: Visualização dos clientes passíveis de bloqueios.
+	gravação: Bloqueio dos clientes passíveis de bloqueios.
+	
+_COBRANCA_AMORTIZACAO:
+	gravação: Amortização de Faturas.
+	
+
+_COBRANCA_GERAR_BOLETOS:
+	gravação: Gerar os lotes de boletos.
+	
+_COBRANCA_TROCA_ARQUIVOS:
+	gravaçao: Download de arquivo de remessa/upload e arquivo de retorno.
+	
+_COBRANCA_RELATORIOS:
+	leitura: Visualização dos Relatórios.
+
+
+
+	
+_SUPORTE_GRAFICOS:
+	leitura: Visualização dos graficos dos clientes
+
+_SUPORTE_MONITORAMENTO:
+	leitura: Visualização do monitoramento
+
+_SUPORTE_LINKS:
+	leitura: Visualização/Acesso aos links externos
+	
+_SUPORTE_FERRAMENTAS_ARP:
+	leitura: Visualização da tabela ARP
+
+_SUPORTE_FERRAMENTAS_PING:
+	leitura: Pings
+
+_SUPORTE_FERRAMENTAS_CALCULADORA_IP:
+	leitura: Consultas na calculadora IP
+
+_SUPORTE_RELATORIOS:
+	leitura: Consultas aos Relatórios.
+
+
+
+_CONFIGURACOES_EQUIPAMENTOS:
+	leitura: Visualização das Configurações
+	gravação: Alteração das Configurações.
+
+_CONFIGURACOES_PREFERENCIAS:
+	leitura: Visualização das Prefêrencias.
+	gravação: Alteração das Preferências.
+
+_CONFIGURACOES_PREFERENCIAS_REGISTRO:
+	leitura: Visualização do Registro do Software.
+	gravação: Upload do registro
+
+_CONFIGURACOES_RELATORIOS:
+	leitura: Visualização dos Relatórios.
+
+
+
+
+_ADMINISTRACAO_ADMINISTRADORES:
+	leitura: Visualização dos Administradores e privilérios.
+	gravação: Cadastro de Administradores e Privilégios.
+
+_ADMINISTRACAO_PLANOS:
+	leitura: Consulta aos Planos Cadastrados.
+	gravação: Cadastro e Alteração dos Planos.
+
+_ADMINISTRACAO_FERRAMENTAS_BACKUP:
+	gravação: Execução dos backups.
+	
+_ADMINISTRACAO_RELATORIOS:
+	leitura: Visualização dos Relatórios.
+	

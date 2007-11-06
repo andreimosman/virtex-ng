@@ -4,14 +4,146 @@
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
+{include file="erro_header.html"}
+<link rel="stylesheet" href="view/templates/css/window/dhtmlwindow.css" type="text/css" />
+<script type="text/javascript" src="view/templates/jslib/window/dhtmlwindow.js"></script>
+
 <script language="JavaScript">
 {literal}
-function ping(ip) {
-	window.alert("Pingando: "+ip);
+
+var pingWin;
+var arpWin;
+
+
+function getReturn(response){
+	var r;
+	try {
+		var r = response.evalJSON();
+	} catch(e) {
+		r = null;
+	}
+	return r;
 }
 
-function arp(ip) {
-	window.alert("ARP: "+ip);
+function ajaxGetInfo(parametros,responseHandler) {
+	url = 'admin-ajax.php';
+
+	var myAjax = new Ajax.Request(
+		url,
+		{
+			method: 'get',
+			parameters: parametros,
+			onComplete: responseHandler,
+			asynchronous: true
+		});
+
+
+}
+
+function pingResponse(originalRequest) {
+
+	try {
+		r = getReturn(originalRequest.responseText);
+		var pd = document.getElementById("pingDiv");
+		if( r.codigo > 0 ) {
+			pd.innerHTML = '<br><br><table class="erro" align="center" width="100%" style="width:300px"><tr><td align="center"><br>'+r.mensagem+'<br><br></td></tr></table>';
+		} else {
+
+			var txtHTML = "<table class='lista' width='100%' cellpadding=0 cellspacing=0>";
+			txtHTML += "<tr><th>host</th><th>resposta</th></tr>";
+			var estilo;
+
+			for(i=0;i<r.resposta.length;i++) {
+				pinga = r.resposta[i];
+
+				if( pinga == '-' ) {
+					pinga = "Tempo limite esgotado";
+				}
+
+				if( i%2 == 0 ) {
+					estilo = 'par';
+				} else {
+					estilo = 'impar';
+				}
+
+				txtHTML += "<tr><td width='50%' class='"+estilo+"'>" + r.endereco + "</td><td width='50%' class='"+estilo+"' align='right'>" + pinga + " &nbsp;</td></tr>";
+			}
+
+			txtHTML += "</table>";
+
+			pd.innerHTML = txtHTML;
+		}
+
+		pingWin.load("div","pingDiv");
+	} catch( e ) {
+
+	}
+
+}
+
+function arpResponse(originalRequest) {
+	r = getReturn(originalRequest.responseText);
+	try {
+
+		var ad = document.getElementById("arpDiv");
+		if( r.codigo > 0 ) {
+			ad.innerHTML = '<br><br><table class="erro" align="center" width="100%" style="width:300px"><tr><td align="center"><br>'+r.mensagem+'<br><br></td></tr></table>';
+		} else {
+			var txtHTML = "<table class='lista' width='100%' cellpadding=0 cellspacing=0>";
+			txtHTML += "<tr><th>host</th><th>mac</th><th>interface</th></tr>";
+			var estilo;
+
+			for(i=0;i<r.resposta.length;i++) {
+				if( r.resposta[i].addr == null || r.resposta[i].addr == "" ) {
+					continue;
+				}
+
+				if( i%2 == 0 ) {
+					estilo = 'par';
+				} else {
+					estilo = 'impar';
+				}
+
+				txtHTML += "<tr><td width='33%' class='"+estilo+"'>" + r.resposta[i].addr + "&nbsp;</td><td width='34%' class='"+estilo+"'>" + r.resposta[i].mac + "&nbsp;</td><td width='33%' class='"+estilo+"'>" + r.resposta[i].iface + "&nbsp;</td></tr>";
+			}
+
+			txtHTML += "</table>";
+
+			ad.innerHTML = txtHTML;
+
+		}
+
+		arpWin.load("div","arpDiv");
+	} catch( e ) {
+
+	}
+
+}
+
+function ping(id_conta) {
+	var pd = document.getElementById("pingDiv");
+	pd.innerHTML="<br><br><center><img src='view/templates/imagens/loader.gif' border=0></center>";
+	if( pingWin == null || pingWin == undefined ) {
+		pingWin = googlewin=dhtmlwindow.open("resultado_ping", "div", "pingDiv", "Ping ...", "width=350px,height=120px,resize=1,scrolling=1,center=50", "recal")
+	} else {
+		pingWin.show();
+		pingWin.load("div","pingDiv");
+	}
+	parametros="op=pingConta&id_conta="+id_conta;
+	ajaxGetInfo(parametros,pingResponse);
+}
+
+function arp(id_conta) {
+	var ad = document.getElementById("arpDiv");
+	ad.innerHTML="<br><br><center><img src='view/templates/imagens/loader.gif' border=0></center>";
+	if( arpWin == null || arpWin == undefined ) {
+		arpWin = googlewin=dhtmlwindow.open("resultado_arp", "div", "arpDiv", "ARP ...", "width=350px,height=120px,resize=1,scrolling=1,center=50", "recal")
+	} else {
+		arpWin.show();
+		arpWin.load("div","arpDiv");
+	}
+	parametros="op=arpConta&id_conta="+id_conta;
+	ajaxGetInfo(parametros,arpResponse);
 }
 {/literal}
 </script>
@@ -42,7 +174,7 @@ function abreEstatisticas(user,id) {
 <table width="600" border="0" cellpadding=1 cellspacing=0 align="center" class="lista">
 	<tr>
 		<th colspan="2" align="left">FICHA TECNICA</th>
-		<th colspan="2" align="right"><label>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$id_conta}">alterar</a>]{if $tipo_conta == "BL"}[<a href="javascript:ping('{$infoConta.ip}')">ping</a>] [<a href="javascript:arp('{$infoConta.ip}')">arp</a>]{/if}</label></th>
+		<th colspan="2" align="right"><label>[<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$tipo}&id_cliente={$id_cliente}&id_conta={$id_conta}">alterar</a>]{if $tipo_conta == "BL"}[<a href="javascript:ping('{$id_conta}');">ping</a>] [<a href="javascript:arp('{$id_conta}');">arp</a>]{/if}</label></th>
 	</tr>
 	<tr>
 		<td align="right" width="110"><strong><label>Username:</label></strong></td>
@@ -133,5 +265,9 @@ function abreEstatisticas(user,id) {
 <center>
 <label><a href="admin-clientes.php?op=conta&tipo={$tipo_contrato}&id_cliente={$id_cliente}">voltar</a></label>
 </center>
+
+<div id="pingDiv" style="display: none"></div>
+<div id="arpDiv" style="display: none"></div>
+
 </body>
 </html>
