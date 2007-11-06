@@ -85,7 +85,7 @@
 					$endereco = $inet->obtemUltimoIP();
 				}
 				
-				$endereco = "192.168.0.110";
+				// $endereco = "192.168.0.110";
 				
 				$retorno["endereco"] = $endereco;
 
