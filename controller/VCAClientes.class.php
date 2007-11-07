@@ -888,6 +888,14 @@
 		protected function executaConta() {
 			$this->_view->atribuiVisualizacao("conta");
 			$tipo = trim($_REQUEST["tipo"]);
+			$id_conta 	= @$_REQUEST["id_conta"];
+			$contas = VirtexModelo::factory("contas");
+			
+			if( !$tipo && $id_conta ) {
+				$info = $contas->obtemContaPeloId($id_conta);
+				$tipo = @$info["tipo_conta"];
+			}
+			
 			$this->_view->atribui("tipo",$tipo);
 			
 			$privReq = "";
@@ -917,7 +925,6 @@
 			$this->_view->atribui("nome_razao",$info["nome_razao"]);
 			
 			$cobranca = VirtexModelo::factory("cobranca");
-			$contas = VirtexModelo::factory("contas");
 
 			
 			$tela 		= @$_REQUEST["tela"];
@@ -931,7 +938,6 @@
 			
 			
 			
-			$id_conta 	= @$_REQUEST["id_conta"];
 			$acao 		= @$_REQUEST["acao"];
 			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 			
