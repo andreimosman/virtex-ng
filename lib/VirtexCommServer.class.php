@@ -172,30 +172,6 @@
 
 		}
 
-		public function acceptConn() {
-			$this->conn = @stream_socket_accept($socket);
-			if( $this->conn ) {
-				$p = pcntl_fork();
-				if( $p === -1 ) {
-					// Erro
-				} elseif( $p ) {
-					pcntl_wait($st);
-					// while( $this->conn = @stream_socket_accept($socket) ) {
-					//	$this->connChild();
-					//return;
-				} else {
-					$this->serverDialog();
-					fclose($this->conn);
-				}
-				echo "AC: false\n";
-				return false;
-			}
-			
-			echo "AC: true\n";
-			return(true);
-		}
-
-
 		public function start() {
 
 			$server_str = "tcp://" . $this->host . ":" . $this->port;
@@ -211,25 +187,17 @@
 				 */
 				
 				while(true) {
-					$pid = pcntl_fork();
-					if($p === -1) {
-						
-					} elseif($pid) {
-						// Parent
-						pcntl_wait($status);
-					} else {
-						while($this->conn = @stream_socket_accept($socket)) {
-							$p = pcntl_fork();
-							
-							if( $p === -1 ) {
-								return;
-							} elseif ($p) {
-								return;
-							} else {
-								$this->serverDialog();
-								fclose($this->conn);
-								return;
-							}
+					while($this->conn = @stream_socket_accept($socket)) {
+						$p = pcntl_fork();
+
+						if( $p === -1 ) {
+							return;
+						} elseif ($p) {
+							return;
+						} else {
+							$this->serverDialog();
+							fclose($this->conn);
+							return;
 						}
 					}
 				}

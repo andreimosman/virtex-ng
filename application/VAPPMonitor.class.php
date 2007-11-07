@@ -2,13 +2,69 @@
 
 	class VAPPMonitor extends VirtexApplication {
 	
+		protected $useConnCache;	// Faz o cache das conexões
+	
 		public function __construct() {
 			parent::__construct();
+			$this->useConnCache	= false;
+			$this->serverCache();
 		}
 		
 		protected function selfConfig() {
 		
 		}
+		
+		/**
+		 *
+		 */
+		protected function serverCache() {
+			$equipamentos = VirtexModelo::factory('equipamentos');
+			$servidores = $equipamentos->obtemListaServidores();
+
+			$this->cacheServidores = array();
+			
+			foreach($servidores as $servidor) {
+				if( $servidor["disponivel"] == 't' && $servidor["ip"] && $servidor["chave"] && $servidor["usuario"] && $servidor["senha"] ) {
+					$this->cacheServidores[ $servidor["id_servidor"] ] = $servidor;
+					
+					if( $this->useConnCache ) {
+						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"] = new VirtexCommClient();
+						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"]->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"]);
+					} else {
+						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"] = null;
+					}
+										
+				}
+			}		
+		}
+		
+		protected function &getCachedServerConnection($id_servidor) {
+			if( $this->cacheServidores[$id_servidor]["conn"] == null) {
+				$servidor = $this->cacheServidores[$id_servidor];
+				$this->cacheServidores[ $id_servidor ]["conn"] = new VirtexCommClient();
+				$this->cacheServidores[ $id_servidor ]["conn"]->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"]);
+			}
+			
+			return( $this->cacheServidores[ $id_servidor ]["conn"] );
+		}
+		
+		protected function closeCachedServerConnection($id_servidor) {
+			if( !$this->useConnCache  && $this->cacheServidores[$id_servidor]["conn"] != null) {
+				$this->cacheServidores[$id_servidor]["conn"]->close();
+				$this->cacheServidores[$id_servidor]["conn"] = null;
+			}
+		}
+		
+		protected function flushCachedServerConnections() {
+			foreach($this->cacheServidores as $k => $v) {
+				if( $this->cacheServidores[$k]["conn"] ) {
+					$this->cacheServidores[$k]["conn"]->close();
+				} 
+			}
+			
+			$this->cacheServidores = array();
+		}
+		
 
 		public function executa() {
 			$preferencias = VirtexModelo::factory('preferencias');
@@ -19,32 +75,16 @@
 			
 			$numPings = @$prefMon["num_pings"] ? $prefMon["num_pings"] : 5;
 			
-			$servidores = $equipamentos->obtemListaServidores();
-			
-			$cacheServidores = array();
-			
-			foreach($servidores as $servidor) {
-				if( $servidor["disponivel"] == 't' && $servidor["ip"] && $servidor["chave"] && $servidor["usuario"] && $servidor["senha"] ) {
-					$cacheServidores[ $servidor["id_servidor"] ] = $servidor;
-					
-					$cacheServidores[ $servidor["id_servidor"] ]["conn"] = new VirtexCommClient();
-					$cacheServidores[ $servidor["id_servidor"] ]["conn"]->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"]);
-										
-				}
-			}
 
 			$pops = $equipamentos->obtemListaPOPs();
 			
 			foreach($pops as $pop) {
-				if( $pop["ativar_monitoramento"] == 't' && $pop["ipaddr"] && count( @$cacheServidores[ $pop["id_servidor"] ] ) ) {
-					// echo "POP: " . $pop["id_pop"] . " / SRV: " . $pop["id_servidor"] . "\n";
-					
-					// echo "PINGANDO " . $pop["ipaddr"] . "\n";
-					
-					$resposta = $cacheServidores[ $pop["id_servidor"] ]["conn"]->getFPING($pop["ipaddr"],$numPings,$tamanho);
-					
-					//print_r($resposta);
-					//echo "--------------------------------\n";
+				if( $pop["ativar_monitoramento"] == 't' && $pop["ipaddr"] ) {
+				
+					$conn = $this->getCachedServerConnection($pop["id_servidor"]);
+					$resposta = $conn->getFPING($pop["ipaddr"],$numPings,$tamanho);
+					$this->closeCachedServerConnection($pop["id_servidor"]);
+					unset($conn);
 
 					$perdas = 0;
 					$minimo = 9999999999999999999;
@@ -68,9 +108,8 @@
 						}
 					}
 					
-					
 					$status='OK';
-					$media = (int)(count($resposta)?$soma/count($resposta):0);
+					$media = (int)(count($resposta)?$soma/(count($resposta)-$perdas):0);
 					
 					if( $perdas == count($resposta) ) {
 						$status = !count($resposta) ? "IER" : "ERR";
@@ -91,11 +130,7 @@
 				}
 			}
 			
-			foreach($cacheServidores as $k => $v) {
-				$cacheServidores[$k]["conn"]->close();
-			}
-			
-			unset($cacheServidores);
+			$this->flushCachedServerConnections();
 			
 		
 		}
