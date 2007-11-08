@@ -461,14 +461,12 @@
 			
 			if($tela != "registro") {
 				$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS");
-			} else {
 				if( $this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS",false)  ) {
 					$this->_view->atribui("podeGravar",true);
 				} else {
 					$this->_view->atribui("podeGravar",false);
 				}
 			}
-			
 			
 			switch($tela) {
 				case 'geral':
