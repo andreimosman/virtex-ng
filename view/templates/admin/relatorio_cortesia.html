@@ -13,7 +13,51 @@
 {/literal}
 //-->
 </script>
-<p>Resumo</p>
+<style>
+{literal}
+#titu{
+	font-weight:bold;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+.nome_razao{
+	background-color:red;
+}
+{/literal}
+</style>
+<br /><br />
+<div id="titu" align="right">Filtro:
+<select onchange="filtro(this);" class="fieldWithoutFocus">
+	<option value="">Todos</option>
+{foreach from=$tipoContas item=display key=value}
+	<option value="{$value}" {if $filtro == $value}selected='selected'{/if}>{$display}</option>
+{/foreach}
+</select>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">	
+	<tr>
+		<th>&nbsp;</th>
+		<th>Data</th>
+		<th>Produto</th>
+		<th>Tipo</th>
+		<th>Username</th>
+	</tr>
+	{foreach from=$contas item=row name=cnts}
+	{if ($smarty.foreach.cnts.iteration%2) }{assign var=estilo value='linhai'}{else}{assign var=estilo value='linhap'}{/if}
+	<tr class="{$estilo} link" onclick="exibirConta({$row.id_cliente},{$row.id_cliente_produto});">
+		<td colspan="4" class="cellInfoLeft" id="titu">{$row.nome_razao}</td>
+		<td></td>
+	</tr>
+	<tr class="{$estilo} link" onclick="exibirConta({$row.id_cliente},{$row.id_cliente_produto});">
+		<td class="cellInfoCenter"></td>
+		<td class="cellInfoCenter">{$row.data_contratacao}</td>
+		<td class="cellInfoCenter">{$row.nome_produto}</td>
+		<td class="cellInfoCenter">{$row.tipo}</td>
+		<td class="cellInfoCenter">{$row.username}</td>
+	</tr>
+	{/foreach}
+	
+</table>
+<br /><br />
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
 	<tr>
 		<th>Banda Larga</th>
@@ -29,35 +73,5 @@
 		<td class="cellInfoCenter">{$resumo.H|default:0}</td>
 		<td class="cellInfoCenter">{$resumo.total|default:0}</td>
 	</tr>
-</table>
-<br />
-<p>Detalhado 
-<select onchange="filtro(this);" >
-	<option value="">Todos</option>
-{foreach from=$tipoContas item=display key=value}
-	<option value="{$value}" {if $filtro == $value}selected='selected'{/if}>{$display}</option>
-{/foreach}
-</select>
-</p>
-<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">	
-	<tr>
-		<th>Data</th>
-		<th>Produto</th>
-		<th>Tipo</th>
-		<th>Username</th>
-	</tr>
-	{foreach from=$contas item=row name=cnts}
-	{if ($smarty.foreach.cnts.iteration%2) }{assign var=estilo value='linhai'}{else}{assign var=estilo value='linhap'}{/if}
-	<tr class="{$estilo} link" onclick="exibirConta({$row.id_cliente},{$row.id_cliente_produto});">
-		<td colspan="4" class="cellInfoLeft">{$row.nome_razao}</td>
-	</tr>
-	<tr class="{$estilo} link" onclick="exibirConta({$row.id_cliente},{$row.id_cliente_produto});">
-		<td class="cellInfoCenter">{$row.data_contratacao}</td>
-		<td class="cellInfoCenter">{$row.nome_produto}</td>
-		<td class="cellInfoCenter">{$row.tipo}</td>
-		<td class="cellInfoCenter">{$row.username}</td>
-	</tr>
-	{/foreach}
-	
 </table>
 {include file="relatorio_footer.html"}
