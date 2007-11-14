@@ -10,44 +10,46 @@
 {/literal}
 //-->
 </script>
+<style>
+{literal}
+.titu {
+	font-weight:bold;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+#border {
+	border-bottom:1px solid gray;
+}
+{/literal}
+</style>
 <br />
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
-	<tr>
-		<th align="left" width="70%" >Cliente</th>
-		<th>Contas</th>
-	</tr>
 	{foreach from=$clientes item=c name=cl}
 	{if ($smarty.foreach.cl.iteration%2) }{assign var=estilo value='linhai'}{else}{assign var=estilo value='linhap'}{/if}
 	<tr class='{$estilo}'>
-		<td class="cellInfoLeft" colspan='2'> {$c.nome_razao}</td>				
+		<th class="cellInfoLeft"> {$c.nome_razao}</th>				
 	</tr>
 	<tr class='{$estilo}'>
 		<td class="cellInfoLeft" valign='top'>
-			<table>
+			<table width="100%">
 				<tr>
-					<td>Endereço:</td>
-					<td>{$c.endereco}</td>
+					<td colspan="5"><span class="titu">Endereço:</span> {$c.endereco}</td>
 				</tr>
 				<tr>
-					<td>Telefone:</td>
-					<td>{$c.fone_comercial}</td>
+					<td><span class="titu">Telefone:</span> {$c.fone_comercial}</td>
 				</tr>
+				<tr><td>&nbsp;</td></tr>
+					<td align="left"><span class="titu">Contas:</span></td>
+				{foreach from=$c.contas key=id item=conta}
+				<tr>
+					<td>&nbsp;</td>
+					<td id="border" width="30%"><b>Username:</b> {$conta.username}</td>
+					<td nowrap id="border"  width="30%"><b>Data contratação: </b>{$conta.data_contratacao}</td>
+					<td width="40%">&nbsp;</td>
+				</tr>
+				{/foreach}
 			</table>
-		</td>
-		<td>
-			{foreach from=$c.contas key=id item=conta}
-				<table>
-					<tr>
-						<td>Username:</td>
-						<td>{$conta.username}</td>
-					</tr>
-					<tr>
-						<td nowrap>Data contratação:</td>
-						<td>{$conta.data_contratacao}</td>
-					</tr>
-				</table>
-			{/foreach}
-		</td>				
+		</td>			
 	</tr>
 	{/foreach}
 </table>

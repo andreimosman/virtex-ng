@@ -10,8 +10,8 @@
 {if $id_pop || $id_nas}
 	<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center">
 		<tr>
-			<th align="center">#</th>
-			<th align="left">Username</th>
+			<th align="left" width='70'>#</th>
+			<th align="left" width='130'>Username</th>
 			<th align="left">NAS</th>
 			<th align="left">POP</th>
 			<th align="right">Upload</th>
@@ -20,7 +20,7 @@
 		{foreach name=registros item=r from=$listaContas}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td style="border-bottom: solid 1px" class="{$estilo}" align="center"><a href="admin-clientes.php?op=conta&tela=ficha&tipo=BL&id_cliente={$r.id_cliente}&id_conta={$r.id_conta}"><strong>{$r.id_conta|string_format:"%06d"}</strong></a></td>
+			<td style="border-bottom: solid 1px" class="{$estilo}" align="left"><a href="admin-clientes.php?op=conta&tela=ficha&tipo=BL&id_cliente={$r.id_cliente}&id_conta={$r.id_conta}"><strong>{$r.id_conta|string_format:"%06d"}</strong></a></td>
 			<td style="border-bottom: solid 1px" class="{$estilo}"><a href="admin-clientes.php?op=conta&tela=ficha&tipo=BL&id_cliente={$r.id_cliente}&id_conta={$r.id_conta}"><strong>{$r.username}</strong></a></td>
 			<td style="border-bottom: solid 1px" class="{$estilo}"><a href="admin-clientes.php?op=conta&tela=ficha&tipo=BL&id_cliente={$r.id_cliente}&id_conta={$r.id_conta}"><strong>{$r.nas.nome}</strong></a></td>
 			<td style="border-bottom: solid 1px" class="{$estilo}"><a href="admin-clientes.php?op=conta&tela=ficha&tipo=BL&id_cliente={$r.id_cliente}&id_conta={$r.id_conta}"><strong>{$r.pop.nome}{if $tipo == "ap" && $r.pop.id_pop != $id_pop}**{/if}</strong></a></td>
@@ -29,9 +29,9 @@
 		</tr>
 		<tr>
 			<td style="border-bottom: solid 1px #000000" colspan=4 class="{$estilo}" align="left">
-				<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.cliente.id_cliente}"><strong>{$r.cliente.nome_razao}</strong></a>
+				<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.cliente.id_cliente}"><strong>&nbsp;&nbsp;{$r.cliente.nome_razao}</strong></a>
 				<br>
-				<span style="font-size: 8px; font-family: verdana">
+				<span style="font-size: 10px; font-family: verdana">
 				{$r.cliente.endereco}{if $r.cliente.complemento} - {$r.cliente.complemento}{/if}{if $r.cliente.bairro} - {$r.cliente.bairro}{/if}<br>
 				{$r.cliente.cidade.cidade} - {$r.cliente.cidade.uf}<br>
 				{if $r.cliente.fone_comercial || $r.cliente.fone_residencial || $r.cliente.fone_celular}Fone(s): {$r.cliente.fone_comercial} {$r.cliente.fone_residencial} {$r.cliente.fone_celular}{else}Cliente sem telefone cadastrado{/if}

@@ -6,7 +6,7 @@
 		<tr class="lista">
 			<th>#</th>
 			<th align="left">Data</th>
-			<th>Vig&ecirc;ncia</th>
+			<th align="center">Vig&ecirc;ncia</th>
 			<th align="left">Produto</th>
 			<th>Tipo</th>
 			<th align="right">Valor</th>
@@ -18,7 +18,7 @@
 		<tr>
 			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.id_cliente_produto|string_format:"%06d"}</a></td>
 			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.data_contratacao}</a></td>
-			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.vigencia}</a></td>
+			<td class='{$estilo}' align="center"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.vigencia}</a></td>
 			<td class='{$estilo}'><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.nome_produto}</a></td>
 			<td class='{$estilo}' align="center"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.tipo_produto}</a></td>
 			<td class='{$estilo}' align="right"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{if $c.valor > 0}{$c.valor}{else}cortesia{/if}</a></td>

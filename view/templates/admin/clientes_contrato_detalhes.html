@@ -49,27 +49,27 @@
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
-			<td colspan=4>{$cliente.nome_razao}</td>
+			<td align="left">{$cliente.nome_razao}</td>
 			<input type=hidden name="id_cliente" value="{$id_cliente}" >
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
-			<td>{$cliente.cpf_cnpj}&nbsp;</td>
+			<td align="left">{$cliente.cpf_cnpj}&nbsp;</td>
 			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG:{else}Inscrição{/if}</strong></td>
-			<td>{$cliente.rg_inscr}&nbsp;</td>
+			<td align="left">{$cliente.rg_inscr}&nbsp;</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Endereço:</strong></td>
-			<td>{$endereco_cobranca.endereco}&nbsp;</td>
+			<td align="left">{$endereco_cobranca.endereco}&nbsp;</td>
 
 			<td width="110" align="right"><strong>Complemento:</strong></td>
-			<td>{$endereco_cobranca.complemento}&nbsp;</td>
+			<td align="left">{$endereco_cobranca.complemento}&nbsp;</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Bairro:</strong></td>
-			<td>{$endereco_cobranca.bairro}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$endereco_cobranca.cep}</td>
+			<td align="left">{$endereco_cobranca.bairro}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$endereco_cobranca.cep}</td>
 			<td width="110" align="right"><strong>Cidade:</strong></td>
-			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
+			<td align="left">{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
 		</tr>
 	</table>
 	<br>
@@ -79,19 +79,19 @@
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Tipo:</strong></td>
-			<td>{if $contrato.tipo_produto == "BL"}BANDA LARGA{/if}{if $contrato.tipo_produto == "D"}DISCADO{/if}{if $contrato.tipo_produto == "H"}HOSPEDAGEM{/if}</td>
+			<td align="left">{if $contrato.tipo_produto == "BL"}BANDA LARGA{/if}{if $contrato.tipo_produto == "D"}DISCADO{/if}{if $contrato.tipo_produto == "H"}HOSPEDAGEM{/if}</td>
 			<td width="110" align="right"><strong>Produto:</strong></td>
 			<td>{$contrato.nome_produto}&nbsp;</td>
 			<td width="110" align="right"><strong>Valor:</strong></td>
-			<td>{if $contrato.valor_produto > 0}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
+			<td align="left">{if $contrato.valor_produto > 0}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
 		</tr>
 		{if $contrato.valor_produto > 0}
 		<tr>
 			<td width="110" align="right"><strong>Comodato:</strong></td>
-			<td>{$contrato.valor_comodato|string_format:"%.2f"}&nbsp;</td>
+			<td align="left">{$contrato.valor_comodato|string_format:"%.2f"}&nbsp;</td>
 
 			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
-			<td>{$contrato.tx_instalacao|string_format:"%.2f"}</td>
+			<td align="left">{$contrato.tx_instalacao|string_format:"%.2f"}</td>
 			<input type=hidden name="tx_instalacao" value="{$tx_instalacao}" >
 
 			<td width="110" align="right"><strong></strong></td>
@@ -100,20 +100,20 @@
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Desconto:</strong></td>
-			<td>{$contrato.desconto_promo|string_format:"%.2f"}&nbsp;</td>
+			<td align="left">{$contrato.desconto_promo|string_format:"%.2f"}&nbsp;</td>
 			<td width="110" align="right"><strong>Período Desconto:</strong></td>
-			<td>{$contrato.periodo_desconto} meses</td>
+			<td align="left">{$contrato.periodo_desconto} meses</td>
 			<td width="110" align="right"><strong>Data Contratação:</strong></td>
-			<td>{$contrato.data_contratacao}</td>
+			<td align="left">{$contrato.data_contratacao}</td>
 
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
-			<td>{$contrato.vencimento}&nbsp;</td>
+			<td align="left">{$contrato.vencimento}&nbsp;</td>
 			<td width="110" align="right"><strong>Vigência:</strong></td>
-			<td>{$contrato.vigencia} meses</td>
+			<td align="left">{$contrato.vigencia} meses</td>
 			<td width="110" align="right"><strong>Carência:</strong></td>
-			<td>{$contrato.carencia} dias</td>
+			<td align="left">{$contrato.carencia} dias</td>
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Pagamento:</strong></td>
@@ -122,7 +122,7 @@
 			<input type=hidden name="id_forma_pagamento" value="{if $forma_pagamento == 'BL'}{$id_forma_pagamento_BL}{/if}{if $forma_pagamento == 'DA'}{$id_forma_pagamento_DA}{/if}{if $forma_pagamento == 'MO'}{$id_forma_pagamento_MO}{/if}{if $forma_pagamento == 'PC'}{$id_forma_pagamento_PC}{/if}" >
 
  			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
-			<td colspan=3><span style="font-family: arial; font-size: 9px;">{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+			<td colspan=3  align="left"><span style="font-family: arial; font-size: 10px;">{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
 		</tr>
 		{if $formaPagamento.tipo_cobranca == "DA"}
 		<tr>
@@ -146,7 +146,7 @@
 		{foreach name=registros item=c from=$listaContas}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td class='{$estilo}' width=200 align="left">&nbsp;<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</a></td>
+			<td class='{$estilo}' width=200 align="center">&nbsp;<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}"><b>{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</b></a></td>
 			<td class='{$estilo}' width=80>
 			<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">
 				{if $c.tipo_conta == 'BL'}BANDA LARGA{/if}

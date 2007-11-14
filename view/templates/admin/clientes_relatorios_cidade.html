@@ -22,9 +22,9 @@
 		<tr>
 			<td class='{$estilo}' width="60" align="right"><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.id_cliente|string_format:"%05d"}</a></td>
 			<td class='{$estilo}'>
-				<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}">{$r.nome_razao}</a>
+				<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}"><b>{$r.nome_razao}</b></a>
 				<br>
-				<span style="font-size: 8px; font-family: verdana">
+				<span style="font-size: 10px; font-family: verdana">
 				{$r.endereco}{if $r.complemento} - {$r.complemento}{/if}{if $r.bairro} - {$r.bairro}{/if}<br>
 				{$cidade} - {$uf}<br>
 				{if $r.fone_comercial || $r.fone_residencial || $r.fone_celular}Fone(s): {$r.fone_comercial} {$r.fone_residencial} {$r.fone_celular}{else}Cliente sem telefone cadastrado{/if}

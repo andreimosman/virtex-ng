@@ -57,7 +57,7 @@
 		<td class='{$estilo}'>
 			<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$r.id_cliente}"><strong>{$r.nome_razao}</strong></a>
 			<br>
-			<span style="font-size: 8px; font-family: verdana">
+			<span style="font-size: 10px; font-family: verdana">
 			{$r.endereco}{if $r.complemento} - {$r.complemento}{/if}{if $r.bairro} - {$r.bairro}{/if}<br>
 			{$r.cidade.cidade} - {$r.cidade.uf}<br>
 			{if $r.fone_comercial || $r.fone_residencial || $r.fone_celular}Fone(s): {$r.fone_comercial} {$r.fone_residencial} {$r.fone_celular}{else}Cliente sem telefone cadastrado{/if}
