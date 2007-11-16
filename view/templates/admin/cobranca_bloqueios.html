@@ -1,10 +1,46 @@
 <html>
 <head>
 	<title></title>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+{/literal}
+</style>
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="cobranca_header.html"}
 
-
+<br /><br />
+<div id="cont" align="center">
+	Bloqueio de Clientes
+	<br /><br />
+	<table class="lista" border="0" width="650px" cellpadding="0" cellspacing="0">
+		<tr>
+			<th>&nbsp;</th>
+			<th width="100px">Cliente</th>
+			<th>Produto</th>
+			<th>Contas</th>
+			<th width="70px">#Faturas em atrazo</th>
+			<th width="70px">Vl Atrazado</th>
+		</tr>
+		<tr>
+			<td><input type="checkbox" name="123"></td>
+			<td align="center">Oie</td>
+			<td align="center">Oie</td>
+			<td align="center">Oie</td>
+			<td align="center">Oie</td>
+			<td align="center">Oie</td>
+		</tr>
+	</table>
+	
+	<input type="button" value="Bloquear">
+	<input type="button" value="Desmarcar Todas">
+</div>
 </body>
 </html>

@@ -82,6 +82,8 @@ class VCACobranca extends VirtexControllerAdmin {
 	}
 
 	protected function executaArquivos() {
+		$tela = @$_REQUEST["tela"];
+		$this->_view->atribui("tela",$tela);
 
 	}
 

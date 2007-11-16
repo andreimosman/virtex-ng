@@ -137,7 +137,8 @@
 		}
 		
 		protected function exibeRelatorios() {
-		
+			$this->_file = "administracao_log_admin.html";
+			$this->atribui("titulo","Log dos Administradores");
 		}
 		
 	

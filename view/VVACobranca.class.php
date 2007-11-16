@@ -52,11 +52,13 @@
 		}
 		
 		protected function exibeGerarCobranca() {
-		
+			$this->_file = "cobranca_gerar_cobranca.html";
+			$this->atribui("titulo","Gerar Cobrança/Boletos");
 		}
 		
 		protected function exibeArquivos() {
-		
+			$this->_file = "cobranca_arquivos.html";
+			$this->atribui("titulo","Troca de Arquivos");
 		}
 		
 		protected function exibeRelatorios() {

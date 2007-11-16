@@ -351,7 +351,7 @@
 		}
 		
 		protected function executaRelatorios() {
-		
+			$this->_view->atribuiVisualizacao("relatorios");
 		}
 		
 	}
