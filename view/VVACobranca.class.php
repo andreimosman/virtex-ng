@@ -42,7 +42,8 @@
 		}
 		
 		protected function exibeBloqueios() {
-		
+			$this->_file = "cobranca_bloqueios.html";
+			$this->atribui("titulo","Clientes Passíveis de Bloqueio");
 		}
 		
 		protected function exibeAmortizacao() {
