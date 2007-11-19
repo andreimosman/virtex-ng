@@ -110,6 +110,7 @@
 		}
 		
 		protected function executaAdministradores() {
+			$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
 			$this->_view->atribuiVisualizacao("administradores");
 			$tela = @$_REQUEST["tela"] ? $_REQUEST["tela"] : "listagem";
 			
@@ -123,13 +124,19 @@
 			$this->_view->atribui("tela",$tela);
 			$this->_view->atribui("id_admin", $id_admin);
 
+			$podeGravar = false;
+			if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
+				$podeGravar = true;
+			}
+
 			switch($tela) {
 				case 'cadastro':
 												
 					if($id_admin) { //Alteração 
 					
 						if(!$this->_acao) {
-						
+							$this->_view->atribui("podeGravar",$podeGravar);
+							
 							$info = $this->administradores->obtemAdminPeloId($id_admin);
 							$this->_view->atribui("acao","cadastrar");
 							
@@ -138,7 +145,7 @@
 							}
 							
 						} else {
-							
+							$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
 							$this->administradores->alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status);
 							
 							$url = "admin-administracao.php?op=administradores&tela=listagem";
@@ -150,7 +157,7 @@
 						}
 						
 					} else { //Cadastro
-										
+						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");				
 						if(!$this->_acao) {
 							$this->_view->atribui("acao","cadastrar");
 						} else {
@@ -198,12 +205,13 @@
 					$id_admin = @$_REQUEST["id_admin"];
 					
 					if($acao=="gravar"){
+						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
 						$this->administradores->gravaPrivilegioUsuario($id_admin,$acesso);
 						$this->_view->atribui("url","admin-administracao.php?op=administradores&tela=listagem");
 						$this->_view->atribui("mensagem","Privilégios gravados com sucesso!");
 						$this->_view->atribuiVisualizacao("msgredirect");		
 					} else {
-					
+						
 						$admin = $this->administradores->obtemAdminPeloId($id_admin);
 						$privilegios = $this->administradores->obtemPrivilegios();
     					
@@ -333,6 +341,9 @@
 		protected function executaFerramentas() {
 			$ferramenta = @$_REQUEST["ferramenta"];
 			$this->_view->atribuiVisualizacao("ferramentas");
+			
+			$tela = @$_REQUEST["tela"];
+			$this->_view->atribui("tela",$tela);
 			
 			switch($ferramenta) {
 				case 'backup':

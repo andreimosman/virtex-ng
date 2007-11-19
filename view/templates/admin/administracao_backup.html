@@ -29,6 +29,15 @@
 	font-weight:bold;
 	font-size: 14px;
 }
+
+#backup {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 14px;
+	margin-left:350px;
+	width:450px;
+	padding-left: 5px;
+}
 {/literal}
 </style>
 </head>
@@ -40,9 +49,9 @@ BACKUP & RECUPERAÇÃO
 <br /><br />
 <table class="lista" border="1" width="400px" cellpadding="0" cellspacing="0">
 	<tr>
-		<td align="center" class="cont_int"><a href="">Início</a></td>
-		<td align="center" class="cont_int"><a href="">Fazer Backup</a></td>
-		<td rowspan="2" align="center" class="cont_int"><a href="">Histórico</a></td>
+		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&tela=inicio">Início</a></td>
+		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&tela=fazer_backup">Fazer Backup</a></td>
+		<td rowspan="2" align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&tela=historico">Histórico</a></td>
 	</tr>
 
 </table>
@@ -56,9 +65,10 @@ Acione o suporte tecnico <b>Mosman Consultoria</b> na necessidade de efetuar uma
 </div>
 
 <br /><br />
+{if $tela == 'inicio' || !$tela == 'inicio'}
 <div id="cont" align="center">
 <span class="apoio">Últimos Backups Realizados</span>
-	<table  class="lista" border="1" width="400px" cellpadding="0" cellspacing="0">
+	<table class="lista" border="1" width="400px" cellpadding="0" cellspacing="0">
 		<tr>
 			<th>Data</th>
 			<th>Status</th>
@@ -74,8 +84,46 @@ Acione o suporte tecnico <b>Mosman Consultoria</b> na necessidade de efetuar uma
 		
 	</table>
 </div>
+<br /><br />
+{/if}
+{if $tela == 'fazer_backup'}
+<div id="backup" align="center">
+	<table class="lista" border="0" width="400px" cellpadding="0" cellspacing="0">
+		<tr><th colspan="2">Marque quais backups você quer efetuar</th></tr>
+		<tr><td align="right">Configurações <input type="checkbox" name="123" value="123" /></td></tr>
+		<tr><td align="right">Banco de Dados <input type="checkbox" name="123" value="123" /></td></tr>
+		<tr><td align="right">Sistema de arquivos <input type="checkbox" name="123" value="123" /></td></tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+		<tr><th colspan="2">Dados (pode demorar alguns minutos)</th></tr>
+		<tr><td align="right">Hospedagens <input type="checkbox" name="123" value="123" /></td></tr>
+		<tr><td align="right">Emails <input type="checkbox" name="123" value="123" /></td></tr>
+		<tr><td align="right">Estatisticas <input type="checkbox" name="123" value="123" /></td></tr>
+		<tr><td>&nbsp;</td><td><input type="submit" name="123" value="Fazer Backup" /></td></tr>
+	</table>
+	
+	
+</div>
+<br /><br />
+{/if}
+{if $tela == 'historico'}
+<div id="cont" align="center">
+<span class="apoio">Histórico de Backups</span>
+	<table class="lista" border="0" width="400px" cellpadding="0" cellspacing="0">
+		<tr>
+			<th align="left">Data</th>
+			<th>Status</th>
+			<th>Admin</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<td>oie</td>
+			<td align="center">oie</td>
+			<td align="center">oie</td>
+			<td align="center">oie</td>
+		</tr>
 
-
+</div>
+{/if}
 </body>
 </html>
 

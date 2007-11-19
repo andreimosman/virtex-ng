@@ -35,7 +35,7 @@ label {
 	font-family: verdana;
 	font-size: 10px;
 	border: solid 1px #909090;
-	background: #CACACA;
+	background: #ffffff;
 	margin-right: 2px;
 
 }
@@ -133,7 +133,6 @@ function adminValidacaoForm() {
 		</tr>
 	</table>
 	{/if}
-
 	<table cellspacing=0 cellpadding=0 border=0 align="center">
 		<tr>
 			<td colspan=2>
@@ -145,17 +144,17 @@ function adminValidacaoForm() {
 			<td width="100" align="left"><label>Nome</label></td>
 		</tr>
 		<tr>
-			<td><input type="text" size="30" maxlength="20" tabindex="1" name="admin" id="admin" value="{$admin}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-			<td><input type="text" size="30" maxlength="40" tabindex="2" name="nome" id="nome" value="{$nome}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td><input type="text" size="30" maxlength="20" tabindex="1" name="admin" id="admin" value="{$admin}" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input type="text" size="30" maxlength="40" tabindex="2" name="nome" id="nome" value="{$nome}"{if !$podeGravar}disabled=true class=fieldDisabled{else} class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		<tr>
 			<td width="100" align="left"><label>Email</label></td>
 			<td width="100" align="left"><label>Status</label></td>
 		</tr>
 		<tr>
-			<td><input type="text" size="30" maxlength="255" tabindex="3" name="email" id="email" value="{$email}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td><input type="text" size="30" maxlength="255" tabindex="3" name="email" id="email" value="{$email}" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 			<td>
-				<select tabindex="4" name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style="width:100%">
+				<select tabindex="4" name="status" id="status" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style="width:100%"{/if}>
 					<option value="A">Ativo</option>
 					<option value="C">Cancelado</option>
 				</select>
@@ -167,13 +166,13 @@ function adminValidacaoForm() {
 
 		</tr>
 		<tr>
-			<td><input type="password" size="30" maxlength="64" tabindex="5" name="senha" id="senha" value="" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-			<td><input type="password" size="30" maxlength="64" tabindex="6" name="confirma" id="confirma" value="" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+			<td><input type="password" size="30" maxlength="64" tabindex="5" name="senha" id="senha" value="" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input type="password" size="30" maxlength="64" tabindex="6" name="confirma" id="confirma" value="" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 		</tr>
 		<tr>
 			<td colspan=2 align="center" style="border-top: dotted 1px #000000;">
 			<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
-			<input type="submit" name="Submit" value="{if $id_admin}Alterar{else}Cadastrar{/if}" class="botao">
+			<input type="submit" name="Submit" value="{if $id_admin}Alterar{else}Cadastrar{/if}"{if !$podeGravar}disabled=true{/if} class="botao">
 			</td>
 		</tr>
 	</table>

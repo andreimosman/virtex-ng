@@ -96,7 +96,23 @@
 				case "adesoes":
 					$this->_file = "relatorio_adesoes.html";	
 					$this->atribui("titulo", $titulo."Adesões");
-					break;		
+					break;
+				case "reagendamentos":
+					$this->_file = "relatorio_reagendamentos.html";	
+					$this->atribui("titulo", $titulo."Reagendamentos");
+					break;
+				case "bloqueios_desbloqueios":
+					$this->_file = "relatorio_bloqueios_desbloqueios.html";	
+					$this->atribui("titulo", $titulo."Bloqueios e Desbloqueios");
+					break;
+				case "emails_cobranca":
+					$this->_file = "relatorio_emails_cobranca.html";	
+					$this->atribui("titulo", $titulo."Emails de Cobrança");
+					break;
+				case "evolucao":
+					$this->_file = "relatorio_evolucao.html";	
+					$this->atribui("titulo", $titulo."Evolução");
+					break;
 					
 				default:
 					die("erro");	

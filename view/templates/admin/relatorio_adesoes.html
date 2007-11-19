@@ -4,7 +4,7 @@
 {literal}	
 	
 	function filtro(filtro){
-		window.open("admin-cobranca.php?op=relatorios&relatorio=adesoes&periodo="+filtro.value,"conteudo");
+		window.open("admin-cobranca.php?op=relatorios&relatorio=cancelados&periodo="+filtro.value,"conteudo");
 		
 	}
 {/literal}
@@ -39,10 +39,10 @@
 	{foreach from=$meses key=p item=m}
 	<tr class='{cycle values="linhai,linhap"}'>
 		<td class="cellInfoCenter">{$p}</td>
-		<td class="cellInfoCenter">{$adesoes[$m.ano][$m.mes].BL|default:0}</td>
-		<td class="cellInfoCenter">{$adesoes[$m.ano][$m.mes].D|default:0}</td>		
-		<td class="cellInfoCenter">{$adesoes[$m.ano][$m.mes].H|default:0}</td>
-		<td class="cellInfoCenter">{$adesoes[$m.ano][$m.mes].total|default:0}</td>
+		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].BL|default:0}</td>
+		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].D|default:0}</td>		
+		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].H|default:0}</td>
+		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].total|default:0}</td>
 	</tr>
 	{/foreach}
 </table>

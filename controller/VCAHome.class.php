@@ -9,6 +9,7 @@
 		public function init() {
 			parent::init();
 			$this->_view = VirtexViewAdmin::factory("home");
+			$this->_view->atribui("licenca",$this->licenca->obtemLicenca());
 		}	
 	
 	}

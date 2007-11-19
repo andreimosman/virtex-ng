@@ -1,30 +1,56 @@
 <html>
 <head>
 	<title></title>
+<style>
+{literal}
+a:link{
+	text-decoration:none;
+	color:black;
+}
+
+a:visited{
+	text-decoration:none;
+	color:black;
+}
+
+a:hover{
+	text-decoration:underline;
+	color:black;
+}
+{/literal}
+</style>
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
-{include file="suporte_header.html"}
+{include file="suporte_header.html"} <br /><br />
 
-<br><br>
-<table class="lista" align="center" width="400" cellspacing=0 cellpadding=1>
-	<tr>
-		<th>VirtexAdmin NG</th>
-	</tr>
-	<tr>
-		<td>
-			<p align="justify"><br>
-			&nbsp;&nbsp;&nbsp; &nbsp;<b>S</b>eja bem vindo ao VirtexAdmin NG. A nova versão do gerenciador do seu provedor.<br><br>
-			&nbsp; &nbsp; &nbsp;<b>V</b>árias melhorias internas foram implementadas nesta nova versão, focando principalmente melhorias no sistema de cobrança bancária e rotinas administrativas.<br><br>
-			&nbsp; &nbsp; &nbsp;<b>E</b>speramos que sua experiência com o VirtexAdmin NG seja a melhor possível. Lembrando que você pode contar com apoio ao uso no horário comercial através dos contatos de MSN <b>monicamosman@hotmail.com</b> e <b>consultoria@mosman.com.br</b>.<br><br>
-			</p>
-			<p align="center">
-			<span style="color: #FF0000"><b>STATUS DA ATUALIZAÇÃO: EM ANDAMENTO.</b><br>(aguarde a conclusão)</span><br><br>
-			</p>
-		</td>
-	</tr>
-</table>
+<div align="center">
 
-
+	<table class="lista" width="35%">
+		<tr><th colspan="2">PRODUTO REGISTRADO</th></tr>
+		<tr><td align="right" width="32%"><b>Empresa</b></td><td>{$licenca.empresa.nome}</td></tr>
+		<tr><td align="right"><b>Telefone</b> </td><td>{$licenca.empresa.telefone}</td></tr>
+		<tr><td align="right"><b>Cidade</b></td><td>{$licenca.empresa.cidade}</td></tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr><td align="right"><b>Licença emitida em</b></td><td>{$licenca.geral.emitida_em}</td></tr>
+		<tr><td align="right"><b>Expira em</b> </td><td>{$licenca.geral.expira_em}</td></tr>
+	</table>
+	<br />
+	<table class="lista" width="35%">
+		<tr><th>Cobrança/Contrato</th></tr>
+		<tr><td align="center"><a href=""><b>Existem 163 clientes para renovaçao de contrato.</b></a></td></tr>
+		<tr><td align="center"><b>No momento existem 4 <a href="admin-cobranca.php?op=bloqueios">clientes passíveis de <span style="color:red;">bloqueio.</b></span></a></td></tr>
+			</td>
+		</tr>
+	</table>
+	<div align="center" style="margin-top:350px; font-size:10px; font-family:Verdana, Arial, Helvetica, sans-serif;">
+		<table class="lista" width="35%">
+			<tr><th>Suporte Técnico Mosman Consultoria</th></tr>
+			<tr><td align="center"><a href="http://www.mosman.com.br/">www.mosman.com.br</a></tr></td>
+			<tr><td align="center">Plantão: (19) 8171-3434 / 81713636</tr></td>
+		</table>
+	</div>
+	
+</div>
 
 </body>
 </html>
