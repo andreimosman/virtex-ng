@@ -291,7 +291,7 @@ function planoValidacaoForm() {
 							<label>Isenção tx inst:</label>
 						</td>
 						<td>
-							<input type="checkbox" size=4 name="tx_instalacao" id="tx_instalacao">
+							<input type="checkbox" size=4 name="tx_instalacao" id="tx_instalacao" {if $tx_instalacao > 0}CHECKED{/if} >
 						</td>
 					</tr>
 					<tr>
@@ -341,7 +341,7 @@ function planoValidacaoForm() {
 							</tr>
 							<tr>
 								<td align="right"><label>Valor GB adicional:</label></td>
-								<td><input type="text" size=4 name="valor_trafego_mensal_gb" id="valor_trafego_mensal_gb" value="{$valor_trafego_mensal_gb}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+								<td><input type="text" size=4 name="valor_trafego_adicional_gb" id="valor_trafego_adicional_gb" value="{$valor_trafego_adicional_gb}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
 							</tr>
 							<tr>
 								<td align="right"><label>Comodato:</label></td>
@@ -374,7 +374,7 @@ function planoValidacaoForm() {
 							</tr>
 							<tr>
 								<td align="right"><label>Valor hora adicional:</label></td>
-								<td><input type="text" size=4 name="valor_hora_adiciona" id="valor_hora_adiciona" value="{$valor_hora_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+								<td><input type="text" size=4 name="valor_hora_adicional" id="valor_hora_adicional" value="{$valor_hora_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
 							</tr>
 						</table>
 					</div>
@@ -399,7 +399,7 @@ function planoValidacaoForm() {
 							</tr>
 							<tr>
 								<td align="right"><label>Valor MB adicional:</label></td>
-								<td><input type="text" size=4 name="valor_mb_adiciona" id="valor_mb_adiciona" value="{$valor_mb_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+								<td><input type="text" size=4 name="valor_mb_adicional" id="valor_mb_adicional" value="{$valor_mb_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
 							</tr>
 						</table>
 					</div>

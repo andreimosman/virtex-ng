@@ -9,16 +9,16 @@
 		public function __construct() {
 			parent::__construct();
 		}
-		
+
 		protected function init() {
 			parent::init();
-			
+
 			$this->_view 			= VirtexViewAdmin::factory("administracao");
 			$this->produtos 		= VirtexModelo::factory("produtos");
 			$this->administradores	= VirtexModelo::factory("administradores");
-	
+
 		}
-		
+
 		protected function executa() {
 			switch($this->_op) {
 				case 'altsenha':
@@ -41,32 +41,32 @@
 					break;
 				default:
 					// Do Something
-			
+
 			}
 		}
-		
+
 		protected function executaAlteracaoSenha() {
 			$this->_view->atribuiVisualizacao("altsenha");
-			
+
 			$dadosLogin = $this->_login->obtem("dados");
 			$admin = VirtexModelo::factory("administradores");
 			$info = $admin->obtemAdminPeloId($dadosLogin["id_admin"]);
 
-			$acao = @$_REQUEST["acao"];			
-			if( !$acao ) {				
+			$acao = @$_REQUEST["acao"];
+			if( !$acao ) {
 				//echo "<pre>INFO: ";
 				//print_r($info);
 				//echo "</pre>";
-				
-				
+
+
 			} else {
 				// Faz a validação.
 				$senha_atual = @$_REQUEST["senha_atual"];
 				$nova_senha = @$_REQUEST["nova_senha"];
 				$nova_senha_conf = @$_REQUEST["nova_senha_conf"];
-				
+
 				$erroMensagem = "";
-				
+
 				if( md5(trim($senha_atual)) != trim($info["senha"]) ) {
 					$erroMensagem = "Senha atual não confere";
 				} else {
@@ -79,15 +79,15 @@
 					}
 				}
 				$this->_view->atribui("erroMensagem",$erroMensagem);
-				
+
 				if( !$erroMensagem ) {
 					// Faz a alteração
 					// $dados = array("senha" => $nova_senha, "primeiro_login" => "f");
 					$admin->alteraAdmin($info["id_admin"],$info["admin"],$info["email"],$info["nome"],$nova_senha,$info["status"],"f");
-					
+
 					// Registrar as informações atualizadas na session
 					$info = $admin->obtemAdminPeloId($info["id_admin"]);
-					
+
 					// Dados do login
 					$this->_login->atribui("primeiroLogin",$info["primeiro_login"]);
 					$this->_login->atribui("dados",$info);
@@ -102,25 +102,25 @@
 					$this->_view->atribui("mensagem",$mensagem);
 					$this->_view->atribui("target","_top");
 					$this->_view->atribuiVisualizacao("msgredirect");
-					
+
 				}
 
 			}
-		
+
 		}
-		
+
 		protected function executaAdministradores() {
 			$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
 			$this->_view->atribuiVisualizacao("administradores");
 			$tela = @$_REQUEST["tela"] ? $_REQUEST["tela"] : "listagem";
-			
+
 			$id_admin = @$_REQUEST["id_admin"];
 			$nome = @$_REQUEST["nome"];
 			$senha = @$_REQUEST["senha"];
 			$admin = @$_REQUEST["admin"];
 			$status = @$_REQUEST["status"];
 			$email = @$_REQUEST["email"];
-			
+
 			$this->_view->atribui("tela",$tela);
 			$this->_view->atribui("id_admin", $id_admin);
 
@@ -131,51 +131,51 @@
 
 			switch($tela) {
 				case 'cadastro':
-												
-					if($id_admin) { //Alteração 
-					
+
+					if($id_admin) { //Alteração
+
 						if(!$this->_acao) {
 							$this->_view->atribui("podeGravar",$podeGravar);
-							
+
 							$info = $this->administradores->obtemAdminPeloId($id_admin);
 							$this->_view->atribui("acao","cadastrar");
-							
+
 							while(list($vr,$vl) = each($info)){
-								$this->_view->atribui($vr,$vl);					
+								$this->_view->atribui($vr,$vl);
 							}
-							
+
 						} else {
 							$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
 							$this->administradores->alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status);
-							
+
 							$url = "admin-administracao.php?op=administradores&tela=listagem";
-							
+
 							$mensagem = "Administrador alterado com sucesso";
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem",$mensagem);
 							$this->_view->atribuiVisualizacao("msgredirect");
 						}
-						
+
 					} else { //Cadastro
-						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");				
+						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
 						if(!$this->_acao) {
 							$this->_view->atribui("acao","cadastrar");
 						} else {
-						
+
 							$url = "admin-administracao.php?op=administradores&tela=listagem";
 							$mensagem = "Administrador cadastrado com sucesso";
 							$erroMensagem="";
-							
+
 							$resultado = $this->administradores->obtemAdminPeloUsername($admin);
 							if ($resultado) {
 								$erroMensagem = "Já existe outro usuario cadastrado com este username.";
 							}
-							
+
 							$resultado = $this->administradores->obtemAdminPeloEmail($email);
 							if($resultado) {
 								$erroMensagem = "Já existe outro usuário cadastrado com este email";
 							}
-							
+
 							if(!$erroMensagem) {
 								$this->administradores->cadastraAdmin($admin, $email, $nome, $senha, $status, TRUE);
 								$this->_view->atribui("url",$url);
@@ -185,43 +185,43 @@
 								while(list($vr,$vl)=each(@$_REQUEST)) {
 									$this->_view->atribui($vr,$vl);
 								}
-								
+
 								$this->_view->atribui("erroMensagem",$erroMensagem);
-								
+
 							}
-							
+
 						}
-						
+
 					}
-					
-					
+
+
 					break;
-				case 'privilegio':	
-					
-					
+				case 'privilegio':
+
+
 					$acao = @$_REQUEST["acao"];
 					$acesso = @$_REQUEST["acesso"];
-					
+
 					$id_admin = @$_REQUEST["id_admin"];
-					
+
 					if($acao=="gravar"){
 						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
 						$this->administradores->gravaPrivilegioUsuario($id_admin,$acesso);
 						$this->_view->atribui("url","admin-administracao.php?op=administradores&tela=listagem");
 						$this->_view->atribui("mensagem","Privilégios gravados com sucesso!");
-						$this->_view->atribuiVisualizacao("msgredirect");		
+						$this->_view->atribuiVisualizacao("msgredirect");
 					} else {
-						
+
 						$admin = $this->administradores->obtemAdminPeloId($id_admin);
 						$privilegios = $this->administradores->obtemPrivilegios();
-    					
+
     					$privilegiosUsuario = $this->administradores->obtemPrivilegiosUsuario($id_admin);
     					$cachePriv = array();
-    					
+
     					for($i=0;$i<count($privilegiosUsuario);$i++) {
     						$cachePriv[ $privilegiosUsuario[$i]["id_priv"] ] = $privilegiosUsuario[$i]["pode_gravar"];
     					}
-    					
+
     					for($i=0;$i<count($privilegios);$i++) {
     						if( @$cachePriv[ $privilegios[$i]["id_priv"] ] ) {
     							$privilegios[$i]["selecao"] = $cachePriv[ $privilegios[$i]["id_priv"] ];
@@ -229,7 +229,7 @@
     							$privilegios[$i]["selecao"] = "0";
     						}
     					}
-    					
+
     					$this->_view->atribui("privilegios",$privilegios);
 
     					$acessos = $this->administradores->obtemAcessos();
@@ -239,10 +239,10 @@
 						//print_r($privilegios);
 						//print_r($acessos);
 						//echo "</pre>";
-						
+
 					}
-										
-				break;						
+
+				break;
 				case 'listagem':
 					$this->_view->atribui("registros", $this->administradores->obtemListaAdmin());
 					break;
@@ -250,9 +250,9 @@
 					//Do something
 			}
 		}
-		
-		protected function executaPlanos() {	
-			// Configuração do objeto de visualização		
+
+		protected function executaPlanos() {
+			// Configuração do objeto de visualização
 			$this->_view->atribuiVisualizacao("planos");
 			$tela = @$_REQUEST["tela"] ? $_REQUEST["tela"] : "listagem";
 			$id_produto = @$_REQUEST["id_produto"];
@@ -265,17 +265,18 @@
 			switch($tela) {
 				case 'cadastro':
 					$this->_view->atribui("lista_bandas",$this->preferencias->obtemListaBandas());
-					
+
 					if( $id_produto ) {
-						
+
 						if( $this->_acao ) {
 							$info = $_REQUEST;
 						} else {
 							$info = $this->produtos->obtemPlanoPeloId($id_produto);
 							$this->_view->atribui("acao","cadastrar");
 						}
-						
+
 						$info["tipo"] = trim($info["tipo"]);
+
 						while(list($vr,$vl) = each($info)){
 							$this->_view->atribui($vr,$vl);
 						}
@@ -291,6 +292,32 @@
 							// TODO: Tratar $dados
 							$dados = $_REQUEST;
 
+							//Dados de taxa de instalação
+							if(isset($dados["tx_instalacao"]))
+								$dados["tx_instalacao"] = $dados["valor"];
+							else
+								$dados["tx_instalacao"] = 0;
+
+
+
+							//Dados dos descontos promocionais
+							if(!isset($dados["desconto"])) {
+								$dados["desconto_promo"] = 0;
+								$dados["periodo_desconto"] = 0;
+							}
+
+
+
+							//Comodato
+							if(!isset($dados["comodato"])) {
+								$dados["comodato"] = 'f';
+								$dados["valor_comodato"] = '0';
+							} else {
+								$dados["comodato"] = 't';
+							}
+
+
+
 							if( $id_produto ) {
 								// Alteração
 								$this->produtos->alteraPlano($id_produto,$dados);
@@ -300,9 +327,9 @@
 								$id_produto	= $this->produtos->cadastraPlano($dados);
 								$mensagem 	= "Produto cadastrado com sucesso";
 							}
-							
+
 							$url = "admin-administracao.php?op=planos&tela=listagem";
-							
+
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem",$mensagem);
 							$this->_view->atribuiVisualizacao("msgredirect");
@@ -321,12 +348,12 @@
 					if( !$disponivel ) {
 						$disponivel='t';
 					}
-					
+
 					$this->_view->atribui("tipo",$tipo);
 					$this->_view->atribui("disponivel",$disponivel);
-					
+
 					$registros = $this->produtos->obtemListaPlanos($tipo,$disponivel);
-					$this->_view->atribui("registros",$registros);					
+					$this->_view->atribui("registros",$registros);
 					break;
 
 				default:
@@ -334,37 +361,37 @@
 			}
 
 		}
-		
+
 		protected function executaProdutos() {
 		}
-		
+
 		protected function executaFerramentas() {
 			$ferramenta = @$_REQUEST["ferramenta"];
 			$this->_view->atribuiVisualizacao("ferramentas");
-			
+
 			$tela = @$_REQUEST["tela"];
 			$this->_view->atribui("tela",$tela);
-			
+
 			switch($ferramenta) {
 				case 'backup':
 					/**
 					 * Rotina de backup
 					 */
-					
-					
-					
-					
-					
-					
+
+
+
+
+
+
 					break;
-			
+
 			}
 		}
-		
+
 		protected function executaRelatorios() {
 			$this->_view->atribuiVisualizacao("relatorios");
 		}
-		
+
 	}
 
 
