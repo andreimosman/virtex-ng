@@ -1,0 +1,42 @@
+{include file="relatorio_header.html"}
+<script type="text/javascript">
+<!--
+{literal}	
+	
+	function filtro(filtro){
+		window.open("admin-cobranca.php?op=relatorios&relatorio=atrasos&periodo="+filtro.value,"conteudo");
+		
+	}
+{/literal}
+//-->
+</script>
+<style>
+{literal}
+#titu{
+	font-weight:bold;
+	font-size:14px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+{/literal}
+</style>
+<br /><br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="lista">
+	<tr>
+		<th align="center" width="5%" >Data</th>
+		<th align="center" width="30%" >Cliente</th>
+		<th align="center" width="25%" >Username</th>
+		<th align="center" width="30%" >Produto</th>
+		<th align="center" width="10%" >Status</th>
+	</tr>
+	{foreach from=$lista key=p item=m}
+	<tr class='{cycle values="linhai,linhap"}'>
+		<td align="left">&nbsp; &nbsp; <a href="">{$m.data}</a></td>		
+		<td class="cellInfoCenter"><a href="">{$m.nome_razao}</a></td>
+		<td class="cellInfoCenter"><a href="">Username Oie</a></td>
+		<td class="cellInfoCenter"><a href="">{$m.nome}</a></td>
+		<td class="cellInfoCenter"><a href="">{$m.status}</a></td>
+	</tr>
+	{/foreach}
+</table>
+<br />
+{include file="relatorio_footer.html"}

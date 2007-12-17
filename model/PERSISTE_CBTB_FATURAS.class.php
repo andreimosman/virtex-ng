@@ -91,7 +91,41 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		PERSISTE_CBTB_FATURAS::$ESTORNADA => "Estornada",
 		PERSISTE_CBTB_FATURAS::$CANCELADA => "Cancelada" );
 	}
+	
+	
+	public function obtemFaturasAtrasadasDetalhes($periodo){
+		$sql  = "SELECT ";
+		$sql .= "	data, ";
+		$sql .= "	id_cliente_produto, ";
+		$sql .= "	status, ";
+		$sql .= "	EXTRACT(year from f.data) as ano, ";
+		$sql .= "	EXTRACT(month from f.data) as mes ";
+		$sql .= "FROM ";
+		$sql .= "	cbtb_faturas f INNER JOIN cbtb_contrato ctt USING(id_cliente_produto), ";
+		$sql .= "	INNER JOIN cbtb_cliente_produto cp ON(f.id_cliente_produto = cp.id_cliente_produto), ";
+		$sql .= "	INNER JOIN cltb_cliente c ON(cp.id_cliente = c.id_cliente), ";
+		$sql .= "	INNER JOIN prtb_produto p ON(p.id_produto = cp.id_produto) ";
+		$sql .= "WHERE ";
+		$sql .= "  CASE WHEN ";
+		$sql .= "     f.status = 'P' ";
+		$sql .= "  THEN ";
+		$sql .= "	   data_pagamento > data ";
+		$sql .= "	ELSE ";
+		$sql .= "   	CASE WHEN ";
+		$sql .= "   		f.reagendamento IS NOT NULL ";
+		$sql .= "   	THEN ";
+		$sql .= "   		f.reagendamento >= CAST( EXTRACT(year from now() + INTERVAL '1 month') || '-' ||EXTRACT(month from now() + INTERVAL '1 month') ||'-01' as date) - INTERVAL '$periodo months' AND ";
+		$sql .= "   		f.reagendamento <  CAST( EXTRACT(year from now()) || '-' ||EXTRACT(month from now()) ||'-01' as date) ";
+		$sql .= "   	ELSE ";
+		$sql .= "   		f.data >= CAST( EXTRACT(year from now() + INTERVAL '1 month') || '-' ||EXTRACT(month from now() + INTERVAL '1 month') ||'-01' as date) - INTERVAL '$periodo months' AND ";
+		$sql .= "  		f.data < CAST( EXTRACT(year from now()) || '-' ||EXTRACT(month from now()) ||'-01' as date) ";
+		$sql .= "   	END ";
+		$sql .= "	END AND ";
+		$sql .= "	(f.status != 'E' AND f.status != 'C') AND ctt.status = 'A' ";
+		$sql .= "GROUP BY ano, mes ";
+		$sql .= "ORDER BY ano, mes ";
+		return ($this->bd->obtemRegistros ($sql));
 
 }
-
+}
 ?>

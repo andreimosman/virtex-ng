@@ -15,6 +15,10 @@
 		protected $cbtb_fatura;
 		protected $preferencias;
 
+		protected $cltb_cliente;
+		protected $prtb_produto;
+		
+
 		protected $cbtb_endereco_cobranca;
 
 		protected static $moeda = 9;
@@ -31,6 +35,8 @@
 
 			$this->pftb_forma_pagamento = VirtexPersiste::factory("pftb_forma_pagamento");
 			$this->preferencias = VirtexModelo::factory("preferencias");
+			$this->cltb_cliente = VirtexPersiste::factory("cltb_cliente");
+			$this->prtb_produto = VirtexPersiste::factory("prtb_produto");
 
 		}
 
@@ -690,6 +696,11 @@
 			return $return;
 		}
 
+		
+		public function obtemFaturasAtrasadasDetalhes($periodo){
+			return $this->cbtb_fatura->obtemFaturasAtrasadasDetalhes ($periodo);
+		}
+		
 		public function obtemStatusFatura(){
 			return $this->cbtb_fatura->enumStatusFatura();
 		}

@@ -17,7 +17,7 @@ function sessionMenuChanged(obj) {
 		<td width="150" align="right" valign="bottom">
 			&nbsp;
 			{if count($sessionMenu.itens) && $sessionMenu.visible}
-			<select name="userMenu" class="selectMenu" {if !$sessionMenu.enabled}disabled="true"{/if} onChange="sessionMenuChanged(this)">
+			<select name="userMenu" class="selectMenu" onChange="sessionMenuChanged(this)">
 				<option value="">-- MENU --</option>
 				{foreach item=r from=$sessionMenu.itens}
 				<option value="{$r.url}">{$r.texto}</option>

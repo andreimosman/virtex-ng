@@ -148,16 +148,16 @@ label {
 		</tr>
 		<tr>
 		  <td width="100" align="right" nowrap><label>Nome:</label></td>
-		  <td colspan="3"><input name="nome" type="text" id="nome" value="{$nome}" size="40" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} /></td>
+		  <td colspan="3"><input name="nome" type="text" id="nome" value="{$nome}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" /></td>
 		</tr>
 		<tr>
 		  <td width="100" align="right" nowrap><label>Info:</label></td>
-		  <td colspan="4"><textarea name="info" cols="50" rows="6" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} >{$info}</textarea></td>
+		  <td colspan="4"><textarea name="info" cols="50" rows="6" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >{$info}</textarea></td>
 		</tr>
 		<tr>
 			<td width="100" align="right" nowrap><label>Tipo:</label></td>
 			<td width="24%">
-				<select name="tipo" id="tipo" onChange="preenchePopAp();" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} {if $id_pop}disabled='disabled'{/if} >
+				<select name="tipo" id="tipo" onChange="preenchePopAp();" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
 				{foreach key=id item=nome from=$tipo_pop}
 				<option value='{$id}'{if $id == $tipo}selected{/if}>{$nome} </option>
 				{/foreach}
@@ -165,7 +165,7 @@ label {
 			</td>
 			<td width="100" align="right" nowrap><label>Conectado em:</label></td>
 			<td>
-				<select name="id_pop_ap" id="id_pop_ap" style="width: 170px;" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+				<select name="id_pop_ap" id="id_pop_ap" style="width: 170px;" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 					<option id="opcoes" value=""> </option>
 				</select>
 			</td>
@@ -173,7 +173,7 @@ label {
 		<tr>
 			<td width="100" align="right" nowrap><label>Status:</label></td>
 			<td colspan="4">
-				<select name="status" id="status"  onChange="ProcessLoop(this.value);" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if} >
+				<select name="status" id="status"  onChange="ProcessLoop(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
 				{foreach key=id item=valor from=$status_pop}
 				<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>
 				{/foreach}
@@ -195,7 +195,7 @@ label {
 	</table>
 	<br />
 	<span>
-		<label><input type="checkbox" value="t" id="ativar_monitoramento" name="ativar_monitoramento" {if !$podeGravar}disabled="true"{/if}{if $ativar_monitoramento=='t'}checked='checked'{/if} class="checkbox" onClick="habilita_monitor();">Ativar Monitoramento</label>
+		<label><input type="checkbox" value="t" id="ativar_monitoramento" name="ativar_monitoramento" {if $ativar_monitoramento=='t'}checked='checked'{/if} class="checkbox" onClick="habilita_monitor();">Ativar Monitoramento</label>
 	</span>
 	<div id="tabela_monitor" class="box_fechada">
 		<table  width='100%' border="0" style="border:1px solid #CCCCCC;">
@@ -207,10 +207,10 @@ label {
 			</tr>
 			<tr>
 				<td width="100" align="right" nowrap><label>IP:</label></td>
-				<td><input type="text" name="ipaddr" id="ipaddr" value="{$ipaddr}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:valida_ip(this);formOnBlur(this)"{/if} /></td>
+				<td><input type="text" name="ipaddr" id="ipaddr" value="{$ipaddr}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:valida_ip(this);formOnBlur(this)" /></td>
 				<td width="100" align="right" nowrap><label>Monitorado por:</label></td>
 				<td>
-					<select name="id_servidor" id="id_servidor" style="width:130px;" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this)"{/if} >
+					<select name="id_servidor" id="id_servidor" style="width:130px;" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this)" >
 					<option value=""></option>
 					{foreach item=s from=$servidores}
 						<option value="{$s.id_servidor}" {if $s.id_servidor == $id_servidor}SELECTED{/if}>{$s.hostname}</option>
@@ -254,7 +254,7 @@ label {
 	</div>
 	<br />
 	<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
-	<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao" {if !$podeGravar}disabled=true{/if}>
+	<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao">
 </div>
 </form>
 </center>

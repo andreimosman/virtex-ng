@@ -1,0 +1,160 @@
+<html>
+<head>
+	<title></title>
+	<style>
+{literal}
+
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 12px;
+	margin-left:350px;
+	padding-left: 5px;
+}
+
+#cont2 {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 12px;
+	margin-left:-20px;
+	padding-left: 5px;
+}
+
+#cabecalho a:link{
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color:blue;
+	text-decoration:none;
+}
+
+#cabecalho a:visited{
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	color:blue;
+}
+
+#cabecalho a:hover{
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-decoration:underline;
+}
+{/literal}
+</style>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<div id="cabecalho">
+	&nbsp;&nbsp;&nbsp;[{if $tela == 'remessa'}Remessa{else}<a href="admin-cobranca.php?op=arquivos&tela=remessa">Remessa</a>{/if}][{if $tela == 'retorno'}Retorno{else}<a href="admin-cobranca.php?op=arquivos&tela=retorno">Retorno</a>{/if}]
+</div>
+
+
+
+<div id="geral">
+	<form method="POST" action="">
+	
+	{if $tela == 'remessa'}
+	<div id="cont">
+		<table class="lista" border="0" width="350px" cellpadding="0" cellspacing="0">
+			<tr>
+				<th colspan="2">Geração de arquivo de remessa:</th>
+			</tr>
+			<tr>
+				<td width="30%">
+					<span class="cont">Período:</span>
+				</td>
+				<td>
+					==CAMPO AQUI==
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="cont">Formato:</span>
+				</td>
+				<td>
+					<select>
+						<option value"123">123</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="cont">Forma Pgto:</span>
+				</td>
+				<td>
+					<select>
+						<option value"123">123</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" name="123" value="Enviar">
+				</td>
+			</tr>
+		</table>
+	</div>
+	{/if}
+	
+	{if $tela == 'retorno'}
+	<div id="cont">
+		<table class="lista"border="0" width="350px" cellpadding="0" cellspacing="0">
+			<tr>	
+				<th colspan="2">Envio de arquivo de retorno:</th>
+			</tr>
+			<tr>
+				<td>
+					<span class="cont">Formato</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<select>
+						<option value"123">123</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="cont">Arquivo</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="file" name="123">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" name="123" value="Enviar">
+				</td>
+			</tr>
+		</table>
+		</div>
+		<br /><br />
+		<div id="cont2" align="center">
+		Ultimos arquivos de retorno processados<br /><br />
+		<table class="lista" border="0" width="500px" cellpadding="0" cellspacing="0">
+			<tr>	
+				<th>Data</th>
+				<th>Arquivo</th>
+				<th>Status</th>
+				<th>NRA</th>
+				<th>NRPE</th>
+				<th>NRSC</th>
+			</tr>
+			<tr>
+				<td align="center">Oie</td>
+				<td align="center">Oie</td>
+				<td align="center">Oie</td>
+				<td align="center">Oie</td>
+				<td align="center">Oie</td>
+				<td align="center">Oie</td>
+			</tr>
+		</table>
+	</div>
+	{/if}
+</div>
+</body>
+</html>

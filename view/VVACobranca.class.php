@@ -77,6 +77,10 @@
 					$this->_file = "relatorio_atraso.html";	
 					$this->atribui("titulo", $titulo."Atrasos");	
 					break;
+				case "atrasos_detalhes":					
+				$this->_file = "relatorio_atraso_detalhes.html";	
+				$this->atribui("titulo", $titulo."Detalhes de Atrasos");	
+				break;
 				case "cliente_produto":					
 					$this->_file = "relatorio_cliente_produto.html";	
 					$this->atribui("titulo", $titulo."Contratos por produto");	

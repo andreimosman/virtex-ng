@@ -142,6 +142,7 @@ class VCACobranca extends VirtexControllerAdmin {
 				list($meses[$data]["mes"],$meses[$data]["ano"]) = split("/",$data);
 			}
 			$this->_view->atribui("meses", $meses);
+			
 		} elseif("atrasos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
@@ -156,17 +157,41 @@ class VCACobranca extends VirtexControllerAdmin {
 				list($m,$a) = split("/",$data);
 				$meses[$data]["mes"] = (int) $m;
 				$meses[$data]["ano"] = (int) $a;
+
+				$mesesAno["01"]="Janeiro";
+				$mesesAno["02"]="Fevereiro";
+				$mesesAno["03"]="Março";
+				$mesesAno["04"]="Abril";
+				$mesesAno["05"]="Maio";
+				$mesesAno["06"]="Junho";
+				$mesesAno["07"]="Julho";
+				$mesesAno["08"]="Agosto";
+				$mesesAno["09"]="Setembro";
+				$mesesAno["10"]="Outubro";
+				$mesesAno["11"]="Novembro";
+				$mesesAno["12"]="Dezembro";
+				$meses[$data]["strmes"] = $mesesAno[$m];
 			}
 			$this->_view->atribui("meses", $meses);
+			
+			} elseif("atrasos_detalhes" == $relatorio) {
+			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
+			$this->_view->atribui("periodo", $periodo);
+			$cobranca = VirtexModelo::factory("cobranca");
+			$lista = $cobranca->obtemFaturasAtrasadasDetalhes($periodo);
+			$this->_view->atribui("lista", $lista);
+			
 		} elseif("cliente_produto" == $relatorio) {
 			$produto = VirtexModelo::factory("produtos");
 			$lista = $produto->obtemQtdeContratosPorProduto();
 			$this->_view->atribui("produto", $lista);
+			
 		} elseif("cliente_produto_detalhe" == $relatorio) {
 			$contas = VirtexModelo::factory("contas");
 			$id_produto = @$_REQUEST["id_produto"];
 			$rs = $contas->obtemClientesPorProduto($id_produto);
 			$this->_view->atribui("clientes", $rs);
+			
 		} elseif("cliente_tipo_produto" == $relatorio) {
 			$produto = VirtexModelo::factory("produtos");
 			$lista = $produto->obtemQtdeContratosPorTipoDeProduto();
