@@ -12,14 +12,14 @@
 		protected $cbtb_contrato;
 		protected $cbtb_carne;
 		protected $pftb_forma_pagamento;
-		protected $cbtb_fatura;		
+		protected $cbtb_fatura;
 		protected $preferencias;
-		
+
 		protected $cbtb_endereco_cobranca;
 
 		protected static $moeda = 9;
-		
-			
+
+
 		public function __construct() {
 			parent::__construct();
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
@@ -33,11 +33,11 @@
 			$this->preferencias = VirtexModelo::factory("preferencias");
 
 		}
-		
+
 		public function obtemClienteProduto($id_cliente_produto) {
 			return($this->cbtb_cliente_produto->obtemUnico(array("id_cliente_produto"=>$id_cliente_produto)));
 		}
-		
+
 		public function cadastraEnderecoCobranca($id_cliente_produto,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_cliente) {
 			$dados = array(
 							"id_cliente_produto" => $id_cliente_produto,
@@ -50,12 +50,12 @@
 							);
 			$this->cbtb_endereco_cobranca->insere($dados);
 		}
-		
+
 		public function obtemEnderecoCobranca($id_cliente_produto) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
 			return($this->cbtb_endereco_cobranca->obtemUnico($filtro));
 		}
-		
+
 
 
 
@@ -68,18 +68,18 @@
 
 			$retorno["prorata_plano"] = $valor_plano;
 			$retorno["prorata_comodato"] = $valor_comodato;
-			
+
 			if( $dias_prorata >= 28 && $dias_prorata <= 31 ) {
 				// Não calcula a pro-rata.
-				$retorno["dias_prorata"] = 0;				
+				$retorno["dias_prorata"] = 0;
 			} else {
 				$prorata_plano = round(($valor_plano/30)*$dias_prorata,2);
 				$prorata_comodato = round(($valor_comodato/30)*$dias_prorata,2);
 				$retorno["prorata_plano"] = $prorata_plano;
 				$retorno["prorata_comodato"] = $prorata_comodato;
-				$retorno["dias_prorata"] = $dias_prorata;			
+				$retorno["dias_prorata"] = $dias_prorata;
 			}
-			
+
 			return($retorno);
 
 		}
@@ -93,7 +93,7 @@
 		 *   -> pagamento (pré ou pós pago)
 		 *   -> taxa de instalação
 		 *   -> comodato
-		 *   -> 
+		 *   ->
 		 */
 		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata) {
 			$faturas = array();
@@ -109,7 +109,7 @@
 				// Pagamento pós pago
 
         		$composicao = array();
-        		
+
         		if( ((float)$tx_instalacao) > 0 ) {
         			echo "TX!!";
 					// Gerar fatura 0 com a taxa de instalaçao
@@ -117,15 +117,15 @@
 					$faturas[] = array("data"=>$data_contratacao,"valor" => $tx_instalacao,"composicao"=>$composicao);
 					$meses_cobrados++;
 				}
-				
-				
+
+
 
 			} else {
 				// Pagamento pré-pago. Calcula pro-rata.
 				$composicao = array();
 				$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
 
-				
+
         		if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
 					// Pró-rata aplicável.
 					$prorata_plano = $prorata["prorata_plano"];
@@ -136,7 +136,7 @@
 					$composicao["prorata_comodato"] = $prorata_comodato;
 					$composicao["dias_prorata"] = $dias_prorata;
 					$valor_fatura = $prorata_plano + $prorata_comodato;
-				
+
 				} else {
 					// Valores diretos
 					$valor_fatura = $valor + $valor_comodato;
@@ -148,15 +148,15 @@
 					$valor_fatura += $tx_instalacao;
 					$composicao["instalacao"] = $tx_instalacao;
 				}
-				
+
 				if( $desconto_valor && $desconto_periodo > 0 ) {
 					$valor_fatura -= $desconto_valor;
 					$descontos_aplicados++;
 					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
 				}
-				
+
 				$meses_cobrados++;
-				
+
 				$faturas[] = array("data"=>$data_contratacao,"valor" => $valor_fatura,"composicao" => $composicao);
 
 				$valor_fatura = $valor+$valor_comodata;
@@ -172,15 +172,15 @@
 					$descontos_aplicados++;
 					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
 				}
-				
-			}
-			
 
-			
+			}
+
+
+
 			for( ; $meses_cobrados < $vigencia ; $meses_cobrados++ ) {
 				$got = false;
 				$composicao = array();
-				
+
 				if( $pagamento == "POS" && $meses_cobrados == 1 ) {
 					// Primeiro vencimento de pós-pago. Calcular pró-rata.
 					$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
@@ -191,16 +191,16 @@
 						$dias_prorata = $prorata["dias_prorata"];
 
 						$data = $data_primeiro_vencimento;
-            
+
 						$composicao["prorata_plano"] = $prorata_plano;
 						$composicao["prorata_comodato"] = $prorata_comodato;
 						$composicao["dias_prorata"] = $dias_prorata;
 						$valor_fatura = $prorata_plano + $prorata_comodato;
-						
+
 						$got = true;
-					} 					
-				} 
-				
+					}
+				}
+
 				if( !$got )  {
 					$valor_fatura = $valor + $valor_comodato;
 					$composicao["valor"] = $valor;
@@ -210,31 +210,31 @@
 					// Reconfigura a data para o dia de vencimento.
 					list($d,$m,$a) = explode("/", $data);
 					$d = $dia_vencimento;
-					
+
 					// Incrementa 1 mês
 					$data = MData::adicionaMes("$d/$m/$a",1);
 				}
-				
+
 				if( $desconto_valor > 0 && $descontos_aplicados < $desconto_periodo ) {
 					$valor_fatura -= $desconto_valor;
 					$descontos_aplicados++;
-					
+
 					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
 				}
 
 				$faturas[] = array("data"=>$data,"valor" => $valor_fatura,"composicao" => $composicao);
-				
+
 
 			}
-			
+
 			return($faturas);
-		
+
 		}
-		
-		
+
+
 		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
-                          $carencia, $id_prduto, $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, 
+                          $carencia, $id_prduto, $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao,
 						  $dados_conta, &$gera_carne = false) {
 			/*echo "<pre>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
 			echo "MODELO_Conbranca::novoContrato()\n";
@@ -269,12 +269,12 @@
 			echo "endereco_cobranca\t\t\t=\t".print_r($endereco_cobranca,true)."\n";
 			echo "endereco_instalacao\t\t\t=\t".print_r($endereco_instalacao,true)."\n";
 			echo "dados_conta\t\t\t=\t".print_r($dados_conta,true)."\n";
-			echo "gera_carne\t\t\t=\t".print_r($gera_carne,true)."\n";			
+			echo "gera_carne\t\t\t=\t".print_r($gera_carne,true)."\n";
 			echo "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</pre>";
 			/*exit;*/
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
-				
+
 			$comodato = $valor_comodato ? true : false;
 
 			$dados = array( "id_cliente" => $id_cliente, "id_produto" => $id_produto, "dominio" => $dominio );
@@ -292,74 +292,74 @@
 			$bl_banda_download_kbps = @$dados_produto["banda_download_kbps"] ? $dados_produto["banda_download_kbps"] : "";
 			$bl_franquia_trafego_mensal_gb = @$dados_produto["franquia_trafego_mensal_gb"] ? $dados_produto["franquia_trafego_mensal_gb"] : "";
 			$bl_valor_trafego_adicional_gb = @$dados_produto["valor_trafego_adicional_gb"] ? $dados_produto["valor_trafego_adicional_gb"] : "";
-			
-			$dados = array(	"id_cliente_produto" => $id_cliente_produto, 
-							"data_contratacao" => $data_contratacao, 
-							"vigencia" => $vigencia, 
+
+			$dados = array(	"id_cliente_produto" => $id_cliente_produto,
+							"data_contratacao" => $data_contratacao,
+							"vigencia" => $vigencia,
 							"data_renovacao" => $data_renovacao,
-							"valor_contrato" => $valor_contrato, 
-							"id_cobranca" => $id_cobranca, 
-							"status" => $status, 
-							"tipo_produto" => $dados_produto["tipo"], 
+							"valor_contrato" => $valor_contrato,
+							"id_cobranca" => $id_cobranca,
+							"status" => $status,
+							"tipo_produto" => $dados_produto["tipo"],
 							"valor_produto" => $dados_produto["valor"],
-							"num_emails" => $dados_produto["num_emails"], 
-							"quota_por_conta" => $dados_produto["quota_por_conta"], 
-							"tx_instalacao" => $tx_instalacao, 
+							"num_emails" => $dados_produto["num_emails"],
+							"quota_por_conta" => $dados_produto["quota_por_conta"],
+							"tx_instalacao" => $tx_instalacao,
 							"comodato" => $comodato,
-							"valor_comodato" => $valor_comodato, 
-							"desconto_promo" => $desconto_promo, 
-							"periodo_desconto" => $desconto_periodo, 
-							"hosp_dominio" => $hosp_dominio, 
+							"valor_comodato" => $valor_comodato,
+							"desconto_promo" => $desconto_promo,
+							"periodo_desconto" => $desconto_periodo,
+							"hosp_dominio" => $hosp_dominio,
 							"hosp_franquia_em_mb" => $hosp_franquia_em_mb,
-							"hosp_valor_mb_adicional" => $hosp_valor_mb_adicional, 
-							"disc_franquia_horas" => $disc_franquia_horas, 
-							"disc_permitir_duplicidade" => $disc_permitir_duplicidade, 
+							"hosp_valor_mb_adicional" => $hosp_valor_mb_adicional,
+							"disc_franquia_horas" => $disc_franquia_horas,
+							"disc_permitir_duplicidade" => $disc_permitir_duplicidade,
 							"disc_valor_hora_adicional" => $disc_valor_hora_adicional,
-							"bl_banda_upload_kbps" => $bl_banda_upload_kbps, 
-							"bl_banda_download_kbps" => $bl_banda_download_kbps, 
+							"bl_banda_upload_kbps" => $bl_banda_upload_kbps,
+							"bl_banda_download_kbps" => $bl_banda_download_kbps,
 							"bl_franquia_trafego_mensal_gb" => $bl_franquia_trafego_mensal_gb,
-							"bl_valor_trafego_adicional_gb" => $bl_valor_trafego_adicional_gb, 
-							"cod_banco" => $pro_dados["codigo_banco"], 
+							"bl_valor_trafego_adicional_gb" => $bl_valor_trafego_adicional_gb,
+							"cod_banco" => $pro_dados["codigo_banco"],
 							"carteira" => $pro_dados["carteira"],
-							"agencia" => $pro_dados["agencia"], 
-							"num_conta" => $pro_dados["num_conta"], 
-							"convenio" => $pro_dados["convenio"], 
-							"cc_vencimento" => "", 
+							"agencia" => $pro_dados["agencia"],
+							"num_conta" => $pro_dados["num_conta"],
+							"convenio" => $pro_dados["convenio"],
+							"cc_vencimento" => "",
 							"cc_numero" => "",
-							"cc_operadora" => "", 
-							"db_banco" => "", 
-							"db_agencia" => "", 
-							"db_conta" => "", 
-							"vencimento" => $dia_vencimento, 
+							"cc_operadora" => "",
+							"db_banco" => "",
+							"db_agencia" => "",
+							"db_conta" => "",
+							"vencimento" => $dia_vencimento,
 							"carencia" => $carencia,
-							"data_alt_status" => "", 
-							"id_produto" => $id_produto, 
-							"nome_produto" => $dados_produto["nome"], 
+							"data_alt_status" => "",
+							"id_produto" => $id_produto,
+							"nome_produto" => $dados_produto["nome"],
 							"descricao_produto" => $dados_produto["descricao"],
-							"disponivel" => $dados_produto["disponivel"], 
-							"vl_email_adicional"  => $dados_produto["vl_email_adicional"], 
+							"disponivel" => $dados_produto["disponivel"],
+							"vl_email_adicional"  => $dados_produto["vl_email_adicional"],
 							"permitir_outros_dominios" => $dados_produto["permitir_outros_dominios"],
-							"email_anexado" => $dados_produto["email_anexado"], 
-							"numero_contas" => $dados_produto["numero_contas"], 
+							"email_anexado" => $dados_produto["email_anexado"],
+							"numero_contas" => $dados_produto["numero_contas"],
 							"valor_estatico" => $dados_produto["valor_estatico"],
-							"da_cod_banco" => $da_dados["codigo_banco"], 
-							"da_carteira" => $da_dados["carteira"], 
-							"da_convenio" => $da_dados["convenio"], 
+							"da_cod_banco" => $da_dados["codigo_banco"],
+							"da_carteira" => $da_dados["carteira"],
+							"da_convenio" => $da_dados["convenio"],
 							"da_agencia" => $da_dados["agencia"],
-							"da_num_conta" => $da_dados["num_conta"], 
-							"bl_cod_banco" => $bl_dados["codigo_banco"], 
+							"da_num_conta" => $da_dados["num_conta"],
+							"bl_cod_banco" => $bl_dados["codigo_banco"],
 							"bl_carteira" => $bl_dados["carteira"],
-							"bl_convenio" => $bl_dados["convenio"], 
-							"bl_agencia" => $bl_dados["agencia"], 
+							"bl_convenio" => $bl_dados["convenio"],
+							"bl_agencia" => $bl_dados["agencia"],
 							"bl_num_conta" => $bl_dados["num_conta"],
 							"pagamento" => $pagamento);
-							
+
 			if( $id_forma_pagamento ) {
 				$dados["id_forma_pagamento"]=$id_forma_pagamento;
-			}						
+			}
 			$this->cbtb_contrato->insere($dados);
 			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata) : array();
-			
+
 			$id_cobranca = 0;
 
 			// gera carne
@@ -375,12 +375,12 @@
 					'id_cliente_produto' => $id_cliente_produto,
 					'valor' => $soma_fatura,
 					'vigencia' => count ($todas_faturas),
-					'id_cliente' => $id_cliente,   	
-				);   
+					'id_cliente' => $id_cliente,
+				);
 
 				$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
 			}
-			
+
 			for( $i=0;$i<count($todas_faturas);$i++) {
 				$fatura = $todas_faturas[$i];
 				$cod_barra = "";
@@ -390,20 +390,20 @@
 				if ($gera_carne) {
 					// gera codigo de barras
 					$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_pagamento);
-					
+
 					// ($banco,$agencia,$conta,$carteira,$convenio,$vencimento,$valor,$id,$moeda=9,$cnpj_ag_cedente="",$codigo_cedente="",$operacao_cedente="")
-					
-					
+
+
 
 					switch ($formaPagto ["tipo_cobranca"]) {
 						case "PC":
 							$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
-							$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);    	
+							$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);
 							break;
 						case "BL":
 							$boleto = MBoleto::factory ($formaPagto["codigo_banco"],$formaPagto["agencia"],$formaPagto["conta"],$formaPagto["carteira"],$formaPagto["convenio"],$fatura['data'],$fatura ['valor'],$nosso_numero,self::$moeda,$formaPagto ['cnpj_ag_cedente'],$formaPagto ['codigo_cedente'],$formaPagto ['operacao_cedente']);
 							$cod_barra = $boleto->obtemCodigoBoleto ();
-							$linha_digitavel = $boleto->obtemLinhaDigitavel();	
+							$linha_digitavel = $boleto->obtemLinhaDigitavel();
 							break;
 						case "MO":
 							// Carnê genérico
@@ -416,11 +416,11 @@
 				}
 
 				$this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
-				
+
 			}
-			
+
 			//$preferencias = VirtexModelo::factory('preferencias');
-			
+
 			$prefGeral = $this->preferencias->obtemPreferenciasGerais();
 			$dominio_padrao = $prefGeral["dominio_padrao"];
 
@@ -436,7 +436,7 @@
 			$dados["id_cliente_produto"] = $id_cliente_produto;
 
 			$this->cadastraEnderecoCobranca($id_cliente_produto,$dados["endereco"],$dados["complemento"],$dados["bairro"],$dados["id_cidade"],$dados["cep"],$id_cliente);
-			
+
 			if( count($dados_conta) ) {
 
 				switch(trim($dados_produto["tipo"])) {
@@ -454,7 +454,7 @@
 						$conta_mestre, $dados_conta["tipo_hospedagem"], $dados_conta["dominio_hospedagem"]);
 					break;
 				}
-			
+
 				if ( $cria_email ) {
 					$contas->cadastraContaEmail($username, $dominio_padrao, $senha, $id_cliente, $id_cliente_produto, $status_conta, $obs,
 					$conta_mestre, $dados_produto["quota_por_conta"]);
@@ -466,7 +466,7 @@
 
 			return($id_cliente_produto);
 
-			
+
 		}
 
 
@@ -477,7 +477,7 @@
 
 	      if ( $descricao )
 	        $dados["descricao"] = $descricao;
-	        
+
 	      if ( $id_carne )
 	        $dados["id_carne"] = $id_carne;
 
@@ -486,17 +486,17 @@
 
 	      if ( $linha_digitavel )
 	        $dados["linha_digitavel"] = $linha_digitavel;
-	        
+
 	      if ( $cod_barra )
 	        $dados["cod_barra"] = $cod_barra;
 
-	        
+
 	      $this->cbtb_fatura->insere($dados);
 	    }
-	    
+
 	    public function cancelaContrato($id_cliente_produto) {
 			$dados = array("status" => "C","data_alt_status" => "=now");
-			$this->cbtb_contrato->altera($dados,array("id_cliente_produto" => $id_cliente_produto));	    
+			$this->cbtb_contrato->altera($dados,array("id_cliente_produto" => $id_cliente_produto));
 	    }
 
 		public function obtemContratos ($id_cliente,$status="",$tipo="")
@@ -504,13 +504,13 @@
 			$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente,$status,$tipo);
 			return ($res);
 		}
-		
+
 		public function obtemContratoPeloId($id_cliente_produto) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
 			$res = $this->cbtb_contrato->obtemUnico($filtro);
 			return($res);
 		}
-		
+
 		public function obtemContratosIncluidosPorPeriodo($periodo){
 			$rs = $this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo);
 			$return = array();
@@ -518,11 +518,11 @@
 				$tipo = $row["tipo_produto"];
 				list($ano,$mes,$dia) = $row["data_contratacao"];
 				$return[$ano][$mes][$tipo] = $row["num_contratos"];
-				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];  		
+				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];
 			}
 			return $return;
 		}
-		
+
 		public function obtemContratosCanceladosPorPeriodo($periodo){
 			$rs = $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo);
 			$return = array();
@@ -531,30 +531,34 @@
 				$ano = $row["ano"];
 				$mes = $row["mes"];
 				$return[$ano][$mes][$tipo] = $row["num_contratos"];
-				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];  		
+				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];
 			}
 			return $return;
 		}
-		
+
+		public function obtemAdesoesPorPeriodo($periodo) {
+			return ($this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo));
+		}
+
 		public function estornaFatura($id_cobranca) {
 			$filtro = array("id_cobranca" => $id_cobranca);
 			$dados = array("status" => "E");
 			return($this->cbtb_fatura->altera($dados,$filtro));
 		}
-		
-		
+
+
 		public function obtemFaturasPorCarne($id_carne) {
 			$filtro = array("status" => "A", "id_carne" => $id_carne);
 			return($this->cbtb_fatura->obtem($filtro));
 		}
-		
-		
+
+
 		/**
-		 * 
+		 *
 		 */
 		public function obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas=false) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
-			
+
 			if( !$exibirEstornadas ) {
 				$filtro["status"] = "!=:E";
 			}
@@ -581,7 +585,7 @@
 					list($aP,$mP,$dP) = explode("-",$faturas[$i]["data_pagamento"]);
 					$pgto = mktime(0,0,0,$mP,$dP,$aP);
 				}
-				
+
 				// Utilizado por códigos como cancelamento e migração
 				$faturas[$i]["estornavel"] = false;
 
@@ -608,9 +612,9 @@
 						$faturas[$i]["strstatus"] = "A vencer";
 					}
 				}
-				
+
 			}
-			
+
 			return($faturas);
 
 
@@ -627,15 +631,15 @@
 				if ($id_carne > 0) {
 					// obtem faturas do carne
 					$tem_carne = true;
-					return ($this->cbtb_fatura->obtemFaturas (null, $id_cliente_produto, $id_carne));	
+					return ($this->cbtb_fatura->obtemFaturas (null, $id_cliente_produto, $id_carne));
 				}
-				else {			
+				else {
 					$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 					if ($formaPagto ['carne'] == 't') {
 						// obtem carne
 						$tem_carne = true;
-					
-						return ($this->cbtb_carne->obtemCarnes ($id_cliente_produto));	
+
+						return ($this->cbtb_carne->obtemCarnes ($id_cliente_produto));
 					}
 					else {
 						$tem_carne = false;
@@ -645,23 +649,23 @@
 			// obtem todas faturas do cliente.
 			return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
 		}
-		
+
 		public function migrarFatura($id_cobranca,$id_cliente_produto) {
 			$filtro = array("id_cobranca" => $id_cobranca);
 			$dados = array("id_cliente_produto" => $id_cliente_produto);
-			
+
 			$fatura = $this->cbtb_fatura->obtemUnico(array("id_cobranca"=> $id_cobranca));
 			$descricao = $fatura["descricao"];
-			$descricao .= "\n\n*** MIGRADA DO CONTRATO ".$fatura["id_cliente_produto"] ." ***";			
+			$descricao .= "\n\n*** MIGRADA DO CONTRATO ".$fatura["id_cliente_produto"] ." ***";
 			$dados["descricao"] = $descricao;
-			
+
 			return($this->cbtb_fatura->altera($dados,$filtro));
 		}
-		
+
 		public function obtemFatura ($id_cliente_produto, $data) {
 			return ($this->cbtb_fatura->obtemUnico (array ("id_cliente_produto" => $id_cliente_produto, "data" => $data)));
 		}
-		
+
 		public function migrarContrato($id_cliente_produto,$novo_id_cliente_produto,$admin) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
 			$dados = array(
@@ -670,52 +674,52 @@
 							"migrado_por" => $admin,
 							"status" => "M"
 							);
-			
+
 			$this->cbtb_contrato->altera($dados,$filtro);
 			//
 		}
-		
+
 		public function obtemFaturasAtrasadasPorPeriodo($periodo){
-			$rs = $this->cbtb_fatura->obtemFaturasAtrasadasPorPeriodo($periodo);			
+			$rs = $this->cbtb_fatura->obtemFaturasAtrasadasPorPeriodo($periodo);
 			$return = array();
-			foreach($rs as $row){				
+			foreach($rs as $row){
 				$ano = $row["ano"];
 				$mes = $row["mes"];
 				$return[$ano][$mes] = $row["num_contratos"];
 			}
 			return $return;
 		}
-		
+
 		public function obtemStatusFatura(){
 			return $this->cbtb_fatura->enumStatusFatura();
 		}
-		
+
 		public function obtemFaturaPorIdCobranca ($id_cobranca) {
 			return ($this->cbtb_fatura->obtemUnico (array ("id_cobranca" => $id_cobranca)));
 		}
-		
+
 		public function obtemFaturaPelaLinhaDigitavel ($codigo) {
 			return ($this->cbtb_fatura->obtemUnico (array ("linha_digitavel" => $codigo)));
 		}
-		
+
 		public function obtemFaturaPeloCodigoBarras ($codigo) {
 			return ($this->cbtb_fatura->obtemUnico (array ("cod_barra" => $codigo)));
 		}
-		
+
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
 					$reagendamento, $observacoes){
-			
+
 			$fatura = $this->obtemFaturaPorIdCobranca($id_cobranca);
 			$data = array();
-			
-			if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or 
+
+			if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or
 				$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
 				$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
 				return false;
 			}
-			
+
 			$totalDevido = $fatura["valor"] - $desconto + $acrescimo;
-			
+
 			if($amortizar > 0) {
 				$data["valor_pago"] = $fatura["valor_pago"] + $amortizar;
 				if($totalDevido == $amortizar){
@@ -723,11 +727,11 @@
 					$data["pagto_parcial"] = 0;
 				} elseif($amortizar < $totalDevido) {
 					$data["status"] = PERSISTE_CBTB_FATURAS::$PARCIAL;
-					$data["pagto_parcial"] = $data["valor_pago"];	
+					$data["pagto_parcial"] = $data["valor_pago"];
 				} elseif($amortizar > $totalDevido){
 					 throw new ExcecaoModeloValidacao (1,"Valor a receber excede o valor pendente!");
 				}
-				
+
 			} elseif($amortizar == 0) {
 				if($totalDevido == 0){ // desconto de 100% sobre o valor devido
 					$data["status"] = PERSISTE_CBTB_FATURAS::$PAGA;
@@ -735,24 +739,24 @@
 					$data["status"] = $fatura["status"];
 				}
 			} else {
-				throw new ExcecaoModeloValidacao (2,"Valor a receber não pode ser negativo!"); 
+				throw new ExcecaoModeloValidacao (2,"Valor a receber não pode ser negativo!");
 			}
-			
+
 			$data["desconto"] = $desconto;
 			$data["acrescimo"] = $acrescimo;
 			$data["data_pagamento"] = $data_pagamento;
-			
+
 			if($reagendar and $data["status"] != PERSISTE_CBTB_FATURAS::$PAGA){
 				$data["reagendamento"] = $reagendamento;
 				$data["observacoes"] = $observacoes;
 			}
-			
+
 			$seek["id_cobranca"] = $id_cobranca;
 			$this->cbtb_fatura->altera($data,$seek);
-			
+
 			return true;
 		}
-		
+
 	}
 
 
