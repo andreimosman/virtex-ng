@@ -16,9 +16,9 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 										$this->_ordem 		= "username,dominio,tipo_conta";
 										$this->_tabela		= "cntb_conta";
 										$this->_sequence	= "cnsq_id_conta";
-											
+
 										$this->_filtros 	= array("status" => "custom", "conta_mestre" => "bool");
-											
+
 	}
 
 	public function filtroCampo($campo,$valor) {
@@ -32,14 +32,14 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 				 * 		'C' => Cancelado
 				 *		'S'	=> Suspenso (falta de pagamento)
 				 */
-					
+
 				$retorno = $valor ? $valor : 'A';
 				break;
 
 			default:
 				$retorno = $valor;
 		}
-			
+
 		return($retorno);
 	}
 
@@ -55,9 +55,9 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 	 * @return unknown
 	 */
 	public function obtemQuantidadeContasDeCadaTipo($cortesia = false){
-		return $this->_obtemContasDeCadaTipo($cortesia,true);		
+		return $this->_obtemContasDeCadaTipo($cortesia,true);
 	}
-	
+
 	/**
 	 * Obtem lista de contas agrupoas por tipo
 	 *
@@ -65,17 +65,17 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 	 * @return unknown
 	 */
 	public function obtemContasDeCadaTipo($cortesia = false, $tipo_conta = false){
-		return $this->_obtemContasDeCadaTipo($cortesia,false, $tipo_conta);		
+		return $this->_obtemContasDeCadaTipo($cortesia,false, $tipo_conta);
 	}
-	
+
 	public function obtemClientesPorTipoConta($tipo_conta,$status){
-		return $this->_obtemContasDeCadaTipo(false,false,$tipo_conta,false,$status);	
+		return $this->_obtemContasDeCadaTipo(false,false,$tipo_conta,false,$status);
 	}
-	
+
 	public function obtemClientesPorPorduto($id_produto,$status){
-		return $this->_obtemContasDeCadaTipo(false,false,false,$id_produto,$status);	
+		return $this->_obtemContasDeCadaTipo(false,false,false,$id_produto,$status);
 	}
-	   
+
 	protected function _obtemContasDeCadaTipo($cortesia = false, $quantidade = false, $tipo_conta = false, $produto = false, $status = false){
 		$sql = " SELECT \n";
 		if($quantidade){
@@ -106,38 +106,38 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 		$sql.= "	AND pr.id_produto = cp.id_produto \n";
 		$sql.= "	AND ct.id_cliente_produto = cp.id_cliente_produto \n";
 		$sql.= "	AND cnt.id_cliente_produto = cp.id_cliente_produto \n";
-		
+
 		$sql.= "	AND cnt.tipo_conta = pr.tipo \n";
-		
+
 		$sql.= "	AND cnt.conta_mestre is true \n";
-		
+
 		if($tipo_conta){
 			$sql.= "	AND cnt.tipo_conta = '$tipo_conta' \n";
 		}
-		
+
 		if($produto) {
 			$sql.= "	AND pr.id_produto = '$produto' \n";
 		}
-		
+
 		if($status){
 			$sql.= "	AND ct.status = '$status' \n";
 		}
-		
+
 		if($cortesia){
 			$sql.= "	AND pr.valor = 0 \n";
 		}
-		
+
 		if($quantidade){
 			$sql.= " GROUP BY \n";
 			$sql.= "	cnt.tipo_conta \n";
 		} else {
 			$sql.= " ORDER BY \n";
 			$sql.= "	cl.nome_razao \n";
-		}		
+		}
 		return $this->bd->obtemRegistros($sql);
 	}
 
-	
+
 	public function enumTiposConta(){
 		return array(
 						PERSISTE_CNTB_CONTA::$BANDA_LARGA => "Banda Larga",
@@ -146,6 +146,39 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 						PERSISTE_CNTB_CONTA::$HOSPEDAGEM => "Hospedagem",
 					);
 	}
+
+
+	public function obtemContasFaturasAtrasadas() {
+
+		$sql  = "SELECT ";
+		$sql .= "	cliente.nome_razao ";
+		$sql .= "	, produto.nome ";
+		$sql .= "	, conta.id_conta ";
+		$sql .= "	, conta.tipo_conta ";
+		$sql .= "	, count(conta.*) as contas ";
+		$sql .= "	, count(fatura.*) as faturas_atraso ";
+		$sql .= "	, sum(fatura.valor) as fatura_valor ";
+		$sql .= "FROM ";
+		$sql .= "	cntb_conta as conta ";
+		$sql .= "	, cltb_cliente as cliente ";
+		$sql .= "	, cbtb_faturas as fatura ";
+		$sql .= "	, cbtb_cliente_produto as cliente_produto ";
+		$sql .= "	, prtb_produto as produto ";
+		$sql .= "WHERE ";
+		$sql .= "	conta.id_cliente = cliente.id_cliente ";
+		$sql .= "	AND conta.id_cliente_produto = cliente_produto.id_cliente_produto ";
+		$sql .= "	AND fatura.id_cliente_produto = fatura.id_cliente_produto ";
+		$sql .= "	AND produto.id_produto = cliente_produto.id_produto ";
+		$sql .= "	AND ( fatura.reagendamento is null and fatura.data > now() - interval '2 days' - interval '30 days' and fatura.status not in ('P','E','C') ";
+		$sql .= "		OR   fatura.reagendamento is null and fatura.data > now() - interval '2 days' - interval '30 days' and fatura.status not in ('P','E','C') ) ";
+		$sql .= "GROUP BY cliente.nome_razao, produto.nome, conta.id_conta, conta.tipo_conta ";
+
+		return $this->bd->obtemRegistros($sql);
+
+	}
+
 }
+
+
 
 ?>
