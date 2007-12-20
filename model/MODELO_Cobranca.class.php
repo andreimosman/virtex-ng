@@ -17,9 +17,11 @@
 
 		protected $cltb_cliente;
 		protected $prtb_produto;
-		
 
 		protected $cbtb_endereco_cobranca;
+
+		protected $cbtb_lote_cobranca;
+		protected $cbtb_lote_fatura;
 
 		protected static $moeda = 9;
 
@@ -38,6 +40,8 @@
 			$this->cltb_cliente = VirtexPersiste::factory("cltb_cliente");
 			$this->prtb_produto = VirtexPersiste::factory("prtb_produto");
 
+			$this->cbtb_lote_cobranca = VirtexPersiste::factory("cbtb_lote_cobranca");
+			$this->cbtb_lote_fatura = VirtexPersiste::factory("cbtb_lote_fatura");
 		}
 
 		public function obtemClienteProduto($id_cliente_produto) {
@@ -696,11 +700,11 @@
 			return $return;
 		}
 
-		
+
 		public function obtemFaturasAtrasadasDetalhes($periodo){
 			return $this->cbtb_fatura->obtemFaturasAtrasadasDetalhes ($periodo);
 		}
-		
+
 		public function obtemStatusFatura(){
 			return $this->cbtb_fatura->enumStatusFatura();
 		}
@@ -715,6 +719,10 @@
 
 		public function obtemFaturaPeloCodigoBarras ($codigo) {
 			return ($this->cbtb_fatura->obtemUnico (array ("cod_barra" => $codigo)));
+		}
+
+		public function obtemAnosFatura() {
+			return $this->cbtb_fatura->obtemAnosFatura();
 		}
 
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
@@ -768,7 +776,33 @@
 			return true;
 		}
 
+
+		public function cadastraLoteCobranca($data_referencia, $periodo, $id_admin) {
+			$dados = array (	"data_referencia" => $data_referencia,
+								"data_geracao" => '=now',
+								"periodo" => $periodo,
+								"id_admin" => $id_admin
+							);
+
+			return ($this->cbtb_lote_cobranca->insere($dados));
+		}
+
+
+		public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
+			return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo));
+		}
+
+		public function cadastraLoteFatura($id_remessa, $id_cobranca) {
+			$dados = array(	"id_remessa" => $id_remessa,
+							"id_cobranca"=> $id_cobranca
+							);
+
+			$this->cbtb_lote_fatura->insere($dados);
+		}
+
 	}
+
+
 
 
 ?>
