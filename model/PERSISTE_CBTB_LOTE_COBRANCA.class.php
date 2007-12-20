@@ -15,6 +15,16 @@ class PERSISTE_CBTB_LOTE_COBRANCA extends VirtexPersiste {
 	}
 
 
+	public function obtemUltimasRemessas($quantidade) {
+		$sql  = "SELECT id_remessa, data_geracao, periodo, data_referencia, id_admin ";
+		$sql .= "FROM cbtb_lote_cobranca ";
+		$sql .= "ORDER BY id_remessa DESC ";
+		$sql .= "LIMIT $quantidade";
+
+		$return ($this->bd->obtemRegistros($sql));
+	}
+
+
 }
 
 
