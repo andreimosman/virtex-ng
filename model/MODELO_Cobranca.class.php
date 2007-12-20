@@ -702,7 +702,15 @@
 
 
 		public function obtemFaturasAtrasadasDetalhes($periodo){
-			return $this->cbtb_fatura->obtemFaturasAtrasadasDetalhes ($periodo);
+			
+			$retorno = $this->cbtb_fatura->obtemFaturasAtrasadasDetalhes($periodo);
+
+			$contas = VirtexModelo::factory("contas");			
+			for($i=0;$i<count($retorno);$i++) {
+				$cnt = $contas->obtemContasPorContrato($retorno[$i]["id_cliente_produto"]);
+				$retorno[$i]["contas"] = $cnt;
+			}
+			return $retorno;
 		}
 
 		public function obtemStatusFatura(){
