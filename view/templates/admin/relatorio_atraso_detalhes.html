@@ -17,6 +17,14 @@
 	font-size:14px;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 }
+
+.vermeio{
+	color: #ff0000;
+}
+
+.preto{
+	color: #000;
+}
 {/literal}
 </style>
 <br /><br />
@@ -30,11 +38,11 @@
 	</tr>
 	{foreach from=$lista key=p item=m}
 	<tr class='{cycle values="linhai,linhap"}'>
-		<td align="left">&nbsp; &nbsp; <a href="">{$m.data}</a></td>		
-		<td class="cellInfoCenter"><a href="">{$m.nome_razao}</a></td>
-		<td class="cellInfoCenter"><a href="">Username Oie</a></td>
-		<td class="cellInfoCenter"><a href="">{$m.nome}</a></td>
-		<td class="cellInfoCenter"><a href="">{$m.status}</a></td>
+		<td align="left">&nbsp; &nbsp; <a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$m.id_cliente}&id_cliente_produto={$m.id_cliente_produto}&data={$m.data}"><span class="{if $m.status != 'P'}vermeio{else}preto{/if}">{$m.data}</span></a></td>		
+		<td class="cellInfoCenter"><a href="admin-clientes.php?op=cadastro&extra_op=ficha&{$m.id_cliente}"><span class="{if $m.status != 'P'}vermeio{else}preto{/if}">{$m.nome_razao}</span></a></td>
+		<td class="cellInfoCenter"><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$m.id_cliente}&id_cliente_produto={$m.id_cliente_produto}&data={$m.data}"><span class="{if $m.status != 'P'}vermeio{else}preto{/if}">{$m.username}</span></a></td>
+		<td class="cellInfoCenter"><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$m.id_cliente}&id_cliente_produto={$m.id_cliente_produto}&data={$m.data}"><span class="{if $m.status != 'P'}vermeio{else}preto{/if}">{$m.descricao}</span></a></td>
+		<td class="cellInfoCenter"><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$m.id_cliente}&id_cliente_produto={$m.id_cliente_produto}&data={$m.data}"><span class="{if $m.status != 'P'}vermeio{else}preto{/if}">{$m.strstatus}</span></a></td>
 	</tr>
 	{/foreach}
 </table>

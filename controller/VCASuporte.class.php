@@ -71,6 +71,8 @@
 					$this->_view->atribui("info",$info->toArray());
 				} catch(MException $e) {
 					$this->_view->atribui("erro",$e->getMessage());
+				} catch(Exception $e) {
+					$this->_view->atribui("erro",$e->getMessage());
 				}
 			}		
 		}

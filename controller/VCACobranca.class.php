@@ -158,7 +158,7 @@ class VCACobranca extends VirtexControllerAdmin {
 				$meses[$data]["mes"] = (int) $m;
 				$meses[$data]["ano"] = (int) $a;
 
-				$mesesAno["01"]="Janeiro";
+				/*$mesesAno["01"]="Janeiro";
 				$mesesAno["02"]="Fevereiro";
 				$mesesAno["03"]="Março";
 				$mesesAno["04"]="Abril";
@@ -170,15 +170,16 @@ class VCACobranca extends VirtexControllerAdmin {
 				$mesesAno["10"]="Outubro";
 				$mesesAno["11"]="Novembro";
 				$mesesAno["12"]="Dezembro";
-				$meses[$data]["strmes"] = $mesesAno[$m];
+				$meses[$data]["strmes"] = $mesesAno[$m]; */
 			}
 			$this->_view->atribui("meses", $meses);
 			
 			} elseif("atrasos_detalhes" == $relatorio) {
-			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
+			$periodo = @$_REQUEST["ano"]."-".@$_REQUEST["mes"];
 			$this->_view->atribui("periodo", $periodo);
 			$cobranca = VirtexModelo::factory("cobranca");
 			$lista = $cobranca->obtemFaturasAtrasadasDetalhes($periodo);
+
 			$this->_view->atribui("lista", $lista);
 			
 		} elseif("cliente_produto" == $relatorio) {

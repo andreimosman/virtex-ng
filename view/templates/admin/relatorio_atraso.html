@@ -36,8 +36,8 @@
 	{foreach from=$meses key=p item=m}
 	<tr class='{cycle values="linhai,linhap"}'>
 
-		<td align="left">&nbsp; &nbsp; <a href="admin-cobranca.php?op=relatorios&relatorio=atrasos_detalhes&ano={$m.ano}&mes={$m.strmes}">{$m.ano}/{$m.strmes}</a></td>		
-		<td class="cellInfoCenter"><a href="admin-cobranca.php?op=relatorios&relatorio=atrasos_detalhes&ano={$m.ano}&mes={$m.strmes}">{$atrasos[$m.ano][$m.mes]|default:0}</a></td>
+		<td align="left">&nbsp; &nbsp; <a href="admin-cobranca.php?op=relatorios&relatorio=atrasos_detalhes&ano={$m.ano}&mes={$m.mes}">{$m.ano}/{$m.mes}</a></td>		
+		<td class="cellInfoCenter"><a href="admin-cobranca.php?op=relatorios&relatorio=atrasos_detalhes&ano={$m.ano}&mes={$m.mes}">{$atrasos[$m.ano][$m.mes]|default:0}</a></td>
 
 
 	</tr>
