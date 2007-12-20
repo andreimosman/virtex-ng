@@ -808,6 +808,11 @@
 			$this->cbtb_lote_fatura->insere($dados);
 		}
 
+
+		public function obtemUltimasRemessas($quantidade) {
+			return ($this->cbtb_lote_cobranca->obtemUltimasRemessas($quantidade));
+		}
+
 	}
 
 
