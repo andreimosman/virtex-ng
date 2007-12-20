@@ -142,9 +142,6 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		return ($retorno);
 	}
 
-<<<<<<< PERSISTE_CBTB_FATURAS.class.php
-	}
-
 
 	public function obtemAnosFatura() {
 
@@ -176,6 +173,5 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 	}
 
 }
-=======
-}
+
 ?>
