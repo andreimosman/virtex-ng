@@ -20,25 +20,49 @@
 <div id="cont" align="center">
 	Geração de Boletos Bancários
 	<br /><br />
-	
-	<table class="lista" border="0" width="400px" cellpadding="0" cellspacing="0">
-		<tr>
-			<th colspan="3">Periodo de Emissão</th>
-		</tr>
-		<tr>
-			<td align="center"><input type="radio" name="123" value="123" /> de 1 a 15</td>
-			<td align="center"><input type="radio" name="123" value="123" /> de 16 a 30</td>
-			<td align="center"><input type="radio" name="123" value="123" /> mês todo</td>		
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td align="left"> Mês <select name="123"><option>123</select> Ano <select name="123"><option>123</select></td>
-		</tr>
-		<tr>
-			<td align="right" colspan="2"><input type="submit" name="123" value="Emitir Boletos no Período" /></td>
-		</tr>
-	</table>
-	
+	<form action="admin-cobranca.php" >
+		<input type="hidden" name="op" value="gerar_cobranca" />
+		<input type="hidden" name="acao" value="gerar" />
+
+		<table class="lista" border="0" width="400px" cellpadding="0" cellspacing="0">
+			<tr>
+				<th colspan="3">Periodo de Emissão</th>
+			</tr>
+			<tr>
+				<td align="center"><input type="radio" name="periodo" value="PQ" CHECKED /> de 1 a 15</td>
+				<td align="center"><input type="radio" name="periodo" value="SQ" /> de 16 a 30</td>
+				<td align="center"><input type="radio" name="periodo" value="MT" /> mês todo</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="left">
+					Mês <select name="mes">
+							<option value="01">Janeiro</option>
+							<option value="02">Fevereiro</option>
+							<option value="03">Março</option>
+							<option value="04">Abril</option>
+							<option value="05">Maio</option>
+							<option value="06">Junho</option>
+							<option value="07">Julho</option>
+							<option value="08">Agosto</option>
+							<option value="09">Setembro</option>
+							<option value="10">Outubro</option>
+							<option value="11">Novembro</option>
+							<option value="12">Dezembro</option>
+						</select>
+					Ano <select name="ano">
+							{foreach from=$periodo_anos item=i key=k}
+							<option value="{$i.ano}">{$i.ano}</option>
+							{/foreach}
+						</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" colspan="2"><input type="submit" name="123" value="Emitir Boletos no Período" /></td>
+			</tr>
+		</table>
+	</form>
+
 </div>
 </body>
 </html>
