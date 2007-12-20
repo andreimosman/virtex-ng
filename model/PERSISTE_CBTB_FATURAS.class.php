@@ -142,5 +142,40 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		return ($retorno);
 	}
 
+<<<<<<< PERSISTE_CBTB_FATURAS.class.php
+	}
+
+
+	public function obtemAnosFatura() {
+
+		$sql  = "SELECT DISTINCT ";
+		$sql .= "	EXTRACT(YEAR FROM data) as ano ";
+		$sql .= "FROM ";
+		$sql .= "	cbtb_faturas ";
+
+		return  $this->bd->obtemRegistros($sql);
+	}
+
+
+	public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
+
+		$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
+		$sql .= "WHERE ";
+		$sql .= "	cod_barra IS NULL ";
+
+
+		if($periodo == "PQ") {		//PRRIMEIRA QUINZENA
+			$sql .= " AND data BETWEEN '$data_referencia-01' AND '$data_referencia-15' ";
+		} else if ($periodo == "SQ") {	//SEGUNDA QUINZENA
+			$sql .= " AND data BETWEEN '$data_referencia-16' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+		} else { 		// MES COMPLETO
+			$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+		}
+
+		return ($this->bd->obtemRegistros($sql));
+	}
+
+}
+=======
 }
 ?>
