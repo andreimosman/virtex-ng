@@ -79,6 +79,33 @@ class VCACobranca extends VirtexControllerAdmin {
 
 	protected function executaGerarCobranca() {
 
+		$acao = @$_REQUEST["acao"];
+		$ano = @$_REQUEST["ano"];
+		$mes = @$_REQUEST["mes"];
+		$periodo = @$_REQUEST["periodo"];
+
+
+		if ($acao == "gerar") {
+			$dados = array();
+
+			//Insere informações da remessa de cobranca
+			$data_referencia = "$ano-$mes";
+			$data_referencia_dia1 = "$ano-$mes-01";
+
+			//COLOCAR ESQUEMA DE PEGAR ID DO USUARIO
+			$dadosLogin = $this->_login->obtem("dados");
+			$id_admin = $dadosLogin["id_admin"];;
+			$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin);
+			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo);
+
+			for($i=0; $i<count($resultado); $i++) {
+				$id_cobranca = $resultado[$i]["id_cobranca"];
+				$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
+			}
+		}
+
+		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
+		$this->_view->atribui("periodo_anos", $periodo_anos_fatura);
 	}
 
 	protected function executaArquivos() {
