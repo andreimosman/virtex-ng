@@ -4,6 +4,16 @@
 	 * Fluxo de Caixa
 	 */
 	class PERSISTE_CXTB_FLUXO extends VirtexPersiste {
+
+
+		public static TIPO_ORIGEM_RETORNO = 'R';
+		public static TIPO_ORIGEM_MANUAL  = 'M';
+		
+		public static ESPECIE_DINHEIRO    = 'D';
+		public static ESPECIE_TEF         = 'T';
+		public static ESPECIE_CHEQUE      = 'C';
+		public static ESPECIE_BOLETO      = 'B';
+		public static ESPECIE_CARTAO      = 'R';
 	
 		public function __construct($bd=null) {
 			parent::__construct($bd);
@@ -44,6 +54,48 @@
 										"data_registro" => "date", "data_compensacao" => "date", "especie" => "custom", "id_cobranca" => "number", 
 										"autenticacao" => "number");
 		
+		}
+		
+		/**
+		 * Pagamento com dinheiro.
+		 * Tipo Origem: Manual
+		 */
+		public function pagamentoComDinheiro($valor,$data_pagamento,$id_cobranca,$admin) {
+			$dados = array(
+							"valor" => $valor, 
+							"id_cobranca" => $id_cobranca, 							
+							"origem" => $admin, 
+							"tipo_origem" => self::$TIPO_ORIGEM_MANUAL,
+							"data_registro" => $data_pagamento,
+							"data_compensacao" => $data_pagamento,
+							"especie" => self::$ESPECIE_DINHEIRO,
+							"autenticacao" => $this->obtemIdAutenticacao()							
+						);
+			return($this->insere($dados));
+		}
+		
+		/**
+		 * Pagamento via arquivo de retorno do banco (boleto/título).
+		 */
+		public function pagamentoViaBoleto($valor,$data_registro,$data_compensacao,$id_cobranca,$arquivo) {
+			$dados = array(
+							"valor" => $valor, 
+							"id_cobranca" => $id_cobranca, 							
+							"origem" => $arquivo, 
+							"tipo_origem" => self::$TIPO_ORIGEM_RETORNO,
+							"data_registro" => $data_registro,
+							"data_compensacao" => $data_compensacao,
+							"especie" => self::$ESPECIE_BOLETO,
+							"autenticacao" => $this->obtemIdAutenticacao()							
+						);
+			return($this->insere($dados));
+		}
+		
+
+
+
+		protected function obtemIdAutenticacao() {
+			return($this->bd->proximoID("cxsq_autenticacao"));
 		}
 	
 	
