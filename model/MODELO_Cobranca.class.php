@@ -797,7 +797,11 @@
 
 
 		public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
-			return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo));
+					return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo));
+		}
+		
+		public function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento) {
+					return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento));
 		}
 
 		public function cadastraLoteFatura($id_remessa, $id_cobranca) {
@@ -807,10 +811,17 @@
 
 			$this->cbtb_lote_fatura->insere($dados);
 		}
+		public function InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca) {
+			return ($this->cbtb_fatura->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca));
+		}
 
 
 		public function obtemUltimasRemessas($quantidade) {
 			return ($this->cbtb_lote_cobranca->obtemUltimasRemessas($quantidade));
+		}
+		
+		public function obtemFaturasPorRemessa($id_remessa) {
+					return ($this->cbtb_fatura->obtemFaturasPorRemessa($id_remessa));
 		}
 
 	}

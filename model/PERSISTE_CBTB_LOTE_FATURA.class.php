@@ -11,6 +11,8 @@ class PERSISTE_CBTB_LOTE_FATURA extends VirtexPersiste {
 		$this->_tabela 		= "cbtb_lote_fatura";
 		$this->_sequence	= "";
 		$this->_filtros		= array("id_remessa" => "number", "id_cobranca" => "number");
+		
+		
 
 	}
 

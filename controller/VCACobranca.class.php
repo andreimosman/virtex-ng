@@ -32,6 +32,9 @@ class VCACobranca extends VirtexControllerAdmin {
 			case 'relatorios':
 				$this->executaRelatorios();
 				break;
+			case 'gerar_lista_boletos':
+				$this->geraListaBoletos();
+				break;
 		}
 	}
 
@@ -76,6 +79,43 @@ class VCACobranca extends VirtexControllerAdmin {
 			}
 		}
 	}
+	
+	protected function geraListaBoletos() {
+		
+		$id_remessa = @$_REQUEST["id_remessa"];
+
+		////echo $id_remessa;
+
+		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);	
+		
+		/*echo "<pre>";
+		print_r($resultado);
+		echo "</pre>";*/
+
+		for($i=0; $i<count($resultado); $i++) {
+			$id_forma_pagamento = $resultado[$i]["id_forma_pagamento"];
+			$valor = $resultado[$i]["valor"];
+			$data = $resultado[$i]["data"];
+			$id_cobranca = $resultado[$i]["id_cobranca"];
+			$codigo_barra = $resultado[$i]["cod_barra"];
+			$linha_digitavel = $resultado[$i]["linha_digitavel"];
+			
+			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+
+		
+			if( $formaPagto["tipo_cobranca"] == "BL" && $id_forma_pagamento=="11" ) {
+				
+				$urlPreto = "view/templates/imagens/preto.gif";
+				$urlBranco = "view/templates/imagens/branco.gif";
+				
+				echo MBanco::htmlBarcode($codigo_barra,$urlPreto,$urlBranco);
+
+				
+			}
+
+		}
+		
+	}
 
 	protected function executaGerarCobranca() {
 
@@ -83,7 +123,15 @@ class VCACobranca extends VirtexControllerAdmin {
 		$ano = @$_REQUEST["ano"];
 		$mes = @$_REQUEST["mes"];
 		$periodo = @$_REQUEST["periodo"];
+		
+		$formas = $this->preferencias->obtemFormasPagamento();
+		$this->_view->atribui("formas",$formas);
+		
+		//echo "<pre>";
+		//print_r($formas);
+		//echo "</pre>";
 
+		
 
 		if ($acao == "gerar") {
 			$dados = array();
@@ -91,21 +139,80 @@ class VCACobranca extends VirtexControllerAdmin {
 			//Insere informações da remessa de cobranca
 			$data_referencia = "$ano-$mes";
 			$data_referencia_dia1 = "$ano-$mes-01";
-
+			
 			//COLOCAR ESQUEMA DE PEGAR ID DO USUARIO
 			$dadosLogin = $this->_login->obtem("dados");
-			$id_admin = $dadosLogin["id_admin"];;
+			$id_admin = $dadosLogin["id_admin"];
+			$id_forma_pagamento = @$_REQUEST["tipo_pagamento"];
+			
+			//phpinfo();
+			
 			$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin);
-			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo);
+			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento);
+			
+			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+			
+			
+			
+			//return;
+			
+			
+			if (!$resultado){
+				
+				$msg = "Não foram encontradas faturas para esse período";
+			
+			}
+			
+			
+			$urlPreto = "view/templates/imagens/preto.gif";
+			$urlBranco = "view/templates/imagens/branco.gif";
 
+			/*echo "<pre>";
+			print_r($formaPagto);
+			echo "</pre>";*/
+	
+			
 			for($i=0; $i<count($resultado); $i++) {
 				$id_cobranca = $resultado[$i]["id_cobranca"];
+				//echo $id_cobranca;
+				
 				$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
+
+				if( $formaPagto["tipo_cobranca"] == "BL" ) {
+					
+					 $boleto = MBoleto::factory(
+					 								$formaPagto["codigo_banco"],$formaPagto["agencia"],
+					 								$formaPagto["conta"],$formaPagto["carteira"],
+					 								$formaPagto["convenio"],
+					 								$resultado[$i]["data"],$resultado[$i]["valor"],
+					 								$id_cobranca,9,$formaPagto["cnpj_agencia_cedente"],
+					 								$formaPagto["codigo_cedente"],
+					 								$formaPagto["operacao_cedente"]
+					 							);
+					 
+					$codigo_barra = $boleto->obtemCodigoBoleto();
+					$linha_digitavel = $boleto->obtemLinhaDigitavel();
+					 
+				
+				}
+
+
+				$this->cobranca->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca);
+				
+				$msg = "O Lote foi gerado para o período com sucesso!";
+				
 			}
 		}
-
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
+		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas(50);
+		
 		$this->_view->atribui("periodo_anos", $periodo_anos_fatura);
+		$this->_view->atribui("ultimas_remessas", $ultimas_remessas);
+		$this->_view->atribui("msg", $msg);
+
+
+		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas("10");
+
 	}
 
 	protected function executaArquivos() {

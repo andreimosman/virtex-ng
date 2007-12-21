@@ -155,7 +155,27 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 
 
 	public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
-
+	
+			$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
+			$sql .= "WHERE ";
+			$sql .= "	cod_barra IS NULL ";
+	
+	
+			if($periodo == "PQ") {		//PRRIMEIRA QUINZENA
+				$sql .= " AND data BETWEEN '$data_referencia-01' AND '$data_referencia-15' ";
+			} else if ($periodo == "SQ") {	//SEGUNDA QUINZENA
+				$sql .= " AND data BETWEEN '$data_referencia-16' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+			} else { 		// MES COMPLETO
+				$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+			}
+	
+			return ($this->bd->obtemRegistros($sql));
+			
+	}
+	
+			
+	public	function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo,$id_forma_pagamento) {
+	
 		$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
 		$sql .= "WHERE ";
 		$sql .= "	cod_barra IS NULL ";
@@ -169,7 +189,47 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
 		}
 
+		if ($id_forma_pagamento){
+
+			$sql .= " AND id_forma_pagamento='$id_forma_pagamento' ";
+
+		}
+		
+		///echo "SQL: $sql<br>\n";
+
+
 		return ($this->bd->obtemRegistros($sql));
+	}
+	
+	public function obtemFaturasPorRemessa($id_remessa) {
+	
+		$sql  = " SELECT ";
+		$sql .="   r.id_remessa, f.id_cobranca, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra ";
+		$sql .=" FROM ";
+		$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON f.id_cobranca = r.id_cobranca ";
+		$sql .=" WHERE ";
+		$sql .="   id_remessa = $id_remessa ";
+		
+		echo $sql;
+		
+		
+
+		return ($this->bd->obtemRegistros($sql));
+	
+	}
+	
+	public function InsereCodigoBarraseLinhaDigitavel($codigo_barra,$linha_digitavel,$id_cobranca){
+	
+		$dados = array( "cod_barra" => $codigo_barra, "linha_digitavel" => $linha_digitavel );
+		$filtro = array("id_cobranca" => $id_cobranca );
+		
+		/*echo $codigo_barra;
+		echo $linha_digitavel;
+		echo $id_cobranca;
+		echo "oie";*/
+		
+		return($this->altera($dados,$filtro));
+
 	}
 
 }
