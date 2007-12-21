@@ -45,6 +45,7 @@ INSERT INTO adtb_privilegio (id_priv, cod_priv, nome, tem_leitura, tem_gravacao,
 INSERT INTO adtb_privilegio (id_priv, cod_priv, nome, tem_leitura, tem_gravacao, descricao_leitura, descricao_gravacao) VALUES (27, '_ADMINISTRACAO_PLANOS', 'Administração::Planos', true, true, 'Visualização dos Planos', 'Cadastro/Alteração de Planos');
 INSERT INTO adtb_privilegio (id_priv, cod_priv, nome, tem_leitura, tem_gravacao, descricao_leitura, descricao_gravacao) VALUES (28, '_ADMINISTRACAO_FERRAMENTAS_BACKUP', 'Administração::Ferramentas::Backup & Restore', false, true, NULL, 'Execução dos Backups');
 INSERT INTO adtb_privilegio (id_priv, cod_priv, nome, tem_leitura, tem_gravacao, descricao_leitura, descricao_gravacao) VALUES (29, '_ADMINISTRACAO_RELATORIOS', 'Administração::Relatórios', true, false, 'Visualização dos Relatórios de Administração', NULL);
+INSERT INTO adtb_privilegio (id_priv, cod_priv, nome, tem_leitura, tem_gravacao, descricao_leitura, descricao_gravacao) VALUES (30, '_SUPORTE_LINKS', 'Suporte::Links', true, false, 'Visualização/Acesso aos links externos', NULL);
 
 
 --
