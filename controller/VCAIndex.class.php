@@ -142,7 +142,22 @@
 			$menuConfiguracoes->addSubmenu("Relatórios", $menuConfiguracoesRelatorios);
 
 			$menu->addSubmenu("Configurações", $menuConfiguracoes);
-
+			
+			//
+			// Menu de Faturamento
+			//
+			
+			$menuFaturamento = new MMenu();
+			$menuFaturamentoRelatorios 	= new MMenu();
+			$menuFaturamentoRelatorios->addItem("Faturamento Comparativo", "admin-faturamento.php?op=relatorios&relatorio=faturamento", $target);
+			$menuFaturamentoRelatorios->addItem("Faturamento por Produto ", "admin-faturamento.php?op=relatorios&relatorio=por_produto", $target);
+			$menuFaturamentoRelatorios->addItem("Faturamento por Período ", "admin-faturamento.php?op=relatorios&relatorio=por_periodo", $target);
+			$menuConfiguracoes->addSeparator();
+			$menuFaturamentoRelatorios->addItem("Previsão de Faturamento", "admin-faturamento.php?op=relatorios&relatorio=previsao", $target);
+			$menuFaturamento->addSubmenu("Relatorios", $menuFaturamentoRelatorios);
+			
+			$menu->addSubmenu("Faturamento", $menuFaturamento);
+			
 			//
 			// Menu de Administração
 			//

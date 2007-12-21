@@ -80,6 +80,10 @@
 					$retorno = new VVAErro();
 					break;
 					
+				case 'faturamento':
+					$retorno = new VVAFaturamento();
+					break;
+					
 				default:
 					throw new ExcecaoView(255,"View não disponível");
 					

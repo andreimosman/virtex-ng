@@ -268,7 +268,7 @@ class VCACobranca extends VirtexControllerAdmin {
 			$cobranca = VirtexModelo::factory("cobranca");
 			$cancelados = $cobranca->obtemContratosCanceladosPorPeriodo($periodo);
 			$this->_view->atribui("cancelados", $cancelados);
-
+			
 			$i = ( $periodo * -1 ) + 1;
 			$meses = array();
 			for(;$i<=0;$i++){
@@ -276,6 +276,7 @@ class VCACobranca extends VirtexControllerAdmin {
 				list($meses[$data]["mes"],$meses[$data]["ano"]) = split("/",$data);
 			}
 			$this->_view->atribui("meses", $meses);
+			
 			
 		} elseif("atrasos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;

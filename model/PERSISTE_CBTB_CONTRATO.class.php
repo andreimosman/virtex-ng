@@ -43,7 +43,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		
 		$sql = " SELECT \n";
 		$sql.= " 	count(*) as num_contratos, \n";
-		$sql.= " 	tipo_produto, \n";
+		$sql.= " 	trim(tipo_produto) as tipo_produto, \n";
 		$sql.= "	EXTRACT( 'month' FROM data_alt_status) as mes, \n";
 		$sql.= "	EXTRACT( 'year' FROM data_alt_status) as ano \n";
 		$sql.= " FROM \n";
@@ -59,7 +59,6 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql.= "	tipo_produto, \n";
 		$sql.= "	ano, \n";
 		$sql.= "	mes  \n";
-		
 		return $this->bd->obtemRegistros($sql);
 	}
 

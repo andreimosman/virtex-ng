@@ -54,6 +54,10 @@
 					$retorno = new VCACobranca();
 					break;
 					
+				case 'faturamento':
+					$retorno = new VCAFaturamento();
+					break;
+					
 				default:
 					throw new ExcecaoController(255,"Controller não encontrado");
 			

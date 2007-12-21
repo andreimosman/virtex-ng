@@ -66,29 +66,6 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		$sql .= "GROUP BY ano, mes ";
 		$sql .= "ORDER BY ano, mes ";
 		
-		//echo $sql."<br><br>";
-		
-		/**
-		$sql .= "  CASE WHEN ";
-		$sql .= "     f.status = 'P' ";
-		$sql .= "  THEN ";
-		$sql .= "	   data_pagamento > data ";
-		$sql .= "	ELSE ";
-		$sql .= "   	CASE WHEN ";
-		$sql .= "   		f.reagendamento IS NOT NULL ";
-		$sql .= "   	THEN ";
-		$sql .= "   		f.reagendamento >= CAST( EXTRACT(year from now() + INTERVAL '1 month') || '-' ||EXTRACT(month from now() + INTERVAL '1 month') ||'-01' as date) - INTERVAL '$periodo months' AND ";
-		$sql .= "   		f.reagendamento <  CAST( EXTRACT(year from now()) || '-' ||EXTRACT(month from now()) ||'-01' as date) ";
-		$sql .= "   	ELSE ";
-		$sql .= "   		f.data >= CAST( EXTRACT(year from now() + INTERVAL '1 month') || '-' ||EXTRACT(month from now() + INTERVAL '1 month') ||'-01' as date) - INTERVAL '$periodo months' AND ";
-		$sql .= "  		f.data < CAST( EXTRACT(year from now()) || '-' ||EXTRACT(month from now()) ||'-01' as date) ";
-		$sql .= "   	END ";
-		$sql .= "	END AND ";
-		$sql .= "	(f.status != 'E' AND f.status != 'C') AND ctt.status = 'A' ";
-		$sql .= "GROUP BY ano, mes ";
-		$sql .= "ORDER BY ano, mes ";
-		*/
-		
 		return ($this->bd->obtemRegistros ($sql));
 	}
 
@@ -231,7 +208,50 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		return($this->altera($dados,$filtro));
 
 	}
-
+	
+	public function obtemFaturamentoPorPeriodo($meses) {
+		$meses -= 1;
+		$sql = "SELECT ";
+		$sql .=   "extract('year' from data) as ano, extract('month' from data) as mes, ";
+		$sql .=   "sum(valor) as valor_documento, sum(desconto) as valor_desconto, ";
+		$sql .=   "sum(acrescimo) as valor_acrescimo, sum(valor_pago) as valor_pago ";
+		$sql .= "FROM ";
+		$sql .=   "cbtb_faturas f ";
+		$sql .= "WHERE ";
+		$sql .= "  f.status = 'P' AND f.data >= date_trunc('month',now() - interval '$meses month') AND f.data < now() ";
+		$sql .= "GROUP BY ";
+		$sql .= "  extract('year' from data), extract('month' from data)";
+		$sql .= "ORDER BY ";
+		$sql .= "  extract('year' from data), extract('month' from data)";
+		
+		//echo $sql;
+		
+		return ($this->bd->obtemRegistros($sql));
+	}
+	
+	public function obtemFaturamentoPorProduto($ano_select) {
+		if ($ano_select){
+			$ano_select1 += $ano_select++;
+		}
+		$sql = "SELECT ";
+		$sql .=   "p.tipo, extract('year' from f.data) as ano, extract('month' from f.data) as mes, ";
+		$sql .=   "sum(f.valor) as valor_documento, sum(f.desconto) as valor_desconto, ";
+		$sql .=   "sum(f.acrescimo) as valor_acrescimo, sum(f.valor_pago) as valor_pago ";
+		$sql .= "FROM ";
+		$sql .=   "cbtb_faturas f "; 
+		$sql .=   "INNER JOIN cbtb_cliente_produto cp ON cp.id_cliente_produto = f.id_cliente_produto ";
+		$sql .=   "INNER JOIN prtb_produto p ON cp.id_produto = p.id_produto ";
+		$sql .= "WHERE ";
+		$sql .=   "f.status = 'P' AND f.data >= '$ano_select1-01-01' ";
+		$sql .= "AND ";
+		$sql .=   "f.data < '$ano_select-01-01' ";
+		$sql .= "GROUP BY ";
+		$sql .=   "p.tipo, extract('year' from data), extract('month' from data)";
+		
+		echo $sql;
+		
+		return ($this->bd->obtemRegistros($sql));
+	}
 }
 
 ?>

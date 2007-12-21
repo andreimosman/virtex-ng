@@ -544,6 +544,11 @@
 				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];
 			}
 			return $return;
+			
+			//echo "<PRE>";
+		//	print_r($return);
+		//	echo "</PRE>";
+			
 		}
 
 		public function obtemAdesoesPorPeriodo($periodo) {
@@ -715,6 +720,21 @@
 
 		public function obtemStatusFatura(){
 			return $this->cbtb_fatura->enumStatusFatura();
+		}
+		
+		public function obtemFaturamentoPorPeriodo($periodo){
+			return $this->cbtb_fatura->obtemFaturamentoPorPeriodo($periodo);
+			
+			//echo "<PRE>";
+			//	print_r($periodo);
+			//echo "</PRE>";
+		}
+		
+		public function obtemFaturamentoPorProduto($ano_select){
+			return $this->cbtb_fatura->obtemFaturamentoPorProduto($ano_select);
+			//echo "<PRE>";
+			//	print_r($ano_select);
+			//echo "</PRE>";
 		}
 
 		public function obtemFaturaPorIdCobranca ($id_cobranca) {
