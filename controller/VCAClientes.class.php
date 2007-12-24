@@ -807,6 +807,9 @@
 					$acao = @$_REQUEST ['acao'];
 					$cobranca = VirtexModelo::factory("cobranca");
 					$erro = false;
+
+
+					$dadosLogin = $this->_login->obtem("dados");
 					
 					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_COBRANCA_AMORTIZACAO",false))) {
 						$desconto		= @$_REQUEST["desconto"];
@@ -819,16 +822,39 @@
 						
 						$url = "admin-clientes.php?op=contrato&tela=faturas&id_cliente=$id_cliente";
 						
+						// echo "Admin: " . $this->_login->
+
+						
 						try {
+						
+										
+							$senha_admin = @$_REQUEST["senha_admin"];
+							
+							if( !$senha_admin ) {
+								$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
+							} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+								$erro = "Operação não autorizada: SENHA NÃO CONFERE.";								
+							}
+							if($erro) throw new Exception($erro);
+								
+						
 							if( $cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
 									$reagendamento, $observacoes) ) {
+									$fluxo=VirtexPersiste::factory("cxtb_fluxo");
+									$fluxo->pagamentoComDinheiro($amortizar,$data_pagamento,$id_cobranca,$dadosLogin["admin"]);
 									$this->_view->atribui("url",$url);
 									$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
 									$this->_view->atribuiVisualizacao("msgredirect");
-							} else {
-								VirtexView::simpleRedirect($url);
+									if( $acao ) {
+										$erro = "";										
+									} else {
+										VirtexView::simpleRedirect($url);
+									}
 							}
 						} catch (ExcecaoModeloValidacao $e ) {
+							$this->_view->atribui ("msg_erro", $e->getMessage());
+							$erro = true;	
+						} catch (Exception $e ) {
 							$this->_view->atribui ("msg_erro", $e->getMessage());
 							$erro = true;	
 						}
@@ -836,6 +862,7 @@
 					
 					
 					$fatura = $cobranca->obtemFaturaPorIdCobranca ($id_cobranca);
+
 					
 					foreach($fatura as $k => $v){
 						if("data"  == $k ) {

@@ -6,14 +6,17 @@
 	class PERSISTE_CXTB_FLUXO extends VirtexPersiste {
 
 
-		public static TIPO_ORIGEM_RETORNO = 'R';
-		public static TIPO_ORIGEM_MANUAL  = 'M';
+		public static $TIPO_ORIGEM_RETORNO = 'R';
+		public static $TIPO_ORIGEM_MANUAL  = 'M';
 		
-		public static ESPECIE_DINHEIRO    = 'D';
-		public static ESPECIE_TEF         = 'T';
-		public static ESPECIE_CHEQUE      = 'C';
-		public static ESPECIE_BOLETO      = 'B';
-		public static ESPECIE_CARTAO      = 'R';
+		public static $TIPO_MOV_ENTRADA    = 'E';
+		public static $TIPO_MOV_SAIDA      = 'S';
+		
+		public static $ESPECIE_DINHEIRO    = 'D';
+		public static $ESPECIE_TEF         = 'T';
+		public static $ESPECIE_CHEQUE      = 'C';
+		public static $ESPECIE_BOLETO      = 'B';
+		public static $ESPECIE_CARTAO      = 'R';
 	
 		public function __construct($bd=null) {
 			parent::__construct($bd);
@@ -63,6 +66,7 @@
 		public function pagamentoComDinheiro($valor,$data_pagamento,$id_cobranca,$admin) {
 			$dados = array(
 							"valor" => $valor, 
+							"tipo_movimentacao" => self::$TIPO_MOV_ENTRADA,
 							"id_cobranca" => $id_cobranca, 							
 							"origem" => $admin, 
 							"tipo_origem" => self::$TIPO_ORIGEM_MANUAL,
@@ -80,6 +84,7 @@
 		public function pagamentoViaBoleto($valor,$data_registro,$data_compensacao,$id_cobranca,$arquivo) {
 			$dados = array(
 							"valor" => $valor, 
+							"tipo_movimentacao" => self::$TIPO_MOV_ENTRADA,
 							"id_cobranca" => $id_cobranca, 							
 							"origem" => $arquivo, 
 							"tipo_origem" => self::$TIPO_ORIGEM_RETORNO,

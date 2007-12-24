@@ -715,7 +715,11 @@
 				$cnt = $contas->obtemContasPorContrato($retorno[$i]["id_cliente_produto"]);
 				$retorno[$i]["contas"] = $cnt;
 			}
+			//echo "<PRE>";
+			//print_r($retorno);
+			//echo "</PRE>";
 			return $retorno;
+			
 		}
 
 		public function obtemStatusFatura(){

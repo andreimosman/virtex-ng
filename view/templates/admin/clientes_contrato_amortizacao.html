@@ -170,7 +170,7 @@
 <table border="0">
 	{if $msg_erro}
 	<tr>
-		<td colspan='2' class="erro">{$msg_erro}</td>
+		<td colspan='2' class="erro" align="center">{$msg_erro}</td>
 	</tr>
 	{/if}
 	<tr>
@@ -259,11 +259,23 @@
 					</td>
 				</tr>
 			</table>
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%">
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação</th>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+				</tr>
+				<tr>
+					<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+			</table>
 		</td>
 	</tr>
-	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
+
+
 	<tr>
 		<td colspan="2" align="center">
 			<input name="botao_cancelar" type="button" class="botao" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
