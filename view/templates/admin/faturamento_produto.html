@@ -9,9 +9,11 @@
 <div align="center">
 
 <form action="admin-faturamento.php?op=relatorios&relatorio=por_produto" method="post">
-<p align="right" id="titu"><label>Escolha o ano:</label>&nbsp; 
+<p align="right" id="titu"><label>Escolha o ano:</label>&nbsp;
 	<select name="ano_select" onchange="filtro(this)">
-		<option value="2007"}>2007</option>
+		{foreach from=$anos_fatura item=i}
+			<option value={$i.ano}  {if $ano_select == $i.ano} SELECTED{/if}>{$i.ano}</option>
+		{/foreach}
 	</select>
 	<input type="submit" value="OK">
 </p>
@@ -36,60 +38,33 @@
 			<th>OUT</th>
 			<th>NOV</th>
 			<th>DEZ</th>
-			
+
 		</tr>
-		{foreach from=$tipo key=p item=m}
+
 		<tr>
 			<td align="center">Banda Larga</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
-			<td align="center">{$m.valor_pago}</td>
+			{foreach from=$dados_bl key=p item=m}
+				<td align="center">{$m}</td>
+			{/foreach}
 		</tr>
-		{/foreach}
+
 
 		<tr>
 			<td align="center">Discado</td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
+			{foreach from=$dados_d key=p item=m}
+				<td align="center">{$m}</td>
+			{/foreach}
 		</tr>
-		
+
 		<tr>
 			<td align="center">Hospedagem</td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
+			{foreach from=$dados_h key=p item=m}
+				<td align="center">{$m}</td>
+			{/foreach}
 		</tr>
 	</table>
-	
-	
+
+
 </div>
 
 </body>
