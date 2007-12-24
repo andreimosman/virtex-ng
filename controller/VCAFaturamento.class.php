@@ -31,6 +31,37 @@ class VCAFaturamento extends VirtexControllerAdmin {
 
 		if("previsao" == $relatorio){
 
+			$ano_select = @$_REQUEST["ano_select"];
+			$cobranca = VirtexModelo::factory("cobranca");
+			$lista = $cobranca->obtemPrevisaoFaturamento($ano_select);
+			$anos_fatura = $cobranca->obtemAnosFatura();
+
+			$dados = array();
+			$soma = array();
+
+
+			for($i=1; $i<=31; $i++) {
+				$dados[$i] = array();
+
+				for($j=1; $j<=12; $j++) {
+					$dados[$i][$j] = "0.00";
+					$soma[$j]="0.00";
+				}
+			}
+
+			foreach ($lista as $chave => $valor) {
+				$vp = $valor["valor_pago"];
+				$dados[$valor["dia"]][$valor["mes"]] = $vp ? $vp : "0.00";
+				$soma[$valor["mes"]] += $vp;
+			}
+
+
+			$this->_view->atribui("soma", $soma);
+			$this->_view->atribui("dados", $dados);
+			$this->_view->atribui("ano_select", $ano_select);
+			$this->_view->atribui("ano_select1", $ano_select1);
+			$this->_view->atribui("anos_fatura", $anos_fatura);
+
 
 		}elseif ("faturamento" == $relatorio){
 

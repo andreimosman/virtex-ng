@@ -35,20 +35,20 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 				     f.id_cobranca
 				FROM cbtb_faturas f
 			  INNER JOIN cbtb_cliente_produto p ON f.id_cliente_produto = p.id_cliente_produto
-			  
+
 				";
 
 		$where = array ();
 
 		if ($id_cliente)
 		$where [] = 'p.id_cliente = ' . $this->bd->escape ($id_cliente);
-			
+
 		if ($id_cliente_produto)
 		$where [] = 'f.id_cliente_produto = ' . $this->bd->escape ($id_cliente_produto);
 
 		if ($id_carne)
 		$where [] = 'f.id_carne = ' . $this->bd->escape ($id_carne);
-			
+
 		$q .= " WHERE " . implode (" AND ", $where);
 		return ($this->bd->obtemRegistros ($q));
 	}
@@ -61,11 +61,11 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		$sql .= "FROM ";
 		$sql .= "	cbtb_faturas f INNER JOIN cbtb_contrato ctt USING(id_cliente_produto)  ";
 		$sql .= "";
-		$sql .= "WHERE ";		
+		$sql .= "WHERE ";
 		$sql .= "   f.status not in ('E', 'C') AND CASE WHEN f.status = 'P' THEN f.data_pagamento > f.data ELSE f.data < now() END ";
 		$sql .= "GROUP BY ano, mes ";
 		$sql .= "ORDER BY ano, mes ";
-		
+
 		return ($this->bd->obtemRegistros ($sql));
 	}
 
@@ -83,17 +83,17 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 public function obtemFaturasAtrasadasDetalhes($periodo){
 
 		// $periodo recebe $mes/$ano;
-		
+
 		list($ano,$mes) = explode("-",$periodo);
-		
+
 		if( $mes < 10 ) {
 			$mes = "0".$mes;
 		}
-		
-		
+
+
 		$data1 = '01/'.$mes."/".$ano;
 		$data2 = MData::adicionaMes($data1,1);
-		
+
 		$data1 = MData::ptBR_to_ISO($data1);
 		$data2 = MData::ptBR_to_ISO($data2);
 
@@ -113,9 +113,9 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		$sql .= "   CASE WHEN f.status = 'P' THEN f.data_pagamento > f.data ELSE f.data < now() END ";
 		$sql .= "ORDER BY f.data DESC";
 
-		
+
 		$retorno = $this->bd->obtemRegistros ($sql);
-		
+
 		return ($retorno);
 	}
 
@@ -132,12 +132,12 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 
 
 	public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
-	
+
 			$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
 			$sql .= "WHERE ";
 			$sql .= "	cod_barra IS NULL ";
-	
-	
+
+
 			if($periodo == "PQ") {		//PRRIMEIRA QUINZENA
 				$sql .= " AND data BETWEEN '$data_referencia-01' AND '$data_referencia-15' ";
 			} else if ($periodo == "SQ") {	//SEGUNDA QUINZENA
@@ -145,14 +145,14 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			} else { 		// MES COMPLETO
 				$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
 			}
-	
+
 			return ($this->bd->obtemRegistros($sql));
-			
+
 	}
-	
-			
+
+
 	public	function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo,$id_forma_pagamento) {
-	
+
 		$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
 		$sql .= "WHERE ";
 		$sql .= "	cod_barra IS NULL ";
@@ -171,44 +171,44 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			$sql .= " AND id_forma_pagamento='$id_forma_pagamento' ";
 
 		}
-		
+
 		///echo "SQL: $sql<br>\n";
 
 
 		return ($this->bd->obtemRegistros($sql));
 	}
-	
+
 	public function obtemFaturasPorRemessa($id_remessa) {
-	
+
 		$sql  = " SELECT ";
 		$sql .="   r.id_remessa, f.id_cobranca, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra ";
 		$sql .=" FROM ";
 		$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON f.id_cobranca = r.id_cobranca ";
 		$sql .=" WHERE ";
 		$sql .="   id_remessa = $id_remessa ";
-		
+
 		echo $sql;
-		
-		
+
+
 
 		return ($this->bd->obtemRegistros($sql));
-	
+
 	}
-	
+
 	public function InsereCodigoBarraseLinhaDigitavel($codigo_barra,$linha_digitavel,$id_cobranca){
-	
+
 		$dados = array( "cod_barra" => $codigo_barra, "linha_digitavel" => $linha_digitavel );
 		$filtro = array("id_cobranca" => $id_cobranca );
-		
+
 		/*echo $codigo_barra;
 		echo $linha_digitavel;
 		echo $id_cobranca;
 		echo "oie";*/
-		
+
 		return($this->altera($dados,$filtro));
 
 	}
-	
+
 	public function obtemFaturamentoPorPeriodo($meses) {
 		$meses -= 1;
 		$sql = "SELECT ";
@@ -223,12 +223,12 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		$sql .= "  extract('year' from data), extract('month' from data)";
 		$sql .= "ORDER BY ";
 		$sql .= "  extract('year' from data), extract('month' from data)";
-		
+
 		//echo $sql;
-		
+
 		return ($this->bd->obtemRegistros($sql));
 	}
-	
+
 	public function obtemFaturamentoPorProduto($ano_select) {
 		if ($ano_select){
 			$ano_select1 += $ano_select++;
@@ -238,7 +238,7 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		$sql .=   "sum(f.valor) as valor_documento, sum(f.desconto) as valor_desconto, ";
 		$sql .=   "sum(f.acrescimo) as valor_acrescimo, sum(f.valor_pago) as valor_pago ";
 		$sql .= "FROM ";
-		$sql .=   "cbtb_faturas f "; 
+		$sql .=   "cbtb_faturas f ";
 		$sql .=   "INNER JOIN cbtb_cliente_produto cp ON cp.id_cliente_produto = f.id_cliente_produto ";
 		$sql .=   "INNER JOIN prtb_produto p ON cp.id_produto = p.id_produto ";
 		$sql .= "WHERE ";
@@ -247,10 +247,31 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		$sql .=   "f.data < '$ano_select-01-01' ";
 		$sql .= "GROUP BY ";
 		$sql .=   "p.tipo, extract('year' from data), extract('month' from data)";
-		
-		echo $sql;
-		
+
 		return ($this->bd->obtemRegistros($sql));
+	}
+
+
+	public function obtemPrevisaoFaturamento($ano_select) {
+
+		if ($ano_select){
+			$ano_select1 = $ano_select+1;
+		}
+
+		$sql  = "SELECT ";
+		$sql .= "extract('year' from f.data) as ano, extract('month' from f.data) as mes, ";
+		$sql .= "extract('day' from f.data) as dia,  ";
+		$sql .= "sum(f.valor) as valor_documento, sum(f.desconto) as valor_desconto, ";
+		$sql .= "sum(f.acrescimo) as valor_acrescimo, sum(f.valor_pago) as valor_pago ";
+		$sql .= "FROM ";
+		$sql .= "   cbtb_faturas f  ";
+		$sql .= "WHERE ";
+		$sql .= "   f.status not in ('E','C') AND f.data >= '$ano_select-01-01' AND f.data < '$ano_select1-01-01' ";
+		$sql .= "GROUP BY ";
+		$sql .= "   extract('year' from data), extract('month' from data), extract('day' from data) ";
+
+		return ($this->bd->obtemRegistros($sql));
+
 	}
 }
 
