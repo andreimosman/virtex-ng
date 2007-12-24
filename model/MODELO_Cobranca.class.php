@@ -544,11 +544,11 @@
 				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];
 			}
 			return $return;
-			
+
 			//echo "<PRE>";
 		//	print_r($return);
 		//	echo "</PRE>";
-			
+
 		}
 		
 		public function obtemEvolucao($periodo) {
@@ -732,10 +732,10 @@
 
 
 		public function obtemFaturasAtrasadasDetalhes($periodo){
-			
+
 			$retorno = $this->cbtb_fatura->obtemFaturasAtrasadasDetalhes($periodo);
 
-			$contas = VirtexModelo::factory("contas");			
+			$contas = VirtexModelo::factory("contas");
 			for($i=0;$i<count($retorno);$i++) {
 				$cnt = $contas->obtemContasPorContrato($retorno[$i]["id_cliente_produto"]);
 				$retorno[$i]["contas"] = $cnt;
@@ -750,20 +750,24 @@
 		public function obtemStatusFatura(){
 			return $this->cbtb_fatura->enumStatusFatura();
 		}
-		
+
 		public function obtemFaturamentoPorPeriodo($periodo){
 			return $this->cbtb_fatura->obtemFaturamentoPorPeriodo($periodo);
-			
+
 			//echo "<PRE>";
 			//	print_r($periodo);
 			//echo "</PRE>";
 		}
-		
+
 		public function obtemFaturamentoPorProduto($ano_select){
 			return $this->cbtb_fatura->obtemFaturamentoPorProduto($ano_select);
 			//echo "<PRE>";
 			//	print_r($ano_select);
 			//echo "</PRE>";
+		}
+
+		public function obtemPrevisaoFaturamento($ano_select) {
+			return ($this->cbtb_fatura->obtemPrevisaoFaturamento($ano_select));
 		}
 
 		public function obtemFaturaPorIdCobranca ($id_cobranca) {
@@ -848,7 +852,7 @@
 		public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
 					return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo));
 		}
-		
+
 		public function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento) {
 					return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento));
 		}
@@ -868,10 +872,12 @@
 		public function obtemUltimasRemessas($quantidade) {
 			return ($this->cbtb_lote_cobranca->obtemUltimasRemessas($quantidade));
 		}
-		
+
 		public function obtemFaturasPorRemessa($id_remessa) {
-					return ($this->cbtb_fatura->obtemFaturasPorRemessa($id_remessa));
+			return ($this->cbtb_fatura->obtemFaturasPorRemessa($id_remessa));
 		}
+
+
 
 	}
 
