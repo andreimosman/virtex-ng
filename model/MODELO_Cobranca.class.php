@@ -550,6 +550,31 @@
 		//	echo "</PRE>";
 			
 		}
+		
+		public function obtemEvolucao($periodo) {
+			$adesoes = $this->obtemContratosIncluidosPorPeriodo($periodo);
+			$cancelamentos = $this->obtemContratosCanceladosPorPeriodo($periodo);
+			
+			$retorno = array();
+			
+			//for($i=0;$i<count($a
+			
+			
+			echo "<pre>";
+			print_r($adesoes);
+			print_r($cancelamentos);
+			echo "</pre>";
+			return(array());
+		
+		
+		
+			// return ($this->cbtb_contrato->obtemEvolucao($periodo));
+			
+			//echo "OIE";
+			//echo "<PRE>";
+			//print_r($periodo);
+			//echo "</PRE>";
+		}
 
 		public function obtemAdesoesPorPeriodo($periodo) {
 			return ($this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo));

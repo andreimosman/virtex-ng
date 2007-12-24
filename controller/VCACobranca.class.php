@@ -338,6 +338,17 @@ class VCACobranca extends VirtexControllerAdmin {
 			$tipo_produto = @$_REQUEST["tipo_produto"];
 			$rs = $contas->obtemClientesPorTipoConta($tipo_produto);
 			$this->_view->atribui("clientes", $rs);
+		
+		} elseif("evolucao" == $relatorio) {
+			$cobranca = VirtexModelo::factory("cobranca");
+			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
+			$this->_view->atribui("periodo", $periodo);
+			//$lista = $cobranca->obtemContratosCanceladosPorPeriodo($periodo);
+			//$lista = $cobranca->obtemAdesoesPorPeriodo($tipo_properiododuto);
+			
+			$evolucao = $cobranca->obtemEvolucao($periodo);
+			
+			$this->_view->atribui("lista", $lista);
 		}
 	}
 }

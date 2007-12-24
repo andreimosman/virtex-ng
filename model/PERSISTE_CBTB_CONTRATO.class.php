@@ -26,14 +26,26 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		//TODO: Essa query não está correta e deve ser refeita. O retorno dessa função deve ser a quantidade de novo contratos por tipo de produto 
 		
 		$sql = " SELECT \n";
-		$sql.= " 	id_cliente_produto, \n";
-		$sql.= " 	data_contratacao(cbtb_contrato.id_cliente_produto) as data_contratacao, \n";
+
+		$sql.= " 	count(*) as num_contratos, \n";
+		$sql.= " 	trim(tipo_produto) as c.tipo_produto, \n";
+		$sql.= "	EXTRACT( 'month' FROM data_contratacao(cbtb_contrato.id_cliente_produto)) as mes, \n";
+		$sql.= "	EXTRACT( 'year' FROM data_contratacao(cbtb_contrato.id_cliente_produto)) as ano, \n";
 		$sql.= " 	tipo_produto \n";
 		$sql.= " FROM  \n";
-		$sql.= " 	cbtb_contrato \n";
+		$sql.= " 	cbtb_contrato c \n";
 		$sql.= " WHERE \n";
-		$sql.= " 	status = 'A' and \n";
 		$sql.= "	data_contratacao(id_cliente_produto) between now() - INTERVAL '$intervalo months' AND now() \n";
+		$sql.= " GROUP BY \n";
+		$sql.= "	c.tipo_produto, \n";
+		$sql.= "	ano, \n";
+		$sql.= "	mes \n";
+		$sql.= " ORDER BY \n";
+		$sql.= "	c.tipo_produto, \n";
+		$sql.= "	ano, \n";
+		$sql.= "	mes  \n";
+		
+		echo "SQL: $sql\n";
 		
 		return $this->bd->obtemRegistros($sql);
 			
@@ -61,6 +73,33 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql.= "	mes  \n";
 		return $this->bd->obtemRegistros($sql);
 	}
+	
+	/*public function obtemEvolucao($periodo){
+		
+		$sql = " SELECT \n";
+		$sql.= " 	count(*) as num_contratos, \n";
+		$sql.= " 	trim(tipo_produto) as tipo_produto, \n";
+		$sql.= "	EXTRACT( 'month' FROM data_alt_status) as mes, \n";
+		$sql.= "	EXTRACT( 'year' FROM data_alt_status) as ano \n";
+		$sql.= " 	id_cliente_produto, \n";
+		$sql.= " 	data_contratacao(cbtb_contrato.id_cliente_produto) as data_contratacao, \n";
+		$sql.= " 	tipo_produto \n";
+		$sql.= " FROM \n";
+		$sql.= "	cbtb_contrato \n";
+		$sql.= " WHERE \n";
+ 		$sql.= "	data_alt_status between now() - INTERVAL '$intervalo months' AND now() \n";
+		$sql.= " 	AND status = 'A' and \n";
+		$sql.= "	AND status = '".PERSISTE_CBTB_CONTRATO::$CANCELADO."' \n";
+		$sql.= " GROUP BY \n";
+		$sql.= "	tipo_produto, \n";
+		$sql.= "	ano, \n";
+		$sql.= "	mes \n";
+		$sql.= " ORDER BY \n";
+		$sql.= "	tipo_produto, \n";
+		$sql.= "	ano, \n";
+		$sql.= "	mes  \n";
+		return $this->bd->obtemRegistros($sql);
+	}*/
 
 }
 
