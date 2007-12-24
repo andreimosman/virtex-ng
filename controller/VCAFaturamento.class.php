@@ -65,7 +65,7 @@ class VCAFaturamento extends VirtexControllerAdmin {
 			
 			
 			echo "<pre>";
-			print_r($tipo);
+			//print_r($tipo);
 			echo "</pre>";
 			echo "<pre>";
 			print_r($dados);

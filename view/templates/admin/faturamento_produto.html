@@ -1,0 +1,96 @@
+<html>
+<head>
+	<title></title>
+
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="suporte_header.html"} <br /><br />
+
+<div align="center">
+
+<form action="admin-faturamento.php?op=relatorios&relatorio=por_produto" method="post">
+<p align="right" id="titu"><label>Escolha o ano:</label>&nbsp; 
+	<select name="ano_select" onchange="filtro(this)">
+		<option value="2007"}>2007</option>
+	</select>
+	<input type="submit" value="OK">
+</p>
+</form>
+
+
+	<table class="lista" width="60%" border="0">
+		<tr>
+			<th rowspan="2">Tipo</th>
+			<th colspan="13">Meses</th>
+		</tr>
+		<tr>
+			<th>JAN</th>
+			<th>FEV</th>
+			<th>MAR</th>
+			<th>ABR</th>
+			<th>MAI</th>
+			<th>JUN</th>
+			<th>JUL</th>
+			<th>AGO</th>
+			<th>SET</th>
+			<th>OUT</th>
+			<th>NOV</th>
+			<th>DEZ</th>
+			
+		</tr>
+		{foreach from=$tipo key=p item=m}
+		<tr>
+			<td align="center">Banda Larga</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+			<td align="center">{$m.valor_pago}</td>
+		</tr>
+		{/foreach}
+
+		<tr>
+			<td align="center">Discado</td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+		</tr>
+		
+		<tr>
+			<td align="center">Hospedagem</td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+			<td align="center"></td>
+		</tr>
+	</table>
+	
+	
+</div>
+
+</body>
+</html>
