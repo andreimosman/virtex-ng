@@ -34,15 +34,15 @@
 		<th>Banda Larga</th>
 		<th>Discado</th>
 		<th>Hospedagem</th>
-		<th>Cancelamentos</th>
+		<th>TOTAL</th>
 	</tr>
-	{foreach from=$meses key=p item=m}
+	{foreach from=$cancelados key=d item=cancelado}
 	<tr class='{cycle values="linhai,linhap"}'>
-		<td class="cellInfoCenter">{$p}</td>
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].BL|default:0}</td>
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].D|default:0}</td>		
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].H|default:0}</td>
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].total|default:0}</td>
+		<td class="cellInfoCenter">{$cancelado.mes}/{$cancelado.ano}</td>
+		<td class="cellInfoCenter">{$cancelado.BL.num_contratos|default:0}</td>
+		<td class="cellInfoCenter">{$cancelado.D.num_contratos|default:0}</td>		
+		<td class="cellInfoCenter">{$cancelado.H.num_contratos|default:0}</td>
+		<td class="cellInfoCenter">{$cancelado.BL.num_contratos+$cancelado.D.num_contratos+$cancelado.H.num_contratos|default:0}</td>
 	</tr>
 	{/foreach}
 </table>
