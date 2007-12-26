@@ -4,7 +4,7 @@
 {literal}	
 	
 	function filtro(filtro){
-		window.open("admin-cobranca.php?op=relatorios&relatorio=cancelados&periodo="+filtro.value,"conteudo");
+		window.open("admin-cobranca.php?op=relatorios&relatorio=adesoes&periodo="+filtro.value,"conteudo");
 		
 	}
 {/literal}
@@ -34,15 +34,15 @@
 		<th>Banda Larga</th>
 		<th>Discado</th>
 		<th>Hospedagem</th>
-		<th>Cancelamentos</th>
+		<th>TOTAL</th>
 	</tr>
-	{foreach from=$meses key=p item=m}
+	{foreach from=$adesoes key=k item=adesao}
 	<tr class='{cycle values="linhai,linhap"}'>
-		<td class="cellInfoCenter">{$p}</td>
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].BL|default:0}</td>
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].D|default:0}</td>		
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].H|default:0}</td>
-		<td class="cellInfoCenter">{$cancelados[$m.ano][$m.mes].total|default:0}</td>
+		<td class="cellInfoCenter">{$adesao.mes}/{$adesao.ano}</td>
+		<td class="cellInfoCenter">{$adesao.BL.num_contratos|default:0}</td>
+		<td class="cellInfoCenter">{$adesao.D.num_contratos|default:0}</td>		
+		<td class="cellInfoCenter">{$adesao.H.num_contratos|default:0}</td>
+		<td class="cellInfoCenter">{$adesao.BL.num_contratos+$adesao.D.num_contratos+$adesao.H.num_contratos|default:0}</td>
 	</tr>
 	{/foreach}
 </table>
