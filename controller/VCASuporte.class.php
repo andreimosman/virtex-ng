@@ -246,6 +246,25 @@
 					$contas = VirtexModelo::factory('contas');
 					$lista = $contas->obtemContasSemMac();
 					
+					
+					$podeGravarConta = $this->requirePrivGravacao("_CLIENTES_BANDALARGA",false);
+					$this->_view->atribui("podeGravarConta",$podeGravarConta);
+					
+					$bloquear = @$_REQUEST["bloquear"];
+					$acao = @$_REQUEST["acao"];
+					
+					if( $acao == "bloquear" ) {
+
+						$this->requirePrivGravacao("_CLIENTES_BANDALARGA");
+					
+						if( $bloquear ) {
+							foreach( $bloquear as $id_conta => $lixo ) {
+								//echo "BLOQUEANDO: $id_conta<br>\n";
+								$contas->alteraContaBandaLarga($id_conta, NULL, 'B');
+							}
+						}
+					}
+					
 					$this->_view->atribui("lista",$lista);
 					
 					break;
