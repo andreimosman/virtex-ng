@@ -22,20 +22,46 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 	}
 	
+	
+	/**
+	 * Preenche o período.
+	 */
+	protected function preenchePeriodo($arr,$periodo) {
+		$data = date("d/m/Y");
+		for($i=0;$i<$periodo;$i++) {
+			
+			list($d,$m,$a) = explode("/",$data);
+			
+			$chave = "$a-$m";
+			
+			if( !@$arr[$chave] ) {
+				$arr[$chave] = array();
+			}
+
+			$data = MData::adicionaMes($data,-1);
+
+		}
+		
+		krsort($arr);
+		
+		return($arr);
+	}
+	
 	public function obtemAdesoesPorPeriodo($intervalo){
 		//TODO: Essa query não está correta e deve ser refeita. O retorno dessa função deve ser a quantidade de novo contratos por tipo de produto 
 		
+		$intsql = $intervalo - 1;
+		
 		$sql = " SELECT \n";
-
 		$sql.= " 	count(*) as num_contratos, \n";
-		$sql.= " 	trim(tipo_produto) as c.tipo_produto, \n";
-		$sql.= "	EXTRACT( 'month' FROM data_contratacao(cbtb_contrato.id_cliente_produto)) as mes, \n";
-		$sql.= "	EXTRACT( 'year' FROM data_contratacao(cbtb_contrato.id_cliente_produto)) as ano, \n";
+		$sql.= " 	trim(c.tipo_produto) as tipo_produto, \n";
+		$sql.= "	EXTRACT( 'month' FROM data_contratacao(c.id_cliente_produto)) as mes, \n";
+		$sql.= "	EXTRACT( 'year' FROM data_contratacao(c.id_cliente_produto)) as ano, \n";
 		$sql.= " 	tipo_produto \n";
 		$sql.= " FROM  \n";
 		$sql.= " 	cbtb_contrato c \n";
 		$sql.= " WHERE \n";
-		$sql.= "	data_contratacao(id_cliente_produto) between now() - INTERVAL '$intervalo months' AND now() \n";
+		$sql.= "	data_contratacao(c.id_cliente_produto) < now() AND data_contratacao(c.id_cliente_produto) > now() - INTERVAL '$intsql months' \n";
 		$sql.= " GROUP BY \n";
 		$sql.= "	c.tipo_produto, \n";
 		$sql.= "	ano, \n";
@@ -45,13 +71,30 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql.= "	ano, \n";
 		$sql.= "	mes  \n";
 		
-		echo "SQL: $sql\n";
+		$adesoes = $this->bd->obtemRegistros($sql);
+		$retorno = array();
 		
-		return $this->bd->obtemRegistros($sql);
+		
+		for($i=0;$i<count($adesoes);$i++) {
+			if( $adesoes[$i]["mes"] < 10 ) $adesoes[$i]["mes"] = "0".$adesoes[$i]["mes"];
+			$adesoes[$i]["tipo_produto"] = trim($adesoes[$i]["tipo_produto"]);
+			$retorno[ $adesoes[$i]["ano"] . "-" . $adesoes[$i]["mes"] ][ $adesoes[$i]["tipo_produto"] ] = $adesoes[$i];
+		}
+		
+		$retorno = $this->preenchePeriodo($retorno,$intervalo);
+
+		//echo "<pre>";
+		//print_r($retorno);
+		//echo "</pre>";
+
+		
+		return( $retorno );
 			
 	}
 
 	public function obtemCanceladosPorPeriodo($intervalo){
+
+		$intsql = $intervalo - 1;
 		
 		$sql = " SELECT \n";
 		$sql.= " 	count(*) as num_contratos, \n";
@@ -61,7 +104,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql.= " FROM \n";
 		$sql.= "	cbtb_contrato \n";
 		$sql.= " WHERE \n";
- 		$sql.= "	data_alt_status between now() - INTERVAL '$intervalo months' AND now() \n";
+ 		$sql.= "	data_alt_status between now() - INTERVAL '$intsql months' AND now() \n";
 		$sql.= "	AND status = '".PERSISTE_CBTB_CONTRATO::$CANCELADO."' \n";
 		$sql.= " GROUP BY \n";
 		$sql.= "	tipo_produto, \n";
@@ -71,36 +114,67 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql.= "	tipo_produto, \n";
 		$sql.= "	ano, \n";
 		$sql.= "	mes  \n";
-		return $this->bd->obtemRegistros($sql);
+		
+		$cancelamentos = $this->bd->obtemRegistros($sql);
+		
+		$retorno = array();
+		
+		for($i=0;$i<count($cancelamentos);$i++) {
+			if( $cancelamentos[$i]["mes"] < 10 ) $cancelamentos[$i]["mes"] = "0".$cancelamentos[$i]["mes"];
+			$cancelamentos[$i]["tipo_produto"] = trim($cancelamentos[$i]["tipo_produto"]);
+			$retorno[ $cancelamentos[$i]["ano"] . "-" . $cancelamentos[$i]["mes"] ][ $cancelamentos[$i]["tipo_produto"] ] = $cancelamentos[$i];
+		}
+
+		$retorno = $this->preenchePeriodo($retorno,$intervalo);
+
+		//echo "<pre>";
+		//print_r($retorno);
+		//echo "</pre>";
+		
+
+		return ($retorno);
 	}
 	
-	/*public function obtemEvolucao($periodo){
+	public function obtemEvolucao($periodo) {
+		$adesoes = $this->obtemAdesoesPorPeriodo($periodo);
+		$cancelamentos = $this->obtemCanceladosPorPeriodo($periodo);
 		
-		$sql = " SELECT \n";
-		$sql.= " 	count(*) as num_contratos, \n";
-		$sql.= " 	trim(tipo_produto) as tipo_produto, \n";
-		$sql.= "	EXTRACT( 'month' FROM data_alt_status) as mes, \n";
-		$sql.= "	EXTRACT( 'year' FROM data_alt_status) as ano \n";
-		$sql.= " 	id_cliente_produto, \n";
-		$sql.= " 	data_contratacao(cbtb_contrato.id_cliente_produto) as data_contratacao, \n";
-		$sql.= " 	tipo_produto \n";
-		$sql.= " FROM \n";
-		$sql.= "	cbtb_contrato \n";
-		$sql.= " WHERE \n";
- 		$sql.= "	data_alt_status between now() - INTERVAL '$intervalo months' AND now() \n";
-		$sql.= " 	AND status = 'A' and \n";
-		$sql.= "	AND status = '".PERSISTE_CBTB_CONTRATO::$CANCELADO."' \n";
-		$sql.= " GROUP BY \n";
-		$sql.= "	tipo_produto, \n";
-		$sql.= "	ano, \n";
-		$sql.= "	mes \n";
-		$sql.= " ORDER BY \n";
-		$sql.= "	tipo_produto, \n";
-		$sql.= "	ano, \n";
-		$sql.= "	mes  \n";
-		return $this->bd->obtemRegistros($sql);
-	}*/
+		$retorno = array();
+		
+		foreach( $adesoes as $chave => $adesao ) {
+			// echo "CHAVE: $chave<br>\n";
+			list($retorno[$chave]["ano"],$retorno[$chave]["mes"]) = explode("-",$chave);
+			
+			// Banda Larga
+			$retorno[$chave]["BL"]["adesoes"] = (int) @$adesoes[$chave]["BL"]["num_contratos"];
+			$retorno[$chave]["BL"]["cancelamentos"] = (int) @$cancelamentos[$chave]["BL"]["num_contratos"];
+			$retorno[$chave]["BL"]["evolucao"] = $retorno[$chave]["BL"]["adesoes"] - $retorno[$chave]["BL"]["cancelamentos"];
 
+			// Discado
+			$retorno[$chave]["D"]["adesoes"] = (int) @$adesoes[$chave]["D"]["num_contratos"];
+			$retorno[$chave]["D"]["cancelamentos"] = (int) @$cancelamentos[$chave]["D"]["num_contratos"];
+			$retorno[$chave]["D"]["evolucao"] = $retorno[$chave]["D"]["adesoes"] - $retorno[$chave]["D"]["cancelamentos"];
+ 
+			// Hospedagem
+			$retorno[$chave]["H"]["adesoes"] = (int) @$adesoes[$chave]["H"]["num_contratos"];
+			$retorno[$chave]["H"]["cancelamentos"] = (int) @$cancelamentos[$chave]["H"]["num_contratos"];
+			$retorno[$chave]["H"]["evolucao"] = $retorno[$chave]["H"]["adesoes"] - $retorno[$chave]["H"]["cancelamentos"];
+			
+			// TOTAIS
+			$retorno[$chave]["total"]["adesoes"] = $retorno[$chave]["BL"]["adesoes"] + $retorno[$chave]["D"]["adesoes"] + $retorno[$chave]["H"]["adesoes"];
+			$retorno[$chave]["total"]["cancelamentos"] = $retorno[$chave]["BL"]["cancelamentos"] + $retorno[$chave]["D"]["cancelamentos"] + $retorno[$chave]["H"]["cancelamentos"];
+			$retorno[$chave]["total"]["evolucao"] = $retorno[$chave]["total"]["adesoes"] - $retorno[$chave]["total"]["cancelamentos"];
+			
+		}
+
+		//echo "<pre>";
+		//print_r($retorno);
+		//echo "</pre>";
+		
+		return($retorno);
+
+	}
+	
 }
 
 ?>

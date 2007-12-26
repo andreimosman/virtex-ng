@@ -521,63 +521,16 @@
 			return($res);
 		}
 
-		public function obtemContratosIncluidosPorPeriodo($periodo){
-			$rs = $this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo);
-			$return = array();
-			foreach($rs as $row){
-				$tipo = $row["tipo_produto"];
-				list($ano,$mes,$dia) = $row["data_contratacao"];
-				$return[$ano][$mes][$tipo] = $row["num_contratos"];
-				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];
-			}
-			return $return;
+		public function obtemAdesoesPorPeriodo($periodo){
+			return( $this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo) );
 		}
 
-		public function obtemContratosCanceladosPorPeriodo($periodo){
-			$rs = $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo);
-			$return = array();
-			foreach($rs as $row){
-				$tipo = $row["tipo_produto"];
-				$ano = $row["ano"];
-				$mes = $row["mes"];
-				$return[$ano][$mes][$tipo] = $row["num_contratos"];
-				$return[$ano][$mes]["total"] = isset($return[$ano][$mes]["total"]) ? $return[$ano][$mes]["total"] + $row["num_contratos"] : $row["num_contratos"];
-			}
-			return $return;
-
-			//echo "<PRE>";
-		//	print_r($return);
-		//	echo "</PRE>";
-
+		public function obtemCancelamentosPorPeriodo($periodo){
+			return( $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo) );
 		}
 		
-		public function obtemEvolucao($periodo) {
-			$adesoes = $this->obtemContratosIncluidosPorPeriodo($periodo);
-			$cancelamentos = $this->obtemContratosCanceladosPorPeriodo($periodo);
-			
-			$retorno = array();
-			
-			//for($i=0;$i<count($a
-			
-			
-			echo "<pre>";
-			print_r($adesoes);
-			print_r($cancelamentos);
-			echo "</pre>";
-			return(array());
-		
-		
-		
-			// return ($this->cbtb_contrato->obtemEvolucao($periodo));
-			
-			//echo "OIE";
-			//echo "<PRE>";
-			//print_r($periodo);
-			//echo "</PRE>";
-		}
-
-		public function obtemAdesoesPorPeriodo($periodo) {
-			return ($this->cbtb_contrato->obtemAdesoesPorPeriodo($periodo));
+		public function obtemEvolucaoPorPeriodo($periodo) {		
+			return($this->cbtb_contrato->obtemEvolucao($periodo));
 		}
 
 		public function estornaFatura($id_cobranca) {
@@ -585,7 +538,6 @@
 			$dados = array("status" => "E");
 			return($this->cbtb_fatura->altera($dados,$filtro));
 		}
-
 
 		public function obtemFaturasPorCarne($id_carne) {
 			$filtro = array("status" => "A", "id_carne" => $id_carne);
