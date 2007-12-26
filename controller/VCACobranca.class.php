@@ -3,6 +3,7 @@
 class VCACobranca extends VirtexControllerAdmin {
 
 	protected $cobranca;
+	protected $contas;
 
 	public function __construct() {
 		parent::__construct();
@@ -10,8 +11,9 @@ class VCACobranca extends VirtexControllerAdmin {
 
 	protected function init() {
 		parent::init();
-			
+
 		$this->cobranca = VirtexModelo::factory('cobranca');
+		$this->contas = VirtexModelo::factory('contas');
 		$this->_view = VirtexViewAdmin::factory('cobranca');
 	}
 
@@ -39,21 +41,49 @@ class VCACobranca extends VirtexControllerAdmin {
 	}
 
 	protected function executaBloqueios() {
-		
+
+		//echo "<PRE>";
+		//print_r($_REQUEST);
+		//echo "</PRE>";
+
+		$contas_id = @$_REQUEST["conta_id"];
+
+		if ($contas_id) {
+
+			foreach($contas_id as $k => $v) {
+
+				if($v == "BL") {
+					$this->contas->alteraContaBandaLarga($k, NULL, 'S');
+				} else if($v == "D") {
+					$this->contas->alteraContaDiscado($k, NULL, 'S');
+				} else if($v == "H") {
+					$this->contas->alteraHospedagem($k, NULL, 'S');
+				}
+
+				$dadosLogin = $this->_login->obtem("dados");
+				$admin = $dadosLogin["admin"];
+				$id_cliente_produto = $this->contas->obtemIdClienteProdutoPeloIdConta($k);
+				$this->contas->gravaLogBloqueioAutomatizado($id_cliente_produto, $v, $admin);
+			}
+
+		}
+
+		$atrasados = $this->contas->obtemContasFaturasAtrasadas();
+		$this->_view->atribui("atrasados", $atrasados);
 	}
 
 	protected function executaAmortizacao() {
 		$this->requirePrivGravacao("_COBRANCA_AMORTIZACAO");
 		$id_cobranca = @$_REQUEST["id_cobranca"];
-			
+
 		$texto_pesquisa = @$_REQUEST["texto_pesquisa"];
 		$tipo_pesquisa  = @$_REQUEST["tipo_pesquisa"];
-			
+
 		if(!$tipo_pesquisa) $tipo_pesquisa = "CODIGOBARRAS";
-			
+
 		$this->_view->atribui("texto_pesquisa", $texto_pesquisa);
 		$this->_view->atribui("tipo_pesquisa",$tipo_pesquisa);
-			
+
 		if( $texto_pesquisa && $tipo_pesquisa ) {
 			// Pesquisar!
 			$fatura = array();
@@ -71,23 +101,23 @@ class VCACobranca extends VirtexControllerAdmin {
 				$this->_view->atribui("erro", $erro);
 			} else {
 				// Redireciona p/ a fatura.
-					
+
 				$clienteProduto = $this->cobranca->obtemClienteProduto($fatura["id_cliente_produto"]);
-					
+
 				$url = "admin-clientes.php?op=contrato&tela=amortizacao&id_cliente=".$clienteProduto["id_cliente"]."&id_cliente_produto=".$fatura["id_cliente_produto"]."&data=".$fatura["data"]."&id_cobranca=".$fatura["id_cobranca"];
 				VirtexView::simpleRedirect($url);
 			}
 		}
 	}
-	
+
 	protected function geraListaBoletos() {
-		
+
 		$id_remessa = @$_REQUEST["id_remessa"];
 
 		////echo $id_remessa;
 
-		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);	
-		
+		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);
+
 		/*echo "<pre>";
 		print_r($resultado);
 		echo "</pre>";*/
@@ -99,22 +129,22 @@ class VCACobranca extends VirtexControllerAdmin {
 			$id_cobranca = $resultado[$i]["id_cobranca"];
 			$codigo_barra = $resultado[$i]["cod_barra"];
 			$linha_digitavel = $resultado[$i]["linha_digitavel"];
-			
+
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 
-		
+
 			if( $formaPagto["tipo_cobranca"] == "BL" && $id_forma_pagamento=="11" ) {
-				
+
 				$urlPreto = "view/templates/imagens/preto.gif";
 				$urlBranco = "view/templates/imagens/branco.gif";
-				
+
 				echo MBanco::htmlBarcode($codigo_barra,$urlPreto,$urlBranco);
 
-				
+
 			}
 
 		}
-		
+
 	}
 
 	protected function executaGerarCobranca() {
@@ -123,15 +153,15 @@ class VCACobranca extends VirtexControllerAdmin {
 		$ano = @$_REQUEST["ano"];
 		$mes = @$_REQUEST["mes"];
 		$periodo = @$_REQUEST["periodo"];
-		
+
 		$formas = $this->preferencias->obtemFormasPagamento();
 		$this->_view->atribui("formas",$formas);
-		
+
 		//echo "<pre>";
 		//print_r($formas);
 		//echo "</pre>";
 
-		
+
 
 		if ($acao == "gerar") {
 			$dados = array();
@@ -139,47 +169,47 @@ class VCACobranca extends VirtexControllerAdmin {
 			//Insere informações da remessa de cobranca
 			$data_referencia = "$ano-$mes";
 			$data_referencia_dia1 = "$ano-$mes-01";
-			
+
 			//COLOCAR ESQUEMA DE PEGAR ID DO USUARIO
 			$dadosLogin = $this->_login->obtem("dados");
 			$id_admin = $dadosLogin["id_admin"];
 			$id_forma_pagamento = @$_REQUEST["tipo_pagamento"];
-			
+
 			//phpinfo();
-			
+
 			$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin);
 			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento);
-			
+
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-			
-			
-			
+
+
+
 			//return;
-			
-			
+
+
 			if (!$resultado){
-				
+
 				$msg = "Não foram encontradas faturas para esse período";
-			
+
 			}
-			
-			
+
+
 			$urlPreto = "view/templates/imagens/preto.gif";
 			$urlBranco = "view/templates/imagens/branco.gif";
 
 			/*echo "<pre>";
 			print_r($formaPagto);
 			echo "</pre>";*/
-	
-			
+
+
 			for($i=0; $i<count($resultado); $i++) {
 				$id_cobranca = $resultado[$i]["id_cobranca"];
 				//echo $id_cobranca;
-				
+
 				$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
 
 				if( $formaPagto["tipo_cobranca"] == "BL" ) {
-					
+
 					 $boleto = MBoleto::factory(
 					 								$formaPagto["codigo_banco"],$formaPagto["agencia"],
 					 								$formaPagto["conta"],$formaPagto["carteira"],
@@ -189,23 +219,23 @@ class VCACobranca extends VirtexControllerAdmin {
 					 								$formaPagto["codigo_cedente"],
 					 								$formaPagto["operacao_cedente"]
 					 							);
-					 
+
 					$codigo_barra = $boleto->obtemCodigoBoleto();
 					$linha_digitavel = $boleto->obtemLinhaDigitavel();
-					 
-				
+
+
 				}
 
 
 				$this->cobranca->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca);
-				
+
 				$msg = "O Lote foi gerado para o período com sucesso!";
-				
+
 			}
 		}
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
 		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas(50);
-		
+
 		$this->_view->atribui("periodo_anos", $periodo_anos_fatura);
 		$this->_view->atribui("ultimas_remessas", $ultimas_remessas);
 		$this->_view->atribui("msg", $msg);
@@ -222,9 +252,9 @@ class VCACobranca extends VirtexControllerAdmin {
 	}
 
 	protected function executaRelatorios() {
-			
+
 		$relatorio = @$_REQUEST["relatorio"];
-			
+
 		if("cortesias" == $relatorio){
 			$contas = VirtexModelo::factory("contas");
 			$rs = $contas->obtemQtdeContasCortesiaDeCadaTipo();
@@ -255,15 +285,15 @@ class VCACobranca extends VirtexControllerAdmin {
 			//echo "<pre>";
 			//print_r($adesoes);
 			//echo "</pre>";
-			
-			
+
+
 		} elseif("cancelamentos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
 			$cobranca = VirtexModelo::factory("cobranca");
 			$cancelados = $cobranca->obtemCancelamentosPorPeriodo($periodo);
 			$this->_view->atribui("cancelados", $cancelados);
-			
+
 		} elseif("atrasos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
@@ -294,7 +324,7 @@ class VCACobranca extends VirtexControllerAdmin {
 				$meses[$data]["strmes"] = $mesesAno[$m]; */
 			}
 			$this->_view->atribui("meses", $meses);
-			
+
 			} elseif("atrasos_detalhes" == $relatorio) {
 			$periodo = @$_REQUEST["ano"]."-".@$_REQUEST["mes"];
 			$this->_view->atribui("periodo", $periodo);
@@ -302,18 +332,18 @@ class VCACobranca extends VirtexControllerAdmin {
 			$lista = $cobranca->obtemFaturasAtrasadasDetalhes($periodo);
 
 			$this->_view->atribui("lista", $lista);
-			
+
 		} elseif("cliente_produto" == $relatorio) {
 			$produto = VirtexModelo::factory("produtos");
 			$lista = $produto->obtemQtdeContratosPorProduto();
 			$this->_view->atribui("produto", $lista);
-			
+
 		} elseif("cliente_produto_detalhe" == $relatorio) {
 			$contas = VirtexModelo::factory("contas");
 			$id_produto = @$_REQUEST["id_produto"];
 			$rs = $contas->obtemClientesPorProduto($id_produto);
 			$this->_view->atribui("clientes", $rs);
-			
+
 		} elseif("cliente_tipo_produto" == $relatorio) {
 			$produto = VirtexModelo::factory("produtos");
 			$lista = $produto->obtemQtdeContratosPorTipoDeProduto();
@@ -324,14 +354,14 @@ class VCACobranca extends VirtexControllerAdmin {
 			$tipo_produto = @$_REQUEST["tipo_produto"];
 			$rs = $contas->obtemClientesPorTipoConta($tipo_produto);
 			$this->_view->atribui("clientes", $rs);
-		
+
 		} elseif("evolucao" == $relatorio) {
 			$cobranca = VirtexModelo::factory("cobranca");
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
 			$evolucao = $cobranca->obtemEvolucaoPorPeriodo($periodo);
 			$this->_view->atribui("evolucao", $evolucao);
-			
+
 			//echo "<pre>";
 			//print_r($evolucao);
 			//echo "</pre>";
