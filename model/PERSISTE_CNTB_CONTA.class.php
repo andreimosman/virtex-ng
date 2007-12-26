@@ -150,30 +150,44 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 
 	public function obtemContasFaturasAtrasadas() {
 
-		$sql  = "SELECT ";
-		$sql .= "	cliente.nome_razao ";
-		$sql .= "	, produto.nome ";
-		$sql .= "	, conta.id_conta ";
-		$sql .= "	, conta.tipo_conta ";
-		$sql .= "	, count(conta.*) as contas ";
-		$sql .= "	, count(fatura.*) as faturas_atraso ";
-		$sql .= "	, sum(fatura.valor) as fatura_valor ";
-		$sql .= "FROM ";
-		$sql .= "	cntb_conta as conta ";
-		$sql .= "	, cltb_cliente as cliente ";
-		$sql .= "	, cbtb_faturas as fatura ";
-		$sql .= "	, cbtb_cliente_produto as cliente_produto ";
-		$sql .= "	, prtb_produto as produto ";
-		$sql .= "WHERE ";
-		$sql .= "	conta.id_cliente = cliente.id_cliente ";
-		$sql .= "	AND conta.id_cliente_produto = cliente_produto.id_cliente_produto ";
-		$sql .= "	AND fatura.id_cliente_produto = fatura.id_cliente_produto ";
-		$sql .= "	AND produto.id_produto = cliente_produto.id_produto ";
-		$sql .= "	AND ( fatura.reagendamento is null and fatura.data > now() - interval '2 days' - interval '30 days' and fatura.status not in ('P','E','C') ";
-		$sql .= "		OR   fatura.reagendamento is null and fatura.data > now() - interval '2 days' - interval '30 days' and fatura.status not in ('P','E','C') ) ";
-		$sql .= "GROUP BY cliente.nome_razao, produto.nome, conta.id_conta, conta.tipo_conta ";
+		$sql  = "SELECT \r\n";
+		$sql .= "	cliente.nome_razao \r\n";
+		$sql .= "	, produto.nome \r\n";
+		$sql .= "	, conta.id_conta \r\n";
+		$sql .= "	, conta.id_cliente_produto \r\n";
+		$sql .= "	, conta.tipo_conta \r\n";
+		$sql .= "	, conta.username as contas \r\n";
+		$sql .= "	, count(fatura.*) as faturas_atraso \r\n";
+		$sql .= "	, sum(fatura.valor) as fatura_valor \r\n";
+		$sql .= "FROM \r\n";
+		$sql .= "	cntb_conta as conta \r\n";
+		$sql .= "	, cltb_cliente as cliente \r\n";
+		$sql .= "	, cbtb_faturas as fatura \r\n";
+		$sql .= "	, cbtb_cliente_produto as cliente_produto \r\n";
+		$sql .= "	, prtb_produto as produto \r\n";
+		$sql .= "WHERE \r\n";
+		$sql .= "	conta.id_cliente = cliente.id_cliente \r\n";
+		$sql .= "	AND conta.id_cliente_produto = cliente_produto.id_cliente_produto \r\n";
+		$sql .= "	AND fatura.id_cliente_produto = fatura.id_cliente_produto \r\n";
+		$sql .= "	AND produto.id_produto = cliente_produto.id_produto \r\n";
+		$sql .= "	AND conta.tipo_conta NOT LIKE 'E' ";
+		$sql .= "	AND ( fatura.reagendamento is null and fatura.data > now() - interval '2 days' - interval '30 days' and fatura.status not in ('P','E','C') \r\n";
+		$sql .= "		OR   fatura.reagendamento is null and fatura.data > now() - interval '2 days' - interval '30 days' and fatura.status not in ('P','E','C') ) \r\n";
+		$sql .= "GROUP BY cliente.nome_razao, produto.nome, conta.id_conta, conta.tipo_conta, conta.username, conta.id_cliente_produto \r\n";
 
 		return $this->bd->obtemRegistros($sql);
+
+	}
+
+	public function obtemIdClienteProdutoPeloIdConta($id_conta) {
+
+		$sql  = "SELECT \n\r ";
+		$sql .= "	id_cliente_produto \n\r ";
+		$sql .= "FROM cntb_conta ";
+		$sql .= "WHERE id_conta = $id_conta ";
+
+		$retorno = $this->bd->obtemUnicoRegistro($sql);
+		return $retorno["id_cliente_produto"];
 
 	}
 

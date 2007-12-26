@@ -15,6 +15,8 @@
 
 		protected $cntb_endereco_instalacao;
 
+		protected  $lgtb_bloqueio_automatizado;
+
 		protected $preferencias;
 		protected $equipamentos;
 		protected $spool;
@@ -22,17 +24,19 @@
 
 		public function __construct() {
 			parent::__construct();
-			$this->cntb_conta 				= VirtexPersiste::factory("cntb_conta");
-			$this->cntb_conta_bandalarga 	= VirtexPersiste::factory("cntb_conta_bandalarga");
-			$this->cntb_conta_discado		= VirtexPersiste::factory("cntb_conta_discado");
-			$this->cntb_conta_email			= VirtexPersiste::factory("cntb_conta_email");
+			$this->cntb_conta 					= VirtexPersiste::factory("cntb_conta");
+			$this->cntb_conta_bandalarga 		= VirtexPersiste::factory("cntb_conta_bandalarga");
+			$this->cntb_conta_discado			= VirtexPersiste::factory("cntb_conta_discado");
+			$this->cntb_conta_email				= VirtexPersiste::factory("cntb_conta_email");
 			$this->cntb_conta_hospedagem		= VirtexPersiste::factory("cntb_conta_hospedagem");
-			$this->cntb_endereco_instalacao	= VirtexPersiste::factory("cntb_endereco_instalacao");
+			$this->cntb_endereco_instalacao		= VirtexPersiste::factory("cntb_endereco_instalacao");
+
+			$this->lgtb_bloqueio_automatizado 	= VirtexPersiste::factory("lgtb_bloqueio_automatizado");
 
 			// Classes de preferencias e equipamentos são acessadas internamente p/ minimizar erros de programação.
-			$this->preferencias 			= VirtexModelo::factory("preferencias");
-			$this->equipamentos 			= VirtexModelo::factory("equipamentos");
-			$this->spool					= VirtexModelo::factory("spool");
+			$this->preferencias 				= VirtexModelo::factory("preferencias");
+			$this->equipamentos 				= VirtexModelo::factory("equipamentos");
+			$this->spool						= VirtexModelo::factory("spool");
 
 		}
 
@@ -709,9 +713,25 @@
 			return $this->cntb_conta->enumTiposConta();
 		}
 
-
 		public function obtemContasFaturasAtrasadas() {
 			return $this->cntb_conta->obtemContasFaturasAtrasadas();
+		}
+
+		public function gravaLogBloqueioAutomatizado($id_cliente_produto, $tipo, $admin, $auto_obs="", $admin_obs="") {
+
+			$dados = array(	"id_cliente_produto" => $id_cliente_produto,
+							"data_hora" => "=now",
+							"tipo" => $tipo,
+							"admin" => $admin,
+							"auto_obs" => $auto_obs,
+							"admin_obs" => $admin_obs
+						);
+
+			$this->lgtb_bloqueio_automatizado->insere($dados);
+		}
+
+		public function obtemIdClienteProdutoPeloIdConta($id_conta) {
+			return $this->cntb_conta->obtemIdClienteProdutoPeloIdConta($id_conta);
 		}
 
 	}
