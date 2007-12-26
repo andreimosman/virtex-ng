@@ -39,7 +39,7 @@ class VCACobranca extends VirtexControllerAdmin {
 	}
 
 	protected function executaBloqueios() {
-
+		
 	}
 
 	protected function executaAmortizacao() {
@@ -250,33 +250,19 @@ class VCACobranca extends VirtexControllerAdmin {
 		} elseif("adesoes" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
-			//TODO: Primeiro a query deve ser refeita depois essa tracho deve ser refeito 
-			/*$cobranca = VirtexModelo::factory("cobranca");
-			$cancelados = $cobranca->obtemContratosCanceladosPorPeriodo($periodo);
-			$this->_view->atribui("cancelados", $cancelados);
-
-			$i = ( $periodo * -1 ) + 1;
-			$meses = array();
-			for(;$i<=0;$i++){
-				$data = MData::calculaPeriodo(mktime(),$i,"m/Y");
-				list($meses[$data]["mes"],$meses[$data]["ano"]) = split("/",$data);
-			}
-			$this->_view->atribui("meses", $meses);*/
+			$adesoes = $this->cobranca->obtemAdesoesPorPeriodo($periodo);
+			$this->_view->atribui("adesoes", $adesoes);
+			//echo "<pre>";
+			//print_r($adesoes);
+			//echo "</pre>";
+			
+			
 		} elseif("cancelamentos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
 			$cobranca = VirtexModelo::factory("cobranca");
-			$cancelados = $cobranca->obtemContratosCanceladosPorPeriodo($periodo);
+			$cancelados = $cobranca->obtemCancelamentosPorPeriodo($periodo);
 			$this->_view->atribui("cancelados", $cancelados);
-			
-			$i = ( $periodo * -1 ) + 1;
-			$meses = array();
-			for(;$i<=0;$i++){
-				$data = MData::calculaPeriodo(mktime(),$i,"m/Y");
-				list($meses[$data]["mes"],$meses[$data]["ano"]) = split("/",$data);
-			}
-			$this->_view->atribui("meses", $meses);
-			
 			
 		} elseif("atrasos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
@@ -343,12 +329,12 @@ class VCACobranca extends VirtexControllerAdmin {
 			$cobranca = VirtexModelo::factory("cobranca");
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
-			//$lista = $cobranca->obtemContratosCanceladosPorPeriodo($periodo);
-			//$lista = $cobranca->obtemAdesoesPorPeriodo($tipo_properiododuto);
+			$evolucao = $cobranca->obtemEvolucaoPorPeriodo($periodo);
+			$this->_view->atribui("evolucao", $evolucao);
 			
-			$evolucao = $cobranca->obtemEvolucao($periodo);
-			
-			$this->_view->atribui("lista", $lista);
+			//echo "<pre>";
+			//print_r($evolucao);
+			//echo "</pre>";
 		}
 	}
 }
