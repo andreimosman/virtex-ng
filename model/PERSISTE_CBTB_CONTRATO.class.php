@@ -35,7 +35,10 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 			$chave = "$a-$m";
 			
 			if( !@$arr[$chave] ) {
-				$arr[$chave] = array();
+				$arr[$chave] = array("mes"=>$m,"ano"=>$a);
+			} else {
+				$arr[$chave]["mes"] = $m;
+				$arr[$chave]["ano"] = $a;
 			}
 
 			$data = MData::adicionaMes($data,-1);
