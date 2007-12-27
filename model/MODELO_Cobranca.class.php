@@ -739,7 +739,7 @@
 		}
 
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
-					$reagendamento, $observacoes){
+					$reagendamento, $observacoes, $admin=array()){
 
 			$fatura = $this->obtemFaturaPorIdCobranca($id_cobranca);
 			$data = array();
@@ -781,6 +781,17 @@
 			if($reagendar and $data["status"] != PERSISTE_CBTB_FATURAS::$PAGA){
 				$data["reagendamento"] = $reagendamento;
 				$data["observacoes"] = $observacoes;
+				
+				$dadosLog = array("id_cliente_produto" => $fatura["id_cliente_produto"], 
+									"data" => $fatura["data"], 
+									"data_reagendamento" => "=now",
+									"data_para_reagendamento" => $reagendamento,
+									"admin" => ((int)@$admin["id_admin"]));
+				
+				$lgtb_reagendamento = VirtexPersiste::factory("lgtb_reagendamento");
+				$lgtb_reagendamento->insere($dadosLog);
+				
+				
 			}
 
 			$seek["id_cobranca"] = $id_cobranca;

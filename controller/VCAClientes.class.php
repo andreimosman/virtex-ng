@@ -810,6 +810,9 @@
 
 
 					$dadosLogin = $this->_login->obtem("dados");
+					//echo "<pre>";
+					//print_r($dadosLogin);
+					//echo "</pre>";
 					
 					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_COBRANCA_AMORTIZACAO",false))) {
 						$desconto		= @$_REQUEST["desconto"];
@@ -839,7 +842,7 @@
 								
 						
 							if( $cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
-									$reagendamento, $observacoes) ) {
+									$reagendamento, $observacoes,$dadosLogin) ) {
 									$fluxo=VirtexPersiste::factory("cxtb_fluxo");
 									$fluxo->pagamentoComDinheiro($amortizar,$data_pagamento,$id_cobranca,$dadosLogin["admin"]);
 									$this->_view->atribui("url",$url);
