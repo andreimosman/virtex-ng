@@ -10,6 +10,11 @@
 <input type="hidden" name="relatorio" value="cliente_sem_mac">
 <input type="hidden" name="acao" value="bloquear">
 <table width="600" class="lista" cellpadding=0 cellspacing=0 align="center">
+	{if $msg_erro}
+	<tr>
+		<td colspan='5' class="erro" align="center">{$msg_erro}</td>
+	</tr>
+	{/if}
 	<tr>
 		{if $podeGravarConta}
 		<th>&nbsp;</th>
@@ -25,7 +30,7 @@
 		{if $podeGravarConta}
 		<td class="{$estilo}" align="center"><input type="checkbox" name="bloquear[{$c.id_conta}]" /></td>
 		{/if}
-		<td class="{$estilo}" width="250">&nbsp;{$c.username}</td>
+		<td class="{$estilo}" width="250">&nbsp;<a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto={$c.id_cliente_produto}&id_cliente={$c.id_cliente}&id_conta={$c.id_conta}">{$c.username}</a></td>
 		<td class="{$estilo}" width="100">{$c.ipaddr}{$c.rede}</td>
 		<td class="{$estilo}" align="center">{if $c.status == "A"}Ativo{elseif $c.status == "B"}Bloqueado{elseif $c.status == "S"}Suspenso{elseif $c.status == "C"}Cancelado{/if}</td>
 		<td class="{$estilo}" width="100" align="right">[<a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto=206&id_cliente={$c.id_cliente}&id_conta={$c.id_conta}">FICHA TÉCNICA</a>]</td>
@@ -36,14 +41,15 @@
 		<th style="background: #FF0000; color: #ffffff" colspan=="5">Confirmação</th>
 	</tr>
 	<tr>
-		<td align="center" colspan="5">Administrador: <label><strong>{$dadosLogin.admin}</strong></label></td>
+		<td align="right" colspan="2">Administrador: </td>
+		<td><label><strong>{$dadosLogin.admin}</strong></label></td>
 	</tr>
 	<tr>
-		<td align="right">Confirme sua senha: </td>
+		<td align="right" colspan="2">Confirme sua senha: </td>
 		<td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 	</tr>
 	<tr>
-		<td><input type="submit" value="Bloquear" /></td>
+		<td align="center" colspan="5"><input type="submit" value="Bloquear" class="botao"/></td>
 	</tr>
 	{/if}
 </table>
