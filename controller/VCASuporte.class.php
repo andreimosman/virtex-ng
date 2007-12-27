@@ -245,28 +245,55 @@
 				case 'cliente_sem_mac':
 					$contas = VirtexModelo::factory('contas');
 					$lista = $contas->obtemContasSemMac();
+					$url = "admin-suporte.php?op=relatorios&relatorio=cliente_sem_mac";
 					
 					
+					
+							
 					$podeGravarConta = $this->requirePrivGravacao("_CLIENTES_BANDALARGA",false);
 					$this->_view->atribui("podeGravarConta",$podeGravarConta);
-					
+
 					$bloquear = @$_REQUEST["bloquear"];
 					$acao = @$_REQUEST["acao"];
 					
 					if( $acao == "bloquear" ) {
-
-						$this->requirePrivGravacao("_CLIENTES_BANDALARGA");
-					
-						if( $bloquear ) {
-							foreach( $bloquear as $id_conta => $lixo ) {
-								//echo "BLOQUEANDO: $id_conta<br>\n";
-								$contas->alteraContaBandaLarga($id_conta, NULL, 'B');
+							$this->requirePrivGravacao("_CLIENTES_BANDALARGA");
+							if( $bloquear ) {
+								try {
+									$senha_admin = @$_REQUEST["senha_admin"];
+									$dadosLogin = $this->_login->obtem("dados");
+									if( !$senha_admin ) {
+										$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
+									} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+										$erro = "Operação não autorizada: SENHA NÃO CONFERE.";								
+									}
+									if($erro) throw new Exception($erro);
+									
+									foreach( $bloquear as $id_conta => $lixo ) {
+										$contas->alteraContaBandaLarga($id_conta, NULL, 'B');
+									}
+								
+									$this->_view->atribui("url",$url);
+									$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
+									$this->_view->atribuiVisualizacao("msgredirect");
+									
+									if( $acao ) {
+										$erro = "";										
+									} else {
+										VirtexView::simpleRedirect($url);
+									}
+								
+						
+							}catch (ExcecaoModeloValidacao $e ) {
+								$this->_view->atribui ("msg_erro", $e->getMessage());
+								$erro = true;	
+							} catch (Exception $e ) {
+								$this->_view->atribui ("msg_erro", $e->getMessage());
+								$erro = true;	
 							}
-						}
 					}
-					
+				}
 					$this->_view->atribui("lista",$lista);
-					
 					break;
 				case 'banda':
 					
