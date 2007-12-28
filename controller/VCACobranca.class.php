@@ -74,10 +74,6 @@ class VCACobranca extends VirtexControllerAdmin {
 		
 		$countBloqueados = count($atrasados);
 		$this->_view->atribui("countBloqueados", $countBloqueados);
-		
-		echo "<pre>";
-		print_r($countBloqueados);
-		echo "</pre>";
 	}
 
 	protected function executaAmortizacao() {
