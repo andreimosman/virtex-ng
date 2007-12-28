@@ -528,8 +528,8 @@
 		public function obtemCancelamentosPorPeriodo($periodo){
 			return( $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo) );
 		}
-		
-		public function obtemEvolucaoPorPeriodo($periodo) {		
+
+		public function obtemEvolucaoPorPeriodo($periodo) {
 			return($this->cbtb_contrato->obtemEvolucao($periodo));
 		}
 
@@ -696,7 +696,7 @@
 			//print_r($retorno);
 			//echo "</PRE>";
 			return $retorno;
-			
+
 		}
 
 		public function obtemStatusFatura(){
@@ -840,6 +840,9 @@
 			return ($this->cbtb_fatura->obtemFaturasPorRemessa($id_remessa));
 		}
 
+		public function obtemContratosFaturasAtrasadas() {
+			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadas());
+		}
 
 
 	}
