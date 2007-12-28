@@ -14,6 +14,8 @@
 		protected $pftb_forma_pagamento;
 		protected $cbtb_fatura;
 		protected $preferencias;
+		
+		protected $lgtb_reagendamento;
 
 		protected $cltb_cliente;
 		protected $prtb_produto;
@@ -39,6 +41,8 @@
 			$this->preferencias = VirtexModelo::factory("preferencias");
 			$this->cltb_cliente = VirtexPersiste::factory("cltb_cliente");
 			$this->prtb_produto = VirtexPersiste::factory("prtb_produto");
+			
+			$this->lgtb_reagendamento = VirtexPersiste::factory("lgtb_reagendamento");
 
 			$this->cbtb_lote_cobranca = VirtexPersiste::factory("cbtb_lote_cobranca");
 			$this->cbtb_lote_fatura = VirtexPersiste::factory("cbtb_lote_fatura");
@@ -705,10 +709,6 @@
 
 		public function obtemFaturamentoPorPeriodo($periodo){
 			return $this->cbtb_fatura->obtemFaturamentoPorPeriodo($periodo);
-
-			//echo "<PRE>";
-			//	print_r($periodo);
-			//echo "</PRE>";
 		}
 
 		public function obtemFaturamentoPorProduto($ano_select){
@@ -737,7 +737,18 @@
 		public function obtemAnosFatura() {
 			return $this->cbtb_fatura->obtemAnosFatura();
 		}
-
+		
+		public function obtemReagendamento() {
+			$returno = $this->lgtb_reagendamento->obtemReagendamento();
+			return $retorno;
+			
+			echo "<PRE>";
+			print_r($retorno);
+			echo "</PRE>";
+			
+		}
+		
+		
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
 					$reagendamento, $observacoes, $admin=array()){
 

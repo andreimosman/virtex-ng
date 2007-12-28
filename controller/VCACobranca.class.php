@@ -369,6 +369,10 @@ class VCACobranca extends VirtexControllerAdmin {
 			//echo "<pre>";
 			//print_r($evolucao);
 			//echo "</pre>";
+		} elseif("reagendamentos" == $relatorio) {
+			$cobranca = VirtexModelo::factory("cobranca");
+			$lista = $cobranca->obtemReagendamento();
+			$this->_view->atribui("cobranca", $lista);
 		}
 	}
 }

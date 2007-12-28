@@ -16,6 +16,20 @@
 										"data_para_reagendamento" => "date" );
 
 		}
+		
+		public function obtemReagendamento(){
+		
+		$sql  = "SELECT ";
+		$sql .= 	"r.id_reagendamento, r.data, r.data_reagendamento, r.data_para_reagendamento ";
+		$sql .= "FROM ";
+		$sql .= 	"lgtb_reagendamento r ";
+		$sql .= "ORDER BY ";
+		$sql .= 	"r.id_reagendamento DESC ";
+		
+		echo $sql;
+	
+		return ($this->bd->obtemRegistros($sql));
+	}
 	
 	
 	}
