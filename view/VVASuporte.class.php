@@ -72,7 +72,7 @@
 		}
 		
 		protected function exibeRelatorios() {
-			$titulo = "Suporte :: Relatórios";
+			$titulo = "Relatórios";
 			
 			switch($this->obtem("relatorio")) {
 				case 'cliente_sem_mac':
