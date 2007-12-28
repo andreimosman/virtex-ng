@@ -17,7 +17,7 @@
 			<th>Faturamento</th>
 		</tr>
 		{foreach from=$lista key=p item=m}
-		<tr class='{cycle values="linhai,linhap"}'>
+		<tr class='{cycle values="impar,par"}'>
 			<td align="center">{$m.ano}/{$m.mes}</td>
 			<td align="center">{$m.valor_documento|default:0}</td>
 			<td align="center">{$m.valor_acrescimo|default:0}</td>

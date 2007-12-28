@@ -3,7 +3,8 @@
 }
 
 .lista th {
-	background: #bFd0aF;
+	color:#ffffff;
+	background: #6B7D9C;
 	font-family: verdana;
 	font-size: 12px;
 	padding-right: 6px;
@@ -39,7 +40,7 @@
 }
 
 .lista .impar {
-	background: #DFF0CF;
+	background: #D1DDEF;
 }
 
 .lista .par {

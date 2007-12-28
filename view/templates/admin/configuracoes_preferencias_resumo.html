@@ -12,17 +12,17 @@
   <input type="hidden" name="op" id="op" value="resumo" />
 </form>
 <br>
-<table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
+<table border="0" cellpadding="0" cellspacing="1" class="lista">
     <tr>
 		<th colspan="6" class="resumoCellTitle">Prefer&ecirc;ncia Geral</th>
 	</tr>
 	<tr>
-		<th width="120" class="resumoCellSub">Dominio Padr&atilde;o</th>
-		<th width="244" class="resumoCellSub">Nome</th>
-		<th width="110" class="resumoCellSub">Radius Server</th>
-		<th width="110" class="resumoCellSub">Servidor de Hospedagem</th>
-		<th width="110" class="resumoCellSub">Servidor de E-Mail</th>
-		<th width="16" class="resumoCellSub">&nbsp;</th>
+		<th width="120" style="background-color:#819FCF;">Dominio Padr&atilde;o</th>
+		<th width="244" style="background-color:#819FCF;">Nome</th>
+		<th width="110" style="background-color:#819FCF;">Radius Server</th>
+		<th width="110" style="background-color:#819FCF;">Servidor de Hospedagem</th>
+		<th width="110" style="background-color:#819FCF;">Servidor de E-Mail</th>
+		<th width="16" style="background-color:#819FCF;">&nbsp;</th>
     </tr>
 	<tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=geral'" class='link'>
 	{if $geral.dominio_padrao}
@@ -38,17 +38,17 @@
 	</tr>
   </table>
   <br />
-  <table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
+  <table border="0" cellpadding="0" cellspacing="1" class="lista">
 	<tr>
 		<th colspan="6" class="resumoCellTitle">Prefer&ecirc;ncia do Provedor</td>
 	</tr>
     <tr>
-      <th width="254" class="resumoCellSub">Endere&ccedil;o</th>
-      <th width="120" class="resumoCellSub">Localidade</th>
-      <th width="80"  class="resumoCellSub">CEP</th>
-      <th width="120" class="resumoCellSub">Cnpj</th>
-	  <th width="120" class="resumoCellSub">Fone</th>
-	  <th width="16" class="resumoCellSub">&nbsp;</th>
+      <th width="254" style="background-color:#819FCF;">Endere&ccedil;o</th>
+      <th width="120" style="background-color:#819FCF;">Localidade</th>
+      <th width="80"  style="background-color:#819FCF;">CEP</th>
+      <th width="120" style="background-color:#819FCF;">Cnpj</th>
+	  <th width="120" style="background-color:#819FCF;">Fone</th>
+	  <th width="16"  style="background-color:#819FCF;">&nbsp;</th>
     </tr>
     <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=provedor'" class='link'>
 	{if $provedor.endereco}
@@ -64,18 +64,18 @@
     </tr>
   </table>
   <br />
-  <table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
+  <table border="0" cellpadding="0" cellspacing="1" class="lista">
 	<tr>
 		<th colspan="8" class="resumoCellTitle">Prefer&ecirc;ncia de Cobran&ccedil;a</th>
 	</tr>
     <tr>
-    	<th width="115" class="resumoCellSub">Dia de Vencimento</th>
-    	<th width="115" class="resumoCellSub">Car&ecirc;ncia</th>
-		<th width="115" class="resumoCellSub">Enviar E-Mail </th>
-    	<th width="115" class="resumoCellSub">Taxa de Juros</th>
-    	<th width="115" class="resumoCellSub">Multa</th>
-    	<th width="115" class="resumoCellSub">Pagamento</th>
-		<th width="16"  class="resumoCellSub">&nbsp;</th>
+    	<th width="115" style="background-color:#819FCF;">Dia de Vencimento</th>
+    	<th width="115" style="background-color:#819FCF;">Car&ecirc;ncia</th>
+		<th width="115" style="background-color:#819FCF;">Enviar E-Mail </th>
+    	<th width="115" style="background-color:#819FCF;">Taxa de Juros</th>
+    	<th width="115" style="background-color:#819FCF;">Multa</th>
+    	<th width="115" style="background-color:#819FCF;">Pagamento</th>
+		<th width="16"  style="background-color:#819FCF;">&nbsp;</th>
     </tr>
     <tr onclick="document.location='admin-configuracoes.php?op=preferencias&tela=cobranca'" class='link'>
 	{if $cobranca.dia_venc}
@@ -92,17 +92,17 @@
     </tr>
   </table>
   <br />
-  <table border="0" cellpadding="0" cellspacing="1" class="tableResumo">
+  <table border="0" cellpadding="0" cellspacing="1" class="lista" width="100%">
   	<tr>
-		<td colspan="6" class="resumoCellTitle">Formas de pagamento <span style="color:#999999;">(Cobran&ccedil;a)</span></td>
+		<th colspan="6" class="resumoCellTitle">Formas de pagamento <span style="color:#DFDFDF;">(Cobran&ccedil;a)</span></th>
 	</tr>
 	<tr>
-		<th class="resumoCellSub">TIPO</th>
-		<th class="resumoCellSub">BANCO</th>
-		<th class="resumoCellSub">AG.</th>
-		<th class="resumoCellSub">CONTA</th>
-		<th class="resumoCellSub">CARNÊ</th>
-		<th class="resumoCellSub">DISPONÍVEL</th>
+		<th style="background-color:#819FCF;">TIPO</th>
+		<th style="background-color:#819FCF;">BANCO</th>
+		<th style="background-color:#819FCF;">AG.</th>
+		<th style="background-color:#819FCF;">CONTA</th>
+		<th style="background-color:#819FCF;">CARNÊ</th>
+		<th style="background-color:#819FCF;">DISPONÍVEL</th>
 	</th>
 	{foreach name=registros item=r from=$formas}
 	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
