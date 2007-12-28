@@ -191,6 +191,27 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 
 	}
 
+	public function obtemContasPeloContrato($id_cliente_produto, $tipo=NULL) {
+
+		$sql  = "SELECT ";
+		$sql .= "	conta.username, conta.dominio, conta.tipo_conta, conta.senha, ";
+		$sql .= "	conta.id_cliente, conta.id_cliente_produto, conta.id_conta, ";
+		$sql .= "	conta.senha_cript ,conta.conta_mestre, conta.status, conta.observacoes ";
+		$sql .= "FROM ";
+		$sql .= "	cbtb_contrato contrato INNER JOIN cntb_conta conta ON conta.id_cliente_produto = contrato.id_cliente_produto ";
+		$sql .= "WHERE ";
+		$sql .= "	contrato.id_cliente_produto = $id_cliente_produto ";
+		$sql .= "	AND conta.status NOT IN ('C','S') ";
+
+		if($tipo) {
+			$sql .= "	AND conta.tipo_conta LIKE '$tipo' ";
+		}
+
+		return ($this->bd->obtemRegistros($sql));
+	}
+
+
+
 }
 
 

@@ -4,6 +4,7 @@ class VCACobranca extends VirtexControllerAdmin {
 
 	protected $cobranca;
 	protected $contas;
+	protected $contratos;
 
 	public function __construct() {
 		parent::__construct();
@@ -42,33 +43,33 @@ class VCACobranca extends VirtexControllerAdmin {
 
 	protected function executaBloqueios() {
 
-		//echo "<PRE>";
-		//print_r($_REQUEST);
-		//echo "</PRE>";
+		$contrato_id = @$_REQUEST["contrato_id"];
 
-		$contas_id = @$_REQUEST["conta_id"];
+		if ($contrato_id) {
+			$dadosLogin = $this->_login->obtem("dados");
+			$admin = $dadosLogin["admin"];
+			$id_admin = $dadosLogin["id_admin"];
 
-		if ($contas_id) {
+			foreach($contrato_id as $k => $v) {
 
-			foreach($contas_id as $k => $v) {
+				$listacontas = $this->contas->obtemContasPeloContrato($k, $v);
 
-				if($v == "BL") {
-					$this->contas->alteraContaBandaLarga($k, NULL, 'S');
-				} else if($v == "D") {
-					$this->contas->alteraContaDiscado($k, NULL, 'S');
-				} else if($v == "H") {
-					$this->contas->alteraHospedagem($k, NULL, 'S');
+				foreach($listacontas as $chave => $campo) {
+					if($v == "BL") {
+						$this->contas->alteraContaBandaLarga($k, NULL, 'S');
+					} else if($v == "D") {
+						$this->contas->alteraContaDiscado($k, NULL, 'S');
+					} else if($v == "H") {
+						$this->contas->alteraHospedagem($k, NULL, 'S');
+					}
+					$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, '');
 				}
 
-				$dadosLogin = $this->_login->obtem("dados");
-				$admin = $dadosLogin["admin"];
-				$id_cliente_produto = $this->contas->obtemIdClienteProdutoPeloIdConta($k);
-				$this->contas->gravaLogBloqueioAutomatizado($id_cliente_produto, $v, $admin);
+				$this->contas->gravaLogBloqueioAutomatizado($k, 'S', $admin, 'Suspensão por pendências financeiras');
 			}
-
 		}
 
-		$atrasados = $this->contas->obtemContasFaturasAtrasadas();
+		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadas();
 		$this->_view->atribui("atrasados", $atrasados);
 	}
 

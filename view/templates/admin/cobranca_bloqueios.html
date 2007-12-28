@@ -35,7 +35,7 @@
 			{foreach from=$atrasados item=i key=k}
 			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 			<tr>
-				<td><input type="checkbox" style="{$estilo}" name="conta_id[{$i.id_conta}]" value="{$i.tipo_conta}"></td>
+				<td><input type="checkbox" style="{$estilo}" name="contrato_id[{$i.id_cliente_produto}]" value="{$i.tipo_produto}"></td>
 				<td align="center" style="{$estilo}" >{$i.nome_razao}</td>
 				<td align="center" style="{$estilo}" >{$i.nome}</td>
 				<td align="center" style="{$estilo}" >{$i.contas}</td>

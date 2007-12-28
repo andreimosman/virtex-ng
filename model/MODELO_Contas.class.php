@@ -15,7 +15,8 @@
 
 		protected $cntb_endereco_instalacao;
 
-		protected  $lgtb_bloqueio_automatizado;
+		protected $lgtb_bloqueio_automatizado;
+		protected $lgtb_status_conta;
 
 		protected $preferencias;
 		protected $equipamentos;
@@ -32,6 +33,7 @@
 			$this->cntb_endereco_instalacao		= VirtexPersiste::factory("cntb_endereco_instalacao");
 
 			$this->lgtb_bloqueio_automatizado 	= VirtexPersiste::factory("lgtb_bloqueio_automatizado");
+			$this->lgtb_status_conta 			= VirtexPersiste::factory("lgtb_status_conta");
 
 			// Classes de preferencias e equipamentos são acessadas internamente p/ minimizar erros de programação.
 			$this->preferencias 				= VirtexModelo::factory("preferencias");
@@ -730,9 +732,35 @@
 			$this->lgtb_bloqueio_automatizado->insere($dados);
 		}
 
+
+		public function gravaLogMudancaStatusConta($id_cliente_produto, $username, $dominio, $tipo_conta, $id_admin, $ip_admin, $operacao=NULL, $cod_operacao=NULL) {
+
+			$dados = array(
+							"id_cliente_produto" => $id_cliente_produto ,
+							"username" => $username,
+							"dominio" => $dominio,
+							"tipo_conta" => $tipo_conta,
+							"data_hora" => "=now",
+							"id_admin" => $id_admin,
+							"ip_admin" => $ip_admin,
+							"operacao" => $operacao,
+							"cod_operacao" => $cod_operacao
+						);
+
+			$this->lgtb_status_conta->insere($dados);
+
+		}
+
+
 		public function obtemIdClienteProdutoPeloIdConta($id_conta) {
 			return $this->cntb_conta->obtemIdClienteProdutoPeloIdConta($id_conta);
 		}
+
+
+		public function obtemContasPeloContrato($id_cliente_produto, $tipo=NULL) {
+			return $this->cntb_conta->obtemContasPeloContrato($id_cliente_produto, $tipo=NULL);
+		}
+
 
 	}
 
