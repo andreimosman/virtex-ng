@@ -65,7 +65,7 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		$sql .= "   f.status not in ('E', 'C') AND CASE WHEN f.status = 'P' THEN f.data_pagamento > f.data ELSE f.data < now() END ";
 		$sql .= "GROUP BY ano, mes ";
 		$sql .= "ORDER BY ano, mes ";
-		echo $sql;
+		//echo $sql;
 		return ($this->bd->obtemRegistros ($sql));
 	}
 
