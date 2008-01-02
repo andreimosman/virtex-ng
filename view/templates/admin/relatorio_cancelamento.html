@@ -37,7 +37,7 @@
 		<th>TOTAL</th>
 	</tr>
 	{foreach from=$cancelados key=d item=cancelado}
-	<tr class='{cycle values="linhai,linhap"}'>
+	<tr class='{cycle values="impar,par"}'>
 		<td class="cellInfoCenter">{$cancelado.mes}/{$cancelado.ano}</td>
 		<td class="cellInfoCenter">{$cancelado.BL.num_contratos|default:0}</td>
 		<td class="cellInfoCenter">{$cancelado.D.num_contratos|default:0}</td>		
