@@ -31,15 +31,17 @@
 			<th>VALOR</th>
 			<th>ADMIN</th>
 		</tr>
-		<tr>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
+		{foreach from=$cobranca key=k item=reagendamento}
+		<tr class='{cycle values="impar,par"}'>
+			<td align="center">{$reagendamento.nome_razao}</td>
+			<td align="center">{$reagendamento.username}</td>
+			<td align="center">{$reagendamento.data}</td>
+			<td align="center">{$reagendamento.data_reagendamento}</td>
+			<td align="center">{$reagendamento.data_para_reagendamento}</td>
+			<td align="center">{$reagendamento.valor}</td>
+			<td align="center">{$reagendamento.admin}</td>
 		</tr>
+		{/foreach}
 		<tr>
 			<th colspan="7" style="background-color:#819FCF;">Reagendadas faturas no total.</th>
 		</tr>

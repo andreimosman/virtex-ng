@@ -94,8 +94,8 @@
 			<th align="center" colspan="2">&nbsp;</th>
 		</tr>
 		{foreach from=$ultimas_remessas item=r}
-		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
-		<tr>
+		
+		<tr class='{cycle values="impar,par"}'>
 			<td width="120" class='{$estilo}' align="center">{$r.data_geracao|date_format:"%d/%m/%Y"}</td>
 			<td class='{$estilo}' align='center'>{$r.data_referencia|date_format:"%d/%m/%Y"}{if $.periodo=="MT"} <em>(Todo o mês)</em>{else if $r.periodo=="PQ"} <em>(Parcial)</em>{/if}</td>
 			<td class='{$estilo}' align='center'>{$r.qtfaturas}</td>

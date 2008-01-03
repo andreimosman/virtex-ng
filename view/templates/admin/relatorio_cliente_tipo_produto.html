@@ -17,7 +17,7 @@
 		<th>Contratos</th>
 	</tr>
 	{foreach from=$produto item=p}
-	<tr class='{cycle values="linhai,linhap"} link' onclick="filtro('{$p.tipo}')" >
+	<tr class='{cycle values="impar,par"} link' onclick="filtro('{$p.tipo}')">
 		<td class="cellInfoLeft">&nbsp;&nbsp;{$p.tipo}</td>		
 		<td class="cellInfoCenter">{$p.num_contratos|default:0}</td>
 	</tr>

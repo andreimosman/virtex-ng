@@ -17,7 +17,7 @@
 		<th>Contratos</th>
 	</tr>
 	{foreach from=$produto item=p}
-	<tr class='{cycle values="linhai,linhap"} link' onclick="detalhes({$p.id_produto})">
+	<tr class='{cycle values="impar,par"} link' onclick="detalhes({$p.id_produto})">
 		<td class="cellInfoLeft">{$p.nome}</td>		
 		<td class="cellInfoCenter">{$p.num_contratos|default:0}</td>
 	</tr>

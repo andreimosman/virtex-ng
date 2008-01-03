@@ -73,7 +73,7 @@
 			<td align="center" style="border-bottom:1px solid #000;"><b>T(=)</b></td>
 		</tr>
 		{foreach from=$evolucao key=d item=evolucao}
-		<tr>
+		<tr class='{cycle values="impar,par"}'>
 			<td align="center">{$evolucao.mes}/{$evolucao.ano}</td>
 			
 			<td align="center" class="verde" id="bordinha_left">{$evolucao.BL.adesoes|default:0}</td>

@@ -28,7 +28,11 @@
 	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 	<tr>
 		{if $podeGravarConta}
+		{if $c.status == "A" or $c.status == "S" or $c.status == "C"}
 		<td class="{$estilo}" align="center"><input type="checkbox" name="bloquear[{$c.id_conta}]" /></td>
+		{elseif $c.status == "B"}
+		<td class="{$estilo}" align="center">&nbsp;</td>
+		{/if}
 		{/if}
 		<td class="{$estilo}" width="250">&nbsp;<a href="admin-clientes.php?op=conta&tela=ficha&id_cliente_produto={$c.id_cliente_produto}&id_cliente={$c.id_cliente}&id_conta={$c.id_conta}">{$c.username}</a></td>
 		<td class="{$estilo}" width="100">{$c.ipaddr}{$c.rede}</td>
@@ -38,7 +42,7 @@
 	{/foreach}
 	{if $podeGravarConta}
 	<tr>
-		<th style="background: #FF0000; color: #ffffff" colspan=="5">Confirmação</th>
+		<th style="background: #FF0000; color: #ffffff" colspan="5">Confirmação</th>
 	</tr>
 	<tr>
 		<td align="right" colspan="2">Administrador: </td>

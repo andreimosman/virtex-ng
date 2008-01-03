@@ -26,11 +26,10 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="lista">
 	
 	{foreach from=$clientes item=c name=cl}
-	{if ($smarty.foreach.cl.iteration%2) }{assign var=estilo value='linhai'}{else}{assign var=estilo value='linhap'}{/if}
 	<tr class='{$estilo}'>
 		<th class="cellInfoLeft"> {$c.nome_razao}</th>				
 	</tr>
-	<tr class='{$estilo}'>
+	<tr class='{cycle values="impar,par"}'>
 		<td class="cellInfoLeft" valign='top'>
 			<table width="100%">
 				<tr>

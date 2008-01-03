@@ -23,6 +23,11 @@
 	<form action="{$smarty.server.PHP_SELF}" >
 
 		<table class="lista" border="0" width="650px" cellpadding="0" cellspacing="0">
+			{if $msg_erro}
+			<tr>
+				<td colspan='5' class="erro" align="center">{$msg_erro}</td>
+			</tr>
+			{/if}
 			<tr>
 				<th>&nbsp;</th>
 				<th width="100px" align="left">Cliente</th>
@@ -43,12 +48,25 @@
 				<td align="center" style="{$estilo}" >{$i.fatura_valor}</td>
 			</tr>
 			{/foreach}
+			<tr>
+				<th style="background: #FF0000; color: #ffffff" colspan="6">Confirmação</th>
+			</tr>
+			<tr>
+				<td align="right" colspan="3">Administrador: </td>
+				<td><label><strong>{$dadosLogin.admin}</strong></label></td>
+			</tr>
+			<tr>
+				<td align="right" colspan="3">Confirme sua senha: </td>
+				<td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+			</tr>
+			<tr>
+				<td align="center" colspan="6"><input type="submit" value="Bloquear" class="botao"/><input type="reset" value="Desmarcar Todas" class="botao" /></td>
+			</tr>
 		</table>
 
 		<input type="hidden" name="op" value="bloqueios" />
 		<input type="hidden" name="tela" value="bloqueios" />
-		<input type="submit" value="Bloquear" />
-		<input type="reset" value="Desmarcar Todas" />
+		
 	</form>
 
 </div>

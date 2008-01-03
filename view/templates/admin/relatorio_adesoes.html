@@ -37,7 +37,7 @@
 		<th>TOTAL</th>
 	</tr>
 	{foreach from=$adesoes key=k item=adesao}
-	<tr class='{cycle values="linhai,linhap"}'>
+	<tr class='{cycle values="impar,par"}'>
 		<td class="cellInfoCenter">{$adesao.mes}/{$adesao.ano}</td>
 		<td class="cellInfoCenter">{$adesao.BL.num_contratos|default:0}</td>
 		<td class="cellInfoCenter">{$adesao.D.num_contratos|default:0}</td>		
