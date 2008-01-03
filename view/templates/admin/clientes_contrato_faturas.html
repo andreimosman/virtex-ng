@@ -47,27 +47,27 @@ function abreCarne(id_carne,id_cliente,id_cliente_produto) {
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		{ if $tem_carne }
 		<tr>
-				<th colspan="7" style="background: #bFd0a0">Carn&ecirc; { $smarty.request.id_carne|string_format:"%08d" }</th>
+				<th colspan="7">Carn&ecirc; { $smarty.request.id_carne|string_format:"%08d" }</th>
 		</tr>
 		{ /if }
 		<tr class="lista" style="background: #bFd0aF;">
-			<td>Vencimento</th>
-			<td>Descrição</th>
-			<td>Valor</th>
-			<td>Vl. Pago</th>
-			<td>Dt. Pagto</th>
-			<td>Reagend.</th>
-			<td>Status</th>
+			<th align="left">Vencimento</th>
+			<th align="left">Descrição</th>
+			<th>Valor</th>
+			<th>Vl. Pago</th>
+			<th>Dt. Pagto</th>
+			<th>Reagend.</th>
+			<th>Status</th>
 		</tr>
 		{foreach from=$faturas item=f}
-		<tr>
+		<tr class='{cycle values="impar,par"}'>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.data}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.descricao}</a></td>
-			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.valor}</a></td>
+			<td align="center"><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.valor}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.valor_pago}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.data_pagamento}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.reagendamento}</a></td>
-			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.status}</a></td>
+			<td align="center"><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.status}</a></td>
 		</tr>
 		{/foreach}
 	</table>
