@@ -20,6 +20,30 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 										$this->_filtros 	= array("status" => "custom", "conta_mestre" => "bool");
 
 	}
+	
+	protected function preenchePeriodo($arr,$periodo) {
+		$data = date("d/m/Y");
+		for($i=0;$i<$periodo;$i++) {
+
+			list($d,$m,$a) = explode("/",$data);
+
+			$chave = "$a-$m";
+
+			if( !@$arr[$chave] ) {
+				$arr[$chave] = array("mes"=>$m,"ano"=>$a);
+			} else {
+				$arr[$chave]["mes"] = $m;
+				$arr[$chave]["ano"] = $a;
+			}
+
+			$data = MData::adicionaMes($data,-1);
+
+		}
+
+		krsort($arr);
+
+		return($arr);
+	}
 
 	public function filtroCampo($campo,$valor) {
 
@@ -209,7 +233,64 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 
 		return ($this->bd->obtemRegistros($sql));
 	}
+	
+	public function obtemBloqueiosDesbloqueios($intervalo) {
+	
+		$intsql = $intervalo - 1;
+	
+			$sql  = "SELECT ";
+			$sql .= "	count(*) as num_contratos, ";
+			$sql .= "	EXTRACT(year from ba.data_hora) as ano, ";
+			$sql .= "	EXTRACT(month from ba.data_hora) as mes ";
+			$sql .= "FROM ";
+			$sql .= "   lgtb_bloqueio_automatizado ba ";
+			$sql .= " WHERE ";
+			$sql .= "	ba.data_hora between now() - INTERVAL '$intsql months' AND now() ";
+			$sql .= "GROUP BY ano, mes ";
+			$sql .= "ORDER BY ano, mes ";
 
+			$retorno = array();
+	
+		$bloqueio_desbloqueio = $this->bd->obtemRegistros($sql);
+		
+		for($i=0;$i<count($bloqueio_desbloqueio);$i++) {
+			if( $bloqueio_desbloqueio[$i]["mes"] < 10 ) $bloqueio_desbloqueio[$i]["mes"] = "0".$bloqueio_desbloqueio[$i]["mes"];
+			$retorno[ $bloqueio_desbloqueio[$i]["ano"] . "-" . $bloqueio_desbloqueio[$i]["mes"] ] = $bloqueio_desbloqueio[$i];
+		}
+		
+		$retorno = $this->preenchePeriodo($retorno,$intervalo);
+		//echo $retorno;
+		return ($retorno);
+		}
+
+		public function obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes) {
+		
+			list($ano,$mes) = explode("-",$periodoAnoMes);
+			if( $mes < 10 ) {
+				$mes = "0".$mes;
+			}
+			$data1 = '01/'.$mes."/".$ano;
+			$data2 = MData::adicionaMes($data1,1);
+			$data1 = MData::ptBR_to_ISO($data1);
+			$data2 = MData::ptBR_to_ISO($data2);
+			
+			$sql  = "SELECT ";
+			$sql .= "	EXTRACT(year from ba.data_hora) as ano, ";
+			$sql .= "	EXTRACT(month from ba.data_hora) as mes, ";
+			$sql .= "	EXTRACT(day from ba.data_hora) as dia, ";
+			$sql .= "	ba.data_hora, ba.id_cliente_produto, p.id_produto, cl.nome_razao, p.nome, ba.admin, con.username, cl.id_cliente ";
+			$sql .= "FROM ";
+			$sql .= "   lgtb_bloqueio_automatizado ba INNER JOIN cbtb_cliente_produto cp ON (ba.id_cliente_produto = cp.id_cliente_produto) ";
+			$sql .= "   INNER JOIN cltb_cliente cl ON (cl.id_cliente = cp.id_cliente) ";
+			$sql .= "   INNER JOIN prtb_produto p ON (cp.id_produto = p.id_produto) ";
+			$sql .= "   INNER JOIN cntb_conta con ON (cp.id_cliente_produto = con.id_cliente_produto) ";
+			$sql .= "WHERE ";
+			$sql .= "	ba.data_hora >='$data1' AND ba.data_hora <'$data2' ";
+			$sql .= "ORDER BY ba.data_hora ";
+			//echo $sql;	
+			return ($this->bd->obtemRegistros($sql));			
+		
+		}
 
 
 }
