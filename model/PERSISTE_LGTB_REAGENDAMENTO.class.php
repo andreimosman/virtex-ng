@@ -17,7 +17,7 @@
 
 		}
 		
-		public function obtemReagendamento($id_cliente){
+		public function obtemReagendamento(){
 		
 		$sql  = "SELECT ";
 		$sql .= "	r.id_reagendamento, r.data, r.data_reagendamento, r.data_para_reagendamento, r.id_cliente_produto, cl.nome_razao, ";

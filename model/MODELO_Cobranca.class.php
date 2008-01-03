@@ -738,8 +738,8 @@
 			return $this->cbtb_fatura->obtemAnosFatura();
 		}
 		
-		public function obtemReagendamento($id_cliente) {
-			$retorno = $this->lgtb_reagendamento->obtemReagendamento($id_cliente);
+		public function obtemReagendamento() {
+			$retorno = $this->lgtb_reagendamento->obtemReagendamento();
 			
 			//echo "<PRE>";
 			//print_r($retorno);
