@@ -44,29 +44,61 @@ class VCACobranca extends VirtexControllerAdmin {
 	protected function executaBloqueios() {
 
 		$contrato_id = @$_REQUEST["contrato_id"];
-
-		if ($contrato_id) {
-			$dadosLogin = $this->_login->obtem("dados");
-			$admin = $dadosLogin["admin"];
-			$id_admin = $dadosLogin["id_admin"];
-
-			foreach($contrato_id as $k => $v) {
-
-				$listacontas = $this->contas->obtemContasPeloContrato($k, $v);
-
-				foreach($listacontas as $chave => $campo) {
-					if($v == "BL") {
-						$this->contas->alteraContaBandaLarga($k, NULL, 'S');
-					} else if($v == "D") {
-						$this->contas->alteraContaDiscado($k, NULL, 'S');
-					} else if($v == "H") {
-						$this->contas->alteraHospedagem($k, NULL, 'S');
+		$bloquear    = @$_REQUEST["bloquear"];
+		$acao        = @$_REQUEST["acao"];
+		$url 		 = "admin-cobranca.php?op=bloqueios";
+		if( $acao == "bloquear" ) {
+				try {
+					$senha_admin = @$_REQUEST["senha_admin"];
+					$dadosLogin = $this->_login->obtem("dados");
+					if( !$senha_admin ) {
+						$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
+					} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+						$erro = "Operação não autorizada: SENHA NÃO CONFERE.";								
 					}
-					$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, '');
-				}
+					if($erro) throw new Exception($erro);
+					
+						if ($contrato_id) {
+							$dadosLogin = $this->_login->obtem("dados");
+							$admin = $dadosLogin["admin"];
+							$id_admin = $dadosLogin["id_admin"];
 
-				$this->contas->gravaLogBloqueioAutomatizado($k, 'S', $admin, 'Suspensão por pendências financeiras');
-			}
+							foreach($contrato_id as $k => $v) {
+
+								$listacontas = $this->contas->obtemContasPeloContrato($k, $v);
+
+								foreach($listacontas as $chave => $campo) {
+									if($v == "BL") {
+										$this->contas->alteraContaBandaLarga($k, NULL, 'S');
+									} else if($v == "D") {
+										$this->contas->alteraContaDiscado($k, NULL, 'S');
+									} else if($v == "H") {
+										$this->contas->alteraHospedagem($k, NULL, 'S');
+									}
+									$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, '');
+								}
+
+								$this->contas->gravaLogBloqueioAutomatizado($k, 'S', $admin, 'Suspensão por pendências financeiras');
+							}
+						}
+									$this->_view->atribui("url",$url);
+									$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
+									$this->_view->atribuiVisualizacao("msgredirect");
+									
+									if( $acao ) {
+										$erro = "";										
+									} else {
+										VirtexView::simpleRedirect($url);
+									}
+								
+						
+				}catch (ExcecaoModeloValidacao $e ) {
+					$this->_view->atribui ("msg_erro", $e->getMessage());
+					$erro = true;	
+				} catch (Exception $e ) {
+					$this->_view->atribui ("msg_erro", $e->getMessage());
+					$erro = true;	
+				}
 		}
 
 		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadas();
@@ -373,7 +405,14 @@ class VCACobranca extends VirtexControllerAdmin {
 			$cobranca = VirtexModelo::factory("cobranca");
 			$lista = $cobranca->obtemReagendamento();
 			$this->_view->atribui("cobranca", $lista);
-		}
+		
+		} elseif("bloqueios_desbloqueios" == $relatorio) {
+			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
+			$this->_view->atribui("periodo", $periodo);
+			$contas = VirtexModelo::factory("contas");
+			$bloqueios_desbloqueios = $contas->obtemBloqueiosDesbloqueios($periodo);
+			$this->_view->atribui("bloqueios_desbloqueios", $bloqueios_desbloqueios);
+			}
 	}
 }
 ?>
