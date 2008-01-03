@@ -1,21 +1,24 @@
-<html>
-<head>
-	<title></title>
-
-</head>
-<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="suporte_header.html"} <br /><br />
-
+<script type="text/javascript">
+<!--
+{literal}	
+	
+	function filtro(filtro){
+		window.open("admin-faturamento.php?op=relatorios&relatorio=previsao&ano_select="+filtro.value,"conteudo");
+		
+	}
+{/literal}
+//-->
+</script>
 <div align="center">
 
-<form action="admin-faturamento.php?op=relatorios&relatorio=previsao" method="post">
+<form action="admin-faturamento.php?op=relatorios&relatorio=previsao&ano_select={$ano_select}" method="post">
 <p align="right" id="titu"><label>Escolha o ano:</label>&nbsp;
 	<select name="ano_select" onchange="filtro(this)">
 		{foreach from=$anos_fatura item=i}
 			<option value={$i.ano}  {if $ano_select == $i.ano} SELECTED{/if}>{$i.ano}</option>
 		{/foreach}
 	</select>
-	<input type="submit" value="OK">
 </p>
 </form>
 
@@ -42,7 +45,7 @@
 		</tr>
 
 		{foreach from=$dados key=p item=m}
-		<tr>
+		<tr class='{cycle values="impar,par"}'>
 			<td align="center">{$p}</td>
 			<td align="center">{$m[1]}</td>		<!-- Janeiro -->
 			<td align="center">{$m[2]}</td>		<!-- Fevereito -->

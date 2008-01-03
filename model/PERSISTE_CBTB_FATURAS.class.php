@@ -269,7 +269,7 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		$sql .= "   f.status not in ('E','C') AND f.data >= '$ano_select-01-01' AND f.data < '$ano_select1-01-01' ";
 		$sql .= "GROUP BY ";
 		$sql .= "   extract('year' from data), extract('month' from data), extract('day' from data) ";
-
+		//echo $sql;
 		return ($this->bd->obtemRegistros($sql));
 
 	}

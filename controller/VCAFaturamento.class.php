@@ -32,10 +32,17 @@ class VCAFaturamento extends VirtexControllerAdmin {
 		if("previsao" == $relatorio){
 
 			$ano_select = @$_REQUEST["ano_select"];
+			
+			if( ! $ano_select ) $ano_select = date("Y");
+			
 			$cobranca = VirtexModelo::factory("cobranca");
 			$lista = $cobranca->obtemPrevisaoFaturamento($ano_select);
 			$anos_fatura = $cobranca->obtemAnosFatura();
-
+			
+			//echo "<pre>";
+			//print_r($lista);
+			//echo "</pre>";
+			
 			$dados = array();
 			$soma = array();
 

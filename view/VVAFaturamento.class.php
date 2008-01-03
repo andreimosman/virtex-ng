@@ -34,7 +34,7 @@
 			
 			switch($relatorio) {
 				
-				case "previsao":					
+				case "previsao":	
 					$this->_file = "faturamento_previsao.html";	
 					$this->atribui("titulo", $titulo."Previsão de Faturamento");	
 					break;
