@@ -121,6 +121,10 @@
 					$this->_file = "relatorio_bloqueios_desbloqueios.html";
 					$this->atribui("titulo", $titulo."Bloqueios e Desbloqueios");
 					break;
+				case "bloqueios_desbloqueios_detalhes":
+					$this->_file = "relatorio_bloqueios_desbloqueios_detalhes.html";
+					$this->atribui("titulo", $titulo."Detalhes Bloqueios e Desbloqueios");
+					break;
 				case "emails_cobranca":
 					$this->_file = "relatorio_emails_cobranca.html";
 					$this->atribui("titulo", $titulo."Emails de Cobrança");

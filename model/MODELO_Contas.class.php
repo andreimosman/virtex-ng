@@ -760,6 +760,22 @@
 		public function obtemContasPeloContrato($id_cliente_produto, $tipo=NULL) {
 			return $this->cntb_conta->obtemContasPeloContrato($id_cliente_produto, $tipo=NULL);
 		}
+		
+		public function obtemBloqueiosDesbloqueios($periodo){
+			$retorno = $this->cntb_conta->obtemBloqueiosDesbloqueios($periodo);
+			//echo "<PRE>";
+			//print_r($retorno);
+			//echo "</PRE>";
+			return $retorno;
+		}
+		
+		public function obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes){
+			$retorno = $this->cntb_conta->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
+			//echo "<PRE>";
+			//print_r($retorno);
+			//echo "</PRE>";
+			return $retorno;
+		}
 
 
 	}

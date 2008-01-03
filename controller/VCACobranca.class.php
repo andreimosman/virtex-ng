@@ -412,7 +412,23 @@ class VCACobranca extends VirtexControllerAdmin {
 			$contas = VirtexModelo::factory("contas");
 			$bloqueios_desbloqueios = $contas->obtemBloqueiosDesbloqueios($periodo);
 			$this->_view->atribui("bloqueios_desbloqueios", $bloqueios_desbloqueios);
-			}
+		
+		} elseif("bloqueios_desbloqueios_detalhes" == $relatorio) {
+			$contas = VirtexModelo::factory("contas");
+			
+			$periodoMesAno = $mes = @$_REQUEST["mes"] . -  $ano = @$_REQUEST["ano"];
+			$this->_view->atribui("periodoMesAno", $periodoMesAno);
+			
+			$periodoAnoMes = @$_REQUEST["ano"] . - @$_REQUEST["mes"];
+			$this->_view->atribui("periodoAnoMes", $periodoAnoMes);
+			
+			$bloqueados_desbloqueados = $contas->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
+			$this->_view->atribui("bloqueados_desbloqueados", $bloqueados_desbloqueados);
+			
+			//echo "<pre>";
+			//print_r($periodoAnoMes);
+			//echo "</pre>";
+		}
 	}
 }
 ?>

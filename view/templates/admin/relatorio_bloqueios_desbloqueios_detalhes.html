@@ -1,0 +1,55 @@
+<script type="text/javascript">
+
+{literal}	
+	
+	function filtro(filtro){
+		window.open("admin-cobranca.php?op=relatorios&relatorio=bloqueios_desbloqueios&periodo="+filtro.value,"conteudo");
+		
+	}
+{/literal}
+
+</script>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+
+.int {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 14px;
+}
+{/literal}
+</style>
+{include file="cobranca_header.html"}
+
+<br /><br />
+<div id="cont" align="center">
+	<h4> Bloqueados e Desbloqueados no período de {$periodoMesAno}</h4>
+
+	
+	<table class="lista" border="0" width="600px" cellpadding="0" cellspacing="0">
+		<tr>
+			<th>Data</th>
+			<th>Cliente</th>
+			<th>Username</th>
+			<th>Produto</th>
+			<th>Admin</th>
+		</tr>
+		{foreach from=$bloqueados_desbloqueados key=d item=b_d}
+		<tr class='{cycle values="impar,par"}'>
+			<td align="center"><a href="admin-clientes.php?op=contrato&id_cliente={$b_d.id_cliente}">{$b_d.dia}-{$b_d.mes}-{$b_d.ano}</a></td>
+			<td align="center"><a href="admin-clientes.php?op=contrato&id_cliente={$b_d.id_cliente}">{$b_d.nome_razao}</a></td>
+			<td align="center"><a href="admin-clientes.php?op=contrato&id_cliente={$b_d.id_cliente}">{$b_d.username}</a></td>
+			<td align="center"><a href="admin-clientes.php?op=contrato&id_cliente={$b_d.id_cliente}">{$b_d.nome}</a></td>
+			<td align="center"><a href="admin-clientes.php?op=contrato&id_cliente={$b_d.id_cliente}">{$b_d.admin}</a></td>
+		</tr>
+		{/foreach}
+	</table>
+	
+</div>
