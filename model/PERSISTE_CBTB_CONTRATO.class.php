@@ -134,7 +134,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		//print_r($retorno);
 		//echo "</pre>";
 
-
+		
 		return ($retorno);
 	}
 

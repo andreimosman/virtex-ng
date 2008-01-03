@@ -532,7 +532,7 @@
 		public function obtemCancelamentosPorPeriodo($periodo){
 			return( $this->cbtb_contrato->obtemCanceladosPorPeriodo($periodo) );
 		}
-
+		
 		public function obtemEvolucaoPorPeriodo($periodo) {
 			return($this->cbtb_contrato->obtemEvolucao($periodo));
 		}
@@ -738,13 +738,14 @@
 			return $this->cbtb_fatura->obtemAnosFatura();
 		}
 		
-		public function obtemReagendamento() {
-			$returno = $this->lgtb_reagendamento->obtemReagendamento();
-			return $retorno;
+		public function obtemReagendamento($id_cliente) {
+			$retorno = $this->lgtb_reagendamento->obtemReagendamento($id_cliente);
 			
-			echo "<PRE>";
-			print_r($retorno);
-			echo "</PRE>";
+			//echo "<PRE>";
+			//print_r($retorno);
+			//echo "</PRE>";
+			
+			return $retorno;
 			
 		}
 		
