@@ -218,6 +218,74 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		return $this->bd->obtemRegistros($sql);
 
 	}
+	
+	public function obtemContratosFaturasAtrasadasBloqueios() {
+
+	$sql  = "SELECT sum(f.valor) as fatura_valor, cl.nome_razao, ";
+	$sql .= "	(SELECT count(f.status) ";
+	$sql .= "		FROM cbtb_faturas f ";
+	//$sql .= "		INNER JOIN cbtb_contrato co ON (co.id_cliente_produto = f.id_cliente_produto) ";
+	$sql .= "		WHERE f.reagendamento is null ";
+	$sql .= "		AND f.data > now() - interval '10 days' - interval '30 days' ";
+	$sql .= "		AND f.status not in ('P','E','C') OR f.reagendamento is null ";
+	$sql .= "		AND f.data > now() - interval '2 days' - interval '30 days' ";
+	$sql .= "		AND f.status not in ('P','E','C'))as faturas_atraso  ";
+	//$sql .= "		AND f.id_cliente_produto = co.id_cliente_produto) as faturas_atraso ";
+	$sql .= "FROM cbtb_faturas f ";
+	$sql .= "	INNER JOIN cbtb_cliente_produto cp ON (cp.id_cliente_produto = f.id_cliente_produto) ";
+	$sql .= "	INNER JOIN cltb_cliente cl ON (cl.id_cliente = cp.id_cliente) ";
+	$sql .= "WHERE ";
+	$sql .= "	 f.reagendamento is null ";
+	$sql .= "	AND f.data > now() - interval '10 days' - interval '30 days' "; 
+	$sql .= "	AND f.status not in ('P','E','C') ";
+	$sql .= "	OR f.reagendamento is null ";
+	$sql .= "	AND f.data > now() - interval '2 days' - interval '30 days' ";
+	$sql .= "	AND f.status not in ('P','E','C') ";
+	$sql .= "GROUP BY ";
+	$sql .= "	cl.nome_razao	";
+	$sql .= "ORDER BY ";
+	$sql .= "	cl.nome_razao ";
+		
+		
+		
+		
+		/*$sql  = "SELECT ";
+		$sql .= "	cliente.nome_razao  ";
+		$sql .= "	, produto.nome  ";
+		$sql .= "	, contrato.id_cliente_produto  ";
+		$sql .= "	, contrato.tipo_produto  ";
+		$sql .= "	, (SELECT count(nconta.*) FROM cntb_conta nconta WHERE nconta.id_cliente_produto = contrato.id_cliente_produto AND nconta.tipo_conta = contrato.tipo_produto) as contas ";
+		$sql .= "	, (SELECT count(faturas.*)  ";
+		$sql .= "		FROM cbtb_faturas faturas  ";
+		$sql .= "			WHERE 	faturas.reagendamento is null and faturas.data > now() - interval '10 days' - interval '30 days'  ";
+		$sql .= "				and faturas.status not in ('P','E','C') OR faturas.reagendamento is null and faturas.data > now() - interval '2 days' - interval '30 days' and faturas.status not in ('P','E','C')  ";
+		$sql .= "				AND f.id_cliente_produto = contrato.id_cliente_produto) as faturas_atraso ";
+		$sql .= "	, (SELECT sum(faturas.valor)  ";
+		$sql .= "		FROM cbtb_faturas faturas  ";
+		$sql .= "			WHERE 	faturas.reagendamento is null and faturas.data > now() - interval '10 days' - interval '30 days'  ";
+		$sql .= "				and faturas.status not in ('P','E','C') OR faturas.reagendamento is null and faturas.data > now() - interval '2 days' - interval '30 days' and faturas.status not in ('P','E','C')  ";
+		$sql .= "				AND faturas.id_cliente_produto = co.id_cliente_produto) as fatura_valor ";
+		$sql .= "FROM 	cntb_conta as conta  ";
+		$sql .= "	, cbtb_contrato as contrato  ";
+		$sql .= "	, cltb_cliente as cliente  ";
+		$sql .= "	, cbtb_cliente_produto as cliente_produto  ";
+		$sql .= "	, prtb_produto as produto  ";
+		$sql .= "WHERE  ";
+		$sql .= "	conta.id_cliente = cliente.id_cliente  ";
+		$sql .= "	AND contrato.id_cliente_produto = cliente_produto.id_cliente_produto  ";
+		$sql .= "	AND conta.id_cliente_produto = contrato.id_cliente_produto  ";
+		$sql .= "	AND produto.id_produto = cliente_produto.id_produto  ";
+		$sql .= "	AND conta.status NOT IN ('C', 'S')  ";
+		$sql .= "GROUP BY  ";
+		$sql .= "	contrato.tipo_produto ";
+		$sql .= "	, cliente.nome_razao ";
+		$sql .= "	, produto.nome ";
+		$sql .= "	, contrato.id_cliente_produto ";*/
+
+		echo $sql;
+		return $this->bd->obtemRegistros($sql);
+
+	}
 
 }
 
