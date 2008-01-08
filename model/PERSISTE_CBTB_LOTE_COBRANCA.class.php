@@ -23,7 +23,7 @@ class PERSISTE_CBTB_LOTE_COBRANCA extends VirtexPersiste {
 			$sql .= "ORDER BY id_remessa DESC ";
 			$sql .= "LIMIT $quantidade";
 
-	echo $sql;
+	/////echo $sql;
 			return ($this->bd->obtemRegistros($sql));
 	}
 
