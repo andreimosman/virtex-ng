@@ -38,6 +38,9 @@ class VCACobranca extends VirtexControllerAdmin {
 			case 'gerar_lista_boletos':
 				$this->geraListaBoletos();
 				break;
+			case 'gerar_lista_faturas':
+				$this->geraListaFaturas();
+				break;
 		}
 	}
 
@@ -149,6 +152,20 @@ class VCACobranca extends VirtexControllerAdmin {
 			}
 		}
 	}
+	
+	protected function geraListaFaturas(){
+		
+		$id_remessa = @$_REQUEST["id_remessa"];
+		
+		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);
+		
+		$this->_view->atribui("resultado", $resultado);
+		
+		
+		///$this->arquivoTemplate = "cobranca_listar_faturas.html";
+		
+		
+	}
 
 	protected function geraListaBoletos() {
 
@@ -193,9 +210,14 @@ class VCACobranca extends VirtexControllerAdmin {
 		$ano = @$_REQUEST["ano"];
 		$mes = @$_REQUEST["mes"];
 		$periodo = @$_REQUEST["periodo"];
+		
 
-		$formas = $this->preferencias->obtemFormasPagamento();
+		$formas = $this->preferencias->obtemFormasPagamentoGerarCobranca();
 		$this->_view->atribui("formas",$formas);
+		
+		$bancos = $this->preferencias->obtemListaBancos();
+		$this->_view->atribui("bancos",$bancos);
+		
 
 		//echo "<pre>";
 		//print_r($formas);
@@ -213,27 +235,26 @@ class VCACobranca extends VirtexControllerAdmin {
 			//COLOCAR ESQUEMA DE PEGAR ID DO USUARIO
 			$dadosLogin = $this->_login->obtem("dados");
 			$id_admin = $dadosLogin["id_admin"];
-			$id_forma_pagamento = @$_REQUEST["tipo_pagamento"];
+			$id_forma_pagamento = @$_REQUEST["id_forma_pagamento"];
 
 			//phpinfo();
+			
+			//echo "<pre>";
+			//print_r($_REQUEST);
+			//echo "</pre>";
+			
+			//die;
 
-			$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin);
 			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento);
 
-			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-
-
-
-			//return;
-
-
 			if (!$resultado){
-
-				$msg = "Não foram encontradas faturas para esse período";
-
+				$msg = "Não foram encontradas faturas para esse período.";
+			} else {
+				$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin,$id_forma_pagamento);
+				$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+				$msg = "Remessa cadastrada com sucesso.";
 			}
-
-
+			
 			$urlPreto = "view/templates/imagens/preto.gif";
 			$urlBranco = "view/templates/imagens/branco.gif";
 
@@ -269,19 +290,40 @@ class VCACobranca extends VirtexControllerAdmin {
 
 				$this->cobranca->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca);
 
-				$msg = "O Lote foi gerado para o período com sucesso!";
+				// $msg = "O Lote foi gerado para o período com sucesso!";
 
 			}
+
+			$url = "admin-cobranca.php?op=gerar_cobranca";
+			$this->_view->atribui("url",$url);
+			$this->_view->atribui("mensagem", $msg);
+			$this->_view->atribuiVisualizacao("msgredirect");
+
+			// VirtexView::simpleRedirect($url);
+			
 		}
+
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
-		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas(50);
-
-		$this->_view->atribui("periodo_anos", $periodo_anos_fatura);
-		$this->_view->atribui("ultimas_remessas", $ultimas_remessas);
-		$this->_view->atribui("msg", $msg);
-
 
 		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas("10");
+		
+		$formas = $this->preferencias->obtemFormasPagamentoGerarCobranca();
+		$this->_view->atribui("formas",$formas);
+				
+		$bancos = $this->preferencias->obtemListaBancos();
+		$this->_view->atribui("bancos",$bancos);
+		
+		
+		for($i=0;$i<count($ultimas_remessas);$i++){
+			$ultimas_remessas[$i]["forma_pagto"] = $ultimas_remessas[$i]["id_forma_pagamento"] ? $this->preferencias->obtemFormaPagamento($ultimas_remessas[$i]["id_forma_pagamento"]) : array();
+		}
+		
+		//echo "<pre>";
+		//print_r($ultimas_remessas);
+		//echo "</pre>";
+
+		$this->_view->atribui("ultimas_remessas", $ultimas_remessas);
+
 
 	}
 

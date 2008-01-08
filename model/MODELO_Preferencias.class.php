@@ -455,6 +455,12 @@
 			return($this->pftb_forma_pagamento->obtem($filtro));
 		}
 		
+		public function obtemFormasPagamentoGerarCobranca() {
+			$filtro=array("tipo_cobranca"=>"DA", "tipo_cobranca" =>"BL", "carne" => "false");
+			
+			return($this->pftb_forma_pagamento->obtem($filtro));
+		}
+		
 		public function obtemFormaPagamento($id_forma_pagamento) {
 			return($this->pftb_forma_pagamento->obtemUnico(array("id_forma_pagamento"=>$id_forma_pagamento)));
 		}

@@ -375,7 +375,6 @@
 			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata) : array();
 
 			$id_cobranca = 0;
-
 			// gera carne
 			if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
 				$gera_carne = true;
@@ -400,6 +399,8 @@
 				$cod_barra = "";
 				$linha_digitavel = "";
 				$nosso_numero = "";
+				
+				///ECHO  $fatura["valor"];
 
 				if ($gera_carne) {
 					// gera codigo de barras
@@ -407,7 +408,7 @@
 
 					// ($banco,$agencia,$conta,$carteira,$convenio,$vencimento,$valor,$id,$moeda=9,$cnpj_ag_cedente="",$codigo_cedente="",$operacao_cedente="")
 
-
+					
 
 					switch ($formaPagto ["tipo_cobranca"]) {
 						case "PC":
@@ -813,10 +814,11 @@
 		}
 
 
-		public function cadastraLoteCobranca($data_referencia, $periodo, $id_admin) {
+		public function cadastraLoteCobranca($data_referencia, $periodo, $id_admin,$id_forma_pagamento) {
 			$dados = array (	"data_referencia" => $data_referencia,
 								"data_geracao" => '=now',
 								"periodo" => $periodo,
+								"id_forma_pagamento"=>$id_forma_pagamento,
 								"id_admin" => $id_admin
 							);
 

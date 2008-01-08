@@ -181,13 +181,14 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 	public function obtemFaturasPorRemessa($id_remessa) {
 
 		$sql  = " SELECT ";
-		$sql .="   r.id_remessa, f.id_cobranca, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra ";
+		$sql .="   r.id_remessa, f.id_cobranca, f.status, f.id_cliente_produto, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra, cp.id_cliente ";
 		$sql .=" FROM ";
-		$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON f.id_cobranca = r.id_cobranca ";
+		$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON (f.id_cobranca = r.id_cobranca) ";
+		$sql .="   INNER JOIN cbtb_cliente_produto cp ON (f.id_cliente_produto = cp.id_cliente_produto) ";
 		$sql .=" WHERE ";
 		$sql .="   id_remessa = $id_remessa ";
 
-		echo $sql;
+		//echo $sql;
 
 
 

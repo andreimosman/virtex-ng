@@ -29,8 +29,8 @@
 
 <br /><br />
 <div id="cont" align="center">
-	Geração de Boletos Bancários
-	<br /><br />
+
+	{if $formas}
 	<form action="admin-cobranca.php" >
 		<input type="hidden" name="op" value="gerar_cobranca" />
 		<input type="hidden" name="acao" value="gerar" />
@@ -67,38 +67,47 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Tipo de Pagamento:</td>
-				<td><select name="tipo_pagamento" id="tipo_pagamento">
-							{foreach from=$formas item=i key=k}
-							<option value="{$i.id_forma_pagamento}">{if $i.tipo_cobranca=="MO"}Manual{else if $i.tipo_cobranca=="BL"}Boleto{/if}</option>
-							{/foreach}
-						</select></td>
+				<td colspan="4" align='center'>{if $formas}Forma de Pagamento{/if}</td>
 			</tr>
 			<tr>
-				<td colspan="3"  align="center"><input type="submit" name="123" value="Emitir Boletos no Período" /></td>
+				<td colspan="4" align='center'><select name="id_forma_pagamento" id="id_forma_pagamento" style='font-size:15px;'>
+							{foreach from=$formas item=i key=k}
+							<option value="{$i.id_forma_pagamento}">{if $i.tipo_cobranca=="BL"}Boleto{/if} {if $i.tipo_cobranca=="DA"}Débito Automático{/if} - {$bancos[$i.codigo_banco]} - convênio {$i.convenio}</option>
+							{/foreach}
+						</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3"  align="center"><input type="submit" name="123" value="Gerar Cobranças" /></td>
 			</tr>
 		</table>
 	</form>
+	{else}
+		Não existem formas de pagamento passíveis de geração<br><br>
+	{/if}
+
 
 	{if $msg}
 		<h4>{$msg}</h4>
 	{/if}
 
 	{if $ultimas_remessas}
-	<table class='lista' width='500' cellpadding=0 cellspacing=0 align="center" border="0">
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border="0">
 
 		<tr>
 			<th align="left">DATA CRIAÇÃO</th>
+			<th align="left">&nbsp;</th>
 			<th align="center">PERIODO</th>
 			<th align="center">FATURAS</th>
 			<th align="center" colspan="2">&nbsp;</th>
 		</tr>
 		{foreach from=$ultimas_remessas item=r}
-		
+
 		<tr class='{cycle values="impar,par"}'>
-			<td width="120" class='{$estilo}' align="center">{$r.data_geracao|date_format:"%d/%m/%Y"}</td>
-			<td class='{$estilo}' align='center'>{$r.data_referencia|date_format:"%d/%m/%Y"}{if $.periodo=="MT"} <em>(Todo o mês)</em>{else if $r.periodo=="PQ"} <em>(Parcial)</em>{/if}</td>
-			<td class='{$estilo}' align='center'>{$r.qtfaturas}</td>
+			<td width="120" class='{$estilo}' align="center"><a href="admin-cobranca.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_geracao|date_format:"%d/%m/%Y"}</a></td>
+			<td width="150" align=center >{if !$r.id_forma_pagamento}&nbsp;{else}{if $r.forma_pagto.tipo_cobranca=="BL"}Boleto{/if} {if $r.forma_pagto.tipo_cobranca=="DA"}Débito Automático{/if} - {$bancos[$r.forma_pagto.codigo_banco]} - convênio {$r.forma_pagto.convenio}{/if}</td>
+			<td class='{$estilo}' width="150"  align='center'><a href="admin-cobranca.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_referencia|date_format:"%d/%m/%Y"}{if $.periodo=="MT"} <em>(Todo o mês)</em>{else if $r.periodo=="PQ"} <em>(Parcial)</em>{/if}</a></td>
+			<td class='{$estilo}' align='center'><a href="admin-cobranca.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}">{$r.qtfaturas}</a></td>
 			<td class='{$estilo}' align='center' width='18'><a href="admin-cobranca.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/gif_alterar.gif"  alt="Ver Lista de Faturas" title="Ver Lista de Faturas" border="0"/></a></td>
 			<td class='{$estilo}' align='center' width='18'><a href="javascript: popup();"><img src="view/templates/imagens/print.gif" width="17" height="17" alt="Imprimir Boletos" title="Imprimir Boletos"  border="0"/></a></td>
 		</tr>

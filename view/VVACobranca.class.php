@@ -9,39 +9,52 @@
 		protected function init() {
 			parent::init();
 			$this->nomeSessao = "Cobrança";
+			$this->atribuiVisualizacao("cobranca");
 		}
 
 		public function exibe() {
 
-			switch($this->obtem("op")) {
+			switch( $this->_visualizacao ) {
+				case 'cobranca':
+					switch($this->obtem("op")) {
 
-				case 'gerar_lista_boletos':
-					$this->exibeListaBoletos();
+						case 'gerar_lista_boletos':
+							$this->exibeListaBoletos();
+							break;
+
+						case 'bloqueios':
+							$this->exibeBloqueios();
+							break;
+
+						case 'amortizacao':
+							$this->exibeAmortizacao();
+							break;
+
+						case 'gerar_cobranca':
+							$this->exibeGerarCobranca();
+							break;
+
+						case 'arquivos':
+							$this->exibeArquivos();
+							break;
+
+						case 'relatorios':
+							$this->exibeRelatorios();
+							break;
+
+						case 'gerar_lista_faturas':
+							$this->exibeListaFaturas();
+							break;
+
+						default:
+
+					}
 					break;
-
-				case 'bloqueios':
-					$this->exibeBloqueios();
-					break;
-
-				case 'amortizacao':
-					$this->exibeAmortizacao();
-					break;
-
-				case 'gerar_cobranca':
-					$this->exibeGerarCobranca();
-					break;
-
-				case 'arquivos':
-					$this->exibeArquivos();
-					break;
-
-				case 'relatorios':
-					$this->exibeRelatorios();
-					break;
-
-
 			}
-
+			
+			//echo "<pre>";
+			//print_r($this);
+			//echo "</pre>";
 			parent::exibe();
 
 		}
@@ -60,6 +73,13 @@
 			$this->_file = "cobranca_amortizacao.html";
 			$this->atribui("titulo", "Amortização");
 		}
+		
+		protected function exibeListaFaturas() {
+			$this->_file = "cobranca_listar_faturas.html";
+			$this->atribui("titulo", "Listagem das Faturas");
+		}
+		
+		
 
 		protected function exibeGerarCobranca() {
 			$id_remessa = @$_REQUEST["id_remessa"];
