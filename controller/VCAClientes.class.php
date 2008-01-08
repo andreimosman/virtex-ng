@@ -1081,7 +1081,10 @@
 					
 					
 					if($id_conta) {  // alteração
+						$contaAtual = $contas->obtemContaPeloId($id_conta);
+
 						if("BL" == $tipo){
+							//die;
 							
 							$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
 									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
@@ -1117,6 +1120,23 @@
 						} else {							
 							// die("tipo inválido!");
 						}
+
+						$contaNova = $contas->obtemContaPeloId($id_conta);
+						$dadosLogin = $this->_login->obtem("dados");
+												
+						// Registra no sistema.
+						$endAtual = @$contaAtual["ipaddr"] ? @$contaAtual["ipaddr"] : @$contaAtual["rede"];
+						$endNovo  = @$contaNova["ipaddr"] ? @$contaNova["ipaddr"] : @$contaNova["rede"];
+
+						$this->eventos->registraAlteracaoConta($this->ipaddr,$dadosLogin["id_admin"],$contaAtual["id_conta"],$contaAtual["id_cliente_produto"],
+																@$contaAtual["status"], @$contaNova["status"],
+																$endAtual,$endNovo,
+																@$contaAtual["id_pop"], @$contaNova["id_pop"],
+																@$contaAtual["id_nas"], @$contaNova["id_nas"],
+																@$contaAtual["mac"], @$contaNova["mac"],
+																@$contaAtual["upload_kbps"], @$contaNova["upload_kbps"],
+																@$contaAtual["download_kbps"], @$contaNova["download_kbps"]
+																);
 
 						$this->_view->atribui("url",$url);
 						$this->_view->atribui("mensagem",$msg);

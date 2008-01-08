@@ -46,6 +46,9 @@
 					case 'contas':
 						self::$modelosInstanciados[$modelo] = new MODELO_Contas();
 						break;
+					case 'eventos':
+						self::$modelosInstanciados[$modelo] = new MODELO_Eventos();
+						break;
 					default:
 						throw new ExcecaoModeloInexistente();
 

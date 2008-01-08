@@ -1,0 +1,60 @@
+<html>
+<head>
+	<title></title>
+</head>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+
+.cont_int {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 14px;
+}
+
+.cont_int {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 10px;
+}
+{/literal}
+</style>
+
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+<br /><br />
+
+<div id="cont" align="center">
+	<table  class="lista" border="0" width="700" cellpadding="0" cellspacing="0">
+		<tr>
+			<th align="left">Data/Hora</th>
+			<th align="left">Admin</th>
+			<th align="left">Tipo</th>
+			<th align="left">Natureza</th>
+			<th align="left">Conta</th>
+		</tr>
+		{foreach item=e from=$eventos}
+		<tr class='{cycle values="impar,par" advance=false}'>
+			<td align="left" width="130"><strong>{$e.datahora|date_format:"%d/%m/%Y %H:%M:%S"}</strong></td>
+			<td align="left"><strong>{if $e.id_admin}{$e.admin.admin}{else}{if $e.tipo == 'ERRO' && $e.natureza == 'LOGIN'}{$e.descricao}{else}&nbsp;-{/if}{/if}</strong></td>
+			<td align="left"><strong>{$e.tipo}</strong></td>
+			<td align="left"><strong>{$e.natureza}</strong></td>
+			<td align="left"><strong>{if $e.id_conta}{$e.id_conta} ({$e.conta.tipo_conta}) - {$e.conta.username}{if $e.conta.tipo_conta == 'E'}@{$e.conta.dominio}{/if}{else}&nbsp;-{/if}</strong></td>
+		</tr>
+		<tr class='{cycle values="impar,par"}'>
+			<td align="left" colspan=5><strong>Descrição:</strong><pre>{$e.descricao}</pre>&nbsp;</td>
+		</tr>
+		{/foreach}
+
+	</table>
+</div>
+
+
+</body>
+</html>

@@ -390,6 +390,69 @@
 
 		protected function executaRelatorios() {
 			$this->_view->atribuiVisualizacao("relatorios");
+			
+			$relatorio = @$_REQUEST["relatorio"];
+			
+			$this->_view->atribui("relatorio",$relatorio);
+			
+			
+			
+			switch($relatorio) {
+			
+				case 'eventos':
+					$this->executaRelatorioEventos();
+					break;
+			
+			}
+			
+			
+		}
+		
+		protected function executaRelatorioEventos() {
+		
+			// 			
+			$tipo = @$_REQUEST["tipo"];
+			$id_admin = @$_REQUEST["id_admin"];
+			$natureza = @$_REQUEST["natureza"];
+			$id_conta = @$_REQUEST["id_conta"];
+			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+			$limite = @$_REQUEST["limite"];
+			
+			
+
+			// TODO: PERÍODO.
+			
+			$filtro = array();
+			
+			// $tipo = "INFO";
+			// $natureza = "LOGIN";
+			// $natureza = "ALTERACAO CONTA";
+			// $id_admin = 1;
+			// $id_conta = 204;
+			// $id_conta = 195;
+			// $id_cliente_produto = 309;
+			
+			if( $tipo ) $filtro["tipo"] = $tipo;
+			if( $natureza ) $filtro["natureza"] = $natureza;
+			if( $id_admin ) $filtro["id_admin"] = $id_admin;
+			if( $id_conta ) $filtro["id_conta"] = $id_conta;
+			if( $id_cliente_produto ) $filtro["id_cliente_produto"] = $id_cliente_produto;
+			if( $id_cobranca ) $filtro["id_cobranca"] = $id_cobranca;
+			
+			
+			if( !$limite && !count($filtro)) $limite = 20;
+			
+			
+			$eventos = $this->eventos->obtem($filtro,$limite);
+			$this->_view->atribui("eventos",$eventos);
+			
+			
+			//echo "<pre>";
+			//print_r($eventos);
+			//echo "</pre>";
+			
+			
+		
 		}
 
 	}

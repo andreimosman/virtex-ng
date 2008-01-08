@@ -137,8 +137,20 @@
 		}
 		
 		protected function exibeRelatorios() {
-			$this->_file = "administracao_log_admin.html";
-			$this->atribui("titulo","Log dos Administradores");
+		
+			switch($this->obtem("relatorio")) {
+				case 'eventos':
+					$this->atribui("titulo","Log de Eventos do Sistema");
+					$this->_file = "administracao_relatorios_eventos.html";
+					break;
+				
+				default:
+				
+			
+			}
+		
+			//$this->_file = "administracao_log_admin.html";
+			//$this->atribui("titulo","Log dos Administradores");
 		}
 		
 	

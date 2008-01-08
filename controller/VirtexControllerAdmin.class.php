@@ -5,7 +5,9 @@
 	
 	class VirtexControllerAdmin extends VirtexController {
 
+		protected $eventos;
 		protected $preferencias;
+		
 	
 		protected function __construct() {
 			parent::__construct();
@@ -73,7 +75,9 @@
 	
 		protected function init() {
 			parent::init();
+			$this->eventos		= VirtexModelo::factory("eventos");
 			$this->preferencias = VirtexModelo::factory("preferencias");
+			
 			$this->_loginScript = "admin-login.php";
 			$this->_changePasswordScript = "admin-administracao.php?op=altsenha";
 			
@@ -119,10 +123,8 @@
 			if( !parent::verificaRegistro() ) {
 				return false;
 			}
-			
-			
-			return true;
-			
+						
+			return true;			
 			
 		}
 		

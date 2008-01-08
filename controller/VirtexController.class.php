@@ -21,6 +21,8 @@
 		
 		protected $_registroScript;
 		
+		protected $remote_addr;
+		
 		public static function &factory($tipo,$controller) {
 			$tipo = strtolower($tipo);
 			$controller = strtolower($controller);
@@ -54,6 +56,8 @@
 			parent::__construct();
 			// Dados padrão que podem ser sobrescritos em init()
 			$this->_executar 	= true;
+			
+			$this->ipaddr = $_SERVER["REMOTE_ADDR"];
 			
 			
 			$this->_login = Login::getInstance();

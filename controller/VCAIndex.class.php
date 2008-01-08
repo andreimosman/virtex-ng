@@ -152,7 +152,7 @@
 			$menuFaturamentoRelatorios->addItem("Faturamento Comparativo", "admin-faturamento.php?op=relatorios&relatorio=faturamento", $target);
 			$menuFaturamentoRelatorios->addItem("Faturamento por Produto ", "admin-faturamento.php?op=relatorios&relatorio=por_produto", $target);
 			$menuFaturamentoRelatorios->addItem("Faturamento por Período ", "admin-faturamento.php?op=relatorios&relatorio=por_periodo", $target);
-			$menuConfiguracoes->addSeparator();
+			$menuFaturamentoRelatorios->addSeparator();
 			$menuFaturamentoRelatorios->addItem("Previsão de Faturamento", "admin-faturamento.php?op=relatorios&relatorio=previsao", $target);
 			$menuFaturamento->addSubmenu("Relatorios", $menuFaturamentoRelatorios);
 			
@@ -175,7 +175,7 @@
 
 			$menuAdministracao->addSeparator();
 			$menuAdministracaoRelatorios = new MMenu();
-			$menuAdministracaoRelatorios->addItem("Log dos Administradores", "admin-administracao.php?op=relatorios&relatorio=logs_admin", $target);
+			$menuAdministracaoRelatorios->addItem("Log de Eventos", "admin-administracao.php?op=relatorios&relatorio=eventos", $target);
 			$menuAdministracao->addSubmenu("Relatórios",$menuAdministracaoRelatorios);
 
 			$menu->addSubmenu("Administração", $menuAdministracao);

@@ -35,7 +35,7 @@
 			
 				$username = trim(@$_REQUEST["username"]);
 				$password = trim(@$_REQUEST["password"]);
-
+				
 				if( $username && $password ) {
 					$admin = VirtexModelo::factory("administradores");
 				
@@ -57,6 +57,9 @@
 
 						// Grava na sessão.
 						$this->_login->persisteSessao();
+
+						// Registra a entrada no sistema.
+						$this->eventos->registraLoginOk($this->ipaddr,$info["id_admin"],($info["primeiro_login"] == 't' ? true : false));
 						
 						/**
 						 * Redirecionar p/ site.
@@ -74,6 +77,8 @@
 					}
 				}
 				
+				$this->eventos->registraLoginErro($this->ipaddr,null,$username);
+
 				$this->_view->atribui("erro",$erro);
 				
 			}
