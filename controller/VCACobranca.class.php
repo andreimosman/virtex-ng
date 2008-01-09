@@ -173,7 +173,11 @@ class VCACobranca extends VirtexControllerAdmin {
 
 		////echo $id_remessa;
 
-		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);
+		$resultado = $this->cobranca->obtemFaturasPorRemessaGeraBoleto($id_remessa);
+		
+		$cedente = $this->preferencias->obtemPreferenciasGerais();
+		
+		$cedente_cobranca = $this->preferencias->obtemPreferenciasProvedor();
 
 		/*echo "<pre>";
 		print_r($resultado);
@@ -189,18 +193,28 @@ class VCACobranca extends VirtexControllerAdmin {
 
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 
-
+			$resultado[$i]["hoje"] = date("d/m/Y");
+			
 			if( $formaPagto["tipo_cobranca"] == "BL" && $id_forma_pagamento=="11" ) {
 
 				$urlPreto = "view/templates/imagens/preto.gif";
 				$urlBranco = "view/templates/imagens/branco.gif";
 
-				echo MBanco::htmlBarcode($codigo_barra,$urlPreto,$urlBranco);
+				$resultado[$i]["barcode"] =  MBanco::htmlBarcode($codigo_barra,$urlPreto,$urlBranco);
 
 
 			}
 
 		}
+		
+		/*echo "<pre>";
+		print_r($resultado);
+		echo "</pre>";
+		*/
+		
+		$this->_view->atribui("resultado",$resultado);
+		$this->_view->atribui("cedente",$cedente);
+		$this->_view->atribui("cedente_cobranca",$cedente_cobranca);
 
 	}
 

@@ -409,14 +409,37 @@
 		}
 		
 		protected function executaRelatorioEventos() {
-		
+			
+			$this->requirePrivLeitura("_ADMINISTRACAO_RELATORIOS");
+			
 			// 			
 			$tipo = @$_REQUEST["tipo"];
 			$id_admin = @$_REQUEST["id_admin"];
 			$natureza = @$_REQUEST["natureza"];
 			$id_conta = @$_REQUEST["id_conta"];
+			
 			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 			$limite = @$_REQUEST["limite"];
+			
+			
+			
+				$administradores_select= $this->administradores->obtemListaAdmin();
+				$this->_view->atribui("administradores_select",$administradores_select);
+			
+				$this->_view->atribui("id_admin",$id_admin);
+			
+				$natureza_select= $this->eventos->obtemNatureza();
+				$this->_view->atribui("natureza_select",$natureza_select);
+			
+				$this->_view->atribui("natureza",$natureza);
+			
+				$tipos_select= $this->eventos->obtemTipos();
+				$this->_view->atribui("tipos_select",$tipos_select);
+		
+				$this->_view->atribui("tipo",$tipo);
+		
+			
+			
 			
 			
 
@@ -444,8 +467,9 @@
 			
 			
 			$eventos = $this->eventos->obtem($filtro,$limite);
+
 			$this->_view->atribui("eventos",$eventos);
-			
+			$this->_view->atribui("limite",$limite);
 			
 			//echo "<pre>";
 			//print_r($eventos);

@@ -78,7 +78,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="3"  align="center"><input type="submit" name="123" value="Gerar Cobranças" /></td>
+				<td colspan="3"  align="center"><input type="submit" name="123" value="Gerar Cobranças" class="botao"/></td>
 			</tr>
 		</table>
 	</form>
@@ -107,9 +107,8 @@
 			<td width="120" class='{$estilo}' align="center"><a href="admin-cobranca.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_geracao|date_format:"%d/%m/%Y"}</a></td>
 			<td width="150" align=center >{if !$r.id_forma_pagamento}&nbsp;{else}{if $r.forma_pagto.tipo_cobranca=="BL"}Boleto{/if} {if $r.forma_pagto.tipo_cobranca=="DA"}Débito Automático{/if} - {$bancos[$r.forma_pagto.codigo_banco]} - convênio {$r.forma_pagto.convenio}{/if}</td>
 			<td class='{$estilo}' width="150"  align='center'><a href="admin-cobranca.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_referencia|date_format:"%d/%m/%Y"}{if $.periodo=="MT"} <em>(Todo o mês)</em>{else if $r.periodo=="PQ"} <em>(Parcial)</em>{/if}</a></td>
-			<td class='{$estilo}' align='center'><a href="admin-cobranca.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}">{$r.qtfaturas}</a></td>
-			<td class='{$estilo}' align='center' width='18'><a href="admin-cobranca.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/gif_alterar.gif"  alt="Ver Lista de Faturas" title="Ver Lista de Faturas" border="0"/></a></td>
-			<td class='{$estilo}' align='center' width='18'><a href="javascript: popup();"><img src="view/templates/imagens/print.gif" width="17" height="17" alt="Imprimir Boletos" title="Imprimir Boletos"  border="0"/></a></td>
+			<td class='{$estilo}' align='center'><a href="admin-cobranca.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.qtfaturas}</a></td>
+			<td class='{$estilo}' align='center' width='18'><a href="admin-cobranca.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/print.gif" width="17" height="17" alt="Imprimir Boletos" title="Imprimir Boletos"  border="0"/></a></td>
 		</tr>
 		{/foreach}
 	</table>

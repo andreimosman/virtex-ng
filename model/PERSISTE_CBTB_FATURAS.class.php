@@ -179,21 +179,42 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 	}
 
 	public function obtemFaturasPorRemessa($id_remessa) {
-
-		$sql  = " SELECT ";
-		$sql .="   r.id_remessa, f.id_cobranca, f.status, f.id_cliente_produto, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra, cp.id_cliente ";
-		$sql .=" FROM ";
-		$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON (f.id_cobranca = r.id_cobranca) ";
-		$sql .="   INNER JOIN cbtb_cliente_produto cp ON (f.id_cliente_produto = cp.id_cliente_produto) ";
-		$sql .=" WHERE ";
-		$sql .="   id_remessa = $id_remessa ";
-
-		//echo $sql;
-
-
-
-		return ($this->bd->obtemRegistros($sql));
-
+	
+			$sql  = " SELECT ";
+			$sql .="   r.id_remessa, f.id_cobranca, f.status, f.id_cliente_produto,f.observacoes, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra, cp.id_cliente ";
+			$sql .=" FROM ";
+			$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON (f.id_cobranca = r.id_cobranca) ";
+			$sql .="   INNER JOIN cbtb_cliente_produto cp ON (f.id_cliente_produto = cp.id_cliente_produto) ";
+			$sql .=" WHERE ";
+			$sql .="   id_remessa = $id_remessa ";
+	
+			//echo $sql;
+	
+	
+	
+			return ($this->bd->obtemRegistros($sql));
+	
+	}
+	
+	public function obtemFaturasPorRemessaGeraBoleto($id_remessa) {
+	
+			$sql  = " SELECT ";
+			$sql .="   r.id_remessa, f.id_cobranca, f.status, f.id_cliente_produto,f.observacoes, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra, cp.id_cliente, fp.carteira, fp.convenio, fp.agencia, fp.conta, f.nosso_numero, cl.nome_razao, cc.nome_produto, cc.descricao_produto, cl.endereco, cl.complemento, cd.cidade, uf.estado, cl.cep, cl.cpf_cnpj ";
+			$sql .=" FROM ";
+			$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON (f.id_cobranca = r.id_cobranca) ";
+			$sql .="   INNER JOIN cbtb_cliente_produto cp ON (f.id_cliente_produto = cp.id_cliente_produto) ";
+			$sql .="   INNER JOIN cbtb_contrato cc ON (f.id_cliente_produto = cc.id_cliente_produto) ";
+			$sql .="   INNER JOIN cltb_cliente cl ON (cp.id_cliente = cl.id_cliente) ";
+			$sql .="   INNER JOIN pftb_forma_pagamento fp ON (f.id_forma_pagamento = fp.id_forma_pagamento) ";
+			$sql .="   INNER JOIN cftb_cidade cd ON (cl.id_cidade = cd.id_cidade) ";
+			$sql .="   INNER JOIN cftb_uf uf ON (cd.uf = uf.uf) ";
+			$sql .=" WHERE ";
+			$sql .="   id_remessa = $id_remessa ";
+	
+			////echo $sql;
+	
+			return ($this->bd->obtemRegistros($sql));
+	
 	}
 
 	public function InsereCodigoBarraseLinhaDigitavel($codigo_barra,$linha_digitavel,$id_cobranca){

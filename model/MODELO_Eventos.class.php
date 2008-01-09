@@ -32,6 +32,33 @@
 			$this->evtb_evento = VirtexPersiste::factory("evtb_evento");
 		}
 		
+		public function obtemTipos(){
+				
+					$retorno = array();
+		
+						$retorno[self::$TIPO_INFO] = "Informações";
+						$retorno[self::$TIPO_ERRO] = "Erros";
+						$retorno[self::$TIPO_ALTERTA] = "Alertas";
+		
+					return($retorno);
+		
+		
+		}
+		
+		public function obtemNatureza(){
+				
+			$retorno = array();
+
+				$retorno[self::$NATUREZA_LOGIN] = "Login";
+				$retorno[self::$NATUREZA_ALT_CONTA] = "Alteração de Conta";
+				$retorno[self::$NATUREZA_PAG_FATURA] = "Pagamento de Faturas";
+
+			return($retorno);
+		
+		
+		}
+	
+
 		public function registraLoginOk($ipaddr,$id_admin,$primeiroLogin = false) {
 			$dados = array("id_admin" => $id_admin,"ipaddr" => $ipaddr, "natureza" => self::$NATUREZA_LOGIN, "tipo" => self::$TIPO_INFO);
 			

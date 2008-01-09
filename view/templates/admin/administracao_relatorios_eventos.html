@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta http-equiv="refresh" content="60">
 	<title></title>
 </head>
 <style>
@@ -29,7 +30,63 @@
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="cobranca_header.html"}
 <br /><br />
-
+<form method="get" action="">
+<input type="hidden" name="op" value="relatorios" />
+<input type="hidden" name="relatorio" value="eventos" />
+<table class="lista" border="0" width="400px" cellpadding="2" cellspacing="2" align='center'>
+			<tr>
+				<th colspan="3">Buscar nos registros</th>
+			</tr>
+	<tr>
+		<td style="width:400px; height:200px;" align='center'>
+			<table>
+				<tr>
+					<td>Administrador:</td>
+					<td>
+						<select name="id_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+								<option value=""></option>
+							{foreach item=r key=valor from=$administradores_select}
+								<option value={$r.id_admin} {if $r.id_admin==$id_admin}selected="selected"{/if}>{$r.nome}</option>
+							{/foreach}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Tipo:</td>
+					<td>
+						<select name="tipo"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+								<option value=""></option>
+							{foreach item=texto key=valor from=$tipos_select}
+								<option value="{$valor}" {if $valor==$tipo}selected="selected"{/if}>{$texto}</option>
+							{/foreach}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Natureza:</td>
+					<td>
+						<select name="natureza"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+								<option value=""></option>
+							{foreach item=texto key=valor from=$natureza_select}
+								<option value="{$valor}" {if $valor==$natureza}selected="selected"{/if}>{$texto}</option>
+							{/foreach}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Registros:</td>
+					<td><input type="text" name="limite" value="{$limite}" onClick="this.value='';"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" ></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td><input type="submit" value="Buscar" class="botao"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</form>
+{if $eventos}
 <div id="cont" align="center">
 	<table  class="lista" border="0" width="700" cellpadding="0" cellspacing="0">
 		<tr>
@@ -54,6 +111,9 @@
 
 	</table>
 </div>
+{else}
+	<div align='center'>Nenhum registro foi encontrado com os termos da busca.</div>
+{/if}
 
 
 </body>

@@ -859,9 +859,12 @@
 		}
 		
 		public function obtemContratosFaturasAtrasadasBloqueios() {
-			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios());
+					return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios());
 		}
-
+		
+		public function obtemFaturasPorRemessaGeraBoleto($id_remessa) {
+					return ($this->cbtb_fatura->obtemFaturasPorRemessaGeraBoleto($id_remessa));
+		}
 
 	}
 

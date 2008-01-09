@@ -60,8 +60,8 @@
 		}
 
 		protected function exibeListaBoletos() {
-			$this->_file = "cobranca_listar_faturas.html";
-			$this->atribui("titulo","Faturas por Lote");
+			$this->_file = "cobranca_listar_boletos.html";
+			$this->atribui("titulo","Boleto das Faturas do Lote");
 		}
 
 		protected function exibeBloqueios() {
