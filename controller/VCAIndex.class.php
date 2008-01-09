@@ -53,9 +53,9 @@
 			$menuCobranca->addSeparator();
 			$menuCobranca->addItem("Amortização", "admin-cobranca.php?op=amortizacao", $target);
 
-			$menuCobranca->addSeparator();
-			$menuCobranca->addItem("Gerar Cobrança/Boletos", "admin-cobranca.php?op=gerar_cobranca", $target);
-			$menuCobranca->addItem("Troca de Arquivos", "admin-cobranca.php?op=arquivos",$target);
+			//$menuCobranca->addSeparator();
+			//$menuCobranca->addItem("Gerar Cobrança/Boletos", "admin-cobranca.php?op=gerar_cobranca", $target);
+			//$menuCobranca->addItem("Troca de Arquivos", "admin-cobranca.php?op=arquivos",$target);
 
 			$menuCobranca->addSeparator();
 			$menuCobrancaRelatorios = new MMenu();
@@ -147,16 +147,15 @@
 			// Menu de Faturamento
 			//
 			
-			$menuFaturamento = new MMenu();
-			$menuFaturamentoRelatorios 	= new MMenu();
-			$menuFaturamentoRelatorios->addItem("Faturamento Comparativo", "admin-faturamento.php?op=relatorios&relatorio=faturamento", $target);
-			$menuFaturamentoRelatorios->addItem("Faturamento por Produto ", "admin-faturamento.php?op=relatorios&relatorio=por_produto", $target);
-			$menuFaturamentoRelatorios->addItem("Faturamento por Período ", "admin-faturamento.php?op=relatorios&relatorio=por_periodo", $target);
-			$menuFaturamentoRelatorios->addSeparator();
-			$menuFaturamentoRelatorios->addItem("Previsão de Faturamento", "admin-faturamento.php?op=relatorios&relatorio=previsao", $target);
-			$menuFaturamento->addSubmenu("Relatorios", $menuFaturamentoRelatorios);
-			
-			$menu->addSubmenu("Faturamento", $menuFaturamento);
+			//$menuFaturamento = new MMenu();
+			//$menuFaturamentoRelatorios 	= new MMenu();
+			//$menuFaturamentoRelatorios->addItem("Faturamento Comparativo", "admin-faturamento.php?op=relatorios&relatorio=faturamento", $target);
+			//$menuFaturamentoRelatorios->addItem("Faturamento por Produto ", "admin-faturamento.php?op=relatorios&relatorio=por_produto", $target);
+			//$menuFaturamentoRelatorios->addItem("Faturamento por Período ", "admin-faturamento.php?op=relatorios&relatorio=por_periodo", $target);
+			//$menuFaturamentoRelatorios->addSeparator();
+			//$menuFaturamentoRelatorios->addItem("Previsão de Faturamento", "admin-faturamento.php?op=relatorios&relatorio=previsao", $target);
+			//$menuFaturamento->addSubmenu("Relatorios", $menuFaturamentoRelatorios);
+			//$menu->addSubmenu("Faturamento", $menuFaturamento);
 			
 			//
 			// Menu de Administração
