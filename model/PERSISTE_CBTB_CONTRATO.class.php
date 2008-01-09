@@ -282,7 +282,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql .= "	, produto.nome ";
 		$sql .= "	, contrato.id_cliente_produto ";*/
 
-		echo $sql;
+		// echo $sql;
 		return $this->bd->obtemRegistros($sql);
 
 	}
