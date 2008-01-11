@@ -32,7 +32,13 @@ a:hover{
 		<tr><td align="right"><b>Cidade</b></td><td>{$licenca.empresa.cidade}</td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr><td align="right"><b>Licença emitida em</b></td><td>{$licenca.geral.emitida_em}</td></tr>
+
 		<tr><td align="right"><b>Expira em</b> </td><td>{$licenca.geral.expira_em}</td></tr>
+
+		{if $congelamento}
+		<tr><td align="center" colspan=2 style="color:red"><b>Licensa expirada. Data de congelamento: {$licenca.geral.congela_em}</b> </td></tr>
+		{/if}
+
 	</table>
 	<br />
 	<table class="lista" width="35%">
@@ -48,7 +54,7 @@ a:hover{
 			<tr><td align="center">Plantão: (19) 8171-3434 / 8171-3636</tr></td>
 		</table>
 	</div>
-	
+
 </div>
 
 </body>
