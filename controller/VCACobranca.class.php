@@ -50,67 +50,70 @@ class VCACobranca extends VirtexControllerAdmin {
 		$bloquear    = @$_REQUEST["bloquear"];
 		$acao        = @$_REQUEST["acao"];
 		$url 		 = "admin-cobranca.php?op=bloqueios";
+
 		if( $acao == "bloquear" ) {
+
 				try {
 					$senha_admin = @$_REQUEST["senha_admin"];
 					$dadosLogin = $this->_login->obtem("dados");
 					if( !$senha_admin ) {
 						$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
 					} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
-						$erro = "Operação não autorizada: SENHA NÃO CONFERE.";								
+						$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
 					}
 					if($erro) throw new Exception($erro);
-					
-						if ($contrato_id) {
-							$dadosLogin = $this->_login->obtem("dados");
-							$admin = $dadosLogin["admin"];
-							$id_admin = $dadosLogin["id_admin"];
 
-							foreach($contrato_id as $k => $v) {
+					if ($contrato_id) {
+						$dadosLogin = $this->_login->obtem("dados");
+						$admin = $dadosLogin["admin"];
+						$id_admin = $dadosLogin["id_admin"];
 
-								$listacontas = $this->contas->obtemContasPeloContrato($k, $v);
+						foreach($contrato_id as $k => $v) {
 
-								foreach($listacontas as $chave => $campo) {
-									if($v == "BL") {
-										$this->contas->alteraContaBandaLarga($k, NULL, 'S');
-									} else if($v == "D") {
-										$this->contas->alteraContaDiscado($k, NULL, 'S');
-									} else if($v == "H") {
-										$this->contas->alteraHospedagem($k, NULL, 'S');
-									}
-									$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, '');
+							$listacontas = $this->contas->obtemContasPeloContrato($k, $v);
+
+							foreach($listacontas as $chave => $campo) {
+								if($v == "BL") {
+									$this->contas->alteraContaBandaLarga($campo["id_conta"], NULL, 'S');
+								} else if($v == "D") {
+									$this->contas->alteraContaDiscado($campo["id_conta"], NULL, 'S');
+								} else if($v == "H") {
+									$this->contas->alteraHospedagem($campo["id_conta"], NULL, 'S');
 								}
-
-								$this->contas->gravaLogBloqueioAutomatizado($k, 'S', $admin, 'Suspensão por pendências financeiras');
+								$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, '');
 							}
+
+							$this->contas->gravaLogBloqueioAutomatizado($k, 'S', $admin, 'Suspensão por pendências financeiras');
 						}
-									$this->_view->atribui("url",$url);
-									$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
-									$this->_view->atribuiVisualizacao("msgredirect");
-									
-									if( $acao ) {
-										$erro = "";										
-									} else {
-										VirtexView::simpleRedirect($url);
-									}
-								
-						
+					}
+
+					$this->_view->atribui("url",$url);
+					$this->_view->atribui("mensagem","Dados atualizados com sucesso!");
+					$this->_view->atribuiVisualizacao("msgredirect");
+
+					if( $acao ) {
+						$erro = "";
+					} else {
+						VirtexView::simpleRedirect($url);
+					}
+
+
 				}catch (ExcecaoModeloValidacao $e ) {
 					$this->_view->atribui ("msg_erro", $e->getMessage());
-					$erro = true;	
+					$erro = true;
 				} catch (Exception $e ) {
 					$this->_view->atribui ("msg_erro", $e->getMessage());
-					$erro = true;	
+					$erro = true;
 				}
 		}
 
 		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios();
 		$this->_view->atribui("atrasados", $atrasados);
-		
+
 		//echo "<pre>";
 		//print_r($atrasados);
 		///echo "</pre>";
-		
+
 		$countBloqueados = count($atrasados);
 		$this->_view->atribui("countBloqueados", $countBloqueados);
 	}
@@ -152,19 +155,19 @@ class VCACobranca extends VirtexControllerAdmin {
 			}
 		}
 	}
-	
+
 	protected function geraListaFaturas(){
-		
+
 		$id_remessa = @$_REQUEST["id_remessa"];
-		
+
 		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);
-		
+
 		$this->_view->atribui("resultado", $resultado);
-		
-		
+
+
 		///$this->arquivoTemplate = "cobranca_listar_faturas.html";
-		
-		
+
+
 	}
 
 	protected function geraListaBoletos() {
@@ -174,9 +177,9 @@ class VCACobranca extends VirtexControllerAdmin {
 		////echo $id_remessa;
 
 		$resultado = $this->cobranca->obtemFaturasPorRemessaGeraBoleto($id_remessa);
-		
+
 		$cedente = $this->preferencias->obtemPreferenciasGerais();
-		
+
 		$cedente_cobranca = $this->preferencias->obtemPreferenciasProvedor();
 
 		/*echo "<pre>";
@@ -194,7 +197,7 @@ class VCACobranca extends VirtexControllerAdmin {
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 
 			$resultado[$i]["hoje"] = date("d/m/Y");
-			
+
 			if( $formaPagto["tipo_cobranca"] == "BL" && $id_forma_pagamento=="11" ) {
 
 				$urlPreto = "view/templates/imagens/preto.gif";
@@ -206,12 +209,12 @@ class VCACobranca extends VirtexControllerAdmin {
 			}
 
 		}
-		
+
 		/*echo "<pre>";
 		print_r($resultado);
 		echo "</pre>";
 		*/
-		
+
 		$this->_view->atribui("resultado",$resultado);
 		$this->_view->atribui("cedente",$cedente);
 		$this->_view->atribui("cedente_cobranca",$cedente_cobranca);
@@ -224,14 +227,14 @@ class VCACobranca extends VirtexControllerAdmin {
 		$ano = @$_REQUEST["ano"];
 		$mes = @$_REQUEST["mes"];
 		$periodo = @$_REQUEST["periodo"];
-		
+
 
 		$formas = $this->preferencias->obtemFormasPagamentoGerarCobranca();
 		$this->_view->atribui("formas",$formas);
-		
+
 		$bancos = $this->preferencias->obtemListaBancos();
 		$this->_view->atribui("bancos",$bancos);
-		
+
 
 		//echo "<pre>";
 		//print_r($formas);
@@ -252,11 +255,11 @@ class VCACobranca extends VirtexControllerAdmin {
 			$id_forma_pagamento = @$_REQUEST["id_forma_pagamento"];
 
 			//phpinfo();
-			
+
 			//echo "<pre>";
 			//print_r($_REQUEST);
 			//echo "</pre>";
-			
+
 			//die;
 
 			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento);
@@ -268,7 +271,7 @@ class VCACobranca extends VirtexControllerAdmin {
 				$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 				$msg = "Remessa cadastrada com sucesso.";
 			}
-			
+
 			$urlPreto = "view/templates/imagens/preto.gif";
 			$urlBranco = "view/templates/imagens/branco.gif";
 
@@ -314,24 +317,24 @@ class VCACobranca extends VirtexControllerAdmin {
 			$this->_view->atribuiVisualizacao("msgredirect");
 
 			// VirtexView::simpleRedirect($url);
-			
+
 		}
 
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
 
 		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas("10");
-		
+
 		$formas = $this->preferencias->obtemFormasPagamentoGerarCobranca();
 		$this->_view->atribui("formas",$formas);
-				
+
 		$bancos = $this->preferencias->obtemListaBancos();
 		$this->_view->atribui("bancos",$bancos);
-		
-		
+
+
 		for($i=0;$i<count($ultimas_remessas);$i++){
 			$ultimas_remessas[$i]["forma_pagto"] = $ultimas_remessas[$i]["id_forma_pagamento"] ? $this->preferencias->obtemFormaPagamento($ultimas_remessas[$i]["id_forma_pagamento"]) : array();
 		}
-		
+
 		//echo "<pre>";
 		//print_r($ultimas_remessas);
 		//echo "</pre>";
@@ -465,26 +468,26 @@ class VCACobranca extends VirtexControllerAdmin {
 			$cobranca = VirtexModelo::factory("cobranca");
 			$lista = $cobranca->obtemReagendamento();
 			$this->_view->atribui("cobranca", $lista);
-		
+
 		} elseif("bloqueios_desbloqueios" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
 			$this->_view->atribui("periodo", $periodo);
 			$contas = VirtexModelo::factory("contas");
 			$bloqueios_desbloqueios = $contas->obtemBloqueiosDesbloqueios($periodo);
 			$this->_view->atribui("bloqueios_desbloqueios", $bloqueios_desbloqueios);
-		
+
 		} elseif("bloqueios_desbloqueios_detalhes" == $relatorio) {
 			$contas = VirtexModelo::factory("contas");
-			
+
 			$periodoMesAno = $mes = @$_REQUEST["mes"] . -  $ano = @$_REQUEST["ano"];
 			$this->_view->atribui("periodoMesAno", $periodoMesAno);
-			
+
 			$periodoAnoMes = @$_REQUEST["ano"] . - @$_REQUEST["mes"];
 			$this->_view->atribui("periodoAnoMes", $periodoAnoMes);
-			
+
 			$bloqueados_desbloqueados = $contas->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
 			$this->_view->atribui("bloqueados_desbloqueados", $bloqueados_desbloqueados);
-			
+
 			//echo "<pre>";
 			//print_r($periodoAnoMes);
 			//echo "</pre>";
