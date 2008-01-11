@@ -134,7 +134,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		//print_r($retorno);
 		//echo "</pre>";
 
-		
+
 		return ($retorno);
 	}
 
@@ -218,7 +218,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		return $this->bd->obtemRegistros($sql);
 
 	}
-	
+
 	public function obtemContratosFaturasAtrasadasBloqueios($carencia) {
 
 	/*$sql  = "SELECT sum(f.valor) as fatura_valor, cl.nome_razao, ";
@@ -236,7 +236,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	$sql .= "	INNER JOIN cltb_cliente cl ON (cl.id_cliente = cp.id_cliente) ";
 	$sql .= "WHERE ";
 	$sql .= "	 f.reagendamento is null ";
-	$sql .= "	AND f.data > now() - interval '10 days' - interval '30 days' "; 
+	$sql .= "	AND f.data > now() - interval '10 days' - interval '30 days' ";
 	$sql .= "	AND f.status not in ('P','E','C') ";
 	$sql .= "	OR f.reagendamento is null ";
 	$sql .= "	AND f.data > now() - interval '2 days' - interval '30 days' ";
@@ -245,8 +245,8 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	$sql .= "	cl.nome_razao	";
 	$sql .= "ORDER BY ";
 	$sql .= "	cl.nome_razao ";*/
-		
-	
+
+
 	$sql .= "SELECT  ";
 	$sql .= "	cl.nome_razao, f.id_cliente_produto, p.nome as produto, count(f.id_cobranca) as faturas,  ";
 	$sql .= "	p.tipo, sum(f.valor) - sum(f.desconto) + sum(f.acrescimo) as valor_devido, cnt.num_contas ";
@@ -269,12 +269,12 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	$sql .= "			cp.id_cliente_produto ";
 	$sql .= "	) cnt ON cnt.id_cliente_produto = cp.id_cliente_produto ";
 	$sql .= "WHERE  ";
-	$sql .= "	(f.reagendamento is null AND f.data > now() + interval '5 days' ) OR (f.reagendamento is not null AND f.data > now() + interval '5 days' + interval '20 days' ) AND f.status not in ('P','E','C')  ";
+	$sql .= "	(f.reagendamento is null AND f.data < now() + interval '5 days' ) OR (f.reagendamento is not null AND f.data < now() + interval '5 days' + interval '20 days' ) AND f.status not in ('P','E','C')  ";
 	$sql .= "GROUP BY  ";
 	$sql .= "	f.id_cliente_produto, cl.nome_razao, p.nome, p.tipo, cnt.num_contas ";
-	
-	///echo $sql;
-		
+
+	////echo $sql;
+
 		/*$sql  = "SELECT ";
 		$sql .= "	cliente.nome_razao  ";
 		$sql .= "	, produto.nome  ";
