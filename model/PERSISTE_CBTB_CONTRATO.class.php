@@ -219,9 +219,9 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 	}
 	
-	public function obtemContratosFaturasAtrasadasBloqueios() {
+	public function obtemContratosFaturasAtrasadasBloqueios($carencia) {
 
-	$sql  = "SELECT sum(f.valor) as fatura_valor, cl.nome_razao, ";
+	/*$sql  = "SELECT sum(f.valor) as fatura_valor, cl.nome_razao, ";
 	$sql .= "	(SELECT count(f.status) ";
 	$sql .= "		FROM cbtb_faturas f ";
 	//$sql .= "		INNER JOIN cbtb_contrato co ON (co.id_cliente_produto = f.id_cliente_produto) ";
@@ -244,10 +244,36 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	$sql .= "GROUP BY ";
 	$sql .= "	cl.nome_razao	";
 	$sql .= "ORDER BY ";
-	$sql .= "	cl.nome_razao ";
+	$sql .= "	cl.nome_razao ";*/
 		
-		
-		
+	
+	$sql .= "SELECT  ";
+	$sql .= "	cl.nome_razao, f.id_cliente_produto, p.nome as produto, count(f.id_cobranca) as faturas,  ";
+	$sql .= "	p.tipo, sum(f.valor) - sum(f.desconto) + sum(f.acrescimo) as valor_devido, cnt.num_contas ";
+	$sql .= "FROM  ";
+	$sql .= "	cbtb_faturas f  ";
+	$sql .= "	INNER JOIN cbtb_cliente_produto cp ON f.id_cliente_produto = cp.id_cliente_produto  ";
+	$sql .= "	INNER JOIN cltb_cliente cl ON cp.id_cliente = cl.id_cliente  ";
+	$sql .= "	INNER JOIN prtb_produto p ON cp.id_produto = p.id_produto  ";
+	$sql .= "	INNER JOIN ( ";
+	$sql .= "		SELECT  ";
+	$sql .= "			cp.id_cliente_produto, count(cn.id_conta) as num_contas ";
+	$sql .= "		FROM  ";
+	$sql .= "			cntb_conta cn  ";
+	$sql .= "			INNER JOIN cbtb_cliente_produto cp ON cn.id_cliente_produto = cp.id_cliente_produto  ";
+	$sql .= "			INNER JOIN prtb_produto p ON cp.id_produto = p.id_produto ";
+	$sql .= "		WHERE  ";
+	$sql .= "			cn.status = 'A'  ";
+	$sql .= "			AND cn.tipo_conta = p.tipo ";
+	$sql .= "		GROUP BY ";
+	$sql .= "			cp.id_cliente_produto ";
+	$sql .= "	) cnt ON cnt.id_cliente_produto = cp.id_cliente_produto ";
+	$sql .= "WHERE  ";
+	$sql .= "	(f.reagendamento is null AND f.data > now() + interval '5 days' ) OR (f.reagendamento is not null AND f.data > now() + interval '5 days' + interval '20 days' ) AND f.status not in ('P','E','C')  ";
+	$sql .= "GROUP BY  ";
+	$sql .= "	f.id_cliente_produto, cl.nome_razao, p.nome, p.tipo, cnt.num_contas ";
+	
+	///echo $sql;
 		
 		/*$sql  = "SELECT ";
 		$sql .= "	cliente.nome_razao  ";

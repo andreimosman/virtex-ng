@@ -107,9 +107,9 @@ class VCACobranca extends VirtexControllerAdmin {
 		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios();
 		$this->_view->atribui("atrasados", $atrasados);
 		
-		echo "<pre>";
-		print_r($atrasados);
-		echo "</pre>";
+		//echo "<pre>";
+		//print_r($atrasados);
+		///echo "</pre>";
 		
 		$countBloqueados = count($atrasados);
 		$this->_view->atribui("countBloqueados", $countBloqueados);

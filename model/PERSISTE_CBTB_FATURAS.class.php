@@ -272,7 +272,38 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 
 		return ($this->bd->obtemRegistros($sql));
 	}
+	
+	public function obtemFaturamentoComparativo($ano){
+		
+		
 
+		$data_inicio = $ano."-01-01";
+		$data_final = $ano."-12-31";
+
+		
+		
+		$sSQL  = "SELECT "; 
+		$sSQL .= "SUM(valor_pago) as faturamento, ";
+		$sSQL .= "EXTRACT(day from data_pagamento) as dia, ";  
+		$sSQL .= "EXTRACT(month from data_pagamento) as mes, ";  
+		$sSQL .= "EXTRACT(year from data_pagamento) as ano   ";
+		$sSQL .= "FROM   ";
+		$sSQL .= "cbtb_faturas   ";
+		$sSQL .= "WHERE   ";
+		$sSQL .= "status = 'P' ";
+		$sSQL .= "AND data_pagamento BETWEEN   ";
+		$sSQL .= "CAST( '$data_inicio' as date)  ";
+		$sSQL .= "AND CAST( '$data_final' as date )  ";
+		$sSQL .= "GROUP BY   ";
+		$sSQL .= "ano, mes, dia  ";
+		$sSQL .= "ORDER BY   ";
+		$sSQL .= "dia, mes, ano  ASC";
+		
+		
+		
+		return ($this->bd->obtemRegistros($sSQL));
+	
+	}
 
 	public function obtemPrevisaoFaturamento($ano_select) {
 

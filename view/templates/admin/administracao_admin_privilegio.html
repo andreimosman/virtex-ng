@@ -48,7 +48,7 @@ function voltar() {
 				&nbsp; <u>Gravacao:</u> <i>{if $v.tem_gravacao == 't'}{$v.descricao_gravacao}{else}Não Aplicável{/if}</i>
 			</td>
 	    	<td class="{$estilo}" width="100">
-	    		<select name='acesso[{$v.id_priv}]' {if !$podeGravar}disabled=true class=disabledFP{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style='width: 120px;'{/if}>
+				<select name='acesso[{$v.id_priv}]' {if !$podeGravar}disabled=true class=disabledFP{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style='width: 120px;'{/if}>
 				{foreach key=id item=nome from=$acessos}
 					{if ($id == 't' && $v.tem_gravacao == 't') || ($id == 'f' && $v.tem_leitura == 't')}
 						<option value='{$id}' {if $id == $v.selecao}SELECTED{/if}>{$nome}</option>

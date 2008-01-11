@@ -28,7 +28,8 @@ class VCAFaturamento extends VirtexControllerAdmin {
 
 		$relatorio = @$_REQUEST["relatorio"];
 
-
+		$cobranca = VirtexModelo::factory("cobranca");
+		
 		if("previsao" == $relatorio){
 
 			$ano_select = @$_REQUEST["ano_select"];
@@ -71,14 +72,68 @@ class VCAFaturamento extends VirtexControllerAdmin {
 
 
 		}elseif ("faturamento" == $relatorio){
+			
+			$ano_select = @$_REQUEST["ano_select"];
+			
+			$ano_atual = Date("Y");
+			
+			$metodo = @$_REQUEST["metodo"];
+					
+			if (!$ano_select ){
+				$ano_select = $ano_atual;
+				$metodo = "2";
+			}
+			
+			if ($metodo == "1"){
+				$titulo_relatorio = "Comparativo";		
+			}else{
+				$titulo_relatorio = "Acumulativo";
+			}
 
+			$anos_fatura = $cobranca->obtemAnosFatura();
+			
+			$fat = $cobranca->obtemFaturamentoComparativo($ano_select);
+			
+			$tabela = array();
+					
+			for($i=0;$i<count($fat);$i++) {
+				$tabela[   ((int)$fat[$i]["dia"]) ][   ((int)$fat[$i]["mes"]) ] = $fat[$i]["faturamento"] ;
+		
+			}
+
+			for($i=1;$i<=31;$i++) {
+				if( !@$tabela[$i] ) {
+					$tabela[$i]=array();
+				}
+				for($x=1;$x<=12;$x++) {
+					if( !@$tabela[$i][$x] ) {
+						$tabela[$i][$x] = 0;
+					}
+				}
+				//echo $tabela[$i]["1"] . " - " . $tabela[$i]["2"] . " - ". $tabela[$i]["3"] . "<br>\n";
+			}
+					
+			ksort($tabela);
+			
+			
+			$this->_view->atribui("tabela",$tabela);
+			$this->_view->atribui("titulo_relatorio",$titulo_relatorio);
+			$this->_view->atribui("anos_fatura",$anos_fatura);
+			$this->_view->atribui("ano_select",$ano_select);
+			$this->_view->atribui("metodo",$metodo);
+			
+			
 
 		}elseif ("por_produto" == $relatorio){
 
 			$ano_select = @$_REQUEST["ano_select"];
+			
+			$ano_atual = Date("Y");
+			if (!$ano_select ){
+				$ano_select = $ano_atual;
+			}
 			$this->_view->atribui("ano_select", $ano_select);
-			$this->_view->atribui("ano_select1", $ano_select1);
-			$cobranca = VirtexModelo::factory("cobranca");
+			
 			$lista = $cobranca->obtemFaturamentoPorProduto($ano_select);
 			$anos_fatura = $cobranca->obtemAnosFatura();
 			$dados_bl = array();

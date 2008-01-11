@@ -1,7 +1,17 @@
 <html>
 <head>
 	<title></title>
+<script type="text/javascript">
+<!--
+{literal}
 
+	function filtro(filtro){
+		window.open("admin-faturamento.php?op=relatorios&relatorio=por_produto&ano_select="+filtro.value,"conteudo");
+
+	}
+{/literal}
+//-->
+</script>
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="suporte_header.html"} <br /><br />
@@ -9,13 +19,12 @@
 <div align="center">
 
 <form action="admin-faturamento.php?op=relatorios&relatorio=por_produto" method="post">
-<p align="right" id="titu"><label>Escolha o ano:</label>&nbsp;
-	<select name="ano_select" onchange="filtro(this)">
+<p align="right" id="titu" style="font-family: Tahoma; Font-size:12px;"><label>Escolha o ano:</label>&nbsp;
+	<select name="ano_select" onchange="filtro(this)" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
 		{foreach from=$anos_fatura item=i}
 			<option value={$i.ano}  {if $ano_select == $i.ano} SELECTED{/if}>{$i.ano}</option>
 		{/foreach}
 	</select>
-	<input type="submit" value="OK">
 </p>
 </form>
 

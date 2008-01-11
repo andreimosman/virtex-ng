@@ -31,7 +31,7 @@
 			<tr>
 				<th>&nbsp;</th>
 				<th width="100px" align="left">Cliente</th>
-				<th align="left">Produto</th>
+				<th align="center">Contrato</th>
 				<th>Contas</th>
 				<th width="70px">#Faturas em atrazo</th>
 				<th width="70px">Vl Atrazado</th>
@@ -40,12 +40,12 @@
 			{foreach from=$atrasados item=i key=k}
 			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 			<tr class='{cycle values="impar,par"}'>
-				<td><input type="checkbox" style="{$estilo}" name="contrato_id[{$i.id_cliente_produto}]" value="{$i.tipo_produto}"></td>
-				<td align="left" style="{$estilo}" >{$i.nome_razao}</td>
-				<td align="left" style="{$estilo}" >{$i.nome}</td>
-				<td align="center" style="{$estilo}" >{$i.contas}</td>
-				<td align="center" style="{$estilo}" >{$i.faturas_atraso}</td>
-				<td align="center" style="{$estilo}" >{$i.fatura_valor}</td>
+				<td><input type="checkbox" style="{$estilo}" name="contrato_id[{$i.id_cliente_produto}]" id="contrato_id[{$i.id_cliente_produto}]" value="{$i.tipo_produto}"></td>
+				<td align="left" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.nome_razao}</label></td>
+				<td align="center" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">#0{$i.id_cliente_produto} - {$i.produto}</label></td>
+				<td align="center" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.num_contas}</label></td>
+				<td align="center" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.faturas}</label></td>
+				<td align="center" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.valor_devido}</label></td>
 			</tr>
 			{/foreach}
 			<tr>
@@ -66,7 +66,7 @@
 
 		<input type="hidden" name="op" value="bloqueios" />
 		<input type="hidden" name="tela" value="bloqueios" />
-		
+
 	</form>
 
 </div>

@@ -718,6 +718,9 @@
 			//	print_r($ano_select);
 			//echo "</PRE>";
 		}
+		public function obtemFaturamentoComparativo($ano){
+			return $this->cbtb_fatura->obtemFaturamentoComparativo($ano);		
+		}
 
 		public function obtemPrevisaoFaturamento($ano_select) {
 			return ($this->cbtb_fatura->obtemPrevisaoFaturamento($ano_select));
@@ -858,8 +861,10 @@
 			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadas());
 		}
 		
-		public function obtemContratosFaturasAtrasadasBloqueios() {
-					return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios());
+		public function obtemContratosFaturasAtrasadasBloqueios() {	
+			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
+			$carencia =  $preferenciasCobranca["carencia"];
+			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia));
 		}
 		
 		public function obtemFaturasPorRemessaGeraBoleto($id_remessa) {

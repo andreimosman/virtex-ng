@@ -198,11 +198,15 @@
 					break;
 				case 'privilegio':
 
-
+					
+					$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
+					
+					
 					$acao = @$_REQUEST["acao"];
 					$acesso = @$_REQUEST["acesso"];
 
 					$id_admin = @$_REQUEST["id_admin"];
+					
 
 					if($acao=="gravar"){
 						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
@@ -214,6 +218,10 @@
 
 						$admin = $this->administradores->obtemAdminPeloId($id_admin);
 						$privilegios = $this->administradores->obtemPrivilegios();
+						
+						/*echo "<pre>";
+						print_r($privilegios);
+						echo "</pre>";*/
 
     					$privilegiosUsuario = $this->administradores->obtemPrivilegiosUsuario($id_admin);
     					$cachePriv = array();
@@ -231,8 +239,18 @@
     					}
 
     					$this->_view->atribui("privilegios",$privilegios);
+    					
+    					
+						$podeGravar = false;
+						
+						if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
+							$podeGravar = true;
+						}
+						
+						$this->_view->atribui("podeGravar",$podeGravar);
 
     					$acessos = $this->administradores->obtemAcessos();
+    					
     					$this->_view->atribui("acessos",$acessos);
 
 						//echo "<pre>";

@@ -41,7 +41,7 @@
 				
 				case "faturamento":					
 					$this->_file = "faturamento_corporativo.html";	
-					$this->atribui("titulo", $titulo."Faturamento Corporativo");	
+					$this->atribui("titulo", $titulo."Faturamento Anual");	
 					break;
 				
 				case "por_produto":					
