@@ -209,12 +209,12 @@
 								$this->dialog($allclients,$sockeet,"",0);
 							}
 						} else {
-							$bytes = socket_recv($socket, $buffer, 2048, 0);
+							$bytes = @socket_recv($socket, $buffer, 2048, 0);
 							//echo "BYTES: $bytes\n";
 							if ($bytes == 0) {
 								$index = array_search($socket, $read_sockets);
 								unset($read_sockets[$index]);
-								socket_close($socket);
+								@socket_close($socket);
 							} else {
 								$allclients = $read_sockets;
 								array_shift($allclients);    // remove master
