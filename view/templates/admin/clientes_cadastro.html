@@ -48,7 +48,8 @@ table.mensagemErro td {
 var id_cliente='{$id_cliente}';
 var estilo='{$estilo}';
 {literal}
-function cadatroAfterLoad() {
+
+/*function cadatroAfterLoad() {
 	frm = document.cadastro;
 	for(i=0;i<frm.all.length;i++) {
 		if( estilo == 'disabledFP' && frm.all[i].name != undefined && (frm.all[i].type == "text" || frm.all[i].type == "select-one" || frm.all[i].type == "radio" || frm.all[i].type == "textarea") ) {
@@ -56,7 +57,22 @@ function cadatroAfterLoad() {
 			frm.all[i].className = "disabledFP";
 		}
 	}
+}*/
+
+
+
+function cadatroAfterLoad() {
+
+	frm = document.getElementById("cadastro");
+	for(i=0;i<frm.elements.length;i++) {
+		if( estilo == 'disabledFP' && frm.elements[i].name != undefined && (frm.elements[i].type == "text" || frm.elements[i].type == "select-one" || frm.elements[i].type == "radio" || frm.elements[i].type == "textarea") ) {
+			frm.elements[i].disabled = "true";
+			frm.elements[i].className = "disabledFP";
+		}
+	}
 }
+
+
 
 function cadastroVoltar() {
 	if( window.confirm('Deseja abandonar a alteração do cliente?') ) {
@@ -268,7 +284,7 @@ function checkForm() {
 							</div>
 						</td>
 						<td><div align="justify">
-							<input class="{$estilo}" style="width:100px" tabindex="9" align="right" name="cep"type="text"  id="cep5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"onKeyPress="formatar(this, '#####-###')" value="{$cep}" size="16" maxlength="9">
+							<input class="{$estilo}" style="width:100px" tabindex="9" align="right" name="cep"type="text"  id="cep5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$cep}" size="16" maxlength="9">
 							</div></td>
 					</tr>
 				</table>
