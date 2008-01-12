@@ -14,7 +14,7 @@
 			$this->_view->atribui("licenca",$this->licenca->obtemLicenca());	
 			$this->cobranca = VirtexModelo::factory('cobranca');
 			
-			$atrasados = $this->cobranca->obtemContratosFaturasAtrasadas();
+			$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios();
 			$this->_view->atribui("atrasados", $atrasados);
 			
 			$countBloqueados = count($atrasados);

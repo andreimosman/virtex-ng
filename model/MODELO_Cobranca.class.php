@@ -809,6 +809,7 @@
 				
 				
 			}
+			
 
 			$seek["id_cobranca"] = $id_cobranca;
 			$this->cbtb_fatura->altera($data,$seek);

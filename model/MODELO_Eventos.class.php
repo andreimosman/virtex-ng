@@ -19,6 +19,8 @@
 		public static $DESCRICAO_LOGIN_PRIMEIRO = 'PRIMEIRO LOGIN';
 		public static $DESCRICAO_PAG_FAT_DESC	= 'PAGAMENTO COM DESCONTO';
 		public static $DESCRICAO_PAG_FAT_ACRESC	= 'PAGAMENTO COM ACRESCIMO';
+		public static $DESCRICAO_PAG_FAT_PARCIAL= 'PAGAMENTO PARCIAL REALIZADO';
+		public static $DESCRICAO_PAG_FAT_REAG	= 'PAGAMENTO REAGENDADO';
 		public static $DESCRICAO_CONTA_ALT_POP	= 'ALTERACAO DE POP';
 		public static $DESCRICAO_CONTA_ALT_MAC  = 'ALTERACAO DE MAC';
 		public static $DESCRICAO_CONTA_ALT_NAS	= 'ALTERACAO DE NAS';
@@ -128,20 +130,38 @@
 			
 		}
 		
-		public function registraPagamentoFatura($ipaddr,$id_admin,$id_cobranca,$valor,$acrescimo,$desconto) {
-			$dados = array("ipaddr" => $ipaddr, "id_admin" => $id_admin, "id_cobranca" => $id_cobranca, 
-							"natureza" => self::$NATUREZA_PAG_FATURA, "tipo" => self::$TIPO_INFO);
+		public function registraPagamentoFatura($ipaddr,$id_admin,$id_cobranca,$valor,$acrescimo,$desconto, $amortizar, $reagendar,$id_cliente_produto, $id_conta) {
+			$dados = array("ipaddr" => $ipaddr, "id_admin" => $id_admin, "id_cobranca" => $id_cobranca, "id_conta" => $id_conta, 
+							"natureza" => self::$NATUREZA_PAG_FATURA, "id_cliente_produto" => $id_cliente_produto, "tipo" => self::$TIPO_INFO);
+			///echo $id_cliente_produto;
 			
-			$descricao = "VALOR: $valor\n";
+			$descricao = "VALOR FATURA: $valor\n";
 			
-			if( $desconto ) {
+			if ($reagendar){
+				$parcial = false;		
+			}else{
+				$parcial = true;
+			}
+			
+			if( $desconto != "0.00") {
 				$descricao .= self::$DESCRICAO_PAG_FAT_DESC . ": " . $desconto . "\n";
+				$parcial = false;
+			}
+			if( $acrescimo  != "0.00" ) {
+				$descricao .= self::$DESCRICAO_PAG_FAT_ACRESC . ": " . $acrescimo . "\n";
+				$parcial = false;
+			}
+			
+			$descricao .= "VALOR PAGO: $amortizar\n<br>";
+			
+			
+			if (($amortizar != $valor) && ($parcial) && (!$reagendar) ){
+				$descricao .= "<br><span style='color: red;'>" . self::$DESCRICAO_PAG_FAT_PARCIAL . "</span>";
+			}elseif (($amortizar != $valor) && (!$parcial) && ($reagendar) ){
+				$descricao .= "<br><span style='color: red;'>" . self::$DESCRICAO_PAG_FAT_REAG . "</span>";	
 			}
 
-			if( $acrescimo ) {
-				$descricao .= self::$DESCRICAO_PAG_FAT_ACRESC . ": " . $acrescimo . "\n";
-			}
-			
+
 			$dados["descricao"] = $descricao;
 			
 			return($this->evtb_evento->insere($dados));

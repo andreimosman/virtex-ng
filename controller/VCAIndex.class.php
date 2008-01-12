@@ -54,7 +54,7 @@
 			$menuCobranca->addItem("Amortização", "admin-cobranca.php?op=amortizacao", $target);
 
 			//$menuCobranca->addSeparator();
-			//$menuCobranca->addItem("Gerar Cobrança/Boletos", "admin-cobranca.php?op=gerar_cobranca", $target);
+			$menuCobranca->addItem("Gerar Cobrança/Boletos", "admin-cobranca.php?op=gerar_cobranca", $target);
 			//$menuCobranca->addItem("Troca de Arquivos", "admin-cobranca.php?op=arquivos",$target);
 
 			$menuCobranca->addSeparator();
