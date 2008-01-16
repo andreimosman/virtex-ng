@@ -34,8 +34,8 @@ function miniOpenLinkFicha(id) {
 function miniOpenLinkFichaConta(id_cliente_produto,id_cliente,id_conta) {
 	//
 	url = 'admin-clientes.php?op=conta&tela=ficha&id_cliente_produto='+id_cliente_produto+'&id_cliente='+id_cliente+'&id_conta='+id_conta;
-	
-	
+
+
 	parent.open(url,'conteudo');
 	parent.document.resultwin.hide();
 	//parent.document.resultwin.unload();
@@ -91,13 +91,13 @@ label {
 {if $tela != 'mini' }
 <center>
 <div class='form_pesquisa' align='center'>
-<form name='form_pesquisa' method='get' action='admin-clientes.php'>
+<form name='form_pesquisa' method='get' action='admin-clientes.php' onsubmit="javascript: return validaTextoEntrada(document.getElementById('texto_pesquisa').value, 3);">
 <input type='hidden' name='op' value='{$op}'>
 	<BR>
 	<fieldset><legend><span class="pesquisa_titulo">Procurar Cliente</span></legend>
 	<table cellspacing=0 cellpadding=0 align="center">
 		<tr>
-			<td align="center"><input type='text' size=75 name='texto_pesquisa' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$texto_pesquisa}">
+			<td align="center"><input type='text' size=75 name='texto_pesquisa' id='texto_pesquisa' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$texto_pesquisa}">
 			</td>
 		</tr>
 		<tr>

@@ -41,11 +41,16 @@ div.gadget iframe {
 <script language="JavaScript">
 {literal}
 var resultwin;
+
 function pesquisaUsuario() {
 
 	frm = document.form_pesquisa;
 
 	texto_pesquisa = frm.texto_pesquisa.value;
+
+	if (!validaTextoEntrada(texto_pesquisa, 3)) {
+		return false;
+	}
 
 	//itens = frm.all;
 	itens = document.getElementById("form_pesquisa").elements;
