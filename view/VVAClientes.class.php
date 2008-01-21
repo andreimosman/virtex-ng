@@ -140,6 +140,7 @@
 				
 				case 'contratos':
 					$titulo .=  " :: Contratos";
+					
 					break;
 					
 				case 'migrar':
@@ -147,7 +148,9 @@
 					break;
 					
 				case 'faturas':
+					$id_cliente_produto = $this->obtem("id_cliente_produto");
 					$titulo .= " :: Faturas";
+					if ($id_cliente_produto) $titulo .= " :: Contrato #$id_cliente_produto";
 					break;
 			
 				case 'amortizacao':
