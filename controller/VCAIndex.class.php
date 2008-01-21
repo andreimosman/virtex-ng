@@ -14,6 +14,9 @@
 		}
 
 		protected function executa() {
+		
+			$permissao_monitoramento = $this->requirePrivLeitura("_SUPORTE_MONITORAMENTO",false);
+			$this->_view->atribui("permissao_monitoramento", $permissao_monitoramento);
 
 			$target = "conteudo";
 
