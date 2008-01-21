@@ -48,6 +48,8 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 
 		if ($id_carne)
 		$where [] = 'f.id_carne = ' . $this->bd->escape ($id_carne);
+		
+		$where [] = "f.status <> 'E' ";
 
 		$q .= " WHERE " . implode (" AND ", $where);
 		return ($this->bd->obtemRegistros ($q));

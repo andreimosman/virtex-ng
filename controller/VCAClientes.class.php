@@ -776,7 +776,9 @@
 					$cobranca = VirtexModelo::factory("cobranca");
 					$faturas = $cobranca->obtemFaturas ($_REQUEST ['id_cliente'], $tem_carne, $_REQUEST ['id_cliente_produto'],
 								 $_REQUEST ['id_forma_pagamento'], $_REQUEST ['id_carne']);
+							
 
+					$this->_view->atribui ('id_cliente_produto', @$_REQUEST['id_cliente_produto']);
 					$this->_view->atribui ('tem_carne', $tem_carne);
 					if ($tem_carne && $_REQUEST ["id_carne"] > 0) {
 						$acao = 'faturas';
