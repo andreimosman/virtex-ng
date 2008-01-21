@@ -1,11 +1,11 @@
 <?
 
 	class VCAIndex extends VirtexControllerAdmin {
-	
+
 		public function __construct() {
 			parent::__construct();
 		}
-	
+
 		protected function init() {
 			// Inicializações da SuperClasse
 			parent::init();
@@ -23,7 +23,7 @@
 			// Home
 			//
 			$menu->addItem("Home", "admin-home.php", $target);
-			
+
 			//
 			// Menu de Clientes
 			//
@@ -85,7 +85,7 @@
 			$menuSuporte = new MMenu();
 			$menuSuporte->addItem("Gráficos", "admin-suporte.php?op=graficos", $target);
 			$menuSuporte->addItem("Monitoramento", "admin-suporte.php?op=monitoramento", $target);
-			
+
 			$menuSuporte->addSeparator();
 			$menuSuporte->addItem("Links Externos", "admin-suporte.php?op=links", $target);
 
@@ -101,7 +101,7 @@
 			$menuSuporteRelatorios = new MMenu();
 			$menuSuporteRelatorios->addItem("Clientes por Banda","admin-suporte.php?op=relatorios&relatorio=banda", $target);
 			$menuSuporteRelatorios->addItem("Clientes sem MAC","admin-suporte.php?op=relatorios&relatorio=cliente_sem_mac", $target);
-			$menuSuporte->addSubmenu("Relatórios", $menuSuporteRelatorios);		
+			$menuSuporte->addSubmenu("Relatórios", $menuSuporteRelatorios);
 
 			$menu->addSubmenu("Suporte",$menuSuporte);
 
@@ -142,11 +142,11 @@
 			$menuConfiguracoes->addSubmenu("Relatórios", $menuConfiguracoesRelatorios);
 
 			$menu->addSubmenu("Configurações", $menuConfiguracoes);
-			
+
 			//
 			// Menu de Faturamento
 			//
-			
+
 			$menuFaturamento = new MMenu();
 			$menuFaturamentoRelatorios 	= new MMenu();
 			$menuFaturamentoRelatorios->addItem("Faturamento Anual", "admin-faturamento.php?op=relatorios&relatorio=faturamento", $target);
@@ -156,7 +156,7 @@
 			$menuFaturamentoRelatorios->addItem("Previsão de Faturamento", "admin-faturamento.php?op=relatorios&relatorio=previsao", $target);
 			$menuFaturamento->addSubmenu("Relatorios", $menuFaturamentoRelatorios);
 			$menu->addSubmenu("Faturamento", $menuFaturamento);
-			
+
 			//
 			// Menu de Administração
 			//
@@ -166,6 +166,13 @@
 			$menuAdministracao->addItem("Administradores", "admin-administracao.php?op=administradores&tela=listagem", $target);
 			$menuAdministracao->addSeparator();
 			$menuAdministracao->addItem("Planos", "admin-administracao.php?op=planos&tela=listagem", $target);
+
+			$menuAdministracao->addSeparator();
+			$menuAdministracaoBancoDados = new MMenu();
+			$menuAdministracaoBancoDados->addItem("Eliminar Cliente", "admin-administracao.php?op=bancodados&eliminar=cliente", $target);
+			$menuAdministracaoBancoDados->addItem("Eliminar Contrato", "admin-administracao.php?op=bancodados&eliminar=contrato", $target);
+			$menuAdministracaoBancoDados->addItem("Eliminar Conta", "admin-administracao.php?op=bancodados&eliminar=conta", $target);
+			$menuAdministracao->addSubmenu("Banco de Dados", $menuAdministracaoBancoDados);
 
 			$menuAdministracao->addSeparator();
 			$menuAdministracaoFerramentas = new MMenu();
@@ -183,18 +190,18 @@
 			// Logout
 			//
 			$menu->addItem("Sair", "admin-login.php", "_top");
-			
+
 
 			// $menu->printRecursive();
 			$this->_view->atribui("jsMenuItens", $menu->jsOutput());
 
-		
-		
-		
-		
-		
+
+
+
+
+
 		}
-		
+
 	}
 
 ?>
