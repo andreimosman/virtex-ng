@@ -644,7 +644,7 @@
 				}
 			}
 			// obtem todas faturas do cliente.
-			return ($this->cbtb_fatura->obtemFaturas ($id_cliente));
+			return ($this->cbtb_fatura->obtemFaturas ($id_cliente, $id_cliente_produto));
 		}
 
 		public function migrarFatura($id_cobranca,$id_cliente_produto) {
