@@ -35,6 +35,7 @@
 		
 		public function daemon() {
 		
+			/**
 			$pid = pcntl_fork();
 			
 			if( $pid == -1 ) {
@@ -48,12 +49,39 @@
 					$this->executa();
 				}
 			}
+			*/
+			
+			
+			// Escuta em uma porta pra cada tipo de serviço. (evita lags e ganha em paralelismo)
+			$this->startServerDaemon(VirtexComm::$INC_MONITORAMENTO);	// Monitoramento
+			$this->startServerDaemon(VirtexComm::$INC_GRAFICOS);		// Gráficos
+			$this->startServerDaemon(VirtexComm::$INC_ARP);				// Tabela ARP
+			$this->startServerDaemon(VirtexComm::$INC_PING);			// Tabela PING
+			
+		}
+		
+		protected function startServerDaemon($incremento) {
+
+			$pid = pcntl_fork();
+			
+			if( $pid == -1 ) {
+				die("O sistema não pode operar em modo 'daemon'");
+			} elseif($pid) {
+				// Parent
+				// pcntl_wait($signal);
+			} else {
+				//
+				while(true) {
+					$srv = new VirtexCommServer(@$this->serverConfig["geral"]["chave"],@$this->serverConfig["geral"]["host"],@$this->serverConfig["geral"]["port"]+((int)$incremento),$this->userbase);
+					$srv->start();
+				}
+			}
+
+
 
 		}
 		
 		public function executa() {
-			$srv = new VirtexCommServer(@$this->serverConfig["geral"]["chave"],@$this->serverConfig["geral"]["host"],@$this->serverConfig["geral"]["port"],$this->userbase);
-			$srv->start();
 		}
 	
 	}

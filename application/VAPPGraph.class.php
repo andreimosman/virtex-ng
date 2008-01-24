@@ -122,7 +122,7 @@
 			$servidores = $equipamentos->obtemListaServidores(true);
 			// print_r($servidores);
 			
-			$comm = new VirtexCommClient();
+			$comm = new VirtexCommClient(VirtexComm::$INC_GRAFICOS);
 			
 
 			$arqtmp = tempnam( "/tmp" , "vastat-" );

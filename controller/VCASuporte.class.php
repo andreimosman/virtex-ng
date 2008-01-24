@@ -96,7 +96,7 @@
 				
 				if( !$ip ) $ip = "-a";
 				
-				$conn = new VirtexCommClient();
+				$conn = new VirtexCommClient(VirtexComm::$INC_ARP);
 				if(@!$conn->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"])) {
 					$erro = "Erro de conexão com o servidor";
 					$this->_view->atribui("erro",$erro);
@@ -143,7 +143,7 @@
 					$servidor = $equipamentos->obtemServidor($id_servidor);
 					$this->_view->atribui("servidor",$servidor);
 
-					$conn = new VirtexCommClient();
+					$conn = new VirtexCommClient(VirtexComm::$INC_PING);
 					if(@!$conn->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"])) {
 						// echo "ERRO DE CONEXÃO\n\n";
 						$erro = "Erro de conexão com o servidor";

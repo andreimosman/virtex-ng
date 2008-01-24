@@ -3,9 +3,12 @@
 	class VirtexCommClient extends VirtexComm {
 	
 		//protected $conectado;
+		protected $incremento;
 
-		public function __construct() {
+		public function __construct($incremento=0) {
 			parent::__construct();
+			
+			$this->incremento = $incremento;
 		}
 		
 		/**
@@ -114,7 +117,7 @@
 		 * Abre uma conexão
 		 */
 		public function open($host,$porta,$chave,$user,$pass) {
-			$this->conn = @fsockopen($host,$porta,$errno,$errstr,30);
+			$this->conn = @fsockopen($host,$porta+$this->incremento,$errno,$errstr,30);
 
 			if( !$this->conn ) {
 				$this->conectado = false;

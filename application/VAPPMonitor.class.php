@@ -28,7 +28,7 @@
 					$this->cacheServidores[ $servidor["id_servidor"] ] = $servidor;
 					
 					if( $this->useConnCache ) {
-						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"] = new VirtexCommClient();
+						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"] = new VirtexCommClient(VirtexComm::$INC_MONITORAMENTO);
 						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"]->open($servidor["ip"],$servidor["porta"],$servidor["chave"],$servidor["usuario"],$servidor["senha"]);
 					} else {
 						$this->cacheServidores[ $servidor["id_servidor"] ]["conn"] = null;

@@ -16,6 +16,13 @@
 		// indica se está conectado.
 		protected $conectado;
 		
+		
+		
+		public static $INC_MONITORAMENTO 	= 0;
+		public static $INC_GRAFICOS			= 1;
+		public static $INC_ARP				= 2;
+		public static $INC_PING				= 3;
+		
 		public function __construct() {
 			$this->conectado = false;
 		}
