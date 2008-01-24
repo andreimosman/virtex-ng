@@ -4,7 +4,7 @@
 	
 		public function __construct($bd=null) {
 			parent::__construct($bd);
-			$this->_campos	 	= array("id_provedor", "tx_juros", "multa", "dia_venc", "carencia", "pagamento", "observacoes", "path_contrato","enviar_email","mensagem_email","email_remetente", "dias_minimo_cobranca");
+			$this->_campos	 	= array("id_provedor", "tx_juros", "multa", "dia_venc", "carencia", "pagamento", "observacoes", "path_contrato","enviar_email","mensagem_email","email_remetente", "dias_minimo_cobranca", "tempo_banco");
 			$this->_chave 		= "id_provedor";
 			$this->_ordem 		= "";
 			$this->_tabela		= "pftb_preferencia_cobranca";
