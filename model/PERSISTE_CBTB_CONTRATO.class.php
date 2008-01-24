@@ -219,7 +219,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 	}
 
-	public function obtemContratosFaturasAtrasadasBloqueios($carencia) {
+	public function obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco=2,$id_cliente_produto="") {
 
 	/*$sql  = "SELECT sum(f.valor) as fatura_valor, cl.nome_razao, ";
 	$sql .= "	(SELECT count(f.status) ";
@@ -269,7 +269,16 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	$sql .= "			cp.id_cliente_produto ";
 	$sql .= "	) cnt ON cnt.id_cliente_produto = cp.id_cliente_produto ";
 	$sql .= "WHERE  ";
-	$sql .= "	(f.reagendamento is null AND f.data < now() + interval '5 days' ) OR (f.reagendamento is not null AND f.data < now() + interval '5 days' + interval '20 days' ) AND f.status not in ('P','E','C')  ";
+	//$sql .= "	(f.reagendamento is null AND f.data < now() + interval '5 days' ) OR (f.reagendamento is not null AND f.data < now() + interval '5 days' + interval '20 days' ) AND f.status not in ('P','E','C')  ";
+	
+	$diasSemReagendamento = $carencia + $tempo_banco;
+	$diasComReagendamento = $tempo_banco;
+	$sql .= "  ((f.reagendamento is null AND f.data < now() + interval '$diasSemReagendamento' ) OR (f.reagendamento is not null AND f.reagendamento < now() + interval '$diasComReagendamento')) AND f.status not in ('P','E','C') ";
+	
+	if( $id_cliente_produto ) {
+		$sql .= " AND f.id_cliente_produto = $id_cliente_produto ";
+	}
+	
 	$sql .= "GROUP BY  ";
 	$sql .= "	f.id_cliente_produto, cl.nome_razao, p.nome, p.tipo, cnt.num_contas ";
 
@@ -308,9 +317,17 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql .= "	, produto.nome ";
 		$sql .= "	, contrato.id_cliente_produto ";*/
 
-		// echo $sql;
 		return $this->bd->obtemRegistros($sql);
 
+	}
+
+	public function obtemContrato($id_cliente_produto) {
+		$sql  = "SELECT ";
+		$sql .= "	id_cliente_produto, tipo_produto ";
+		$sql .= "FROM cbtb_contrato ";
+		$sql .= "WHERE id_cliente_produto = $id_cliente_produto ";
+		//echo "$sql";
+		return $this->bd->obtemUnicoRegistro($sql);
 	}
 
 }

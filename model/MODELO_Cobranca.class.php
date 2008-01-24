@@ -757,7 +757,11 @@
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
 					$reagendamento, $observacoes, $admin=array()){
 
+			$contas = VirtexModelo::factory("contas");
+			$cobranca = VirtexModelo::factory("cobranca");
 			$fatura = $this->obtemFaturaPorIdCobranca($id_cobranca);
+			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
+			
 			$data = array();
 
 			if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or
@@ -772,7 +776,7 @@
 				$data["valor_pago"] = $fatura["valor_pago"] + $amortizar;
 				if($totalDevido == $amortizar){
 					$data["status"] = PERSISTE_CBTB_FATURAS::$PAGA;
-					$data["pagto_parcial"] = 0;
+					$data["pagto_parcial"] = 0;	
 				} elseif($amortizar < $totalDevido) {
 					$data["status"] = PERSISTE_CBTB_FATURAS::$PARCIAL;
 					$data["pagto_parcial"] = $data["valor_pago"];
@@ -813,6 +817,40 @@
 
 			$seek["id_cobranca"] = $id_cobranca;
 			$this->cbtb_fatura->altera($data,$seek);
+			
+			//Remanejamento e verificação de contas bloqueadas
+			//$contrato = $this->obtemContrato($fatura["id_cliente_produto"]);
+			$atrasados = $this->obtemContratosFaturasAtrasadasBloqueios($preferenciasCobranca["carencia"],$preferenciasCobranca["tempo_banco"],$fatura["id_cliente_produto"]); 
+
+			$permitir_desbloqueio = false;
+			if(!$atrasados) { 
+				$permitir_desbloqueio = true;
+			}
+			
+			//for ($i=0; $i<count($atrasados); $i++) {
+			//	if($atrasados[$i]["id_cliente_produto"] == $fatura["id_cliente_produto"]) $permitir_desbloqueio = false;
+			//}
+
+			if($permitir_desbloqueio) {
+				$contas_bloqueadas = $contas->obtemContasBloqueadasPeloContrato($fatura["id_cliente_produto"], $tipo_produto);			
+				
+				foreach( $contas_bloqueadas as $i => $conta ) {
+					switch(trim($conta["tipo_conta"])) {
+						case "BL":
+							$contas->alteraContaBandaLarga($conta["id_conta"], NULL, 'A');
+							break; 
+						case "D":
+							$contas->alteraContaDiscado($conta["id_conta"], NULL, 'A');
+							break;
+						case "H":
+							$contas->alteraHospedagem($conta["id_conta"], NULL, 'A', '', '');
+							break;
+					}
+					$contas->gravaLogMudancaStatusConta($contas_bloqueadas["id_cliente_produto"], $contas_bloqueadas["username"], $contas_bloqueadas["dominio"], $contas_bloqueadas["tipo_conta"], $admin["id_admin"], '');
+				}
+				$contas->gravaLogBloqueioAutomatizado($contas_bloqueadas["id_cliente_produto"], 'A', $admin["admin"], 'Ativacao por motivo de pagamento de fatura');
+					
+			}
 
 			return true;
 		}
@@ -849,7 +887,6 @@
 			return ($this->cbtb_fatura->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca));
 		}
 
-
 		public function obtemUltimasRemessas($quantidade) {
 			return ($this->cbtb_lote_cobranca->obtemUltimasRemessas($quantidade));
 		}
@@ -862,14 +899,19 @@
 			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadas());
 		}
 		
-		public function obtemContratosFaturasAtrasadasBloqueios() {	
+		public function obtemContratosFaturasAtrasadasBloqueios($carencia="",$tempo_banco=2,$id_cliente_produto="") {	
 			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
-			$carencia =  $preferenciasCobranca["carencia"];
-			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia));
+			if(!$carencia) $carencia = $preferenciasCobranca["carencia"];
+			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco,$id_cliente_produto));
 		}
 		
 		public function obtemFaturasPorRemessaGeraBoleto($id_remessa) {
 					return ($this->cbtb_fatura->obtemFaturasPorRemessaGeraBoleto($id_remessa));
+		}
+		
+		public function obtemContrato($id_cliente_produto) {
+			$retorno = $this->cbtb_contrato->obtemContrato($id_cliente_produto);
+			return $retorno;
 		}
 
 	}

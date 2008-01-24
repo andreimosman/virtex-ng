@@ -21,6 +21,7 @@
 		protected $preferencias;
 		protected $equipamentos;
 		protected $spool;
+		protected $evento;
 
 
 		public function __construct() {
@@ -39,6 +40,7 @@
 			$this->preferencias 				= VirtexModelo::factory("preferencias");
 			$this->equipamentos 				= VirtexModelo::factory("equipamentos");
 			$this->spool						= VirtexModelo::factory("spool");
+			$this->eventos						= VirtexModelo::factory("eventos");
 
 		}
 
@@ -761,6 +763,14 @@
 			return $this->cntb_conta->obtemContasPeloContrato($id_cliente_produto, $tipo=NULL);
 		}
 		
+		public function obtemContasBloqueadasPeloContrato($id_cliente_produto, $tipo=NULL) {		
+			$retorno = $this->cntb_conta->obtemContasBloqueadasPeloContrato($id_cliente_produto, $tipo);
+			//echo "<PRE>";
+			//print_r($retorno);
+			//echo "</PRE>";
+			return $retorno;
+		}	
+
 		public function obtemBloqueiosDesbloqueios($periodo){
 			$retorno = $this->cntb_conta->obtemBloqueiosDesbloqueios($periodo);
 			//echo "<PRE>";
@@ -768,14 +778,39 @@
 			//echo "</PRE>";
 			return $retorno;
 		}
-		
+
 		public function obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes){
 			$retorno = $this->cntb_conta->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
 			//echo "<PRE>";
 			//print_r($retorno);
 			//echo "</PRE>";
 			return $retorno;
-		}
+		}	
+
+		
+		/*
+
+		public function eliminaConta($id_conta, $id_admin, $ipaddr) {
+			$info = $this->obtemContaPeloId($id_conta);
+
+			if( $info["tipo_conta"] == 'BL' ) {
+				// Enviar instrução de remoção p/ spool
+				$nas = $this->equipamentos->obtemNAS($info["id_nas"]);
+				$remEnd = $info["rede"] ? $info["rede"] : $info["ipaddr"];
+				$this->spool->removeContaBandaLarga($info["id_nas"],$id_conta,$info["username"],$remEnd,$info["mac"],$nas["padrao"]);
+			}
+			
+			echo "<PRE>";
+			print_r($info);
+			echo "</PRE>";
+
+			//$this->cntb_conta->remove(array("id_conta"=>$id_conta));
+			
+			//$this->eventos->registraEliminacaoConta($id_conta, $info["id_cliente_produto"],$ipaddr, $id_admin, $username="", $endereco="");
+
+		} */
+
+
 
 
 	}
