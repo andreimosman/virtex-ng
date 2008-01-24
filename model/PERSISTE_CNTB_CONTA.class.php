@@ -20,7 +20,7 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 										$this->_filtros 	= array("status" => "custom", "conta_mestre" => "bool");
 
 	}
-	
+
 	protected function preenchePeriodo($arr,$periodo) {
 		$data = date("d/m/Y");
 		for($i=0;$i<$periodo;$i++) {
@@ -234,10 +234,31 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 		return ($this->bd->obtemRegistros($sql));
 	}
 	
+	
+	public function obtemContasBloqueadasPeloContrato($id_cliente_produto, $tipo=NULL) {
+	
+		$sql  = "SELECT ";
+		$sql .= "	conta.username, conta.dominio, conta.tipo_conta, conta.senha, ";
+		$sql .= "	conta.id_cliente, conta.id_cliente_produto, conta.id_conta, ";
+		$sql .= "	conta.senha_cript ,conta.conta_mestre, conta.status, conta.observacoes ";
+		$sql .= "FROM ";
+		$sql .= "	cbtb_contrato contrato INNER JOIN cntb_conta conta ON conta.id_cliente_produto = contrato.id_cliente_produto ";
+		$sql .= "WHERE ";
+		$sql .= "	contrato.id_cliente_produto = $id_cliente_produto ";
+		$sql .= "	AND conta.status IN ('S') ";
+		
+		if($tipo) {
+			$sql .= "	AND conta.tipo_conta LIKE '$tipo' ";
+		}
+		
+		return $this->bd->obtemRegistros($sql);
+	}
+	
+
 	public function obtemBloqueiosDesbloqueios($intervalo) {
-	
+
 		$intsql = $intervalo - 1;
-	
+
 			$sql  = "SELECT ";
 			$sql .= "	count(*) as num_contratos, ";
 			$sql .= "	EXTRACT(year from ba.data_hora) as ano, ";
@@ -250,21 +271,21 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 			$sql .= "ORDER BY ano, mes ";
 
 			$retorno = array();
-	
+
 		$bloqueio_desbloqueio = $this->bd->obtemRegistros($sql);
-		
+
 		for($i=0;$i<count($bloqueio_desbloqueio);$i++) {
 			if( $bloqueio_desbloqueio[$i]["mes"] < 10 ) $bloqueio_desbloqueio[$i]["mes"] = "0".$bloqueio_desbloqueio[$i]["mes"];
 			$retorno[ $bloqueio_desbloqueio[$i]["ano"] . "-" . $bloqueio_desbloqueio[$i]["mes"] ] = $bloqueio_desbloqueio[$i];
 		}
-		
+
 		$retorno = $this->preenchePeriodo($retorno,$intervalo);
 		//echo $retorno;
 		return ($retorno);
 		}
 
 		public function obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes) {
-		
+
 			list($ano,$mes) = explode("-",$periodoAnoMes);
 			if( $mes < 10 ) {
 				$mes = "0".$mes;
@@ -273,7 +294,7 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 			$data2 = MData::adicionaMes($data1,1);
 			$data1 = MData::ptBR_to_ISO($data1);
 			$data2 = MData::ptBR_to_ISO($data2);
-			
+
 			$sql  = "SELECT ";
 			$sql .= "	EXTRACT(year from ba.data_hora) as ano, ";
 			$sql .= "	EXTRACT(month from ba.data_hora) as mes, ";
@@ -287,9 +308,9 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 			$sql .= "WHERE ";
 			$sql .= "	ba.data_hora >='$data1' AND ba.data_hora <'$data2' ";
 			$sql .= "ORDER BY ba.data_hora ";
-			//echo $sql;	
-			return ($this->bd->obtemRegistros($sql));			
-		
+			//echo $sql;
+			return ($this->bd->obtemRegistros($sql));
+
 		}
 
 
