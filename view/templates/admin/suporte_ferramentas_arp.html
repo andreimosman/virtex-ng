@@ -59,7 +59,7 @@ label {
 					<option value="" />
 					{foreach item=s from=$servidores}
 					{if $s.hostname && $s.ip}
-					<option value='{$s.id_servidor}' {if $servidor.id_servidor == $s.id_servidor}SELECTED{/if}>{$s.hostname} ({$s.ip})</option>
+					<option value='{$s.id_servidor}' {if !$id_servidor && ($s.ip == '127.0.0.1' || $s.ip == 'localhost')}SELECTED{else}{if $servidor.id_servidor == $s.id_servidor}SELECTED{/if}{/if}>{$s.hostname} ({$s.ip})</option>
 					{/if}
 					{/foreach}
 				</select>
