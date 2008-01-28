@@ -14,6 +14,7 @@
 		public static $NATUREZA_LOGIN	 		= 'LOGIN';
 		public static $NATUREZA_ALT_CONTA		= 'ALTERACAO CONTA';
 		public static $NATUREZA_PAG_FATURA  	= 'PAGAMENTO FATURA';
+		public static $NATUREZA_ELI_CONTA		= 'ELIMINACAO CONTA';
 		
 		public static $DESCRICAO_ERRO			= 'ERRO';
 		public static $DESCRICAO_LOGIN_PRIMEIRO = 'PRIMEIRO LOGIN';
@@ -166,6 +167,25 @@
 			
 			return($this->evtb_evento->insere($dados));
 			
+		}
+		
+		public function registraEliminacaoConta($id_conta, $id_cliente_produto,$ipaddr, $id_admin, $username="", $endereco="") {
+		
+			$descricao = "";
+			if($endereco) $descricao .= "ENDERECO: " . $endereco . "\n";
+			if($username) $descricao .= "USERNAME: " . $username . "\n";
+		
+			$dados = array (	"id_conta" => $id_conta,
+								"id_cliente_produto" => $id_cliente_produto, 
+								"id_admin" => $id_admin,
+								"ipaddr" => $ipaddr,
+								"tipo" => self::$TIPO_INFO,
+								"natureza" => self::NATUREZA_ELI_CONTA,
+								"descricao" => $descricao
+							);
+			
+			return ($this->evtb_evento->insere($dados));
+		
 		}
 		
 		/**

@@ -847,15 +847,11 @@
 							$contas = VirtexModelo::factory("contas");
 
 							if( $cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
-									$reagendamento, $observacoes,$dadosLogin) ) {
+									$reagendamento, $observacoes,$dadosLogin) ) { 
 									$fluxo=VirtexPersiste::factory("cxtb_fluxo");
 									$fluxo->pagamentoComDinheiro($amortizar,$data_pagamento,$id_cobranca,$dadosLogin["admin"]);
 
-
 									$fatura = $cobranca->obtemFaturaPorIdCobranca($id_cobranca);
-
-									$conta = $contas->obtemContasPeloContrato($fatura["id_cliente_produto"]);
-
 
 									$this->eventos->registraPagamentoFatura($this->ipaddr,$dadosLogin["id_admin"],$id_cobranca,$fatura["valor"],$acrescimo,$desconto,$amortizar,$reagendar,$fatura["id_cliente_produto"], $conta[0]["id_conta"]);
 									$fluxo=VirtexPersiste::factory("cxtb_fluxo");

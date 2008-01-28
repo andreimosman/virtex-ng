@@ -5,7 +5,7 @@
 		public function __construct() {
 			parent::__construct();
 		}
-		
+
 		protected function init() {
 			parent::init();
 			$this->nomeSessao = "Administração";
@@ -13,7 +13,7 @@
 
 		protected function obtemItensMenu() {
 			$itensMenu = array();
-			
+
 			switch($this->obtem("op")) {
 				case 'planos':
 					$itensMenu[] = array("texto" => "Novo: Banda Larga", "url" => "admin-administracao.php?op=planos&tela=cadastro&tipo=BL");
@@ -25,12 +25,13 @@
 				default:
 					// Do something
 			}
-			
+
 			return($itensMenu);
-			
+
 		}
 
 		public function exibe() {
+
 			switch($this->_visualizacao) {
 				case 'altsenha':
 					$this->exibeAlteracaoSenha();
@@ -50,13 +51,16 @@
 				case 'relatorios':
 					$this->exibeRelatorios();
 					break;
+				case 'bancodados':
+					$this->exibeBancoDados();
+					break;
 				default:
 					// Do Something
 			}
-			
+
 			parent::exibe();
 		}
-		
+
 		protected function exibeAlteracaoSenha() {
 			$dadosLogin = $this->obtem("dadosLogin");
 			echo "<pre>";
@@ -64,10 +68,10 @@
 			echo "</pre>";
 			$this->_file = "administracao_altsenha.html";
 			$titulo = " :: ".(@$dadosLogin["nome"])." :: Alteração de Senha";
-			
+
 			$this->nomeSessao .= $titulo;
 		}
-		
+
 		protected function exibeAdministradores() {
 			$titulo = " :: Administradores";
 			switch($this->obtem("tela") ) {
@@ -77,15 +81,15 @@
 					}else {
 						$titulo .= " :: Cadastro";
 					}
-					
+
 					$this->configureMenu($this->obtemItensMenu(),false,true);
 					$this->_file = "administracao_admin_cadastro.html";
 					break;
-				case 'privilegio':	
+				case 'privilegio':
 					$titulo .= " :: Privilégios";
 					$this->configureMenu($this->obtemItensMenu(),false,true);
-					$this->_file = "administracao_admin_privilegio.html";				
-				break;	
+					$this->_file = "administracao_admin_privilegio.html";
+				break;
 				case 'listagem':
 					$titulo .= " :: Listagem";
 					$this->_file = "administracao_admin_listagem.html";
@@ -94,10 +98,10 @@
 				default:
 					//Do Something
 			}
-			
+
 			$this->nomeSessao .= $titulo;
 		}
-		
+
 		protected function exibePlanos() {
 			$titulo = "Planos";
 			switch( $this->obtem("tela") ) {
@@ -118,42 +122,71 @@
 				default:
 					// Do something
 			}
-			
+
 			$this->atribui("titulo",$titulo);
 		}
-		
+
 		protected function exibeProdutos() {
-		
+
 		}
-		
+
 		protected function exibeFerramentas() {
 			// echo "EF";
 			$this->_file = "administracao_backup.html";
-			
+
 			$titulo = "Backup";
-			
-			
+
+
 			$this->atribui("titulo", $titulo);
 		}
-		
+
+
 		protected function exibeRelatorios() {
-		
+
 			switch($this->obtem("relatorio")) {
 				case 'eventos':
 					$this->atribui("titulo","Log de Eventos do Sistema");
 					$this->_file = "administracao_relatorios_eventos.html";
 					break;
-				
+
 				default:
-				
-			
+
+
 			}
-		
+
 			//$this->_file = "administracao_log_admin.html";
 			//$this->atribui("titulo","Log dos Administradores");
 		}
-		
-	
+
+
+		protected function exibeBancoDados() {
+
+			$titulo = "Bando de Dados";
+
+			switch($this->obtem("eliminar")) {
+				case 'cliente':
+					$titulo .= " :: Eliminar Cliente";
+					$this->_file = "administracao_bancodados_eliminar.html";
+					break;
+				case 'contrato':
+					$titulo .= " :: Eliminar Contrato";
+					$this->_file = "administracao_bancodados_eliminar.html";
+					break;
+				case 'conta':
+					$titulo .= " :: Eliminar Conta";
+					$this->_file = "administracao_bancodados_eliminar.html";
+					break;
+				default:
+					break;
+
+
+			}
+
+			//$this->_file = "administracao_log_admin.html";
+			$this->nomeSessao .= $titulo;
+			$this->atribui("titulo", $titulo);
+		}
+
 	}
 
 ?>

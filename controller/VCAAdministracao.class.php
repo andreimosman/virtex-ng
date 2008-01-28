@@ -5,6 +5,7 @@
 
 		protected $produtos;
 		protected $administradores;
+		protected $contas;
 
 		public function __construct() {
 			parent::__construct();
@@ -20,6 +21,7 @@
 		}
 
 		protected function executa() {
+
 			switch($this->_op) {
 				case 'altsenha':
 					$this->executaAlteracaoSenha();
@@ -39,6 +41,8 @@
 				case 'relatorios':
 					$this->executaRelatorios();
 					break;
+				case 'bancodados':
+					$this->executaBancoDados();
 				default:
 					// Do Something
 
@@ -198,15 +202,15 @@
 					break;
 				case 'privilegio':
 
-					
+
 					$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
-					
-					
+
+
 					$acao = @$_REQUEST["acao"];
 					$acesso = @$_REQUEST["acesso"];
 
 					$id_admin = @$_REQUEST["id_admin"];
-					
+
 
 					if($acao=="gravar"){
 						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
@@ -218,7 +222,7 @@
 
 						$admin = $this->administradores->obtemAdminPeloId($id_admin);
 						$privilegios = $this->administradores->obtemPrivilegios();
-						
+
 						/*echo "<pre>";
 						print_r($privilegios);
 						echo "</pre>";*/
@@ -239,18 +243,18 @@
     					}
 
     					$this->_view->atribui("privilegios",$privilegios);
-    					
-    					
+
+
 						$podeGravar = false;
-						
+
 						if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
 							$podeGravar = true;
 						}
-						
+
 						$this->_view->atribui("podeGravar",$podeGravar);
 
     					$acessos = $this->administradores->obtemAcessos();
-    					
+
     					$this->_view->atribui("acessos",$acessos);
 
 						//echo "<pre>";
@@ -408,63 +412,63 @@
 
 		protected function executaRelatorios() {
 			$this->_view->atribuiVisualizacao("relatorios");
-			
+
 			$relatorio = @$_REQUEST["relatorio"];
-			
+
 			$this->_view->atribui("relatorio",$relatorio);
-			
-			
-			
+
+
+
 			switch($relatorio) {
-			
+
 				case 'eventos':
 					$this->executaRelatorioEventos();
 					break;
-			
+
 			}
-			
-			
+
+
 		}
-		
+
 		protected function executaRelatorioEventos() {
-			
+
 			$this->requirePrivLeitura("_ADMINISTRACAO_RELATORIOS");
-			
-			// 			
+
+			//
 			$tipo = @$_REQUEST["tipo"];
 			$id_admin = @$_REQUEST["id_admin"];
 			$natureza = @$_REQUEST["natureza"];
 			$id_conta = @$_REQUEST["id_conta"];
-			
+
 			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 			$limite = @$_REQUEST["limite"];
-			
-			
-			
+
+
+
 				$administradores_select= $this->administradores->obtemListaAdmin();
 				$this->_view->atribui("administradores_select",$administradores_select);
-			
+
 				$this->_view->atribui("id_admin",$id_admin);
-			
+
 				$natureza_select= $this->eventos->obtemNatureza();
 				$this->_view->atribui("natureza_select",$natureza_select);
-			
+
 				$this->_view->atribui("natureza",$natureza);
-			
+
 				$tipos_select= $this->eventos->obtemTipos();
 				$this->_view->atribui("tipos_select",$tipos_select);
-		
+
 				$this->_view->atribui("tipo",$tipo);
-		
-			
-			
-			
-			
+
+
+
+
+
 
 			// TODO: PERÍODO.
-			
+
 			$filtro = array();
-			
+
 			// $tipo = "INFO";
 			// $natureza = "LOGIN";
 			// $natureza = "ALTERACAO CONTA";
@@ -472,29 +476,63 @@
 			// $id_conta = 204;
 			// $id_conta = 195;
 			// $id_cliente_produto = 309;
-			
+
 			if( $tipo ) $filtro["tipo"] = $tipo;
 			if( $natureza ) $filtro["natureza"] = $natureza;
 			if( $id_admin ) $filtro["id_admin"] = $id_admin;
 			if( $id_conta ) $filtro["id_conta"] = $id_conta;
 			if( $id_cliente_produto ) $filtro["id_cliente_produto"] = $id_cliente_produto;
 			if( $id_cobranca ) $filtro["id_cobranca"] = $id_cobranca;
-			
-			
+
+
 			if( !$limite && !count($filtro)) $limite = 20;
-			
-			
+
+
 			$eventos = $this->eventos->obtem($filtro,$limite);
 
 			$this->_view->atribui("eventos",$eventos);
 			$this->_view->atribui("limite",$limite);
-			
+
 			//echo "<pre>";
 			//print_r($eventos);
 			//echo "</pre>";
-			
-			
-		
+
+
+
+		}
+
+
+		protected function executaBancoDados() {
+
+			//$this->requirePrivLeitura("_ADMINISTRACAO_BANCODADOS");
+			$this->_view->atribuiVisualizacao("bancodados");
+
+			$eliminar = @$_REQUEST["eliminar"];
+			$this->_view->atribui("eliminar", $eliminar);
+
+			$id_conta = @$_REQUEST["id_conta"];
+			$id_contrato = @$_REQUEST["id_contrato"];
+			$id_cliente = @$_REQUEST["id_cliente"];
+
+			if ($id_conta) {				//se houver um id de conta para ser eliminado
+				$this->executaEliminarConta($id_conta);			
+			} else if($id_cliente) {		//se houver um id de cliente para ser eliminado	
+				$this->executaEliminarCliente($id_cliente);
+			} else if($id_contrato) {		//se houver um id de contrato para ser eliminado
+				$this->executaEliminarContrato($id_contrato);
+			}
+
+
+		}
+
+
+		//Elimina uma conta do banco de dados
+		protected function executaEliminarConta($id_eliminar="") {
+
+			if ($id_eliminar) {
+				$this->contas->eliminaConta($id_eliminar);
+			}
+
 		}
 
 	}

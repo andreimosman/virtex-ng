@@ -107,7 +107,7 @@ class VCACobranca extends VirtexControllerAdmin {
 				}
 		}
 
-		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios();
+		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios(30);
 		$this->_view->atribui("atrasados", $atrasados);
 
 		//echo "<pre>";
