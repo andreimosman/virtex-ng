@@ -62,6 +62,12 @@
 
 		protected function __construct() {
 			parent::__construct();
+
+			// Limites de operação do sistema.			
+			ini_set('max_execution_time', 120);
+			ini_set('max_input_time', 120);
+			ini_set('memory_limit', '512M');
+			
 			// Dados padrão que podem ser sobrescritos em init()
 			$this->_executar 	= true;
 
