@@ -26,11 +26,22 @@
 		
 		
 	
-	
+		// echo "CURRENT: " . posix_getcwd() . "<br>\n";
 		
+		//echo "<pre>";
+		//print_r($_SERVER);
+		//echo "</pre>";
+		
+		$tmp = explode("/", $_SERVER["SCRIPT_FILENAME"]);
+		array_pop($tmp);
+		array_pop($tmp);
+		$tmp[] = "framework";
+		
+		$frameworkPath = implode("/",$tmp);
+
 		// Possibilidades dentro do projeto
 		$possibilidades = array();
-		$possibilidades[] = "../framework/" . $class_name . ".class.php";	// Caminho padrão para o framework.
+		$possibilidades[] = $frameworkPath ."/" . $class_name . ".class.php";	// Caminho padrão para o framework.
 		$possibilidades[] = "application/" . $class_name . ".class.php";
 		$possibilidades[] = "lib/" . $class_name . ".class.php";
 		$possibilidades[] = "controller/" . $class_name . ".class.php";
@@ -38,7 +49,7 @@
 		$possibilidades[] = "view/" . $class_name . ".class.php";
 		
 		for($i=0;$i<count($possibilidades);$i++) {
-			// echo "AL: " . $possibilidades[$i] . " - " . file_exists( $possibilidades[$i] ) . "\n";
+			// echo "AL: " . $possibilidades[$i] . " - " . file_exists( $possibilidades[$i] ) . "<br>\n";
 			if( file_exists( $possibilidades[$i] ) ) {
 				if( include_once($possibilidades[$i]) ) return;
 			}
