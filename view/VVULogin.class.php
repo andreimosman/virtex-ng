@@ -2,10 +2,10 @@
 	/**
 	 *
 	 * Classe responsável por montar a tela de login.
-	 * classe chamada diretamente de VirtexControllerAdmin.
+	 * classe chamada diretamente de VirtexControllerUsuario.
 	 *
 	 */
-	class VVALogin extends VirtexViewAdmin {
+	class VVULogin extends VirtexViewUsuario {
 	
 		public function __construct() {
 			parent::__construct();
@@ -14,8 +14,6 @@
 		public function exibe() {
 			$this->_file = "login.html";
 			parent::exibe();
-			
-			
 		}
 
 	}

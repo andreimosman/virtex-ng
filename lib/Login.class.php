@@ -11,15 +11,19 @@
 		protected $username;
 		protected $password;
 		protected $variaveis;
+		protected $tipo;
 		
 		protected $listaPodeLer;
 		protected $listaPodeGravar;
+		
 	
-		protected function __construct() {
+		protected function __construct($tipo='admin') {
+			$this->tipo = $tipo;
 			$this->init();			
 		}
 		
 		public function init() {
+		
 			$this->username = "";
 			$this->password = "";
 			$this->variaveis = array();
@@ -28,28 +32,28 @@
 			$this->listaPodeGravar = array();
 		}
 		
-		public static function &getInstance() {
+		public static function &getInstance($tipo='admin') {
 			@session_start();
-		
+			
 			if( self::$instance != null ) {
 				// Objeto já instanciado.
 				return(self::$instance);
 			} else {
 				// Procurar na sessão.
-				if( @$_SESSION['vaLOGIN'] != null ) {
+				if( @$_SESSION[$tipo.'vaLOGIN'] != null ) {
 					// Está na sessão
-					self::$instance = @$_SESSION['vaLOGIN'];
+					self::$instance = @$_SESSION[$tipo.'vaLOGIN'];
 				} else {
-					self::$instance = new Login();
+					self::$instance = new Login($tipo);
 				}
 			}
-			
+
 			return self::$instance;
 			
 		}
 		
 		public function persisteSessao() {
-			@$_SESSION['vaLOGIN'] = $this;
+			@$_SESSION[$this->tipo.'vaLOGIN'] = $this;
 		}
 		
 		public function obtemUsername() {

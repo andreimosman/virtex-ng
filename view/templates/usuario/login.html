@@ -1,0 +1,11 @@
+
+{if $mensagem}<p>{$mensagem}</p>{/if}
+<form method="post" action="{$smarty.server.PHP_SELF}">
+<input type="hidden" name="op" value="login">
+<input type="hidden" name="acao" value="login">
+Usuario/Email: <input type="text" name="username" value=""><br>
+Senha: <input type="text" name="password">
+<input type="submit" value="Ok">
+
+</form>
+

@@ -70,11 +70,29 @@
 		 * obtemContaPeloUsername()
 		 * Retorna a conta baseada no conjunto username, dominio, tipo_conta
 		 */
-		public function obtemContaPeloUsername($username,$dominio,$tipo_conta) {
-			$info = $this->cntb_conta->obtemUnico(array("username" => $username,"dominio" => $dominio, "tipo_conta" => $tipo_conta));
+		public function obtemContaPeloUsername($username,$dominio,$tipo_conta='') {
+			$filtro = array("username" => $username,"dominio" => $dominio);
+			
+			if( $tipo_conta ) {
+				$filtro["tipo_conta"] = $tipo_conta;
+			}
+			
+			$info = $this->cntb_conta->obtem($filtro);
 			if( !count($info) ) return array();
+			
+			if( count($info) == 1 ) {
+				$retorno = $this->obtemContaPeloIdTipo($info[0]["id_conta"],$info[0]["tipo_conta"]);
+			} else {
+				$retorno = array();
+				
+				for($i=0;$i<count($info);$i++) {
+					$retorno[] = $this->obtemContaPeloIdTipo($info[$i]["id_conta"],$info[$i]["tipo_conta"]);
+				}
+				
+			}
+			
 
-			return($this->obtemContaPeloIdTipo($info["id_conta"],$tipo_conta));
+			return($retorno);
 		}
 
 		/**

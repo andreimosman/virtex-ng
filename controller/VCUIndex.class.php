@@ -1,0 +1,9 @@
+<?
+
+
+	class VCUIndex extends VirtexControllerUsuario {
+		
+	
+	}
+
+?>

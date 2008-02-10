@@ -42,6 +42,7 @@
 		// Possibilidades dentro do projeto
 		$possibilidades = array();
 		$possibilidades[] = $frameworkPath ."/" . $class_name . ".class.php";	// Caminho padrão para o framework.
+		$possibilidades[] = "../framework/" . $class_name . ".class.php";	// Caminho padrão para o framework.
 		$possibilidades[] = "application/" . $class_name . ".class.php";
 		$possibilidades[] = "lib/" . $class_name . ".class.php";
 		$possibilidades[] = "controller/" . $class_name . ".class.php";
