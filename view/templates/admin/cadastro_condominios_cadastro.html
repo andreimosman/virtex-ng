@@ -1,0 +1,390 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #CACACA;
+	margin-right: 2px;
+
+}
+
+{/literal}
+</style>
+
+<script language="javascript1.2">
+{literal}
+
+	reVazio = /^\s*$/;
+
+	function condominiosValidacaoForm() {
+
+		formcondominio = document.getElementById("condominio");
+
+		for (i=0; i<formcondominio.length; i++) {
+			idstring = formcondominio[i].id;
+			if(idstring) {
+				estring = idstring;
+				estring += " = document.getElementById('" + idstring + "')";
+				//alert(estring);
+				eval (estring);
+			}
+		}
+
+		if (reVazio.test(nome.value)) {
+			alert("O campo nome deve ser preenchido");
+			nome.value="";
+			nome.focus();
+			return false;
+		}
+
+		if (reVazio.test(endereco.value)) {
+			alert("O campo endereco deve ser preenchido");
+			endereco.value="";
+			endereco.focus();
+			return false;
+		}
+
+		if (reVazio.test(bairro.value)) {
+			alert("O campo bairro deve ser preenchido");
+			bairro.value="";
+			bairro.focus();
+			return false;
+		}
+
+		if (reVazio.test(id_cidade.value)) {
+			alert("Você deve selecionar alguma das cidades disponíveis");
+			id_cidade.value="";
+			id_cidade.focus();
+			return false;
+		}
+
+		if (reVazio.test(cep.value)) {
+			alert("O campo CEP deve ser preenchido");
+			cep.value="";
+			cep.focus();
+			return false;
+		}
+
+		if (reVazio.test(situacao.value)) {
+			alert("O campo situacao deve ser preenchido");
+			situacao.value="";
+			situacao.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	function desabilitarForm() {
+		formcondominio = document.getElementById("condominio");
+		for (i=0; i<formcondominio.length; i++) {
+			if(formcondominio[i].type != "button" && formcondominio[i].type != "submit"){
+				formcondominio[i].disabled = true;
+				formcondominio[i].className= "fieldDisabled";
+			}
+		}
+	}
+
+	function formQuit() {
+		self.location = "admin-cadastro.php?op=condominios&tela=listagem";
+	}
+
+	function miniOpenLinkFicha(id_condominio) {
+		self.location = "admin-cadastro.php?op=condominios&tela=cadastro&id_condominio=" + id_condominio;
+	}
+
+	function miniOpenLinkFichaRO(id_condominio) {
+		self.location = "admin-cadastro.php?op=condominios&tela=cadastro&visualizacao=1&id_condominio=" + id_condominio;
+	}
+
+	function miniOpenLinkFichaBloco(id_bloco) {
+		self.location = "admin-cadastro.php?op=condominios&tela=cadastro&id_bloco=" + id_bloco;
+	}
+
+	function miniOpenLinkCadBloco(id_condominio) {
+		self.location = "admin-cadastro.php?op=condominios&tela=bloco&id_condominio=" + id_condominio;
+	}
+
+
+
+{/literal}
+</script>
+
+
+<form name="condominio" id="condominio" method="post" action="admin-cadastro.php" onSubmit="return condominiosValidacaoForm()">
+	<input type="hidden" name="op" value="{$op}">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}">
+	<input type="hidden" name="acao" value="{$acao}">
+
+	<table width="550" align="center" border=0 cellpadding=0 cellspacing=0>
+		<tr>
+			<!-- LADO ESQUERDO DO FORMULÁRIO -->
+			<td width="60%" valign="top" style="border-right: dotted 1px #cccccc; border-bottom: dotted 1px #cccccc">
+				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+					<tr>
+						<td colspan="4" bgcolor="#d5Efd5"><label>Dados do Condomínio</label></td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Nome:</label>
+						</td>
+						<td colspan="3">
+							<input type="text" name="nome" id="nome" maxlength="50" value="{$nome}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Endereço:</label>
+						</td>
+						<td colspan="3" >
+							<input type="text" name="endereco" id="endereco" maxlength="50" value="{$endereco}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Complemento:</label>
+						</td>
+						<td colspan="3" >
+							<input type="text" name="complemento" id="complemento" maxlength="50" value="{$complemento}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Bairro:</label>
+						</td>
+						<td colspan="3" >
+							<input type="text" name="bairro" id="bairro" maxlength="50" value="{$bairro}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Cidade/UF:</label>
+						</td>
+						<td colspan="3" >
+							<select name="id_cidade" id="id_cidade" style="width:100%" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$cidades_disponiveis item=i key=k}
+									<option value="{$i.id_cidade}">{$i.cidade} - {$i.uf}</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>CEP:</label>
+						</td>
+						<td width="30%">
+							<input type="text" name="cep" id="cep" maxlength="10" value="{$cep}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+
+						<td align="right">
+							<label>Fone:</label>
+						</td>
+						<td width="30%">
+							<input type="text" name="fone" id="fone" maxlength="40" value="{$fone}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Qtd. Edifícios:</label>
+						</td>
+						<td width="30%">
+							<input type="text" name="quantidade_edificios" id="quantidade_edificios" style="width:100%" maxlength="2" value="{$quantidade_edificios}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+
+						<td align="right">
+							<label>Situação:</label>
+						</td>
+						<td width="30%">
+							<select name="situacao" id="situacao" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$situacoes item=i key=k}
+									<option value="{$k}">{$i}</option>
+								{/foreach}
+
+							</select>
+						</td>
+					</tr>
+
+
+					<tr>
+						<td width="20%" align="right">
+							<label>Dt Inst:</label>
+						</td>
+						<td width="30%">
+							<input type="text" name="data_instalacao" id="data_instalacao" style="width:100%" maxlength="10" value="{$data_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+
+						<td width="20%" align="right">
+							<label>Dt Ativ:</label>
+						</td>
+						<td width="30%">
+							<input type="text" name="data_ativacao" id="data_ativacao" style="width:100%" maxlength="10" value="{$data_ativacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+
+				</table>
+			</td>
+
+			<!-- LADO DIREITO DO FORMULARIO -->
+			<td width="40%" valign="top" style="border-bottom: dotted 1px #cccccc">
+				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+					<tr>
+						<td colspan="2" bgcolor="#d5Efd5"><label>Contatos</label></td>
+					</tr>
+
+					<tr>
+						<td colspan="2" bgcolor="#eeeeee"><label>Síndico</label></td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Nome:</label>
+						</td>
+						<td >
+							<input type="text" name="sindico_nome" id="sindico_nome" maxlength="50" value="{$nome}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Fone:</label>
+						</td>
+						<td >
+							<input type="text" name="sindico_fone" id="sindico_fone" maxlength="50" value="{$endereco}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="2" bgcolor="#eeeeee"><label>Zelador:</label></td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Nome:</label>
+						</td>
+						<td >
+							<input type="text" name="zelador_nome" id="zelador_nome" maxlength="50" value="{$nome}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Fone:</label>
+						</td>
+						<td >
+							<input type="text" name="zelador_fone" id="zelador_fone" maxlength="50" value="{$endereco}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+				</table>
+
+			</td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2" width="100%">
+				{if ($modo_visualizacao && $id_condominio) || (!$modo_visualizacao && !$id_condominio)}
+					<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:formQuit();">
+				{else}
+					<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:miniOpenLinkFichaRO({$id_condominio});">
+				{/if}
+
+				{if $modo_visualizacao}
+					<input type="button" name="botao" class="botao" value="Alterar" onclick="javascript:miniOpenLinkFicha({$id_condominio});">
+				{else}
+					<input type="submit" name="submit" class="botao" value="{if $id_condominio}Alterar{else}Cadastrar{/if}">
+				{/if}
+			</td>
+		</tr>
+	</table>
+</form>
+
+<script>
+
+{if $situacao}
+	document.getElementById("situacao").value = "{$situacao}";
+{/if}
+
+{if $id_cidade}
+	document.getElementById("id_cidade").value = "{$id_cidade}";
+{/if}
+
+{if $modo_visualizacao}
+	desabilitarForm();
+{/if}
+
+</script>
+
+{if $modo_visualizacao}
+<center>
+ <table border=0 width="700" style="border-top:1px solid #dedede">
+ 	<tr>
+		<td align="left"><label>Bloco/Prédio</label></td>
+		<td align="right"><input type="button" name="botao" class="botao" value="Adicionar Bloco/Prédio" onclick="javascript: miniOpenLinkCadBloco({$id_condominio});" /></td>
+ 	</tr>
+ 	<tr>
+ 		<td colspan=2>
+
+ 			<table border=0 width=700 class='lista'>
+ 				{if $blocos_condominio}
+ 				<tr>
+ 					<th>Bloco/Prédio</th>
+ 					<th>#Andares</th>
+ 					<th>#Aptos/Andar</th>
+ 					<th>#APTOs</th>
+ 					<th>OBS</th>
+ 					<th>Situação</th>
+ 					<th>POP</th>
+ 				</tr>
+ 				{/if}
+
+ 				{foreach name="blocos" from=$blocos_condominio item=i}
+ 				{if ($smarty.foreach.blocos.iteration%2) }{assign var=estilo value='impar'}{else}{assign var=estilo value='par'}{/if}
+ 				<tr>
+				 	<td width="120" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$i.nome}</a></td>
+				 	<td width="70" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$i.numero_andares}<a></td>
+				 	<td width="80" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$i.apartamentos_andar}</a></td>
+				 	<td width="70" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$i.total_apartamentos}</a></td>
+				 	<td width="170" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$i.observacoes}</a></td>
+				 	<td width="70" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$situacoes[$i.situacao]}</a></td>
+				 	<td width="120" class="{$estilo}" align="center"><a href="admin-cadastro.php?op=condominios&tela=bloco&id_condominio={$i.id_condominio}&id_bloco={$i.id_bloco}">{$i.popnome}</a></td>
+ 				</tr>
+
+ 				{foreachelse}
+ 				<tr>
+ 					<td height="50" align="center"><label>Não há blocos/prédios cadastrados neste condomínio</label></td>
+ 				</tr>
+ 				{/foreach}
+ 			</table>
+ 		</td>
+ 	</tr>
+ </table>
+</center>
+{/if}
+</body>
+</html>

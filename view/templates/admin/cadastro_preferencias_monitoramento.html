@@ -1,0 +1,76 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+{/literal}
+
+</style>
+<form name="cadastro_banda" method="post" action="admin-configuracoes.php" onSubmit="return validaCadastroBanda();">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="acao" value="alterar">
+
+<table width="500" border=0 cellspacing=0 cellpadding=0 align="center">
+	<tr>
+		<td valign="top" style="border-right:dotted 1px;">
+			<table border=0 width="270" cellspacing=0 cellpadding=0>
+				<tr>
+					<td align="right"><label>Exibir resumo na barra lateral:</label></td>
+					<td>
+						<select name="exibir_monitor" class="fieldWithoutFocus" {if !$podeGravar}disabled="true" class="disabled"{else}onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+							{foreach item=r from=$lista_boolean}
+							<option value='{$r.id}' {if $r.id == $exibir_monitor}SELECTED{/if}>{$r.nome}</option>
+							{/foreach}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><label>Ativar alerta sonoro:</label></td>
+					<td>
+						<select name="alerta_sonoro" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+							{foreach item=r from=$lista_boolean}
+							<option value='{$r.id}' {if $r.id == $alerta_sonoro}SELECTED{/if}>{$r.nome}</option>
+							{/foreach}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><label>Quantidade de pings:</label></td>
+					<td>
+						<input type="text" size="2" name="num_pings" value="{$num_pings}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top">
+			<table border=0 cellspacing=0 cellpadding=0 style="margin-left: 5px;">
+				<tr>
+					<td height=16><label>Emails que receberão alerta:</label></td>
+				</tr>
+				<tr>
+					<td style="padding-bottom: 5px;"><textarea name="emails" rows=6 cols=44 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>{$emails}</textarea><br></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center" style="border-top: dotted 1px; padding-top: 5px;"><input type="submit" name="Submit" value="alterar" class='botao' {if !$podeGravar}disabled="true"{/if}></td>
+	</tr>
+</table>
+
+
+
+</form>
+</body>
+</html>

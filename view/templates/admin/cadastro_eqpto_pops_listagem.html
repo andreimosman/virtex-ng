@@ -1,0 +1,43 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<script language="javascript">
+{literal}
+function openLinkPOP(id_pop) {
+	window.open("admin-cadastro.php?op=equipamentos&tela=pops&subtela=cadastro&id_pop=" + id_pop,"conteudo");
+}
+{/literal}
+</script>
+<br>
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th align="left">COD</th>
+			<th align="left">NOME</th>
+			<th >IP</th>
+			<th align="left">TIPO</th>
+			<th >&nbsp;</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='right' width=40 class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.id_pop|string_format:"%05d"}</a></td>
+			<td class='{$estilo}'><p class="nivel_{$r.nivel}">{if $r.nivel > 0}<img class="imagem" src="view/templates/imagens/hier-connector.gif" border=0>{/if}<a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.nome|upper}</a></p></td>
+			<td width="80" class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.ipaddr|upper}</a></td>
+			<td class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.tipo|upper}</a></td>
+		</tr>
+		{foreachelse}
+		{if $texto_pesquisa && $tipo_pesquisa}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>NÃO EXISTEM POPS CADASTRADOS</B></td>
+		</tr>
+		{/if}
+		{/foreach}
+	</table>
+
+</body>
+</html>

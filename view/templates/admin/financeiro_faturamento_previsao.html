@@ -1,0 +1,81 @@
+{include file="suporte_header.html"} <br /><br />
+<script type="text/javascript">
+<!--
+{literal}
+
+	function filtro(filtro){
+		window.open("admin-financeiro.php?op=relatorios&relatorio=previsao&ano_select="+filtro.value,"conteudo");
+
+	}
+{/literal}
+//-->
+</script>
+<div align="center">
+
+<form action="admin-financeiro.php?op=relatorios&relatorio=previsao&ano_select={$ano_select}" method="post">
+<p align="right" id="titu"  style="font-family: Tahoma; Font-size:12px;"><label>Escolha o ano:</label>&nbsp;
+	<select name="ano_select" onchange="filtro(this)" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+		{foreach from=$anos_fatura item=i}
+			<option value={$i.ano}  {if $ano_select == $i.ano} SELECTED{/if}>{$i.ano}</option>
+		{/foreach}
+	</select>
+</p>
+</form>
+
+
+	<table class="lista" width="60%" border="0">
+		<tr>
+			<th rowspan="2">Dia</th>
+			<th colspan="13">Meses</th>
+		</tr>
+		<tr>
+			<th>JAN</th>
+			<th>FEV</th>
+			<th>MAR</th>
+			<th>ABR</th>
+			<th>MAI</th>
+			<th>JUN</th>
+			<th>JUL</th>
+			<th>AGO</th>
+			<th>SET</th>
+			<th>OUT</th>
+			<th>NOV</th>
+			<th>DEZ</th>
+
+		</tr>
+
+		{foreach from=$dados key=p item=m}
+		<tr class='{cycle values="impar,par"}'>
+			<td align="center">{$p}</td>
+			<td align="center">{$m[1]}</td>		<!-- Janeiro -->
+			<td align="center">{$m[2]}</td>		<!-- Fevereito -->
+			<td align="center">{$m[3]}</td>		<!-- Março -->
+			<td align="center">{$m[4]}</td>		<!-- Abril -->
+			<td align="center">{$m[5]}</td>		<!-- Maio -->
+			<td align="center">{$m[6]}</td>		<!-- Junho -->
+			<td align="center">{$m[7]}</td>		<!-- Julho -->
+			<td align="center">{$m[8]}</td>		<!-- Agosto -->
+			<td align="center">{$m[9]}</td>		<!-- Setembro -->
+			<td align="center">{$m[10]}</td>	<!-- Outubro -->
+			<td align="center">{$m[11]}</td>	<!-- Novembro -->
+			<td align="center">{$m[12]}</td>	<!-- Dezembo -->
+		</tr>
+		{/foreach}
+
+		<tr>
+			<td align="center"><b>Total</b></td>
+
+			{foreach from=$soma key=p item=m}
+			<td align="center"><b>{$m|string_format:"%.2f"}</b></td>
+			{/foreach}
+
+		</tr>
+
+
+	</table>
+
+
+</div>
+
+</body>
+</html>

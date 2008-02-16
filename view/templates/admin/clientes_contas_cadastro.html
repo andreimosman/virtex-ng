@@ -4,6 +4,10 @@
 <head>
 	<title>VIRTEX_NG</title>
 </head>
+
+	<script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
+	<script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
+
 <body style="margin: auto; paddin: 0px; padding: 2px;">
 {include file="clientes_header.html"}
 
@@ -96,7 +100,7 @@ label {
 <script type="text/javascript">
 	var tipo_contrato = '{$tipo_contrato}';
 	var endereco_original = '{$endereco}';
-
+	var condominios = eval({$condominios});
 
 {literal}
 
@@ -122,14 +126,14 @@ label {
 		if( frm.id_nas.value != frm.nas_orig.value && !frm.altera_rede.checked ) {
 			if( window.confirm("A alteração do NAS exige que o ip seja alterado, deseja continuar ?") ) {
 				frm.altera_rede.checked = true;
-				$('selecao_redeip').value = "A";
+				document.getElementById('selecao_redeip').value = "A";
 				alteraNovaSelecao(false);
 			} else {
 				frm.id_nas.value = frm.nas_orig.value;
 			}
 		}
 {/literal}{else}{literal}
-		$('selecao_redeip').value = "A";
+		document.getElementById('selecao_redeip').value = "A";
 		alteraNovaSelecao(false);
 {/literal}{/if}{literal}
 	}
@@ -147,7 +151,7 @@ label {
 		if( frm.selecao_redeip.disabled || frm.selecao_redeip.value == "A" ) {
 			frm.endereco_redeip.disabled = true;
 			if(!sit){
-				$('endereco_redeip').value = "";
+				document.getElementById('endereco_redeip').value = "";
 			}
    		} else {
    			frm.endereco_redeip.disabled = false;
@@ -156,9 +160,9 @@ label {
 
 	returnStatusUsername = false;
 	function validaUsername(){
-		username = $F('username');
+		username = document.getElementById('username');
 		dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
-		tipo = $F('tipo');
+		tipo = document.getElementById('tipo');
 		var url = "admin-ajax.php";
 		var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
 
@@ -176,8 +180,8 @@ label {
 	function showResponseUsername(originalRequest) {
 		try {
 			if ( !getReturn(originalRequest.responseText)){
-				$('username').value = "";
-				$('username').focus();
+				document.getElementById('username').value = "";
+				document.getElementById('username').focus();
 				returnStatusUsername = false;
 			} else {
 				returnStatusUsername = true;
@@ -222,17 +226,17 @@ label {
 		}
 
 		returnStatus = true;
-		$('endereco_redeip').value = r.endereco;
+		document.getElementById('endereco_redeip').value = r.endereco;
 	}
 
 	function checkFrm(){
-		var senha = $('senha');
-		var confsenha = $('confsenha');
-		var nas = $('id_nas');
-		var pop = $('id_pop');
+		var senha = document.getElementById('senha');
+		var confsenha = document.getElementById('confsenha');
+		var nas = document.getElementById('id_nas');
+		var pop = document.getElementById('id_pop');
 
 {/literal}{if !$id_conta}{literal}
-		var username = $('username');
+		var username = document.getElementById('username');
 		if(username.value != ""){
 			if(!validaUsername()){
 				return false;
@@ -265,10 +269,10 @@ label {
 
 {/literal}{if $tipo == "BL"}{literal}
 
-		var mac = $('mac');
-		var altera_rede = $('altera_rede');
-		var selecao_redeip = $('selecao_redeip');
-		var endereco_redeip = $('endereco_redeip');
+		var mac = document.getElementById('mac');
+		var altera_rede = document.getElementById('altera_rede');
+		var selecao_redeip = document.getElementById('selecao_redeip');
+		var endereco_redeip = document.getElementById('endereco_redeip');
 
 		if("" == nas.value){
 			alert("Selecione um nas!");
@@ -322,6 +326,7 @@ label {
           desabilita(document.getElementById('complemento_cobranca'));
           desabilita(document.getElementById('id_cidade_cobranca'));
           desabilita(document.getElementById('cep_cobranca'));
+          desabilita(document.getElementById('cep_cobranca'));
        }
        else {
           habilita(document.getElementById('endereco_cobranca'));
@@ -337,15 +342,26 @@ label {
           desabilita(document.getElementById('endereco_instalacao'));
           desabilita(document.getElementById('bairro_instalacao'));
           desabilita(document.getElementById('complemento_instalacao'));
-          desabilita(document.getElementById('id_cidade_instalacao'));
+          desabilita(document.getElementById('id_cidade_instalacao_combo'));
           desabilita(document.getElementById('cep_instalacao'));
+          desabilita(document.getElementById('id_condominio_instalacao'));
+          desabilita(document.getElementById('id_bloco_instalacao'));
+
+          //document.getElementById('id_cidade_instalacao').value = document.getElementById('id_cidade_instalacao_combo').value;
        }
        else {
           habilita(document.getElementById('endereco_instalacao'));
           habilita(document.getElementById('bairro_instalacao'));
           habilita(document.getElementById('complemento_instalacao'));
-          habilita(document.getElementById('id_cidade_instalacao'));
+          habilita(document.getElementById('id_cidade_instalacao_combo'));
           habilita(document.getElementById('cep_instalacao'));
+          habilita(document.getElementById('id_condominio_instalacao'));
+
+          if(document.getElementById('id_condominio_instalacao').value) {
+          	habilita(document.getElementById('id_bloco_instalacao'));
+          }
+
+          document.getElementById('id_cidade_instalacao').value = "";
        }
     }
 }
@@ -356,14 +372,14 @@ label {
 </script>
 <center>
 <div id="conteiner_contas">
-<form action="admin-clientes.php" method="post" name="frmConta" onSubmit="return checkFrm();">
-<input type="hidden" name="op" value="{$op}" />
-<input type="hidden" name="tela" value="{$tela}" />
+<form action="admin-clientes.php" method="post" name="frmConta" id="frmConta" onSubmit="return checkFrm();">
+<input type="hidden" name="op" id="op" value="{$op}" />
+<input type="hidden" name="tela" id="tela" value="{$tela}" />
 <input type="hidden" name="tipo" id="tipo" value="{$tipo}" />
-<input type="hidden" name="id_cliente" value="{$id_cliente}" />
-<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}" />
-<input type="hidden" name="id_conta" value="{$id_conta}" />
-<input type="hidden" name="acao" value="update" />
+<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+<input type="hidden" name="id_cliente_produto" id="id_cliente_produto" value="{$id_cliente_produto}" />
+<input type="hidden" name="id_conta" id="id_conta" id="{$id_conta}" />
+<input type="hidden" name="acao" id="acao" value="update" />
 
 
 	<table cellspacing="0" cellpadding="0" class="boxContratacao">
@@ -403,7 +419,7 @@ label {
 		<tr>
 			<td align="right" width="110"><label>Status:</label></td>
 			<td colspan='3' align='left'>
-				<select name="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+				<select name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					<option value="A" {if $status == 'A'}selected='selected'{/if}>Ativo</option>
 					<option value="B" {if $status == 'B'}selected='selected'{/if}>Bloqueado</option>
 				</select>
@@ -412,7 +428,7 @@ label {
 		<tr>
 			<td align="right" width="110"><label>Tipo:</label></td>
 			<td colspan='3' align='left'>
-				<select name="conta_mestre" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+				<select name="conta_mestre" id="conta_mestre" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					<option value="t" {if $conta_mestre == 't'}selected='selected'{/if}>Conta Mestre</option>
 					<option value="f" {if $conta_mestre == 'f'}selected='selected'{/if}>Normal</option>
 				</select>
@@ -442,7 +458,7 @@ label {
 						{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}"  {if $id_nas == $v.id_nas}selected='selected'{/if} >{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
 					{/foreach}
 					</select>
-					<input type="hidden" name="nas_orig" value="{$id_nas}" />
+					<input type="hidden" name="nas_orig" id="nas_orig" value="{$id_nas}" />
 				</td>
 			</tr>
 			<tr>
@@ -506,7 +522,7 @@ label {
 			</tr>
 			<tr>
 				<td align="right" width="110"><label>Fone:</label></td>
-				<td colspan='3' align='left'><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+				<td colspan='3' align='left'><input type="text" size="30" maxlength="20" name="foneinfo" id="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
 			</tr>
 		</table>
 	{elseif $tipo == "E"}
@@ -519,20 +535,21 @@ label {
 			<tr>
 				<td align="right" width="110"><label>Tipo:</label></td>
 				<td colspan='3' align='left'>
-					<select name="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+					<select name="tipo_hospedagem" id="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 						<option value="D">Domínio do Usuário</option>
 						<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
 					</select>
 				</td>
 			<tr>
 				<td align="right" width="110"><label>Criar:</label></td>
-				<td colspan='3' align='left'><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+				<td colspan='3' align='left'><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" id="dominio_hospedagem" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
 			</tr>
 		</table>
 	{/if}
 	{if $tipo == "D" || $tipo == "BL"}
 
 		<table cellspacing='0' cellpadding='0' class="boxContratacao">
+
 			<tr>
 				<th colspan='4' align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
 			</tr>
@@ -541,6 +558,24 @@ label {
 				<input type="checkbox" name="difEnderecoSetup" id="difEnderecoSetup" OnClick="checkStatusFields(this);" value='1'><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
 			</td>
 			</tr>
+
+			{if $condominios}
+			<tr>
+				<td align="right"><label>Condomínio:</label></td>
+				<td align="left">
+					<select name="id_condominio_instalacao" id="id_condominio_instalacao" class="disabled" onchange="javascript:AjustarCamposFormularioContratoInstalacao('frmConta', this.selectedIndex -1 , condominios);" DISABLED>
+						<option value="">-- SELECIONE --</option>
+					</select>
+				</td>
+				<td align="right"><label>Bloco:</label></td>
+				<td align="left">
+					<select name="id_bloco_instalacao" id="id_bloco_instalacao" class="disabled" DISABLED>
+						<option value="">-- SELECIONE --</option>
+					</select>
+				</td>
+			</tr>
+			{/if}
+
 			<tr>
 				<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
 				<td colspan='3' align='left'><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
@@ -558,7 +593,8 @@ label {
 			<tr>
 				<td align="right" ><label>Cidade:</label></td>
 				<td align="left" colspan='4' >
-					<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" id="id_cidade_instalacao" tabindex="10" class="disabled" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+					<input type="hidden" name="id_cidade_instalacao" id="id_cidade_instalacao" value="{$id_cidade}" />
+					<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao_combo" id="id_cidade_instalacao_combo" tabindex="10" class="disabled" onchange="javascript: document.getElementById('id_cidade_instalacao').value=this.value;" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 					{foreach item=a from=$cidades_disponiveis}
 
 					<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
@@ -571,12 +607,31 @@ label {
 	{/if}
 
 	<br />
-	<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
+	<input type="button" name="Voltar" id="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
 	{if !$formDisabled}
-	<input type="submit" name="Submit" value="{if $id_conta}Alterar{else}Cadastrar{/if}" class="botao">
+	<input type="submit" name="Submit" id="Submit" value="{if $id_conta}Alterar{else}Cadastrar{/if}" class="botao">
 	{/if}
 </form>
 </div>
 </center>
+
+<script>
+AlimentarCombo('id_condominio_instalacao', condominios, 'id_condominio', 'nome', '--SELECIONE--' {if $id_condominio_instalacao}, '', '{$id_condominio_instalacao}'{/if});
+
+{if $tipo == "D" || $tipo == "BL"}
+	{if $id_condominio_instalacao}
+
+		AjustarCamposFormularioContratoInstalacao('frmConta', document.getElementById('id_condominio_instalacao').selectedIndex -1 , condominios);
+
+		{if $id_bloco_instalacao}
+			AtualizaComboBloco('id_bloco_instalacao', '{$id_condominio_instalacao}', '{$id_bloco_instalacao}');
+		{/if}
+		document.getElementById('id_bloco_instalacao').disabled = true;
+
+	{/if}
+{/if}
+</script>
+
 </body>
 </html>
+

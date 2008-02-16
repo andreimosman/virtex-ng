@@ -1,0 +1,169 @@
+{include file="suporte_header.html"} <br /><br />
+<script type="text/javascript">
+<!--
+{literal}
+
+	function filtro(filtro){
+		window.open("admin-financeiro.php?op=relatorios_faturamento&relatorio=previsao&ano_select="+filtro.value,"conteudo");
+
+	}
+{/literal}
+//-->
+</script>
+<div align="center">
+
+<form  method="get">
+<input type="hidden" name="op" value="relatorios_faturamento">
+<input type="hidden" name="relatorio" value="faturamento">
+<input type="hidden" name="acao" value="gerar">
+<table class="lista" border="0" width="300px" cellpadding="2" cellspacing="2" align='center'>
+			<tr>
+				<th colspan="3">Relatório Faturamento Anual</th>
+			</tr>
+	<tr>
+		<td align="center">
+			<table>
+				<tr>
+					<td>Escolha o ano:</td>
+					<td><select name="ano_select" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+					{foreach from=$anos_fatura item=i}
+						<option value={$i.ano}  {if $ano_select == $i.ano} SELECTED{/if}>{$i.ano}</option>
+					{/foreach}
+			</select></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<table>
+				<tr>
+					<td>
+						<label><input  type="radio" name="metodo" value="1" class="checkbox" {if $metodo == "1"}checked{/if} />Comparativo</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label><input  type="radio" name="metodo" value="2" class="checkbox" {if $metodo == "2"}checked{/if} />Acumulativo</label>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<input type="submit" value="Listar" class="botao" /><br><br>
+		</td>
+	</tr>
+</table>
+</form>
+
+	<table class="lista" width="60%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<th colspan="13" align="center">Relatório Anual {$titulo_relatorio}</th>
+		</td>
+		<tr>
+			<th rowspan="2">Dia</th>
+			<th colspan="13">Meses</th>
+		</tr>
+		<tr>
+			<th>JAN</th>
+			<th>FEV</th>
+			<th>MAR</th>
+			<th>ABR</th>
+			<th>MAI</th>
+			<th>JUN</th>
+			<th>JUL</th>
+			<th>AGO</th>
+			<th>SET</th>
+			<th>OUT</th>
+			<th>NOV</th>
+			<th>DEZ</th>
+		</tr>
+		{if $metodo == "2"}
+			{assign var='s1' value=0}
+			{assign var='s2' value=0}
+			{assign var='s3' value=0}
+			{assign var='s4' value=0}
+			{assign var='s5' value=0}
+			{assign var='s6' value=0}
+			{assign var='s7' value=0}
+			{assign var='s8' value=0}
+			{assign var='s9' value=0}
+			{assign var='s10' value=0}
+			{assign var='s11' value=0}
+			{assign var='s12' value=0}
+			{foreach key=dia item=fat from=$tabela}
+			<tr class='{cycle values="impar,par"}'>
+			  <td width="30" height="15" align="center">{$dia}</td>
+			  <td height="15" align="right">{assign var='s1' value=$s1+$fat.1}{$s1|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s2' value=$s2+$fat.2}{$s2|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s3' value=$s3+$fat.3}{$s3|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s4' value=$s4+$fat.4}{$s4|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s5' value=$s5+$fat.5}{$s5|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s6' value=$s6+$fat.6}{$s6|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s7' value=$s7+$fat.7}{$s7|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s8' value=$s8+$fat.8}{$s8|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s9' value=$s9+$fat.9}{$s9|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s10' value=$s10+$fat.10}{$s10|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s11' value=$s11+$fat.11}{$s11|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s12' value=$s12+$fat.12}{$s12|string_format:"%.2f"}</td>
+
+			</tr>
+			{/foreach}
+
+		{else if $metodo == "1"}
+			{assign var='s1' value=0}
+			{assign var='s2' value=0}
+			{assign var='s3' value=0}
+			{assign var='s4' value=0}
+			{assign var='s5' value=0}
+			{assign var='s6' value=0}
+			{assign var='s7' value=0}
+			{assign var='s8' value=0}
+			{assign var='s9' value=0}
+			{assign var='s10' value=0}
+			{assign var='s11' value=0}
+			{assign var='s12' value=0}
+			{foreach key=dia item=fat from=$tabela}
+
+			<tr class='{cycle values="impar,par"}'>
+			  <td width="30" height="15" align="center">{$dia}</td>
+			  <td height="15" align="right">{assign var='s1' value=$s1+$fat.1}{$fat.1|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s2' value=$s2+$fat.2}{$fat.2|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s3' value=$s3+$fat.3}{$fat.3|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s4' value=$s4+$fat.4}{$fat.4|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s5' value=$s5+$fat.5}{$fat.5|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s6' value=$s6+$fat.6}{$fat.6|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s7' value=$s7+$fat.7}{$fat.7|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s8' value=$s8+$fat.8}{$fat.8|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s9' value=$s9+$fat.9}{$fat.9|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s10' value=$s10+$fat.10}{$fat.10|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s11' value=$s11+$fat.11}{$fat.11|string_format:"%.2f"}</td>
+			  <td height="15" align="right">{assign var='s12' value=$s12+$fat.12}{$fat.12|string_format:"%.2f"}</td>
+			</tr>
+			{/foreach}
+		{/if}
+		<tr>
+			<th width="30" height="15" ><span style="font-size:10px;">total</span></th>
+			<td height="15" align="right">{assign var='s1' value=$s1+$fat.1}{$s1|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s2' value=$s2+$fat.2}{$s2|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s3' value=$s3+$fat.3}{$s3|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s4' value=$s4+$fat.4}{$s4|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s5' value=$s5+$fat.5}{$s5|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s6' value=$s6+$fat.6}{$s6|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s7' value=$s7+$fat.7}{$s7|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s8' value=$s8+$fat.8}{$s8|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s9' value=$s9+$fat.9}{$s9|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s10' value=$s10+$fat.10}{$s10|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s11' value=$s11+$fat.11}{$s11|string_format:"%.2f"}</td>
+			<td height="15" align="right">{assign var='s12' value=$s12+$fat.12}{$s12|string_format:"%.2f"}</td>
+		</tr>
+	</table>
+	<br>
+	<table>
+
+</div>
+
+</body>
+</html>

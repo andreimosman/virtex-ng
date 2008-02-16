@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Vitex</title>
+</head>
+<body style="margin: auto; padding: 0px;">
+{include file="configuracoes_header.html"}
+<style>
+{literal}
+.disabledFP {
+	border: solid 1px #DADADA;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+ 	color: #000000;
+	width:100px;
+ 	font-family: verdana;
+ 	font-size: 8px;
+}
+{/literal}
+</style>
+<script language="JavaScript">
+{literal}
+function voltar() {
+	window.open('admin-cadastro.php?op=administradores&tela=listagem','_self');
+}
+{/literal}
+</script>
+
+
+
+	<form method="post" action="{$smarty.server.PHP_SELF}">
+    <input type="hidden" name="acao" value="gravar" />
+    <input type="hidden" name="id_admin" value="{$id_admin}" />
+    <input type="hidden" name="op" value="administradores" />
+    <input type="hidden" name="tela" value="privilegio" />
+	<table border='0' cellspacing='0' cellpadding='0' width="600" class="lista" align="center">
+		<tr>
+			<th>Recurso</th>
+	        <th width="100">Acesso</th>
+		</tr>
+		{foreach name="registros" item=v from=$privilegios}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td class="{$estilo}" align="left">
+				&nbsp; <strong>{$v.nome}</strong><br>
+				&nbsp; <u>Leitura:</u> <i>{if $v.tem_leitura == 't'}{$v.descricao_leitura}{else}Não Aplicável{/if}</i><br>
+				&nbsp; <u>Gravacao:</u> <i>{if $v.tem_gravacao == 't'}{$v.descricao_gravacao}{else}Não Aplicável{/if}</i>
+			</td>
+	    	<td class="{$estilo}" width="100">
+				<select name='acesso[{$v.id_priv}]' {if !$podeGravar}disabled=true class=disabledFP{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style='width: 120px;'{/if}>
+				{foreach key=id item=nome from=$acessos}
+					{if ($id == 't' && $v.tem_gravacao == 't') || ($id == 'f' && $v.tem_leitura == 't')}
+						<option value='{$id}' {if $id == $v.selecao}SELECTED{/if}>{$nome}</option>
+					{/if}
+				{/foreach}
+				</select>
+			</td>
+		</tr>
+		{/foreach}
+		<tr><td colspan='2'>&nbsp;</td></tr>
+		<tr>
+			<td colspan='2' align="center">
+				<input type="Button" value="Voltar" onClick="javascript:voltar()" class="botao"> <input name="cadastro_cliente" type="submit" id="cadastro_cliente2" value="Alterar Privil&eacute;gios &gt;&gt;" class="botao" />
+			</td>
+		</tr>
+	</table>
+	</form>
+
+
+</body>
+</html>

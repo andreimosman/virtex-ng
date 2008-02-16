@@ -1,0 +1,119 @@
+<html>
+<head>
+	<title></title>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+{/literal}
+{literal}
+<script type="text/javascript" language="javascript">
+
+	function popup(){
+
+		window.open('admin-financeiro.php?op=gerar_boletos_todos','popup','width=620,height=400,scrolling=auto,top=0,left=0,location=no,status=no,channelmode=0')
+
+	}
+
+</script>
+{/literal}
+</style>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<br /><br />
+<div id="cont" align="center">
+
+	{if $formas}
+	<form action="admin-financeiro.php" >
+		<input type="hidden" name="op" value="gerar_cobranca" />
+		<input type="hidden" name="acao" value="gerar" />
+
+		<table class="lista" border="0" width="400px" cellpadding="2" cellspacing="2">
+			<tr>
+				<th colspan="3">Periodo de Emissão</th>
+			</tr>
+			<tr>
+				<td align="center"><input type="radio" name="periodo" value="PQ" CHECKED /> de 1 a 15</td>
+				<td align="center"><input type="radio" name="periodo" value="SQ" /> de 16 a 30</td>
+				<td align="center"><input type="radio" name="periodo" value="MT" /> mês todo</td>
+			</tr>
+			<tr>
+				<td colspan="3" align='center'>
+					Mês <select name="mes">
+							<option value="01">Janeiro</option>
+							<option value="02">Fevereiro</option>
+							<option value="03">Março</option>
+							<option value="04">Abril</option>
+							<option value="05">Maio</option>
+							<option value="06">Junho</option>
+							<option value="07">Julho</option>
+							<option value="08">Agosto</option>
+							<option value="09">Setembro</option>
+							<option value="10">Outubro</option>
+							<option value="11">Novembro</option>
+							<option value="12">Dezembro</option>
+						</select> Ano <select name="ano">
+							{foreach from=$periodo_anos item=i key=k}
+							<option value="{$i.ano}">{$i.ano}</option>
+							{/foreach}
+						</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" align='center'>{if $formas}Forma de Pagamento{/if}</td>
+			</tr>
+			<tr>
+				<td colspan="4" align='center'><select name="id_forma_pagamento" id="id_forma_pagamento" style='font-size:15px;'>
+							{foreach from=$formas item=i key=k}
+							<option value="{$i.id_forma_pagamento}">{if $i.tipo_cobranca=="BL"}Boleto{/if} {if $i.tipo_cobranca=="DA"}Débito Automático{/if} - {$bancos[$i.codigo_banco]} - convênio {$i.convenio}</option>
+							{/foreach}
+						</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3"  align="center"><input type="submit" name="123" value="Gerar Cobranças" class="botao"/></td>
+			</tr>
+		</table>
+	</form>
+	{else}
+		Não existem formas de pagamento passíveis de geração<br><br>
+	{/if}
+
+
+	{if $msg}
+		<h4>{$msg}</h4>
+	{/if}
+
+	{if $ultimas_remessas}
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border="0">
+
+		<tr>
+			<th align="left">DATA CRIAÇÃO</th>
+			<th align="left">&nbsp;</th>
+			<th align="center">PERIODO</th>
+			<th align="center">FATURAS</th>
+			<th align="center" colspan="2">&nbsp;</th>
+		</tr>
+		{foreach from=$ultimas_remessas item=r}
+
+		<tr class='{cycle values="impar,par"}'>
+			<td width="120" class='{$estilo}' align="center"><a href="admin-financeiro.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_geracao|date_format:"%d/%m/%Y"}</a></td>
+			<td width="150" align=center >{if !$r.id_forma_pagamento}&nbsp;{else}{if $r.forma_pagto.tipo_cobranca=="BL"}Boleto{/if} {if $r.forma_pagto.tipo_cobranca=="DA"}Débito Automático{/if} - {$bancos[$r.forma_pagto.codigo_banco]} - convênio {$r.forma_pagto.convenio}{/if}</td>
+			<td class='{$estilo}' width="150"  align='center'><a href="admin-financeiro.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_referencia|date_format:"%d/%m/%Y"}{if $.periodo=="MT"} <em>(Todo o mês)</em>{else if $r.periodo=="PQ"} <em>(Parcial)</em>{/if}</a></td>
+			<td class='{$estilo}' align='center'><a href="admin-financeiro.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.qtfaturas}</a></td>
+			<td class='{$estilo}' align='center' width='18'><a href="admin-financeiro.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/print.gif" width="17" height="17" alt="Imprimir Boletos" title="Imprimir Boletos"  border="0"/></a></td>
+		</tr>
+		{/foreach}
+	</table>
+	{/if}
+<br><br><br><br>
+</div>
+</body>
+</html>

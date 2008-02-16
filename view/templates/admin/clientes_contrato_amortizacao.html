@@ -8,26 +8,26 @@
 	}
 
 	function pagamentoHoje(){
-		var obj = $('data_pagamento');
+		var obj = document.getElementById('data_pagamento');
 		var data = new Date();
 		hoje = data.getDate() +"/"+ (data.getMonth() + 1) + "/" + data.getFullYear();
 		obj.value = hoje;
 	}
 
 	function pagamentoVencimento(){
-		var obj = $('data_pagamento');
+		var obj = document.getElementById('data_pagamento');
 		obj.value = '{/literal}{$data}{literal}';
 	}
 
 
 	function validaForm() {
 
-		var observacoes		= $('observacoes');
-		var reagendamento	= $('reagendamento');
-		var reagendar		= $('reagendar');
-		var famortizar		= $('amortizar');
-		var fpagamento		= $('data_pagamento');
-		var fpendente		= $('valor_pendente');
+		var observacoes		= document.getElementById('observacoes');
+		var reagendamento	= document.getElementById('reagendamento');
+		var reagendar		= document.getElementById('reagendar');
+		var famortizar		= document.getElementById('amortizar');
+		var fpagamento		= document.getElementById('data_pagamento');
+		var fpendente		= document.getElementById('valor_pendente');
 
 		if("" == famortizar.value){
 			alert('Informe o valor recebido!');
@@ -77,14 +77,14 @@
 	}
 
 	function calculaValores() {
-		var fpendente		= $('valor_pendente');
-		var frestante		= $('valor_restante');
-		var fstatus			= $('status');
-		var fvalor			= $('valor');
-		var fdesconto		= $('desconto');
-		var fpagto_parcial	= $('pagto_parcial');
-		var facrescimo		= $('acrescimo');
-		var famortizar		= $('amortizar');
+		var fpendente		= document.getElementById('valor_pendente');
+		var frestante		= document.getElementById('valor_restante');
+		var fstatus			= document.getElementById('status');
+		var fvalor			= document.getElementById('valor');
+		var fdesconto		= document.getElementById('desconto');
+		var fpagto_parcial	= document.getElementById('pagto_parcial');
+		var facrescimo		= document.getElementById('acrescimo');
+		var famortizar		= document.getElementById('amortizar');
 
 		fdesconto.value = fdesconto.value.replace(",",".");
 		facrescimo.value = facrescimo.value.replace(",",".");
@@ -119,8 +119,8 @@
 
 
 	function amortizarTudo(){
-		var vamortizar	= $('amortizar');
-		vamortizar.value = $('valor_restante').value;
+		var vamortizar	= document.getElementById('amortizar');
+		vamortizar.value = document.getElementById('valor_restante').value;
 		calculaValores();
 	}
 

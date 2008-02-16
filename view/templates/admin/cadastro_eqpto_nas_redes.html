@@ -1,0 +1,279 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+
+<script language="JavaScript">
+
+var podeGravar={if $podeGravar}true{else}false{/if};
+
+{literal}
+
+function exibirEnderecos() {
+	if( window.confirm("A lista de endereços pode ser grande e por este motivo demorar algum tempo pra baixar. Deseja realmente exibí-la?") ) {
+		{/literal}
+		window.open("admin-cadastro.php?op=equipamentos&tela=nas&subtela=redes&id_nas={$id_nas}&exibir_enderecos=1","conteudo");
+		{literal}
+	}
+}
+
+function ocultarEnderecos() {
+	{/literal}
+	window.open("admin-cadastro.php?op=equipamentos&tela=nas&subtela=redes&id_nas={$id_nas}&exibir_enderecos=","conteudo");
+	{literal}
+}
+
+function voltar() {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro?") ) {
+		window.open("admin-cadastro.php?op=equipamentos&tela=nas","conteudo");
+	}
+}
+
+{/literal}
+</script>
+
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+.boxRede {
+	margin-top: 2px;
+	border: solid 1px #000000;
+}
+.boxRede TH {
+	background: #aaccaa;
+}
+
+
+{/literal}
+</style>
+
+
+{if !$exibir_enderecos}
+	{if count($log_cadastro)}
+		<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border=0>
+			<tr>
+				<th colspan=4>Criação de Endereço</th>
+			</tr>
+			{if $tipo_nas == "P"}
+			<tr>
+				<td bgcolor="#dadada" width="130" align="right"><label>Rede:</label></td>
+				<td width="170" colspan=3>{$endereco}</td>
+			</tr>
+			{/if}
+			{if $tipo_nas == "I"}
+			<tr>
+				<td bgcolor="#dadada" width="130" align="right"><label>Rede de Origem:</label></td>
+				<td width="170">{$rede_origem}</td>
+				<td bgcolor="#dadada" width="130" align="right"><label>Iniciar em:</label></td>
+				<td width="170">{$rede_inicial}</td>
+			</tr>
+			<tr>
+				<td bgcolor="#dadada" width="130" align="right"><label>Criar Redes:</label></td>
+				<td width="170">/{$bits_rede}</td>
+				<td bgcolor="#dadada" width="130" align="right"><label>Máximo de Redes:</label></td>
+				<td width="170">{$maximo_redes}</td>
+			</tr>
+			<tr>
+				<td bgcolor="#dadada" width="130" align="right"><label>Tipo:</label></td>
+				<td colspan=3>{if $tipo_rede == "C"}Cliente{/if}{if $tipo_rede == "I"}Infra-estrutura{/if}{if $tipo_rede == "S"}Suporte{/if}</td>
+			</tr>
+			{if $count_ok || $count_erro}
+	 		<tr>
+				<td bgcolor="#dadada" width="130" align="right"><label>Sucesso:</label></td>
+				<td width="170"><span style="color: {if $count_ok}#00aa00{else}#ff0000{/if};">{$count_ok}</span></td>
+				<td bgcolor="#dadada" width="130" align="right"><label>Erros:</label></td>
+				<td width="170"><span style="color: {if !$count_erro}#00aa00{else}#ff0000{/if};">{$count_erro}</span></td>
+			</tr>
+			{/if}
+			{/if}
+			<tr>
+				<td bgcolor="#dadada" width="130" align="right"><label>Consideração:</label></td>
+				<td colspan=3>
+					<strong>
+					{if $erro_inet}
+						<span style="color: #ff0000;">{$erro_inet}</span>
+					{else}
+						{if $tipo_nas == "I"}
+							{if $count_ok && $count_erro}<span style="color: #ff8000;">Apenas algumas classes foram criadas com sucesso.</span>{/if}
+							{if !$count_ok && $count_erro}<span style="color: #ff8000;">Nenhuma rede foi criada com sucesso.</span>{/if}
+							{if $count_ok && !$count_erro}<span style="color: #00aa00;">Todas as redes foram criadas com sucesso.</span>{/if}
+						{/if}
+						{if $tipo_nas == "P"}
+							<span style="color: #00aa00;">Rede cadastrada com sucesso.<span>
+						{/if}
+					{/if}
+					</strong>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=4 align="right">[<a href="admin-cadastro.php?op=equipamentos&tela=nas"> OK </a>]</td>
+			</tr>
+		</table>
+		<br>
+
+		{if $tipo_nas == "I"}
+		<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+			{if count($log_cadastro.ok)}
+			<tr>
+				<th colspan=5>endereços cadastrados com sucesso:</th>
+			</tr>
+			{/if}
+			<tr>
+			{assign var=estilo value='par'}
+			{foreach name=log_cadastro item=r from=$log_cadastro.ok}
+				<td class='{$estilo}'>{$r.endereco}</td>
+			{if ($smarty.foreach.log_cadastro.iteration%5 == 0) }
+			</tr>
+				{if $estilo == "par"}
+					{assign var=estilo value='impar'}
+				{else}
+					{assign var=estilo value='par'}
+				{/if}
+			{/if}
+			{foreachelse}
+			<tr>
+				<td height=110 valign="middle" align="center"><B style="font-family: verdana; color: #FF0000;">NENHUM ENDEREÇO CADASTRADO</B></td>
+			</tr>
+			{/foreach}
+			{math equation="(x-y)" x=5 y=$smarty.foreach.log_cadastro.iteration%5 assign="resto"}
+			{if $resto}
+			<td colspan={$resto} class='{$estilo}'>&nbsp;</td>
+			<tr>
+			{/if}
+		</table>
+		<br>
+		{if count($log_cadastro.erro)}
+		<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+				<tr>
+				<th colspan=5>endereços não cadastrados (por conflito com endereço já cadastrados):</th>
+			</tr>
+			<tr>
+			{assign var=estilo value='par'}
+			{foreach name=log_cadastro item=r from=$log_cadastro.erro}
+				<td class='{$estilo}'>{$r.endereco}</td>
+			{if ($smarty.foreach.log_cadastro.iteration%5 == 0) }
+			</tr>
+				{if $estilo == "par"}
+					{assign var=estilo value='impar'}
+				{else}
+					{assign var=estilo value='par'}
+				{/if}
+			{/if}
+			{foreachelse}
+			<tr>
+				<td height=110 valign="middle" align="center"><B>NENHUM ENDEREÇO COM ERRO.</B></td>
+			</tr>
+			{/foreach}
+			{math equation="(x-y)" x=5 y=$smarty.foreach.log_cadastro.iteration%5 assign="resto"}
+			{if $resto}
+			<td colspan={$resto} class='{$estilo}'>&nbsp;</td>
+			<tr>
+			{/if}
+		</table>
+		{/if}
+		{/if}
+
+
+	{else}
+
+		<form method="POST" action="admin-cadastro.php" name="redes">
+		<input type="hidden" name="op" value="{$op}">
+		<input type="hidden" name="tela" value="{$tela}">
+		<input type="hidden" name="subtela" value="{$subtela}">
+		<input type="hidden" name="id_nas" value="{$id_nas}">
+		<input type="hidden" name="acao" value="cadastrar">
+
+		<table width="400" cellspacing=0 cellpadding=0 border=0 align="center" class="boxRede">
+			<tr>
+				<th colspan=4><label>Cadastro de Endereços</label></th>
+			</tr>
+
+
+		<!-- CADASTRO DE ENDEREÇOS -->
+		{if $tipo_nas == "I"}
+		<!-- IP: CADASTRA AS SUBREDES ESPECIFICADAS -->
+			<tr>
+				<td width="110" align="right"><label>Rede de Origem:</label></td>
+				<td colspan=3><input name="rede_origem" value="{$rede_origem}" type="text" size=20 maxlength=18 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>(ex: 192.168.0.0/16)</label></td>
+			</tr>
+			<tr>
+				<td width="110" align="right"><label>Iniciar Em:</label></td>
+				<td colspan=3><input name="rede_inicial" value="{$rede_inicial}" type="text" size=20 maxlength=18 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>(ex: 192.168.0.0/30)</label></td>
+			</tr>
+			<tr>
+				<td width="110" align="right"><label>Criar Redes:</label></td>
+				<td>&nbsp;<label>/<input name="bits_rede" value="{$bits_rede}" type="text" size=4 maxlength=2 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>(ex: /30)</label></td>
+				<td width="120" align="right"><label>Máximo de Redes:</label></td>
+				<td><input name="maximo_redes" value="{$maximo_redes}" type="text" size=4 maxlength=4 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			</tr>
+		{/if}
+		{if $tipo_nas == "P"}
+			<tr>
+				<td width="110" align="right"><label>Rede:</label></td>
+				<td colspan=3><input name="endereco" value="{$endereco}" type="text" size=20 maxlength=18 {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}><label>(ex: 192.168.0.0/24)</label></td>
+			</tr>
+		{/if}
+			<tr>
+				<td width="110" align="right"><label>Tipo:</label></td>
+				<td colspan=3>
+				   <select name="tipo_rede" type="text" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+					<option value="C">Cliente</option>
+					<option value="I">Infra-estrutura</option>
+					<option value="S">Suporte</option>
+				   </select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=4 style="border-top: dotted 1px #000000;" align="center">
+					<input type="button" name="cancelar" value="Cancelar" onClick="javascript:voltar()" class="botao">
+					<input type="Submit" name="submit" value="Cadastrar" class="botao" {if !$podeGravar}disabled="true"{/if}>
+				</td>
+			</tr>
+
+		{if $tipo_nas == "P"}
+		<!-- PPPoE: CADASTRA TODOS OS ENDEREÇOS DA REDE ESPECIFICADA -->
+
+		{/if}
+
+		{if $tipo_nas == "R"}
+		<!-- DISCADO: NAO CADASTRA ENDERECO -->
+
+		{/if}
+		</table>
+	{/if}
+
+
+
+{else}
+<table class='lista' width='350' cellpadding=0 cellspacing=0 align="center">
+	{if count($registros)}
+	<tr>
+		<th align="left">ENDEREÇO</th>
+		<th align="center">TIPO</th>
+	</th>
+	{/if}
+	{foreach name=registros item=r from=$registros}
+	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr>
+		<td class='{$estilo}'><a href="admin-cadastro.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{if $r.ipaddr}{$r.ipaddr}{else}{$r.rede}{/if}</a></td>
+		<td width="140" class='{$estilo}' align="center"><a href="admin-cadastro.php?op={$op}&tela={$tela}&subtela=cadastro&id_servidor={$r.id_servidor}">{if $r.tipo_rede == "C"}CLIENTE{/if}{if $r.tipo_rede == "S"}SUPORTE{/if}{if $r.tipo_rede == "I"}INFRA-ESTRUTURA{/if}</a></td>
+	</tr>
+	{foreachelse}
+	<tr>
+		<td height=110 valign="middle" align="center"><B>NENHUMA REDE CADASTRADA.</B></td>
+	</tr>
+	{/foreach}
+</table>
+{/if}
+
+
+</body>
+</html>

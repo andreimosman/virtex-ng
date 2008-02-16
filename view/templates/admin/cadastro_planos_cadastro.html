@@ -1,0 +1,470 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #CACACA;
+	margin-right: 2px;
+
+}
+
+{/literal}
+</style>
+<script language="JavaScript">
+{literal}
+function changeDesconto(init) {
+	var frm=document.plano;
+
+	if( frm.desconto.checked ) {
+		frm.periodo_desconto.disabled=false;
+		frm.periodo_desconto.className="fieldWithoutFocus";
+
+		frm.desconto_promo.disabled=false;
+		frm.desconto_promo.className="fieldWithoutFocus";
+
+		if( init == undefined || init == false ) {
+			frm.desconto_promo.focus();
+		}
+
+	} else {
+		frm.desconto_promo.className="fieldDisabled";
+		frm.desconto_promo.disabled=true;
+		frm.periodo_desconto.className="fieldDisabled";
+		frm.periodo_desconto.disabled=true;
+	}
+}
+
+function changeComodato(init) {
+	var frm=document.plano;
+
+	if( frm.comodato.checked ) {
+		frm.valor_comodato.className="fieldWithoutFocus";
+		frm.valor_comodato.disabled=false;
+
+		if( init == undefined || init == false ) {
+			frm.valor_comodato.focus();
+		}
+	} else {
+		frm.valor_comodato.className="fieldDisabled";
+		frm.valor_comodato.disabled=true;
+	}
+}
+
+function formInit() {
+	var frm = document.plano;
+
+	if( frm.tipo.length == 0 ) {
+		// Form usando selectbox pra escolher o tipo do produto.
+		frm.tipo.focus();
+		return;
+	}
+
+
+	changeDesconto(true);
+
+	// Funções BandaLarga
+	if( frm.tipo.value == 'BL' ) {
+		changeComodato(true);
+	}
+
+	// Focus para o nome:
+	frm.nome.focus();
+
+}
+
+function formQuit() {
+	if( window.confirm("Deseja abandonar este registro?") ) {
+		window.open("admin-cadastro.php?op=planos&tela=listagem","conteudo");
+	}
+}
+
+
+
+
+function formValidacao() {
+
+	var frm = document.plano;
+
+	if( frm.tipo.value.length == 0 ) {
+		// Form usando selectbox pra escolher o tipo do produto.
+
+		return false;
+	}
+
+
+	// Valida Nome
+	if( frm.nome.value.length == 0 ) {
+		window.alert("O nome do produto deve ser preenchido");
+		return false;
+	}
+
+	// Valida Mensalidade
+
+
+	// Valida Desconto
+	if( frm.desconto.checked ) {
+		// Quando desconto foi selecionado deve ser informado o valor e período.
+
+	}
+
+	return true;
+}
+
+function escolheTipo() {
+	var frm = document.plano;
+
+	if( frm.tipo.value.length > 0 ) {
+		url = "admin-administracao?op="+frm.op.value+"&tela="+frm.tela.value+"&tipo="+frm.tipo.value;
+		window.open(url,"conteudo");
+	}
+
+}
+
+function planoValidacaoForm() {
+
+	//CAMPOS GERAIS
+	var nome = document.getElementById("nome");
+	var descricao = document.getElementById("descricao");
+	var valor = document.getElementById("valor");
+	var numero_contas = document.getElementById("numero_contas");
+	var tx_instalacao = document.getElementById("tx_instalacao");
+	var desconto = document.getElementById("desconto");
+	var desconto_promo = document.getElementById("desconto_promo");
+	var periodo_desconto = document.getElementById("periodo_desconto");
+
+	var num_emails = document.getElementById("num_emails");
+	var quota_por_conta = document.getElementById("quota_por_conta");
+	var vl_email_adicional = document.getElementById("vl_email_adicional");
+	var permitir_outros_dominios = document.getElementById("permitir_outros_dominios");
+
+	//CAMPOS BANDA LARGA
+	var banda_download_kbps = document.getElementById("banda_download_kbps");
+	var banda_upload_kbps = document.getElementById("banda_upload_kbps");
+	var franquia_trafego_mensal_gb = document.getElementById("franquia_trafego_mensal_gb");
+	var valor_trafego_mensal_gb = document.getElementById("valor_trafego_mensal_gb");
+	var comodato = document.getElementById("comodato");
+	var valor_comodato = document.getElementById("valor_comodato");
+
+	//CAMPOS DISCADO
+	var franquia_horas = document.getElementById("franquia_horas");
+	var permitir_duplicidade = document.getElementById("permitir_duplicidade");
+	var valor_hora_adiciona = document.getElementById("valor_hora_adiciona");
+
+	//CAMPOS HOSPEDAGEM
+	var dominio = document.getElementById("dominio");
+	var franquia_em_mb = document.getElementById("franquia_em_mb");
+	var valor_mb_adiciona = document.getElementById("valor_mb_adiciona");
+
+	//Formulários extras(Banda larga, discado hospedagem)
+	var formBandaLarga = document.getElementById("formBandaLarga");
+	var formHospedagem = document.getElementById("formHospedagem");
+	var formDiscado = document.getElementById("formDiscado");
+
+
+	if(estaVazio(nome.value)) {
+		alert("O campo nome deve ser preenchido");
+		reiniciaCampo(nome, true);
+		return false;
+	}
+
+	if(estaVazio(descricao.value)) {
+		alert("O campo descrição deve ser preenchido");
+		reiniciaCampo(descricao, true);
+		return false;
+	}
+
+	if(estaVazio(valor.value)) {
+		alert("O campo valor deve ser preenchido");
+		reiniciaCampo(valor, true);
+		return false;
+	}
+
+
+	if(desconto.checked) {
+		if(estaVazio(desconto_promo)) {
+			alert("O Campo de valor do desconto deve ser preenchido");
+			reiniciaCampo(desconto_promo, true);
+			false;
+		}
+
+		if(estaVazio(periodo_desconto)) {
+			alert("O Campo de valor do desconto deve ser preenchido");
+			reiniciaCampo(periodo_desconto, true);
+			false;
+		}
+	}
+
+	return true;
+}
+
+{/literal}
+</script>
+<form name="plano" method="post" action="admin-cadastro.php" onSubmit="return planoValidacaoForm()">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="id_produto" value="{$id_produto}">
+{if !$tipo}
+	<br><br>
+	<table width="400" align="center" border=1 cellpadding=0 cellspacing=0>
+		<tr>
+			<td width="100%" height="120">
+				&nbsp;&nbsp;<label>Escolha o tipo de produto:</label><select class="fieldWithFocus" name="tipo" id="tipo" onChange="escolheTipo()">
+					<option value=""></option>
+					<option value="BL">Banda Larga</option>
+					<option value="D">Discado</option>
+					<option value="H">Hospedagem</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+{else}
+	<input type="hidden" name="tipo" value="{$tipo}">
+	<input type="hidden" name="acao" value="{$acao}">
+	<table width="671" align="center" border=0 cellpadding=0 cellspacing=0>
+		<tr>
+			<td width="50%" valign="top" style="border-right: dotted 1px #cccccc; border-bottom: dotted 1px #cccccc">
+				<table border=0 cellspacing=0 cellpadding=0 width="100%">
+					<tr>
+						<td colspan="2" bgcolor="#d5Efd5"><label>Dados Básicos</label></td>
+					</tr>
+					<tr>
+						<td align="right">
+							<label>Nome do Plano:</label>
+						</td>
+						<td>
+							<input type="text" size=41 name="nome" id="nome" maxlength="30" value="{$nome}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+					<tr>
+						<td align="right" valign="top"><label>Descrição:</label></td>
+						<td><textarea rows="5" cols=40 name="descricao" id="descricao" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$descricao}</textarea></td>
+					</tr>
+					<tr>
+						<td align="right">
+							<label>Mensalidade:</label>
+						</td>
+						<td>
+							<input type="text" name="valor" id="valor" maxlength="8" value="{$valor}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">
+							<label>Comissao:</label>
+						</td>
+						<td>
+							<input type="text" name="comissao" id="comissao" maxlength="8" value="{$comissao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Com. Migração:</label>
+						</td>
+						<td>
+							<input type="text" name="comissao_migracao" id="comissao_migracao" maxlength="8" value="{$comissao_migracao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Num. Contas:</label>
+						</td>
+						<td>
+							<input type="text" size=4 name="numero_contas" id="numero_contas" value="{$numero_contas}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">
+							<label>Disponível:</label>
+						</td>
+						<td>
+							<select name="disponivel" id="disponivel" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							{foreach item=r from=$lista_boolean}
+							<option value='{$r.id}' {if $r.id == $disponivel}SELECTED{/if}>{$r.nome}</option>
+							{/foreach}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" bgcolor="#d5Efd5"><label>Promoção</label></td>
+					</tr>
+					<tr>
+						<td align="right">
+							<label>Isenção tx inst:</label>
+						</td>
+						<td>
+							<input type="checkbox" size=4 name="tx_instalacao" id="tx_instalacao" {if $tx_instalacao > 0}CHECKED{/if} >
+						</td>
+					</tr>
+					<tr>
+						<td align="right">
+							<label>Desconto:</label>
+						</td>
+						<td>
+							<input type="checkbox" size=4 name="desconto" id="desconto" {if $desconto_promo > 0}checked{/if} onClick="changeDesconto();">
+						</td>
+					</tr>
+					<tr>
+						<td colspan=2>
+							<p style="font-family: verdana; font-size: 10px">
+							Desconto de <input type="text" size=4 name="desconto_promo" id="desconto_promo" value="{$desconto_promo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> reais,
+							nos primeiros <input type="text" size=4 name="periodo_desconto" id="periodo_desconto" value="{$periodo_desconto}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> meses.
+							</p>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td width="50%" valign="top" style="border-bottom: dotted 1px #cccccc">
+				{if $tipo == "BL"}
+					<div id="formBandaLarga" class="formContainer">
+						<table width="100%" border=0 cellpadding=0 cellspacing=0>
+							<tr>
+								<td colspan="2" bgcolor="#d5Efd5"><label>Informações Banda Larga</label></td>
+							</tr>
+							<tr>
+								<td width="50%" style="border-bottom: solid 1px"><label>Download</label><br>&nbsp;
+									<select name="banda_download_kbps" id="banda_download_kbps" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									{foreach item=b from=$lista_bandas}
+									<option value="{$b.id}" {if $b.id == $banda_download_kbps}SELECTED{/if}>{$b.banda}</option>
+									{/foreach}
+									</select><span style="font-family: verdana; font-size: 10px">kbps</span>
+								</td>
+								<td width="50%" style="border-bottom: solid 1px"><label>Upload</label><br>&nbsp;
+									<select name="banda_upload_kbps" id="banda_upload_kbps" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									{foreach item=b from=$lista_bandas}
+									<option value="{$b.id}" {if $b.id == $banda_upload_kbps}SELECTED{/if}>{$b.banda}</option>
+									{/foreach}
+									</select><span style="font-family: verdana; font-size: 10px">kbps</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><label>Franquia tráfego:</label></td>
+								<td><input type="text" size=4 name="franquia_trafego_mensal_gb" id="franquia_trafego_mensal_gb" value="{$franquia_trafego_mensal_gb}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">GB</span></td>
+							</tr>
+							<tr>
+								<td align="right"><label>Valor GB adicional:</label></td>
+								<td><input type="text" size=4 name="valor_trafego_adicional_gb" id="valor_trafego_adicional_gb" value="{$valor_trafego_adicional_gb}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+							</tr>
+							<tr>
+								<td align="right"><label>Comodato:</label></td>
+								<td><input type="checkbox" name="comodato" id="comodato" {if $comodato == 't'}checked{/if} onClick="changeComodato()"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+							</tr>
+							<tr>
+								<td align="right"><label>Valor do Comodato:</label></td>
+								<td><input type="text" size=4 name="valor_comodato" id="valor_comodato" value="{$valor_comodato}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+							</tr>
+						</table>
+					</div>
+				{/if}
+				{if $tipo == "D"}
+					<div id="formDiscado" class="formContainer">
+						<table width="100%" border=0 cellpadding=0 cellspacing=0>
+							<tr>
+								<td colspan="2" bgcolor="#d5Efd5"><label>Informações Discado</label></td>
+							</tr>
+							<tr>
+								<td width="50%" style="border-bottom: solid 1px"><label>Franquia em Horas:</label><br>&nbsp;
+									<input type="text" size=4 name="franquia_horas" id="franquia_horas" value="{$franquia_horas}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								</td>
+								<td width="50%" style="border-bottom: solid 1px"><label>Permitir Duplicidade:</label><br>&nbsp;
+									<select name="permitir_duplicidade" id="permitir_duplicidade" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									{foreach item=r from=$lista_boolean}
+									<option value='{$r.id}' {if $r.id == $permitir_duplicidade}SELECTED{/if}>{$r.nome}</option>
+									{/foreach}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><label>Valor hora adicional:</label></td>
+								<td><input type="text" size=4 name="valor_hora_adicional" id="valor_hora_adicional" value="{$valor_hora_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+							</tr>
+						</table>
+					</div>
+				{/if}
+				{if $tipo == "H"}
+					<div id="formHospedagem" class="formContainer">
+						<table width="100%" border=0 cellpadding=0 cellspacing=0>
+							<tr>
+								<td colspan="2" bgcolor="#d5Efd5"><label>Informações Hospedagem</label></td>
+							</tr>
+							<tr>
+								<td width="50%" style="border-bottom: solid 1px"><label>Domínio:</label><br>&nbsp;
+									<select name="dominio" id="dominio" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+									{foreach item=r from=$lista_boolean}
+									<option value='{$r.id}' {if $r.id == $dominio}SELECTED{/if}>{$r.nome}</option>
+									{/foreach}
+									</select>
+								</td>
+								<td width="50%" style="border-bottom: solid 1px"><label>Franquia em MB:</label><br>&nbsp;
+									<input type="text" size=4 name="franquia_em_mb" id="franquia_em_mb" value="{$franquia_em_mb}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><label>Valor MB adicional:</label></td>
+								<td><input type="text" size=4 name="valor_mb_adicional" id="valor_mb_adicional" value="{$valor_mb_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+							</tr>
+						</table>
+					</div>
+				{/if}
+				<div id="formEmail" class="formContainer">
+					<table width="100%" border=0 cellpadding=0 cellspacing=0>
+						<tr>
+							<td colspan="2" bgcolor="#d5Efd5"><label>Informações Email</label></td>
+						</tr>
+						<tr>
+							<td align="right" width="50%"><label>Numero de Emails:</label></td>
+							<td><input type="text" size=4 name="num_emails" id="num_emails" value="{$num_emails}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						</tr>
+
+						<tr>
+							<td align="right"><label>Quota por email:</label></td>
+							<td><input type="text" size=4 name="quota_por_conta" id="quota_por_conta" value="{$quota_por_conta}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">bytes</span></td>
+						</tr>
+
+						<tr>
+							<td align="right"><label>Valor email adicional:</label></td>
+							<td><input type="text" size=4 name="vl_email_adicional" id="vl_email_adicional" value="{$vl_email_adicional}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><span style="font-family: verdana; font-size: 10px">reais</span></td>
+						</tr>
+						<tr>
+							<td align="right"><label>Permitir outros dominios:</label></td>
+							<td>
+								<select name="permitir_outros_dominios" id="permitir_outros_dominios" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								{foreach item=r from=$lista_boolean}
+								<option value='{$r.id}' {if $r.id == $permitir_outros_dominios}SELECTED{/if}>{$r.nome}</option>
+								{/foreach}
+								</select>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2" width="100%">
+				<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:formQuit();">
+				<input type="submit" name="submit" class="botao" value="{if $id_produto}Alterar{else}Cadastrar{/if}">
+			</td>
+		</tr>
+	</table>
+{/if}
+</form>
+<script language="JavaScript">
+formInit();
+</script>
+</html>

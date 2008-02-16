@@ -1,0 +1,72 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+.links_filtro {
+	font-family: verdana;
+	font-size: 10px;
+	margin-bottom: 3px;
+}
+
+.links_filtro a {
+	color: #819FCF;
+}
+
+.links_filtro a:hover {
+	text-decoration: none;
+}
+{/literal}
+</style>
+
+	<table class='links_filtro' width=600 cellpadding=0 cellspacing=0 align=center>
+		<tr>
+			<td width="100">
+				{if !$tipo}<b>TODOS</b>{else}<a href="admin-cadastro.php?op=planos&tela=listagem&disponivel={$disponivel}">TODOS</a>{/if}
+			</td>
+			<td width="100">
+				{if $tipo == "BL"}<b>banda larga</b>{else}<a href="admin-cadastro.php?op=planos&tela=listagem&disponivel={$disponivel}&tipo=BL">banda larga</a>{/if}
+			</td>
+			<td width="100">
+				{if $tipo == "D"}<b>discado</b>{else}<a href="admin-cadastro.php?op=planos&tela=listagem&disponivel={$disponivel}&tipo=D">discado</a>{/if}
+			</td>
+			<td width="100">
+				{if $tipo == "H"}<b>hospedagem</b>{else}<a href="admin-cadastro.php?op=planos&tela=listagem&disponivel={$disponivel}&tipo=H">hospedagem</a>{/if}
+			</td>
+			<td width="200" align="right">
+				{if $disponivel == "t"}<a href="admin-cadastro.php?op=planos&tela=listagem&disponivel=f&tipo={$tipo}">exibir não disponíveis</a>{else}<a href="admin-cadastro.php?op=planos&tela=listagem&tipo={$tipo}">exibir disponíveis</a>{/if}
+			</td>
+		</tr>
+	</table>
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+		{if count($registros)}
+		<tr>
+			<th width="35">COD</th>
+			<th width="200" align="left">NOME</th>
+			<th width="200" align="left">DESCRIÇÃO</th>
+			<th width="45">TIPO</th>
+			<th align="center">VALOR</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='right' width=40 class='{$estilo}'><a href="admin-cadastro.php?op=planos&tela=cadastro&id_produto={$r.id_produto}">{$r.id_produto|string_format:"%05d"}</a></td>
+			<td class='{$estilo}'><a href="admin-cadastro.php?op=planos&tela=cadastro&id_produto={$r.id_produto}">{$r.nome|upper}</a></td>
+			<td class='{$estilo}'><a href="admin-cadastro.php?op=planos&tela=cadastro&id_produto={$r.id_produto}">{$r.descricao|upper}</a></td>
+			<td class='{$estilo}' align="center"><a href="admin-cadastro.php?op=planos&tela=cadastro&id_produto={$r.id_produto}">{$r.tipo|upper}</a></td>
+			<td class='{$estilo}' align="right"><a href="admin-cadastro.php?op=planos&tela=cadastro&id_produto={$r.id_produto}">{if $r.valor > 0}{$r.valor}{else}CORTESIA{/if}</a></td>
+		</tr>
+		{foreachelse}
+		{if $texto_pesquisa && $tipo_pesquisa}
+		<tr>
+			<td height=110 valign="middle" align="center"><B>NENHUM PLANO DISPONÍVEL CADASTRADO</B></td>
+		</tr>
+		{/if}
+		{/foreach}
+	</table>
+</body>
+</html>

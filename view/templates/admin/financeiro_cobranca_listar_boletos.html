@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+{literal}
+	<style type="text/css">
+			.botao_imprimir{margin:auto;font-family: Tahoma, Verdana; font-size:10px; color:#cccccc; border:2px solid #dfdfdf; width:100%; background-color:#EFEFEF; cursor:pointer; }
+			.botao_imprimir:hover{background-color:#FFFFFF; }
+			.quebra{visibility:none; border:1px solid;}
+	@media print {
+			.quebra{page-break-after: always; border:none;}
+			.botao_imprimir{visility:hidden; display:none; }
+	}
+	</style>
+{/literal}
+
+<title>Boleto</title>
+</head><body bgcolor="#ffffff">
+<a href="javascript:this.print();"><div class="botao_imprimir" align='center'>
+	<table>
+		<tr>
+			<td><a href="javascript:this.print();"><img src="view/templates/admin/boletos/imagens/print.gif" border="0" /></a><td>
+			<td><a href="javascript:this.print();">Clique aqui para imprimir</a></td>
+		</tr>
+	</table>
+</div></a><br>
+{foreach name="imprime_boleto" from=$resultado item=i key=k}
+
+<div align="center" >
+<table border="0" cellpadding="0" cellspacing="0" width="640">
+<tbody>
+<tr>
+	<td colspan=2><h3 style='font-family:Tahoma; font-size:10px;'>CÓDIGO DE IDENTIFICAÇÃO DO CLIENTE: {$i.id_cliente|string_format:"%06s"}</h3></td>
+</tr>
+<tr>
+      <td valign="bottom" width="242"><img src="view/templates/admin/boletos/imagens/banco001.gif" width="225" height="45"></td>
+      <td width="428" align="right" valign="bottom"><font face="Arial, Helvetica" size="-2"><b>RECIBO DO SACADO</b></font></td>
+</tr>
+</tbody></table>
+
+<table border="1" cellpadding="1" cellspacing="0" width="640">
+<tbody><tr>
+<td><font face="Arial, Helvetica" size="1">Cedente</font><br>
+      <font face="Arial, Helvetica" size="-1">{$cedente.nome} - CNPJ: {$cedente_cobranca.cnpj}
+      </font></td>
+<td><font face="Arial, Helvetica" size="1">Agência / Cod. Cedente</font><br>
+    <font face="Arial, Helvetica" size="-1">{$i.agencia} {$i.conta} </font></td>
+<td><font face="Arial, Helvetica" size="1">Data Emissão</font><br>
+  <font face="Arial, Helvetica" size="-1">{$i.hoje}</font></td>
+<td align="right"><font face="Arial, Helvetica" size="1">Vencimento</font><br>
+  <font face="Arial, Helvetica"><b>{$i.data|date_format:"%d/%m/%Y"}</b></font></td>
+</tr>
+<tr>
+<td valign="top"><font face="Arial, Helvetica" size="1">Sacado</font><br>
+<font face="Arial, Helvetica" size="-1">{$i.nome_razao}<br>
+ {$i.cpf_cnpj}</font></td>
+<td valign="top"><font face="Arial, Helvetica" size="1">Nosso Numero</font><br>
+  <font face="Arial, Helvetica" size="-1">{$i.nosso_numero}</font></td>
+<td valign="top"><font face="Arial, Helvetica" size="1">Numero da Guia</font><br></td>
+<td align="right"><font face="Arial, Helvetica" size="1">Valor do Documento</font><br>
+  <font face="Arial, Helvetica"><b>{$i.valor}</b></font></td>
+</tr>
+<tr>
+<td height="100" colspan="4" valign="top">
+<p><font face="Arial, Helvetica" size="1">Demonstrativo</font><br>
+  <font size="2" face="Arial, Helvetica, sans-serif">{$i.nome_produto} {$i.descricao_produto}</font></p>
+<pre>&nbsp;</pre></td>
+</tr>
+</tbody></table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="640">
+<tbody><tr>
+<td>
+<p align="right"><font face="Arial, Helvetica" size="-2"><b>Autenticação Mecânica</b></font></p>
+<br>
+<br>
+</td>
+</tr>
+</tbody></table>
+
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td width="640">
+<hr color="#dfdfdf" size="1">
+</td>
+<td>
+<p align="right"><font size="-2">&nbsp;dobre</font></p>
+</td>
+</tr>
+</tbody></table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="640">
+<tbody><tr>
+      <td valign="bottom" width="225"><img src="view/templates/admin/boletos/imagens/banco001.gif" width="225" height="45"></td>
+<td align="right" valign="bottom"><font size="2" face="Arial, Helvetica, sans-serif"><strong><br>
+  </strong><font size="1">linha digitavel</font><strong><br>
+  {$i.linha_digitavel}</strong></font></td>
+</tr>
+</tbody></table>
+
+<table border="1" cellpadding="1" cellspacing="0" width="640">
+<tbody><tr>
+<td colspan="5" width="500"><font face="Arial, Helvetica" size="1">Local de Pagamento</font><br><font face="Arial, Helvetica" size="-1">PAGÁVEL EM QUALQUER AGÊNCIA BANCÁRIA</font></td>
+<td align="right" width="170"><font face="Arial, Helvetica" size="1">Vencimento</font><br>
+  <font face="Arial, Helvetica"><b>{$i.data|date_format:"%d/%m/%Y"}</b></font></td>
+</tr>
+<tr>
+<td colspan="5" width="500"><font face="Arial, Helvetica" size="1">Cedente</font><br>
+  <font face="Arial, Helvetica" size="-1">{$cedente.nome} - CNPJ: {$cedente_cobranca.cnpj} </font></td>
+<td align="right" width="170"><font face="Arial, Helvetica" size="1">Agência
+    / Cod. Cedente </font><br>
+    <font face="Arial, Helvetica" size="-1">{$i.agencia} {$i.conta} </font></td>
+</tr>
+<tr>
+<td><font face="Arial, Helvetica" size="1">Data Documento</font><br>
+  <font face="Arial, Helvetica" size="-1">{$i.hoje}</font></td>
+<td><font face="Arial, Helvetica" size="1">Numero Documento</font><br>
+  <font size="-1" face="Arial, Helvetica">{$i.nosso_numero}</font></td>
+<td><font face="Arial, Helvetica" size="1">Especie Documento</font><br><font face="Arial, Helvetica" size="-1">RC-CI</font></td>
+<td><font face="Arial, Helvetica" size="1">Aceite</font><br><font face="Arial, Helvetica" size="-1">N</font></td>
+<td><font face="Arial, Helvetica" size="1">Data Processamento</font><br>
+  <font face="Arial, Helvetica" size="-1">{$i.hoje}</font></td>
+<td align="right" width="170"><font face="Arial, Helvetica" size="1">Nosso Numero</font><br>
+  <font face="Arial, Helvetica" size="-1">{$i.nosso_numero}</font></td>
+</tr>
+<tr>
+<td valign="top"><font face="Arial, Helvetica" size="1">Uso Banco</font><br></td>
+<td valign="top"><font face="Arial, Helvetica" size="1">Carteira</font><br>
+    <font size="-1" face="Arial, Helvetica, sans-serif">{$i.carteira}</font><br></td>
+<td valign="top"><font face="Arial, Helvetica" size="1">Especie</font><br>
+  <font face="Arial, Helvetica" size="-1">R$</font></td>
+<td valign="top"><font face="Arial, Helvetica" size="1">Quantidade<br>
+01</font><br>
+  <font face="Arial, Helvetica" size="-1">&nbsp;</font></td>
+<td valign="top"><font face="Arial, Helvetica" size="1">Valor</font><br>
+    <font size="-1" face="Arial, Helvetica, sans-serif">{$i.valor}</font><br>
+    <font face="Arial, Helvetica" size="-1">&nbsp;</font></td>
+<td align="right" width="170"><font face="Arial, Helvetica" size="1">Valor do Documento</font><br>
+  <font face="Arial, Helvetica"><b>{$i.valor}</b></font></td>
+</tr>
+<tr>
+<th colspan="5" rowspan="4"><p align="left"><font face="Arial, Helvetica" size="1">Instruções</font><br>
+  <font face="Arial, Helvetica" size="-1">{$i.observacoes}</font></p></th>
+<td width="170"><font face="Arial, Helvetica" size="1">(+) Outros Acrécimos</font></td>
+</tr>
+<tr>
+<td width="170"><font face="Arial, Helvetica" size="1">(-) Descontos/Abatimento</font></td>
+</tr>
+<tr>
+<td width="170"><font face="Arial, Helvetica" size="1">(+) Mora/Multa</font></td>
+</tr>
+<tr>
+<td width="170"><font face="Arial, Helvetica" size="1">(=) Valor Cobrado</font><br>&nbsp;</td>
+</tr>
+<tr>
+<td colspan="6"><font face="Arial, Helvetica" size="1">Sacado</font><font face="Arial, Helvetica" size="-1"><br>
+    {$i.nome_razao}<br>
+    <span class="geral">{$i.endereco} - {$i.complemento} - {$i.bairro} - {$i.cidade} - {$i.estado}<br> CEP:
+    {$i.cep}</span><br>
+    {$i.cpf_cnpj}</font></td>
+</tr>
+</tbody></table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="640">
+<tbody><tr>
+<td colspan="6"><p align="right"><font face="Arial, Helvetica" size="-2"><b>Autenticação Mecânica / FICHA DE COMPENSAÇÃO</b></font></p>
+<p align="left"><strong><font size="2" face="Arial, Helvetica, sans-serif">{$i.cod_barra}</font></strong><br>
+{$i.barcode}</p>
+</td>
+</tr>
+</tbody></table>
+
+{if !$smarty.foreach.imprime_boleto.last}<hr class="quebra">{/if}
+
+{/foreach}<br><br><a href="javascript:this.print();"><div class="botao_imprimir" align='center'>
+	<table>
+		<tr>
+			<td><a href="javascript:this.print();"><img src="view/templates/admin/boletos/imagens/print.gif" border="0" /></a><td>
+			<td><a href="javascript:this.print();">Clique aqui para imprimir</a></td>
+		</tr>
+	</table>
+</div></a><br><br>
+</body></html>

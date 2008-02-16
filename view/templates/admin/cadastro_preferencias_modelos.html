@@ -1,0 +1,259 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+.disabled {
+	border: solid 1px #DADADA;
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 2px;
+}
+
+table.mensagemErro {
+        border: dotted 1px #FF0000;
+        margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+        background-color: #FDFDEA;
+        color: #FF0000;
+        font-family: verdana;
+        font-size: 12px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+}
+
+
+
+{/literal}
+</style>
+<script language="JavaScript">
+var podeGravar={if $podeGravar}true{else}false{/if};
+{literal}
+function voltar() {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro") ) {
+		window.open("admin-configuracoes.php?op=preferencias&tela=modelos","conteudo");
+	}
+}
+function habilita(campo) {
+	campo.disabled=false;
+	campo.className='fieldWithoutFocus';
+
+}
+
+function desabilita(campo) {
+	campo.disabled=true;
+	campo.className='disabled';
+}
+
+function alteracaoModelo() {
+	var frm = document.modelo;
+
+	desabilita(frm.tipo);
+
+	if( frm.padrao.value == "t" ) {
+		desabilita(frm.padrao);
+		desabilita(frm.disponivel);
+	}
+
+}
+
+function validaFormModelo() {
+	var frm = document.modelo;
+
+	if( frm.id_modelo_contrato.value != "" ) {
+		// Alteração
+		if( frm.descricao.value == "" ) {
+			window.alert("É preciso colocar uma descrição para o modelo enviado.");
+			return false;
+		}
+
+		if( !frm.padrao.disabled ) {
+
+			if( frm.padrao.value == "t" && frm.disponivel.value != "t" ) {
+				window.alert("O arquivo padrão deve estar disponível.");
+				return false;
+			}
+
+			if( frm.padrao.value == "t" ) {
+				if( !window.confirm("Você está definindo este modelo como padrão. O documento antigo será desmarcado como padrão. Deseja continuar?" ) ) {
+					window.alert("Você cancelou o envio do modelo.");
+					return false;
+				}
+			}
+		}
+
+		return true;
+	} else {
+		if( frm.tipo.value == "" ) {
+			window.alert("Escolha o tipo do produto a qual este modelo se refere.");
+			return false;
+		}
+
+		if( frm.descricao.value == "" ) {
+			window.alert("É preciso colocar uma descrição para o modelo enviado.");
+			return false;
+		}
+
+		if( frm.arquivo.value == "" ) {
+			window.alert("Escolha o arquivo HTML do modelo para upload.");
+			return false;
+		}
+
+		if( frm.padrao.value == "t" && frm.disponivel.value != "t" ) {
+			window.alert("O arquivo padrão deve estar disponível.");
+			return false;
+		}
+
+		if( frm.padrao.value == "t" ) {
+			if( !window.confirm("Você está definindo este modelo como padrão. O documento antigo será desmarcado como padrão. Deseja continuar?" ) ) {
+				window.alert("Você cancelou o envio do modelo.");
+				return false;
+			}
+		}
+
+		return true;
+	}
+}
+
+
+
+
+
+{/literal}
+</script>
+
+
+
+
+{if $subtela}
+<form method="post" action="admin-configuracoes.php" name="modelo" onSubmit="return validaFormModelo();" enctype="multipart/form-data">
+	<input type="hidden" name="op" value="{$op}">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="subtela" value="{$subtela}">
+	<input type="hidden" name="acao" value="alterar">
+	<input type="hidden" name="id_modelo_contrato" value="{$id_modelo_contrato}">
+	<input type="hidden" name="MAX_FILE_SIZE" value="128000">
+
+	{if $erro}
+	<table width="403" cellspacing=0 cellpadding=0 class="mensagemErro" align="center">
+		<tr>
+			<td align="center">{$erro}</td>
+		</tr>
+	</table>
+	{/if}
+	<table width="403" cellspacing=0 cellpadding=0 border=0 align="center" style="border: solid 1px #000000;">
+		<tr>
+			<td width="130" align="right"><label>Tipo:</label></td>
+			<td colspan="3">
+				<select name="tipo" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+				{foreach key=k item=v from=$tipos}
+					<option value="{$k}" {if $tipo == $k}SELECTED{/if}>{$v}</option>
+				{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td width="130" align="right"><label>Descricao:</label></td>
+			<td colspan=3><input type="text" size="50" maxlength="50" name="descricao" value="{$descricao}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+		{if !$id_modelo_contrato}
+		<tr>
+			<td width="130" align="right"><label>Arquivo:</label></td>
+			<td colspan=3><input type="file" size="36" name="arquivo" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+		{/if}
+		<tr>
+			<td width="130" align="right"><label>Padrão:</label></td>
+			<td>
+				<select name="padrao" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+					{foreach item=d from=$lista_boolean}
+					<option value='{$d.id}' {if $d.id == $padrao}SELECTED{/if}>{$d.nome}</option>
+					{/foreach}
+				</select>
+			</td>
+			<td width="130" align="right"><label>Disponível:</label></td>
+			<td>
+				<select name="disponivel" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+					{foreach item=d from=$lista_boolean}
+					<option value='{$d.id}' {if $d.id == $disponivel}SELECTED{/if}>{$d.nome}</option>
+					{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=4 style="border-top: dotted 1px #000000" align="center">
+				<input type="button" name="Voltar" value="Voltar" class="botao" onClick="javascript:voltar();"> <input type="submit" name="Submit" value="{if $id_modelo_contrato}Alterar{else}Cadastrar{/if}" class='botao' {if !$podeGravar}disabled="true"{/if}>
+			</td>
+		</tr>
+	</table>
+	{if $id_modelo_contrato}
+		<br><iframe src="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=exibir_modelo&id_modelo_contrato={$id_modelo_contrato}" width="600" height="200" align="center" frameborder=0 style="border: dotted 1px #000000;"></iframe>
+	{/if}
+</form>
+<script language="JavaScript">
+{if $id_modelo_contrato}
+alteracaoModelo();
+{/if}
+</script>
+
+{else}
+
+	<br>
+	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border=0>
+		{if count($registros)}
+		<tr>
+			<th align="left" width="40">COD</th>
+			<th align="left" width="50">TIPO</th>
+			<th align="left">DESCRIÇÃO</th>
+			<th align="center" width="110">DATA</th>
+			<th align="right" width="50">DISPONÍVEL?</th>
+			<th width="50" align="right">&nbsp;</th>
+		</th>
+		{/if}
+		{foreach name=registros item=r from=$registros}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='center' width=40 class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.id_modelo_contrato|string_format:"%05d"}</a></td>
+			<td class='{$estilo}' align="left"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$tipos[$r.tipo]}</a></td>
+			<td class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.descricao}</a></td>
+			<td class='{$estilo}' align="center" width="130"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.data_upload|date_format:"%d/%m/%Y %H:%M:%S"}</a></td>
+			<td class='{$estilo}' align="center"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{if $r.disponivel=='t'}SIM{else}NÃO{/if}</a></td>
+			<td class='{$estilo}' align="right" align="50"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{if $r.padrao == "t"}PADRÃO{else}&nbsp;{/if}</a></td>
+		</tr>
+		{foreachelse}
+			{if !count($registros)}
+			<tr>
+				<td height=110 valign="middle" align="center"><B>NENHUMA MODELO CADASTRADO ATÉ O MOMENTO.</B></td>
+			</tr>
+			{/if}
+		{/foreach}
+	</table>
+
+
+
+
+
+
+
+
+
+{/if}
+
+
+</body>
+</html>

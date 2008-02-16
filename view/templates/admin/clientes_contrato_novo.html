@@ -1,4 +1,6 @@
 <script type="text/javascript" src="view/templates/jslib/prototype/prototype.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
 <script language="JavaScript">
 // Lista
 var planosBL=eval('{$listaBL}');
@@ -12,12 +14,16 @@ var HSelecionado='';
 var cortesia = false;
 
 var LIMITE_PRORATA = {$limite_prorata};
+
+var condominios = eval({$condominios});
+var condominios_instalacao = eval({$condominios_instalacao});
+
 {literal}
 
 function alteraNas() {
 	var frm = document.contratacao;
 	if( frm.id_nas.value != frm.nas_orig.value ) {
-		$('selecao_redeip').value = "A";
+		document.getElementById('selecao_redeip').value = "A";
 		alteraSelecaoIP();
 	}
 }
@@ -34,7 +40,7 @@ function alteraSelecaoIP() {
 
 returnStatusEmail = false;
 function validaEmail(username,dominio){
-	var username = $F('username');
+	var username = document.getElementById('username');
 	var dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=email&username="+username+"&dominio="+dominio;
@@ -52,7 +58,7 @@ function validaEmail(username,dominio){
 
 function showResponseEmail(originalRequest) {
 	if ( !getReturn(originalRequest.responseText)){
-		$('criar_email').checked = false;
+		document.getElementById('criar_email').checked = false;
 		returnStatusEmail = false;
 	} else {
 		returnStatusEmail = true;
@@ -61,9 +67,9 @@ function showResponseEmail(originalRequest) {
 
 returnStatusUsername = false;
 function validaUsername(){
-	username = $F('username');
+	username = document.getElementById('username');
 	dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
-	tipo = $F('tipo');
+	tipo = document.getElementById('tipo');
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
 
@@ -80,9 +86,9 @@ function validaUsername(){
 
 function showResponseUsername(originalRequest) {
 	if ( !getReturn(originalRequest.responseText)){
-		$('username').value = "";
-		if( $('username').enabled ) {
-			$('username').focus();
+		document.getElementById('username').value = "";
+		if( document.getElementById('username').enabled ) {
+			document.getElementById('username').focus();
 		}
 		returnStatusUsername = false;
 	} else {
@@ -122,7 +128,7 @@ function showResponse(originalRequest) {
 		returnStatus = false;
 	} else {
 		returnStatus = true;
-		$('endereco_redeip').value = r.endereco;
+		document.getElementById('endereco_redeip').value = r.endereco;
 	}
 }
 
@@ -179,8 +185,8 @@ function contratoEscondeBox(tipo) {
 	if( container != null && container != undefined ) {
 		var target = document.getElementById("boxTarget");
 		var temp   = document.getElementById("boxTemporaria");
-		container.style.visibility = "hidden";
-		container.style.position = "absolute";
+		container.style.display = "none";
+		container.style.position = "static";
 		container.style.size="0px";
 		temp.appendChild(container);
 	}
@@ -202,17 +208,18 @@ function contratoExibeBox(tipo) {
 
 	var container = document.getElementById("box"+tipo);
 	if( container != null && container != undefined ) {
-		container.style.visibility = "visible";
+		container.style.display = "block";
 		var target = document.getElementById("boxTarget");
 		target.appendChild(container);
 
-		container.style.position = "relative";
+		container.style.position = "static";
 		container.style.size="";
 
 		//ser for BANDA LARGA OU DISCADA add ENDERECO DE INSTALACAO
 		if (tipo == "BL" || tipo == "D") {
 		  containerEI = document.getElementById("boxEI");
-		  containerEI.style.visibility = "visible";
+		  containerEI.style.display = "block";
+		  containerEI.style.position = "static"
 		  target.appendChild(containerEI);
 		}
 	}
@@ -614,6 +621,9 @@ function checkStatusFields(tag) {
           desabilita(document.getElementById('complemento_cobranca'));
           desabilita(document.getElementById('id_cidade_cobranca'));
           desabilita(document.getElementById('cep_cobranca'));
+          desabilita(document.getElementById('id_condominio_cobranca'));
+          desabilita(document.getElementById('id_bloco_cobranca'));
+          document.getElementById('id_condominio_cobranca').value="";
        }
        else {
           habilita(document.getElementById('endereco_cobranca'));
@@ -621,6 +631,7 @@ function checkStatusFields(tag) {
           habilita(document.getElementById('complemento_cobranca'));
           habilita(document.getElementById('id_cidade_cobranca'));
           habilita(document.getElementById('cep_cobranca'));
+          habilita(document.getElementById('id_condominio_cobranca'));
        }
     }
     else if ( tag.name == "difEnderecoSetup" ) {
@@ -631,6 +642,9 @@ function checkStatusFields(tag) {
           desabilita(document.getElementById('complemento_instalacao'));
           desabilita(document.getElementById('id_cidade_instalacao'));
           desabilita(document.getElementById('cep_instalacao'));
+          desabilita(document.getElementById('id_condominio_instalacao'));
+          desabilita(document.getElementById('id_bloco_instalacao'));
+          document.getElementById('id_condominio_instalacao').value="";
        }
        else {
           habilita(document.getElementById('endereco_instalacao'));
@@ -638,6 +652,7 @@ function checkStatusFields(tag) {
           habilita(document.getElementById('complemento_instalacao'));
           habilita(document.getElementById('id_cidade_instalacao'));
           habilita(document.getElementById('cep_instalacao'));
+          habilita(document.getElementById('id_condominio_instalacao'));
        }
     }
 }
@@ -648,7 +663,7 @@ function calculaDiaProximaFatura() {
 
 
 	// year, mount, date
-	var sD = $F('data_contratacao').split("/");
+	var sD = document.getElementById('data_contratacao').value.split("/");
    	var frm = document.contratacao;
 
     var dia_ven = document.getElementById("dia_vencimento").value;
@@ -752,36 +767,31 @@ function showResponse(originalRequest) {
 	}
 
 	returnStatus = true;
-	$('endereco_redeip').value = r.endereco;
+	document.getElementById('endereco_redeip').value = r.endereco;
 }
 
 
 function validacao(frm ) {
 	var migracao = false;
 
-	if( !$F('tipo') ) {
+	if( !document.getElementById('tipo') ) {
 		window.alert("É necessário escolher o tipo de contrato.");
 		return false;
 	}
 
-
-
-
-
-
-	if( $F('tipo') != '' && $F('id_produto_original') != '') {
+	if( document.getElementById('tipo') != '' && document.getElementById('id_produto_original') != '') {
 		migracao = true;
-		if( $F('id_produto_original') == $F('id_produto') ) {
+		if( document.getElementById('id_produto_original') == document.getElementById('id_produto') ) {
 			window.alert("Você deve escolher outro plano para migrar o contrato.");
 			return false;
 		}
 	}
 
 	if( !migracao ) {
-			username = $('username');
-			criar_email = $('criar_email');
+			username = document.getElementById('username');
+			criar_email = document.getElementById('criar_email');
 
-			if($F('tipo') == "BL") {
+			if(document.getElementById('tipo') == "BL") {
 				if(!checkDadosConexao()){
 					return false;
 				}
@@ -799,8 +809,8 @@ function validacao(frm ) {
 				}
 			}
 	} else {
-		dia_vencimento = $('dia_vencimento');
-		carencia = $('carencia');
+		dia_vencimento = document.getElementById('dia_vencimento');
+		carencia = document.getElementById('carencia');
 
 		if( 1 > dia_vencimento.value){
 			alert("Informe o dia de vencimento!");
@@ -846,12 +856,12 @@ function validacao(frm ) {
 		}
 	}
 
-	if( $F('tipo') == 'BL' ) {
-		var mac = $('mac');
-		var selecao_redeip = $('selecao_redeip');
-		var endereco_redeip = $('endereco_redeip');
-		var nas = $('id_nas');
-		var pop = $('id_pop');
+	if( document.getElementById('tipo') == 'BL' ) {
+		var mac = document.getElementById('mac');
+		var selecao_redeip = document.getElementById('selecao_redeip');
+		var endereco_redeip = document.getElementById('endereco_redeip');
+		var nas = document.getElementById('id_nas');
+		var pop = document.getElementById('id_pop');
 
 		if("" == nas.value){
 			alert("Selecione um nas!");
@@ -897,11 +907,11 @@ function validacao(frm ) {
 }
 
 function checkDadosConexao(){
-		var nas = $('id_nas');
-		var mac = $('mac');
-		var altera_rede = $('altera_rede');
-		var selecao_redeip = $('selecao_redeip');
-		var endereco_redeip = $('endereco_redeip');
+		var nas = document.getElementById('id_nas');
+		var mac = document.getElementById('mac');
+		var altera_rede = document.getElementById('altera_rede');
+		var selecao_redeip = document.getElementById('selecao_redeip');
+		var endereco_redeip = document.getElementById('endereco_redeip');
 
 		var nas_text = nas.options[nas.options.selectedIndex].text;
 		var nas_type=nas_text.split(":");
@@ -1032,27 +1042,44 @@ function validarData(campo){
 {/literal}
 </style>
 
-<form name="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{/if} >
-<input type="hidden" name="op" value="{$op}">
-<input type="hidden" name="tela" value="{$tela}">
-<input type="hidden" name="id_cliente" value="{$id_cliente}">
-<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
-<input type="hidden" name="tipo_produto_original" value="{$contrato.tipo_produto}">
+<form name="contratacao" id="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{/if} >
+<input type="hidden" name="op" id="op" value="{$op}">
+<input type="hidden" name="tela" id="tela" value="{$tela}">
+<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}">
+<input type="hidden" name="id_cliente_produto" id="id_cliente_produto" value="{$id_cliente_produto}">
+<input type="hidden" name="tipo_produto_original" id="tipo_produto_original" value="{$contrato.tipo_produto}">
 <input type="hidden" name="id_produto_original" id="id_produto_original" value="{$contrato.id_produto}">
-<input type="hidden" name="id_forma_pagamento" value="{$contrato.id_forma_pagamento}">
+<input type="hidden" name="id_forma_pagamento" id="id_forma_pagamento" value="{$contrato.id_forma_pagamento}">
 {if $acao == ""}
-	<input type="hidden" name="acao" value="novo_contrato">
+	<input type="hidden" name="acao" id="acao" value="novo_contrato">
 
   <table class="lista" border=0 cellspacing=0 cellpadding=0 align="center">
-		<tr>
-			<th colspan=8 width=720 >Contratante </th>
-		</tr>
-		<tr>
-			<td align="right"><strong>Nome:</strong></td>
-			<td align="left"><strong>{$nome_razao}</strong></td>
-			<td align="center" colspan=4><input type="checkbox" name="difEnderecoMail" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o pra cobran&ccedil;a</label>
-      </td>
+	<tr>
+		<th colspan=8 width=720 >Contratante </th>
+	</tr>
+	<tr>
+		<td align="right"><strong>Nome:</strong></td>
+		<td align="left"><strong>{$nome_razao}</strong></td>
+		<td align="center" colspan=4><input type="checkbox" name="difEnderecoMail" id="difEnderecoMail" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o pra cobran&ccedil;a</label></td>
     </tr>
+
+	{if $condominios}
+  	<tr>
+			<td align="right"><strong>Condomínio:</strong></td>
+			<td align="left">
+				<select name="id_condominio_cobranca" id="id_condominio_cobranca"  class="disabled" onchange="javascript:AjustarCamposFormularioContratoCobranca('contratacao', this.selectedIndex -1 , condominios);" DISABLED/>
+					<option value="">-- SELECIONE --</option>
+				</select>
+			</td>
+      		<td align="right" ><strong>Bloco:</strong></td>
+			<td align="left" >
+				<select name="id_bloco_cobranca" id="id_bloco_cobranca" class="disabled" DISABLED/>
+					<option value="">-- SELECIONE --</option>
+				</select>
+			</td>
+    </tr>
+	{/if}
+
   	<tr>
 			<td align="right"><strong>Endereço:</strong></td>
 			<td align="left"><input type="text" size="50" maxlength="50" disabled name="endereco_cobranca" id="endereco_cobranca" value="{$endereco}"  class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); replaceField('endereco');"></td>
@@ -1066,14 +1093,16 @@ function validarData(campo){
       </td>
   		<td align="right"><strong>Cidade:</strong></td>
 			<td align="left">
-        <select class="disabled" style="width:210px" disabled name="id_cidade_cobranca" id="id_cidade_cobranca" tabindex="10" onBlur="formOnBlur(this);" onFocus="javascript:formOnFocus(this)" onChange="replaceField('id_cidade');" >
+        <input type="hidden" name="id_cidade_cobranca" id="id_cidade_cobranca" value="{$id_cidade}" />
+        <select class="disabled" style="width:210px" disabled name="id_cidade_cobranca_combo" id="id_cidade_cobranca_combo" tabindex="10" onBlur="formOnBlur(this);" onFocus="javascript:formOnFocus(this)" onChange="replaceField('id_cidade'); document.getElementById('id_cidade_cobranca').value = this.value;" >
   				{foreach item=a from=$cidades_disponiveis}
   						<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
 								- {$a.uf}</option>
 					{/foreach}
       </td>
-		</tr>
-	</table>
+	</tr>
+  </table>
+
 
   <table border=0 align="center" cellspacing=0 height="355">
 		<tr>
@@ -1138,9 +1167,9 @@ function validarData(campo){
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Dt. Contratação:</label></td>
-						<td><input type="text" size="12" maxlength="10" name="data_contratacao" value="{$data_contratacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); validarData(this);"></td>
+						<td><input type="text" size="12" maxlength="10" name="data_contratacao" id="data_contratacao" value="{$data_contratacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); validarData(this);"></td>
 						<td align="right" width="70"><label>Vigência:</label></td>
-						<td><input type="text" size="4" maxlength="2" name="vigencia" value="{$vigencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
+						<td><input type="text" size="4" maxlength="2" name="vigencia" id="vigencia" value="{$vigencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
 					</tr>
 					<tr>
 						<td align="right"><label>Dia Venc.:</label></td>
@@ -1150,38 +1179,38 @@ function validarData(campo){
 					</tr>
 					<tr>
 						<td align="right"><label>Pr&oacute;xima Fatura:</label></td>
-						<td colspan=3 align="left" ><input type="text" size="12" maxlength="10" name="primeiro_vencimento_input" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-						<input type="hidden" name="primeiro_vencimento" value="" >
-     			</tr>
+						<td colspan=3 align="left" ><input type="text" size="12" maxlength="10" name="primeiro_vencimento_input" id="primeiro_vencimento_input" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<input type="hidden" name="primeiro_vencimento" id="primeiro_vencimento" value="" >
+     				</tr>
 					<tr>
 						<td align="right"><label>Desconto:</label></td>
-						<td><input type="text" size="6" maxlength="6" name="desconto_promo" value="{$desconto_promo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+						<td><input type="text" size="6" maxlength="6" name="desconto_promo" id="desconto_promo" value="{$desconto_promo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
 						<td align="right"><label>Período:</label></td>
-						<td><input type="text" size="4" maxlength="2" name="periodo_desconto" value="{$periodo_desconto}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
+						<td><input type="text" size="4" maxlength="2" name="periodo_desconto" id="periodo_desconto" value="{$periodo_desconto}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
 					</tr>
 					<tr>
 						<td align="right" width="105"><label>Tx Instalação:</label></td>
-						<td align="left" ><input type="text" size="6" maxlength="6" name="tx_instalacao" value="{$tx_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+						<td align="left" ><input type="text" size="6" maxlength="6" name="tx_instalacao" id="tx_instalacao" value="{$tx_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
 						<td align="right" ><label>Pro Rata:</label></td>
-						<td align="left" ><select name="pro_rata" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						<td align="left" ><select name="pro_rata" id="pro_rata" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
                 {foreach item=d from=$lista_boolean}
 								<option value='{$d.id}' {if $d.id == $pro_rata}SELECTED{/if}>{$d.nome}</option>
 								{/foreach}
 							</select>
 							</td>
-							<input type="hidden" name="limite_prorata" value="{$limite_prorata}" >
+							<input type="hidden" name="limite_prorata" id="limite_prorata" value="{$limite_prorata}" >
 					</tr>
 					<tr>
 						<td align="right"><label>Comodato:</label></td>
 						<td>
-							<select name="comodato" onChange="javascript:contratoAlteraComodato()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							<select name="comodato" id="comodato" onChange="javascript:contratoAlteraComodato()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								{foreach item=d from=$lista_boolean}
 								<option value='{$d.id}' {if $d.id == $comodato}SELECTED{/if}>{$d.nome}</option>
 								{/foreach}
 							</select>
 						</td>
 						<td align="right"><label>v.comodato:</label></td>
-						<td><input type="text" size="8" maxlength="6" name="valor_comodato" value="{$valor_comodato}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
+						<td><input type="text" size="8" maxlength="6" name="valor_comodato" id="valor_comodato" value="{$valor_comodato}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
 					</tr>
 				</table>
 				<table width="360" cellspacing=0 cellpadding=0 class="lista">
@@ -1192,7 +1221,7 @@ function validarData(campo){
 					<tr>
 						<td align="right" width="110"><label>Pagamento:</label></td>
 						<td colspan="3">
-							<select name="pagamento" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							<select name="pagamento" id="pagamento" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 							{foreach key=k item=v from=$tiposPagamento}
 								<option value="{$k}" {if $k==$pagamento}SELECTED{/if}>{$v}</option>
 							{/foreach}
@@ -1214,17 +1243,17 @@ function validarData(campo){
 								{if count($v)}
 									{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 									<tr>
-										<td width="10" class='{$estilo}'><label><input type="radio" name="forma_pagamento" value="{$tipo}" onClick="javascript:contratoAlteraFormaPagamento()" {if $tipo == $forma_pagamento_original}CHECKED{/if}></td>
+										<td width="10" class='{$estilo}'><label><input type="radio" name="forma_pagamento" id="forma_pagamento" value="{$tipo}" onClick="javascript:contratoAlteraFormaPagamento()" {if $tipo == $forma_pagamento_original}CHECKED{/if}></td>
 										<td class='{$estilo}'>
 											<b>{$tiposFormaPgto[$tipo]}</b><br><span style="font-family: arial; font-size: 8px;">
 											{if count($v) == 1}
 												{if $tipo == "PC" || $tipo == "DA" || $tipo == "BL"}{$bancos[$v.0.codigo_banco]} - convênio {$v.0.convenio}{else}Sistema manual com exportação.{/if}
-												<input type="hidden" name="id_forma_pagamento_{$tipo}" value="{$v.0.id_forma_pagamento}">
+												<input type="hidden" name="id_forma_pagamento_{$tipo}" id="id_forma_pagamento_{$tipo}" value="{$v.0.id_forma_pagamento}">
 											{else}
 												<table border=0 cellpadding=0 cellspacing=0>
 													<tr>
 														<td>
-															<select name="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"} onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
+															<select name="id_forma_pagamento_{$tipo}" id="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"} onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
 																<option value="">-- SELECIONE --</option>
 																{foreach item=f from=$v}
 																	<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
@@ -1245,9 +1274,9 @@ function validarData(campo){
 															<table border=0 cellspacing=0 cellpadding=0 width="100">
 																<tr>
 																	<td align="right"><label style="font-size: 8px">ag:</label>
-																	<td><input type="text" size="8" maxlength="4" name="agencia" value="{if $contrato.da_agencia}{$contrato.da_agencia}{/if}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP' )"></td>
+																	<td><input type="text" size="8" maxlength="4" name="agencia" id="agencia" value="{if $contrato.da_agencia}{$contrato.da_agencia}{/if}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP' )"></td>
 																	<td aling="right"><label style="font-size: 8px">cc:</label>
-																	<td><input type="text" size="8" maxlength="10" name="conta" value="{if $contrato.da_num_conta}{$contrato.da_num_conta}{/if}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')"></td>
+																	<td><input type="text" size="8" maxlength="10" name="conta" id="conta" value="{if $contrato.da_num_conta}{$contrato.da_num_conta}{/if}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')"></td>
 																</tr>
 															</table>
 														</td>
@@ -1281,8 +1310,8 @@ function validarData(campo){
 						<td align="right" width="110"><label>Senha:</label></td>
 						<td colspan=3>
 							<label>
-								<input type="password" size="20" maxlength="20" name="senha" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><br>
-								<input type="password" size="20" maxlength="20" name="confsenha" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (confirme)
+								<input type="password" size="20" maxlength="20" name="senha" id="senha" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><br>
+								<input type="password" size="20" maxlength="20" name="confsenha" id="confsenha" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (confirme)
 							</label>
 						</td>
 					</tr>
@@ -1292,8 +1321,8 @@ function validarData(campo){
 					</tr>
 				</table>
 				<!-- BANDA LARGA-->
-				<div id="boxTarget"></div>
-				<div id="boxTemporaria"></div>
+				<div id="boxTarget" style="position:relative"></div>
+				<div id="boxTemporaria"  style="position:relative"></div>
 				<div id="boxBL" class="divBoxContratacao">
 					<table width="360" cellspacing=0 cellpadding=0 class="lista">
 						<tr>
@@ -1308,7 +1337,7 @@ function validarData(campo){
 									{if ($v.tipo_nas == "I") || ($v.tipo_nas == "P")}<option value="{$v.id_nas}">{$tiposNAS[$v.tipo_nas]}:{$v.nome}</option>{/if}
 								{/foreach}
 								</select>
-								<input type="hidden" name="nas_orig" value="" />
+								<input type="hidden" name="nas_orig" id="nas_orig" value="" />
 							</td>
 						</tr>
 						<tr>
@@ -1347,13 +1376,15 @@ function validarData(campo){
 						</tr>
 						<tr>
 							<td align="right" width="110"><label>Fone:</label></td>
-							<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" id="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 					</table>
 				</div>
 				<!-- ENDERECO INSTALACAO -->
 				<div id="boxEI" class="divBoxContratacao">
 					<table width="360" cellspacing=0 cellpadding=0 class="lista">
+
+
 						<tr>
 							<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
 						</tr>
@@ -1362,6 +1393,27 @@ function validarData(campo){
 							<input type="checkbox" name="difEnderecoSetup" id="difEnderecoSetup" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o  pra instala&ccedil;&atilde;o:</label>
 						</td>
 						</tr>
+
+						{if $condominios_instalacao}
+						<tr>
+							<td align="right" width="110"><label>Condominio:</label></td>
+							<td colspan=3>
+								<select name="id_condominio_instalacao" id="id_condominio_instalacao" onchange="javascript:AjustarCamposFormularioContratoInstalacao('contratacao', this.selectedIndex -1 , condominios);" DISABLED>
+									<option value="">-- SELECIONE --</option>
+								</select>
+							</td>
+						</tr>
+
+						<tr>
+							<td align="right" width="110"><label>Bloco:</label></td>
+							<td colspan=3>
+								<select name="id_bloco_instalacao" id="id_bloco_instalacao" DISABLED>
+									<option value="">-- SELECIONE --</option>
+								</select>
+							</td>
+						</tr>
+						{/if}
+
 						<tr>
 							<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
 							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
@@ -1379,7 +1431,8 @@ function validarData(campo){
 						<tr>
 							<td align="right" ><label>Cidade:</label></td>
 							<td align="left" colspan=4 >
-								<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao" id="id_cidade_instalacao" tabindex="10" class="disabled" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								<input type="hidden" name="id_cidade_instalacao" id="id_cidade_instalacao" value="{$id_cidade}" />
+								<select  class="disabled" style="width:210px" disabled name="id_cidade_instalacao_combo" id="id_cidade_instalacao_combo" tabindex="10" class="disabled" onchange="javascript:AjustarCamposFormularioContratoInstalacao('contratacao', this.selectedIndex -1 , condominios);" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach item=a from=$cidades_disponiveis}
 
 								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
@@ -1398,23 +1451,23 @@ function validarData(campo){
 						<tr>
 							<td align="right" width="110"><label>Tipo:</label></td>
 							<td colspan=3>
-								<select name="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<select name="tipo_hospedagem" id="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="D">Domínio do Usuário</option>
 									<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
 								</select>
 							</td>
 						<tr>
 							<td align="right" width="110"><label>Criar:</label></td>
-							<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" value="{$dominio_hospedagem}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" id="dominio_hospedagem" value="{$dominio_hospedagem}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 					</table>
 				</div>
 			</td>
 {/if}
 		</tr>
-		<tr colspan=2 valign="top">
+		<tr valign="top">
 			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
-				<input type="button" name="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" value="Prosseguir" class="botao">
+				<input type="button" name="prosseguir" id="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" id="submit" value="Prosseguir" class="botao">
 			</td>
 		</tr>
 	</table>
@@ -1469,9 +1522,9 @@ contratoAlteraFormaPagamentoDA();
 	<br>
 	<!-- CONFIRMAÇÃO DO CONTRATO -->
 	{foreach from=$form_post key=name item=value}
-	<input type="hidden" name="{$name}" value="{$value}" />
+	<input type="hidden" name="{$name}" id="{$name}" value="{$value}" />
 	{/foreach}
-	<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}" />
+	<input type="hidden" name="id_cliente_produto" id="id_cliente_produto" value="{$id_cliente_produto}" />
 
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		<tr>
@@ -1810,10 +1863,31 @@ contratoAlteraFormaPagamentoDA();
 		<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
 	</tr>
 	<tr>
-		<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><input type="submit" class="botao" name="submit" value="{if $id_cliente_produto}Migrar Contrato{else}Gravar Contrato{/if}"></td>
+		<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" id="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><input type="submit" class="botao" name="submit" id="submit" value="{if $id_cliente_produto}Migrar Contrato{else}Gravar Contrato{/if}"></td>
 	</tr>
 
 </table>
 <br>
 
 {/if}
+
+<script>
+
+{if !$acao == "gravar_novo_contrato"}
+	AlimentarCombo('id_condominio_cobranca', condominios, 'id_condominio', 'nome', '--SELECIONE--' {if $id_condominio}, '', '{$id_condominio}'{/if});
+	AlimentarCombo('id_condominio_instalacao', condominios_instalacao, 'id_condominio', 'nome', '--SELECIONE--' {if $id_condominio}, '', '{$id_condominio}'{/if});
+
+	{if $tela == "migrar" || $tela == "novo_contrato"}
+		{if $id_condominio}
+
+			AjustarCamposFormularioContratoCobranca('contratacao', document.getElementById('id_condominio_cobranca').selectedIndex -1 , condominios);
+
+			{if $id_bloco}
+				AtualizaComboBloco('id_bloco_cobranca', '{$id_condominio}', '{$id_bloco}');
+			{/if}
+			document.getElementById('id_bloco_cobranca').disabled = true;
+
+		{/if}
+	{/if}
+{/if}
+</script>

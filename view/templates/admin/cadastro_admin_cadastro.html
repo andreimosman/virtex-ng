@@ -1,0 +1,246 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+
+table.mensagemErro {
+	border: dotted 1px #FF0000;
+	margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+	background-color: #FDFDEA;
+	color: #FF0000;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #ffffff;
+	margin-right: 2px;
+
+}
+
+.disabledFP {
+	border: solid 1px #DADADA;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+ 	color: #000000;
+ 	font-family: verdana;
+ 	font-size: 9px;
+}
+
+.w100 {
+	width:150px;
+}
+
+{/literal}
+</style>
+<script language="JavaScript">
+{literal}
+
+function voltar() {
+	if( window.confirm("Deseja abandonar este registro?") ) {
+		window.open("admin-cadastro.php?op=administradores&tela=listagem","conteudo");
+	}
+}
+
+function adminValidacaoForm() {
+
+	var nome = document.getElementById("nome");
+	var email = document.getElementById("email");
+	var admin = document.getElementById("admin");
+	var senha = document.getElementById("senha");
+	var confirma = document.getElementById("confirma");
+	var id_admin = document.getElementById("id_admin");
+
+	if (estaVazio(admin.value)) {
+		alert("O campo username deve ser preenchido");
+		admin.value = "";
+		admin.focus();
+		return false;
+	}
+
+	if(estaVazio(nome.value)) {
+		alert("O campo nome deve ser preenchido");
+		nome.value = "";
+		nome.focus();
+		return false;
+	}
+
+	if(!emailValido(email.value)) {
+		alert("O conteúdo do campo e-mail deve conter um e-mail válido");
+		email.value = "";
+		email.focus();
+		return false;
+	}
+
+	if(estaVazio(id_admin.value)) {
+		if(estaVazio(senha.value)) {
+			alert("O campo senha deve ser preenchido");
+			senha.value="";
+			senha.focus();
+			return false;
+		}
+	}
+
+	if ((!estaVazio(senha.value) || !estaVazio(confirma.value)) && senha.value != confirma.value) {
+		alert("O conteúdo do campo de senha e do campo de confirmação devem ser iguais");
+		senha.value = "";
+		confirma.value = "";
+		senha.focus();
+		return false;
+	}
+
+	return true;
+
+}
+
+function ajustaComissionado() {
+	var comissionado = document.getElementById("comissionado");
+	var vendedor = document.getElementById("vendedor");
+
+	if (vendedor.value == "f") {
+		comissionado.value = "f";
+	}
+}
+
+{/literal}
+</script>
+<form name="plano" method="post" action="admin-cadastro.php" onSubmit="return adminValidacaoForm();">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" id="id_admin" name="id_admin" value="{$id_admin}">
+
+<input type="hidden" name="acao" value="{$acao}">
+
+	{if $erroMensagem }
+	<table width=641 cellspacing=0 cellpadding=0 class="mensagemErro" align="center">
+		<tr>
+			<td width="100%" align="center">
+			{$erroMensagem}
+			</td>
+		</tr>
+	</table>
+	{/if}
+
+	<table cellspacing=0 cellpadding=0 border=0 align="center">
+		<tr>
+			<td colspan=2>
+
+			</td>
+		</tr>
+		<tr>
+			<td width="100" align="left"><label>Username</label></td>
+			<td width="100" align="left"><label>Nome</label></td>
+		</tr>
+		<tr>
+			<td><input type="text" size="30" maxlength="20" tabindex="1" name="admin" id="admin" value="{$admin}" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input type="text" size="30" maxlength="40" tabindex="2" name="nome" id="nome" value="{$nome}"{if !$podeGravar}disabled=true class=fieldDisabled{else} class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+		<tr>
+			<td width="100" align="left"><label>Email</label></td>
+			<td width="100" align="left"><label>Status</label></td>
+		</tr>
+		<tr>
+			<td><input type="text" size="30" maxlength="255" tabindex="3" name="email" id="email" value="{$email}" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td>
+				<select tabindex="4" name="status" id="status" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" style="width:100%"{/if}>
+					<option value="A">Ativo</option>
+					<option value="C">Cancelado</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td width="100" align="left"><label>Senha</label></td>
+			<td width="100" align="left"><label>Confirmação</label></td>
+
+		</tr>
+		<tr>
+			<td><input type="password" size="30" maxlength="64" tabindex="5" name="senha" id="senha" value="" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+			<td><input type="password" size="30" maxlength="64" tabindex="6" name="confirma" id="confirma" value="" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+		</tr>
+
+		<tr>
+			<td width="100" align="left"><label>Vendedor</label></td>
+			<td width="100" align="left"><label>Comissionado</label></td>
+
+		</tr>
+		<tr>
+			<td>
+				<select name="vendedor" id="vendedor" onchange="javascript: ajustaComissionado();" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {/if} style="width:100%">
+					<option value="t">Sim</option>
+					<option value="f" SELECTED>Não</option>
+				</select>
+			</td>
+
+			<td>
+				<select name="comissionado" id="comissionado" onchange="javascript: ajustaComissionado();" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {/if} style="width:100%">
+					<option value="t">Sim</option>
+					<option value="f" SELECTED>Não</option>
+				</select>
+			</td>
+		</tr>
+
+
+		<tr>
+			<td width="100" align="left"><label>Tipo</label></td>
+			<td width="100" align="left"><label>&nbsp;</label></td>
+
+		</tr>
+		<tr>
+			<td>
+				<select name="tipo_admin" id="tipo_admin" {if !$podeGravar}disabled=true class=fieldDisabled{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {/if} style="width:100%">
+					<option value="F" SELECTED>Funcionário</option>
+					<option value="T" >Terceiro</option>
+				</select>
+			</td>
+
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+
+
+		<tr>
+			<td colspan=2 align="center" style="border-top: dotted 1px #000000;">
+			<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
+			<input type="submit" name="Submit" value="{if $id_admin}Alterar{else}Cadastrar{/if}" {if !$podeGravar}disabled=true{/if} class="botao">
+			</td>
+		</tr>
+	</table>
+
+
+
+</form>
+<script language="JavaScript">
+	var status = document.getElementById("status");
+	var comissionado = document.getElementById("comissionado");
+	var vendedor = document.getElementById("vendedor");
+	var tipo_admin = document.getElementById("tipo_admin");
+	status.value = "{$status}";
+	if (status.value == "") status.value = "A";
+	vendedor.value = "{$vendedor}";
+	comissionado.value = "{$comissionado}";
+	tipo_admin.value = "{$tipo_admin}";
+</script>
+</html>

@@ -5,13 +5,19 @@
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
 
-
 <script language='JavaScript'>
+
 {literal}
 function miniOpenLinkFicha(id) {
 	url = 'admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente='+id;
 	parent.open(url,'conteudo');
-	parent.document.resultwin.hide();
+
+	try {
+		parent.document.resultwin.hide();
+	} catch(e) {
+		//do something
+	}
+
 	//parent.document.resultwin.unload();
 	//window.alert(parent.document.resultwin);
 

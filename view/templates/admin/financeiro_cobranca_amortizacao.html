@@ -1,0 +1,90 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+
+<style>
+{literal}
+
+.form_pesquisa {
+	width: 400px;
+}
+
+.pesquisa_titulo {
+	font-family: verdana;
+	font-size: 12px;
+	font-color:
+}
+
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+.erro {
+        width: 400px;
+        font-family: verdana;
+        font-size: 12px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: #FFeeee;
+        color: #FF0000;
+        border: solid 1px #ff0000;
+}
+
+
+{/literal}
+</style>
+
+
+<br>
+<center>
+<div class='form_pesquisa' align='center'>
+<form name='form_pesquisa' method='get' action='admin-financeiro.php'>
+<input type='hidden' name='op' value='{$op}'>
+	<fieldset><legend><span class="pesquisa_titulo">Procurar Fatura</span></legend>
+	<table cellspacing=0 cellpadding=0 align="center">
+		<tr>
+			<td align="center"><input type='text' size=65 name='texto_pesquisa' class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$texto_pesquisa}">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{if !$tipo_pesquisa}
+				{assign var=tipo_pesquisa value="NOME"}
+				{/if}
+				<input type='radio' name='tipo_pesquisa' value='LINHADIGITAVEL' {if $tipo_pesquisa == 'LINHADIGITAVEL'}checked{/if}><label>Linha Digitável</label>
+				<input type='radio' name='tipo_pesquisa' value='CODIGOBARRAS' {if $tipo_pesquisa == 'CODIGOBARRAS'}checked{/if}><label>Código de Barras</label>
+			</td>
+		</tr>
+		<tr>
+			<td align=center style="padding-bottom: 5px;">
+				<input type='hidden' name='acao' value='{$acao}'>
+				<input type='submit' name='Submit' value='pesquisar' class='botao'>
+			</td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+</center>
+{if $erro}
+<br><br>
+<center>
+<div class="erro" align="center">{$erro}</div>
+</center>
+
+{/if}
+
+
+
+
+
+</body>
+</html>

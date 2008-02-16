@@ -1,0 +1,150 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+<script language="JavaScript">
+var podeGravar={if $podeGravar}true{else}false{/if};
+{literal}
+
+function servidorValidaForm() {
+
+	var hostname = document.getElementById("hostname");
+	var ip = document.getElementById("ip");
+	var chave = document.getElementById("chave");
+	var usuario = document.getElementById("usuario");
+	var senha = document.getElementById("senha");
+	var confirme = document.getElementById("confirme");
+
+	if(estaVazio(hostname.value)) {
+		alert("O campo Hostname/Apelido precisa ser preenchido");
+		hostname.value="";
+		hostname.focus();
+		return false;
+	}
+
+	if(estaVazio(ip.value)) {
+		alert("O campo ip precisa ser preenchido");
+		ip.value="";
+		ip.focus();
+		return false;
+	}
+
+	if (!validaIP(ip.value)) {
+		alert("O valor do campo IP é inválido");
+		ip.focus();
+		return false;
+	}
+
+	if(estaVazio(chave.value)) {
+		alert("O campo chave precisa ser preenchido");
+		chave.value="";
+		chave.focus();
+		return false;
+	}
+
+	if(estaVazio(usuario.value)) {
+		alert("O campo usuario precisa ser preenchido");
+		usuario.value="";
+		usuario.focus();
+		return false;
+	}
+
+	if(estaVazio(senha.value)) {
+		alert("O campo senha precisa ser preenchido");
+		senha.value = "";
+		senha.focus();
+		return false;
+	}
+
+	if(estaVazio(confirme.value)) {
+		alert("O campo senha precisa ser preenchido");
+		confirme.value="";
+		confirme.focus();
+		return false;
+	}
+
+	//Confere se a senha e a senha confirmada são iguais
+	if(senha.value != confirme.value) {
+		alert("A senha digitada no campo confirme e no campo confirme devem ser iguais");
+		senha.value = "";
+		confirme.value = "";
+		senha.focus();
+		return false;
+	}
+
+	return true;
+}
+
+
+function voltar() {
+	if( !podeGravar || window.confirm("Deseja abandonar este registro?") ) {
+		window.open('admin-cadastro.php?op=equipamentos&tela=servidores&subtela=listagem','conteudo');
+	}
+}
+{/literal}
+</script>
+
+<form method="post" name="formulario" id="formulario" action="admin-cadastro.php" onsubmit="return servidorValidaForm();">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="subtela" value="{$subtela}">
+<input type="hidden" name="id_servidor" value="{$id_servidor}">
+<input type="hidden" name="acao" value="alterar">
+
+<table cellspacing=0 cellpadding=0 border=0 align="center">
+	<tr>
+		<td width="130" align="right"><label>Hostname/Apelido:</label></td>
+		<td><input type="text" size="30" maxlength="20" name="hostname" id="hostname" value="{$hostname}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="130" align="right"><label>IP:</label></td>
+		<td><input type="text" size="30" maxlength="15" name="ip" id="ip" value="{$ip}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>: <input type="text" size="10" maxlength="15" name="porta" value="{$porta}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="130" align="right"><label>Chave:</label></td>
+		<td><input type="text" size="30" maxlength="64" name="chave" id="chave" value="{$chave}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="130" align="right"><label>Usuário:</label></td>
+		<td><input type="text" size="30" maxlength="64" name="usuario" id="usuario" value="{$usuario}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="130" align="right"><label>Senha:</label></td>
+		<td><input type="password" size="30" maxlength="64" name="senha" id="senha" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="130" align="right"><label>Confirme:</label></td>
+		<td><input type="password" size="30" maxlength="64" name="confsenha" id="confsenha" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="130" align="right"><label>Disponível:</label></td>
+		<td>
+			<select name="disponivel" id="disponivel" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+				{foreach item=d from=$lista_boolean}
+				<option value='{$d.id}' {if $d.id == $disponivel}SELECTED{/if}>{$d.nome}</option>
+				{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center" style="border-top: dotted 1px #000000;">
+		<input type="button" name="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
+		<input type="submit" name="Submit" value="{if $id_servidor}Alterar{else}Cadastrar{/if}" class="botao" {if !$podeGravar}disabled="true"{/if}>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>

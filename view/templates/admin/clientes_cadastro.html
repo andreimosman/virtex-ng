@@ -3,6 +3,8 @@
 <head>
 <title>::.. Virtex Admin - Área de Gerenciamento ..::</title>
 <script type="text/javascript" src="view/templates/jslib/form/cpf_cnpj.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
@@ -45,6 +47,7 @@ table.mensagemErro td {
 {assign var='estilo' value='fieldWithoutFocus'}
 {/if}
 <script language="JavaScript">
+var condominios = eval({$condominios});
 var id_cliente='{$id_cliente}';
 var estilo='{$estilo}';
 {literal}
@@ -58,8 +61,6 @@ var estilo='{$estilo}';
 		}
 	}
 }*/
-
-
 
 function cadatroAfterLoad() {
 
@@ -205,6 +206,41 @@ function checkForm() {
 				</table>
 			</td>
 		</tr>
+
+		{if $condominios}
+		<tr>
+			<td width=320>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr valign="bottom">
+						<td width="50%">
+							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Condomínio</font></p>
+						</td>
+
+						<td width="50%">
+							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Bloco</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%">
+							<select name="id_condominio" id="id_condominio" class="{$estilo}" style="width:98%" onchange="javascript:AjustarCamposFormulario('cadastro', this.selectedIndex -1 , condominios);"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+							</select>
+						</td>
+
+						<td width="50%">
+							<select name="id_bloco" id="id_bloco" class="{$estilo}" style="width:98%"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" DISABLED>
+								<option value="">-- SELECIONE --</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+			</td>
+
+		</tr>
+		{/if}
+
+
 		<tr>
 			<td width=320>
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -213,7 +249,7 @@ function checkForm() {
 							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Endere&ccedil;o</font></p></td>
 					</tr>
 					<tr>
-						<td><input class="{$estilo}" style="width:310px" tabindex="6" name="endereco"type="text"  id="endereco4" value="{$endereco}" size="59" maxlength="50" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" width="100%"></td>
+						<td><input class="{$estilo}" style="width:310px" tabindex="6" name="endereco"type="text"  id="endereco" value="{$endereco}" size="59" maxlength="50" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" width="100%"></td>
 					</tr>
 				</table>
 			</td>
@@ -274,17 +310,17 @@ function checkForm() {
 					<tr>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" style="width:100px" tabindex="7" name="complemento"type="text"  id="complemento2" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$complemento}" size="17" maxlength="20">
+								<input class="{$estilo}" style="width:100px" tabindex="7" name="complemento"type="text"  id="complemento" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$complemento}" size="17" maxlength="20">
 								</font>
 							</div>
 						</td>
 						<td>
 							<div align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<input class="{$estilo}" style="width:100px" tabindex="8" name="bairro" type="text"  id="bairro3" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$bairro}" size="17" maxlength="15"></font>
+								<input class="{$estilo}" style="width:100px" tabindex="8" name="bairro" type="text"  id="bairro" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$bairro}" size="17" maxlength="15"></font>
 							</div>
 						</td>
 						<td><div align="justify">
-							<input class="{$estilo}" style="width:100px" tabindex="9" align="right" name="cep"type="text"  id="cep5" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$cep}" size="16" maxlength="9">
+							<input class="{$estilo}" style="width:100px" tabindex="9" align="right" name="cep"type="text"  id="cep" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$cep}" size="16" maxlength="9">
 							</div></td>
 					</tr>
 				</table>
@@ -316,7 +352,8 @@ function checkForm() {
 					</tr>
 					<tr>
 						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-								<select class="{$estilo}" style="width:310px" name="id_cidade" tabindex="10" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								<input type="hidden" name="id_cidade"  id="id_cidade" value="{$id_cidade}" />
+								<select class="{$estilo}" style="width:310px" name="id_cidade_combo" id="id_cidade_combo" tabindex="10" onchange="javascript:document.getElementById('id_cidade').value=this.value; alert(document.getElementById('id_cidade').value)" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach item=a from=$cidades_disponiveis}
 
 								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
@@ -396,6 +433,17 @@ function checkForm() {
 </form>
 </body>
 <script language="javascript">
+AlimentarCombo('id_condominio', condominios, 'id_condominio', 'nome', '--SELECIONE--' {if $id_condominio}, '', '{$id_condominio}'{/if});
+{if $id_condominio}
+	AjustarCamposFormulario('cadastro', document.getElementById('id_condominio').selectedIndex -1 , condominios);
+
+	{if $id_bloco}
+		AtualizaComboBloco('id_bloco', '{$id_condominio}', '{$id_bloco}');
+	{/if}
+
+{/if}
+
+
 {literal}
 cadatroAfterLoad();
 if( !document.cadastro.nome_razao.disabled ) {

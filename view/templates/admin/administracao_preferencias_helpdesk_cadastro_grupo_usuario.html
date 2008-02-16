@@ -1,0 +1,168 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #CACACA;
+	margin-right: 2px;
+
+}
+
+{/literal}
+</style>
+
+<script language="javascript1.2">
+{literal}
+
+	reVazio = /^\s*$/;
+
+	function condominiosValidacaoForm() {
+
+		formcondominio = document.getElementById("condominio");
+
+		for (i=0; i<formcondominio.length; i++) {
+			idstring = formcondominio[i].id;
+			if(idstring) {
+				estring = idstring;
+				estring += " = document.getElementById('" + idstring + "')";
+				//alert(estring);
+				eval (estring);
+			}
+		}
+
+		if (reVazio.test(id_admin.value)) {
+			alert("Um administrador deve ser selecionado");
+			nome.value="";
+			id_admin.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	function desabilitarForm() {
+		formcondominio = document.getElementById("grupo");
+		for (i=0; i<formcondominio.length; i++) {
+			if(formcondominio[i].type != "button" && formcondominio[i].type != "submit"){
+				formcondominio[i].disabled = true;
+				formcondominio[i].className= "fieldDisabled";
+			}
+		}
+	}
+
+	function formataForm() {
+		formcondominio = document.getElementById("grupo");
+		for (i=0; i<formcondominio.length; i++) {
+			if(formcondominio[i].type != "button" && formcondominio[i].type != "submit"){
+				formcondominio[i].className= "fieldWithoutFocus";
+			}
+		}
+	}
+
+	function openLinkGrupo(id_grupo) {
+		self.location = "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo&id_grupo=" + id_grupo;
+	}
+
+	function openLinkGrupoRO(id_grupo) {
+		self.location = "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo&visualizacao=1&id_grupo=" + id_grupo;
+	}
+
+	function openLinkCadUsuarios(id_grupo) {
+		self.location = "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_usuarios&id_grupo=" + id_grupo;
+	}
+
+
+{/literal}
+</script>
+
+
+<form name="grupo" id="grupo" method="post" action="admin-administracao.php" onSubmit="return condominiosValidacaoForm()">
+	<input type="hidden" name="op" value="{$op}">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="subtela" value="{$subtela}">
+	<input type="hidden" name="id_grupo" id="id_grupo" value="{$id_grupo}">
+	<input type="hidden" name="acao" value="{if $acao}{$acao}{else}gravar{/if}">
+
+	<table width="300" align="center" border=0 cellpadding=0 cellspacing=0>
+		<tr>
+			<!-- LADO ESQUERDO DO FORMULÁRIO -->
+			<td valign="top" style="border-bottom: dotted 1px #cccccc">
+				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+					<tr>
+						<td bgcolor="#d5Efd5" colspan=2><label>Dados do Administrador</label></td>
+					</tr>
+
+					<tr>
+						<td width="100" align="right"><label>Administrador</label></td>
+						<td>
+							{if $acao == "gravar"}
+							<select name="id_admin" id="id_admin" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$lista_admin item=i key=k}
+									<option value="{$i.id_admin}">{$i.nome}</option>
+								{/foreach}
+							</select>
+							{else}
+							<input READONLY="true" type="text" name="nome_admin" value="{$admnome}" id="nome_admin" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" />
+							<input type="hidden" name="id_admin" value="{$id_admin}" />
+							{/if}
+						</td>
+					</tr>
+
+					<tr>
+						<td width="100" align="right"><label>Adm. do Grupo</label></td>
+						<td>
+							<select name="admin" id="admin" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="t">Sim</option>
+								<option value="f">Não</option>
+							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="100" align="right"><label>Ativo</label></td>
+						<td>
+							<select name="ativo" id="ativo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="t">Sim</option>
+								<option value="f">Não</option>
+							</select>
+						</td>
+					</tr>
+
+				</table>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="center" colspan="2" width="100%">
+					<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:openLinkGrupoRO({$id_grupo});" />
+					<input type="submit" name="submit" class="botao" value="Alterar" />
+			</td>
+		</tr>
+	</table>
+</form>
+
+<script>
+	formataForm();
+	document.getElementById("admin").value = "{$admin}";
+	document.getElementById("ativo").value = "{$ativo}";
+</script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+	font-weight: bold;
+}
+{/literal}
+</style>
+<br/ ><br/ >
+<form method="post" action="admin-administracao.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="acao" value="alterar">
+
+<table cellspacing=0 cellpadding=0 border=0 align="center">
+	<tr>
+		<td width="100" align="right"><label>Endereço:</label></td>
+		<td><input type="text" size="60" maxlength="255" name="endereco" value="{$endereco}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>Localidade:</label></td>
+		<td><input type="text" size="60" maxlength="255" name="localidade" value="{$localidade}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>CEP:</label></td>
+		<td><input type="text" size="10" maxlength="10" name="cep" value="{$cep}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>CNPJ:</label></td>
+		<td><input type="text" size="25" maxlength="25" name="cnpj" value="{$cnpj}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td width="100" align="right"><label>Telefone:</label></td>
+		<td><input type="text" size="25" maxlength="30" name="fone" value="{$fone}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
+	</tr>
+	<tr>
+		<td colspan=2 style="border-top: dotted 1px #000000" align="center">
+			<input type="submit" name="Submit" value="Alterar" class='botao' {if !$podeGravar}disabled="true"{/if}>
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+
+</body>
+</html>

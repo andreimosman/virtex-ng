@@ -1,0 +1,210 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #CACACA;
+	margin-right: 2px;
+
+}
+
+{/literal}
+</style>
+
+<script language="javascript1.2">
+{literal}
+
+	reVazio = /^\s*$/;
+
+	function condominiosBlocosValidacaoForm() {
+
+		formcondominio = document.getElementById("condominio");
+
+		for (i=0; i<formcondominio.length; i++) {
+			idstring = formcondominio[i].id;
+			if(idstring) {
+				estring = idstring;
+				estring += " = document.getElementById('" + idstring + "')";
+				//alert(estring);
+				eval (estring);
+			}
+		}
+
+		if (reVazio.test(nome.value)) {
+			alert("O campo nome deve ser preenchido");
+			nome.value="";
+			nome.focus();
+			return false;
+		}
+
+		if(reVazio.test(situacao.value)) {
+			alert("O campo situacao deve ser preenchido");
+			situacao.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	function desabilitarForm() {
+		formcondominio = document.getElementById("condominio");
+		for (i=0; i<formcondominio.length; i++) {
+			if(formcondominio[i].type != "button" && formcondominio[i].type != "submit"){
+				formcondominio[i].disabled = true;
+				formcondominio[i].className= "fieldDisabled";
+			}
+		}
+	}
+
+	function formQuit() {
+		self.location = "admin-cadastro.php?op=condominios&tela=listagem";
+	}
+
+	function miniOpenLinkFicha(id_condominio) {
+		self.location = "admin-cadastro.php?op=condominios&tela=cadastro&id_condominio=" + id_condominio;
+	}
+
+	function miniOpenLinkFichaRO(id_condominio) {
+		self.location = "admin-cadastro.php?op=condominios&tela=cadastro&visualizacao=1&id_condominio=" + id_condominio;
+	}
+
+
+{/literal}
+</script>
+
+
+<form name="condominio" id="condominio" method="post" action="admin-cadastro.php" onSubmit="return condominiosBlocosValidacaoForm()">
+	<input type="hidden" name="op" value="{$op}">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}">
+	<input type="hidden" name="id_bloco" id="id_bloco" value="{$id_bloco}">
+	<input type="hidden" name="acao" value="{$acao}">
+
+	<table width="400" align="center" border=0 cellpadding=0 cellspacing=0>
+		<tr>
+			<!-- LADO ESQUERDO DO FORMULÁRIO -->
+			<td valign="top">
+				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+					<!--
+					<tr>
+						<td colspan="4" bgcolor="#d5Efd5"><label>Dados do Bloco</label></td>
+					</tr> -->
+
+					<tr>
+						<td align="right">
+							<label>Nome:</label>
+						</td>
+						<td colspan="3">
+							<input type="text" name="nome" id="nome" maxlength="50" value="{$nome}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>N. Andares:</label>
+						</td>
+						<td colspan="3" >
+							<input type="text" name="numero_andares" id="numero_andares" maxlength="50" value="{$numero_andares}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>N. Aptos Andar:</label>
+						</td>
+						<td colspan="3" >
+							<input type="text" name="apartamentos_andar" id="apartamentos_andar" maxlength="50" value="{$apartamentos_andar}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Total Aptos:</label>
+						</td>
+						<td colspan="3" >
+							<input type="text" name="total_apartamentos" id="total_apartamentos" maxlength="50" value="{$total_apartamentos}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>Situação:</label>
+						</td>
+						<td width="60%">
+							<select style="width:100%" name="situacao" id="situacao" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$situacoes item=i key=k}
+									<option value="{$k}">{$i}</option>
+								{/foreach}
+
+							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>POP:</label>
+						</td>
+						<td width="70%" style="border-bottom: dotted 1px #cccccc">
+							<select style="width:100%" name="id_pop" id="id_pop" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$listapops item=i key=k}
+									<option value="{$i.id_pop}">{$i.nome}</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
+
+					<tr>
+						<td align="right" valign="top" style="border-bottom: dotted 1px #cccccc">
+							<label>OBS:</label>
+						</td>
+						<td width="70%" style="border-bottom: dotted 1px #cccccc">
+							<textarea style="width:100%" rows="4" name="observacoes" id="observacoes">{$observacoes}</textarea>
+						</td>
+					</tr>
+
+
+					<tr>
+						<td colspan=2 align="center">
+							<input type="button" class="botao" name="botao" value="Voltar" onclick="javascript:miniOpenLinkFichaRO({$id_condominio})"/>
+							<input type="submit" class="botao" name="submit" value="Gravar" />
+						</td>
+					</tr>
+
+				</table>
+			</td>
+	</table>
+</form>
+
+<script>
+
+{if $situacao}
+	document.getElementById("situacao").value = "{$situacao}";
+{/if}
+
+{if $id_pop}
+	document.getElementById("id_pop").value = "{$id_pop}";
+{/if}
+
+</script>
+
+</body>
+</html>

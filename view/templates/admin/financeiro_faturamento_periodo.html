@@ -1,0 +1,48 @@
+<html>
+<head>
+	<title></title>
+
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="suporte_header.html"} <br /><br />
+
+<div align="center">
+
+	<table class="lista" width="60%" border="0">
+		<tr>
+			<th>Período</th>
+			<th>Valor Documento</th>
+			<th>Acrescimo</th>
+			<th>Desconto</th>
+			<th>Faturamento</th>
+		</tr>
+		{foreach from=$lista key=p item=m}
+		<tr class='{cycle values="impar,par"}'>
+			<td align="center">{$m.ano}/{$m.mes}</td>
+			<td align="center">{$m.valor_documento|default:0}</td>
+			<td align="center">{$m.valor_acrescimo|default:0}</td>
+			<td align="center">{$m.valor_desconto|default:0}</td>
+			<td align="center">{$m.valor_pago|default:0}</td>
+		</tr>
+		{/foreach}
+		<tr>
+			<th>Totalização</th>
+			<th>Estimativa</th>
+			<th>Acrescimos</th>
+			<th>Descontos</th>
+			<th>Arrecadado</th>
+		</tr>
+		<tr>
+			<td align="center">&nbsp;</td>
+			<td align="center">{$sumario.valor_documento}</td>
+			<td align="center">{$sumario.valor_acrescimo}</td>
+			<td align="center">{$sumario.valor_desconto}</td>
+			<td align="center">{$sumario.valor_pago}</td>
+		</tr>
+	</table>
+	
+	
+</div>
+
+</body>
+</html>
