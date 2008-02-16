@@ -62,13 +62,19 @@
 		}
 
 		protected function executaCadastro() {
-
+			
 			$this->_view->atribuiVisualizacao("cadastro");
 			$this->_view->atribui("extra_op",$this->extra_op);
 			$this->_view->atribui("lista_tp_pessoa",$this->clientes->listaTipoPessoa());
 			$this->_view->atribui("lista_status",$this->clientes->listaStatusCliente());
 			$this->_view->atribui("lista_dia_pagamento",$this->clientes->listaDiaPagamento());
 			$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
+			
+
+			$cadastro = VirtexModelo::factory("cadastro");
+			$condominios = $cadastro->obtemCondominio();
+			
+			$this->_view->atribui("condominios", json_encode($condominios));
 
 			if( $this->id_cliente ) {
 				if( $this->extra_op ) {
@@ -194,6 +200,8 @@
 			$this->_view->atribui("id_cidade",$info["id_cidade"]);
 			$this->_view->atribui("complemento",$info["complemento"]);
 			$this->_view->atribui("cep",$info["cep"]);
+			$this->_view->atribui("id_condominio",$info["id_condominio"]);
+			$this->_view->atribui("id_bloco",$info["id_bloco"]);
 
 			$tela = @$_REQUEST["tela"];
 			$this->_view->atribui("tela",$tela);
@@ -256,6 +264,7 @@
 					$cobranca = VirtexModelo::factory('cobranca');
 
 					$endereco_cobranca = $cobranca->obtemEnderecoCobranca($id_cliente_produto);
+
 					$this->_view->atribui("endereco_cobranca",$endereco_cobranca);
 
 					$cidade_cobranca = array();
@@ -355,6 +364,13 @@
 
 				case 'migrar':
 				case 'novo_contrato':
+					
+					
+					$cadastro = VirtexModelo::factory("cadastro");
+					$condominios = $cadastro->obtemCondominio();
+					$condominios_instalacao = $cadastro->obtemCondominio(NULL, true);
+					$this->_view->atribui("condominios", json_encode($condominios));					
+					$this->_view->atribui("condominios_instalacao", json_encode($condominios_instalacao));					
 
 					$this->requirePrivGravacao("_CLIENTES_CONTRATOS");
 
@@ -653,9 +669,9 @@
 
 								$pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
 
-								$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"] );
-								$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"] );
-
+								$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"], "id_condominio_cobranca" => @$_REQUEST["id_condominio_cobranca"], "id_bloco_cobranca" => $_REQUEST["id_bloco_cobranca"] );
+								$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"], "id_condominio_instalacao" => $_REQUEST["id_condominio_instalacao"], "id_bloco_instalacao" => $_REQUEST["id_bloco_instalacao"] );
+								
 								$dados_conta = array();
 								$cria_e = 0;
 
@@ -701,6 +717,8 @@
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
 																					$_REQUEST["desconto_promo"], $_REQUEST["periodo_desconto"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $carencia,
 																					$_REQUEST["id_produto"], $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
+								
+								
 
 								if( $tela == "migrar" ) {
 									// ESTORNAR/MIGRAR AS FATURAS
@@ -746,7 +764,29 @@
 									$cobranca->migrarContrato($id_cliente_produto,$novo_id_cliente_produto,$dadosLogin["admin"]);
 
 								}
+								
+								
+								//Calcula o valor da comissao
+								$produto = $produtos->obtemPlanoPeloId($_REQUEST["id_produto"]);
+								$valor_comissao = 0;
+								$valor_produto = $produto["valor"];	
+								$perc_comissao = 0;
+							
+								if($tela == "migrar") {
+									$perc_comissao = $produto["comissao_migracao"];
+								} else {
+									$perc_comissao = $produto["comissao"];
+								}
 
+								$dadosLogin = $this->_login->obtem("dados");
+								$valor_comissao = ($perc_comissao * $valor_produto) / 100;
+
+								//Faz a gravação na tabela de comissoes
+								if($valor_comissao) {
+									$cobranca->gravaComissao($novo_id_cliente_produto, $dadosLogin["id_admin"], $valor_comissao);
+								}									
+								
+								
 								$url = "admin-clientes.php?op=contrato&tela=contrato&id_cliente=".$this->id_cliente."&id_cliente_produto=" . $novo_id_cliente_produto;
 								$mensagem = $tela == "migrar" ? "Migração realizada com sucesso" : "Contratação realizada com sucesso";
 								$this->_view->atribui("url",$url);
@@ -930,7 +970,7 @@
 			$this->_view->atribuiVisualizacao("conta");
 			$tipo = trim($_REQUEST["tipo"]);
 			$id_conta 	= @$_REQUEST["id_conta"];
-			$contas = VirtexModelo::factory("contas");
+			$contas = VirtexModelo::factory("contas");		
 
 			if( !$tipo && $id_conta ) {
 				$info = $contas->obtemContaPeloId($id_conta);
@@ -1089,7 +1129,6 @@
 					// todo: buscar esse dados
 					//  $observacoes, $upload,$download
 
-
 					if($id_conta) {  // alteração
 						$contaAtual = $contas->obtemContaPeloId($id_conta);
 
@@ -1099,7 +1138,7 @@
 							$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
 									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
 
-							if($difEnderecoSetup){
+							if($difEnderecoSetup){ 
 								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
 								unset(	$info_endereco["id_endereco_instalacao"],
 										$info_endereco["id_conta"],
@@ -1110,11 +1149,13 @@
 															"bairro" => @$_REQUEST["bairro_instalacao"],
 															"id_cidade" => @$_REQUEST["id_cidade_instalacao"],
 															"complemento" => @$_REQUEST["complemento_instalacao"],
-															"cep" => @$_REQUEST["cep_instalacao"]
+															"cep" => @$_REQUEST["cep_instalacao"],
+															"id_condominio_instalacao" => @$_REQUEST["id_condominio_instalacao"], 
+															"id_bloco_instalacao" => @$_REQUEST["id_bloco_instalacao"]
 														);
 								if($info_endereco != $endereco_instalacao){
 									$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																		$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+																		$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $this->id_cliente);
 								}
 							}
 							$msg = "Conta alterada com sucesso.";
@@ -1168,12 +1209,12 @@
 															"complemento" => @$_REQUEST["complemento_instalacao"],
 															"cep" => @$_REQUEST["cep_instalacao"]
 														);
-							} else {
+							} else { 
 								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
 							}
 
 							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $this->id_cliente);
 							$msg = "Conta cadastrada com sucesso.";
 						} elseif("E" == $tipo){
 
@@ -1197,7 +1238,7 @@
 						$this->_view->atribuiVisualizacao("msgredirect");
 					}
 
-				} else {
+				} else { 
 					$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
 					$listaNAS = $equipamentos->obtemListaNAS();
 					$this->_view->atribui("listaNAS",$listaNAS);
@@ -1208,6 +1249,10 @@
 					$this->_view->atribui("tiposNAS",$tiposNas);
 					$bandas = $this->preferencias->obtemListaBandas();
 					$this->_view->atribui("bandas",$bandas);
+					
+					$cadastro = VirtexModelo::factory("cadastro");
+					$condominios = $cadastro->obtemCondominio();
+					$this->_view->atribui("condominios", json_encode($condominios));						
 
 					if( trim($info["tipo_conta"]) == "BL" || trim($info["tipo_conta"]) == "D") {
 
@@ -1215,7 +1260,7 @@
 						 if(!count($endereco_instalacao)){
 							$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);
 							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $this->id_cliente);
+																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"],$this->id_cliente);
 						}
 
 						$nas = $equipamentos->obtemNAS($info["id_nas"]);
@@ -1227,6 +1272,8 @@
 						$this->_view->atribui("id_cidade",$endereco_instalacao["id_cidade"]);
 						$this->_view->atribui("complemento",$endereco_instalacao["complemento"]);
 						$this->_view->atribui("cep",$endereco_instalacao["cep"]);
+						$this->_view->atribui("id_condominio_instalacao",$endereco_instalacao["id_condominio_instalacao"]);
+						$this->_view->atribui("id_bloco_instalacao",$endereco_instalacao["id_bloco_instalacao"]);
 
 					}
 

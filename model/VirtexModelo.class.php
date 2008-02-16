@@ -49,12 +49,16 @@
 					case 'eventos':
 						self::$modelosInstanciados[$modelo] = new MODELO_Eventos();
 						break;
+					case 'cadastro':
+						self::$modelosInstanciados[$modelo] = new MODELO_Cadastro();
+						break;
+					case 'helpdesk': 
+						self::$modelosInstanciados[$modelo] = new MODELO_Helpdesk();
+						break;
 					default:
 						throw new ExcecaoModeloInexistente();
 
 				}
-				
-
 
 			}
 			

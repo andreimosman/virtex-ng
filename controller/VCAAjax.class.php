@@ -51,6 +51,9 @@
 				case 'arpConta':
 					$this->executaColetaServidorConta("arp");
 					break;
+				case 'condominio_blocos':
+					$this->executaCondominio("condominio_blocos");
+					break;
 			}
 		
 		}
@@ -248,6 +251,32 @@
 										
 					$this->retorna($retorno);
 			}
+			
+		}
+		
+		
+		
+		protected function executaCondominio($tipo) {
+		
+			$cadastro = VirtexModelo::factory("cadastro");
+			
+			$id_condominio = @$_REQUEST["id_condominio"];
+			$status_ativo = @$_REQUEST["ativo"];
+			
+			switch($tipo) {
+				case "condominio_blocos":
+					if ($id_condominio) {
+						$blocos = $cadastro->obtemCondominioBloco($id_condominio, NULL, $status_ativo);
+						$this->retorna($blocos);
+					} else {
+						$this->retorna(NULL);
+					}
+					break;
+				default:
+					//Vai fazer alguma coisa no futuro...
+					break;
+			}
+		
 		}
 	}
 ?>

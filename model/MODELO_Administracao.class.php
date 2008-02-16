@@ -32,16 +32,16 @@
 			return ($this->adtb_admin->obtemUnico(array("admin"=>$username)));
 		}
 
-		public function cadastraAdmin($admin, $email, $nome, $senha, $status, $primeiro_login) {
-			$dados = array("admin"=>trim($admin), "email"=>trim($email), "nome"=>trim($nome), "status"=>trim($status), "senha"=>md5(trim($senha)), "primeiro_login"=>$primeiro_login);
+		public function cadastraAdmin($id_admin, $admin, $email, $nome, $senha, $status, $vendedor, $comissionado, $primeiro_login) {
+			$dados = array("admin"=>trim($admin), "email"=>trim($email), "nome"=>trim($nome), "status"=>trim($status), "senha"=>md5(trim($senha)), "vendedor" => $vendedor, "comissionado" => $comissionado, "tipo_admin" => $tipo_admin, "primeiro_login"=>$primeiro_login);
 
 			return ($this->adtb_admin->insere($dados));
 		}
 
-		public function alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status,$primeiro_login="") {
+		public function alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status, $vendedor, $comissionado, $tipo_admin, $primeiro_login="") {
 			$filtro = array("id_admin" => trim($id_admin));
-			$dados = array("email"=>trim($email), "admin"=>trim($admin), "nome"=>trim($nome), "status" => trim($status));
-
+			$dados = array("email"=>trim($email), "admin"=>trim($admin), "nome"=>trim($nome), "status" => trim($status), "vendedor" => $vendedor, "comissionado" => $comissionado, "tipo_admin" => $tipo_admin);
+			
 			if($senha) {
 				$dados["senha"] = md5(trim($senha));
 				$dados["primeiro_login"] = $primeiro_login ? $primeiro_login : "t";
@@ -65,8 +65,8 @@
 
 
 		public function gravaPrivilegioUsuario($id_admin, $dados){
-				$this->adtb_usuario_privilegio->apagaPrivilegiosUsuario($id_admin, $dados);
-				$this->adtb_usuario_privilegio->gravaPrivilegiosUsuario($id_admin, $dados);
+			$this->adtb_usuario_privilegio->apagaPrivilegiosUsuario($id_admin, $dados);
+			$this->adtb_usuario_privilegio->gravaPrivilegiosUsuario($id_admin, $dados);
 		}
 
 	}

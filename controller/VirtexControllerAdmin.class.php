@@ -59,6 +59,14 @@
 				case 'faturamento':
 					$retorno = new VCAFaturamento();
 					break;
+
+				case 'cadastro':
+					$retorno = new VCACadastro();
+					break;
+					
+				case 'financeiro':
+					$retorno = new VCAFinanceiro();
+					break;
 					
 				default:
 					throw new ExcecaoController(255,"Controller não encontrado");
