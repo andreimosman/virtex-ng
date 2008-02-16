@@ -22,7 +22,8 @@
 			parent::init();
 			$this->_tplPath .= "/admin";
 			$this->nomeSessao = "";
-			// TODO: Atribuir as variáveis do login		
+			// TODO: Atribuir as variáveis do login	
+			$this->exibirNomeArquivo(true);
 
 		}
 
@@ -83,6 +84,14 @@
 				case 'faturamento':
 					$retorno = new VVAFaturamento();
 					break;
+					
+				case 'cadastro':
+					$retorno = new VVACadastro();
+					break;					
+
+				case 'financeiro':
+					$retorno = new VVAFinanceiro();
+					break;	
 					
 				default:
 					throw new ExcecaoView(255,"View não disponível");

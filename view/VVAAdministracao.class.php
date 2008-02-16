@@ -33,9 +33,6 @@
 		public function exibe() {
 
 			switch($this->_visualizacao) {
-				case 'altsenha':
-					$this->exibeAlteracaoSenha();
-					break;
 				case 'administradores':
 					$this->exibeAdministradores();
 					break;
@@ -54,22 +51,14 @@
 				case 'bancodados':
 					$this->exibeBancoDados();
 					break;
+				case 'preferencias':
+					$this->exibePreferencias();
+					break;					
 				default:
 					// Do Something
 			}
 
 			parent::exibe();
-		}
-
-		protected function exibeAlteracaoSenha() {
-			$dadosLogin = $this->obtem("dadosLogin");
-			echo "<pre>";
-			print_r($dados_login);
-			echo "</pre>";
-			$this->_file = "administracao_altsenha.html";
-			$titulo = " :: ".(@$dadosLogin["nome"])." :: Alteração de Senha";
-
-			$this->nomeSessao .= $titulo;
 		}
 
 		protected function exibeAdministradores() {
@@ -185,6 +174,120 @@
 			//$this->_file = "administracao_log_admin.html";
 			$this->nomeSessao .= $titulo;
 			$this->atribui("titulo", $titulo);
+		}
+		
+		
+		protected function exibePreferencias() {
+			$titulo = "Preferencias";
+			
+			switch($this->obtem("tela")) {
+				case 'geral':
+					$this->_file = "administracao_cadastro_preferencias_geral.html";
+					$titulo .= " :: Preferências Gerais";
+					break;
+				case 'provedor':
+					$this->_file = "administracao_cadastro_preferencias_provedor.html";
+					$titulo .= " :: Preferências do Provedor";
+					break;
+				case 'cobranca':
+					$this->_file = "administracao_cadastro_preferencias_cobranca.html";
+					$titulo .= " :: Cobrança";
+					if( $this->obtem("subtela") == "forma_pagamento" ) {
+						$titulo .= " :: Forma Pagamento";
+					} else {
+						if( $this->obtem("acao") == "editar" ) {
+							$titulo .= " :: Editar";
+						}
+					}
+					$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela"),$this->obtem("subtela")),($this->obtem("acao")=="editar"||$this->obtem("subtela")?false:true),true);
+					break;
+				case 'modelos':
+					if( $this->obtem("subtela") != "exibir_modelo" ) {
+						$this->_file = "cadastro_preferencias_modelos.html";
+						$titulo .= " :: Modelos de Contrato";
+						$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela"),$this->obtem("subtela")),($this->obtem("subtela")?false:true),true);
+					}
+					
+					break;
+				case 'cidades':
+					$this->_file = "administracao_cadastro_preferencias_cidades.html";
+					$titulo .= " :: Cidades de Atuação";
+					break;
+				case 'banda':
+					$this->_file = "administracao_cadastro_preferencias_banda.html";
+					$titulo .= " :: Faixas de banda";
+					break;
+				case 'monitoramento':
+					$this->_file = "administracao_cadastro_preferencias_monitoramento.html";
+					$titulo .= " :: Monitoramento";
+					break;
+				case 'links':
+					$this->_file = "administracao_cadastro_preferencias_links.html";
+					$titulo .= " :: Links Externos";
+					break;
+				case 'registro':
+					$this->_file = "administracao_cadastro_preferencias_registro.html";
+					$titulo .= " :: Registro";
+					break;
+				case 'resumo':
+					$this->_file = "administracao_cadastro_preferencias_resumo.html";
+					$titulo .= " :: Resumo";
+					break;
+				case 'helpdesk':					
+					switch($this->obtem("subtela")) {
+						case "cadastro_grupo":
+							$this->_file = "administracao_preferencias_helpdesk_cadastro_grupo.html";
+							
+							if($this->obtem("id_grupo")) {
+							
+								if($this->obtem("modo_visualizacao")) {
+									$titulo .= " :: Helpdesk :: Visualizar grupo \"" . $this->obtem("nome") . "\"";
+								} else {
+									$titulo .= " :: Helpdesk :: Alterar grupo " . $this->obtem("nome");
+								}
+								
+							} else {
+							
+								$titulo .= " :: Helpdesk :: Cadastrar grupo";
+								
+							}
+							
+							$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela")), false, true);
+							break;
+						case "altera_usuario":
+						case "cadastro_usuarios":
+							$this->_file = "administracao_preferencias_helpdesk_cadastro_grupo_usuario.html";
+							$titulo .= " :: Helpdesk :: Gerenciamento do grupo \"" . $this->obtem("nome") . "\"";
+							break;
+						case "listagem":
+						default:
+							$this->_file = "administracao_preferencias_helpdesk_listagem.html";
+							$titulo .= " :: Helpdesk :: Listagem";
+							$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela")), true, true);
+							break;
+					}
+					break;
+			}
+			
+			$this->atribui("titulo",$titulo);
+		}
+		
+		
+		protected function obtemItensMenuPreferencias($tela) {
+			$itensMenu = array();
+			switch($tela) {
+				case 'cobranca':
+					$itensMenu[] = array("texto" => "Editar", "url" => "admin-administracao.php?op=preferencias&tela=cobranca&acao=editar");
+					$itensMenu[] = array("texto" => "Nova Forma Pgto", "url" => "admin-administracao.php?op=preferencias&tela=cobranca&subtela=forma_pagamento");
+					break;
+				case 'modelos':
+					$itensMenu[] = array("texto" => "Novo Modelo", "url" => "admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro");
+					break;
+				case 'helpdesk':
+					$itensMenu[] = array("texto" => "Novo Grupo", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo");
+					break;
+			}
+			return($itensMenu);
 		}
 
 	}

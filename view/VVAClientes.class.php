@@ -9,7 +9,7 @@
 			parent::__construct();
 			
 			$this->titulos = array(
-										"cadastro" => "Cadastro",
+										"cadastro" => "Inclusão",
 										"alteracao" => "Alteração",
 										"ficha" => "Ficha do Cliente",
 										"pesquisa" => "Pesquisa",

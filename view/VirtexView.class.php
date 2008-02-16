@@ -26,9 +26,12 @@
 		protected $_bag;
 		
 		protected $_redir;
+		
+		protected $_exibirNomeArquivo;
 
 		protected function __construct() {
 			$this->_tplPath = ".";
+			$this->_exibirNomeArquivo = false;
 			$this->init();		// Object
 			$this->_tpl = MTemplate::getInstance($this->_tplPath);
 			$this->_bag = array();
@@ -36,6 +39,10 @@
 			
 			$this->atribuiErro();	// Zera o erro
 			
+		}
+		
+		protected function exibirNomeArquivo($bl) {
+			$this->_exibirNomeArquivo = $bl;
 		}
 		
 		public function atribuiErro($codigo=0,$mensagem="") {
@@ -55,6 +62,9 @@
 		public function exibe() {
 			if( !$this->_redir && $this->_file ) {
 				$this->_tpl->exibe($this->_file);
+				if( $this->_exibirNomeArquivo ) {
+					echo "<!-- " . $this->_file . "-->\n";
+				}
 			}
 		}
 		
