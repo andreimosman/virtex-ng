@@ -15,6 +15,11 @@
 
 		protected function executa() {
 		
+			
+			$cfg_geral = $this->_cfg->config["geral"];
+			$desenvolvimento = $cfg_geral["desenvolvimento"];
+
+		
 			$permissao_monitoramento = $this->requirePrivLeitura("_SUPORTE_MONITORAMENTO",false);
 			$this->_view->atribui("permissao_monitoramento", $permissao_monitoramento);
 
@@ -52,7 +57,7 @@
 			//
 
 			$menuSuporte = new MMenu();
-			$menuSuporte->addItem("Helpdesk", "admin-suporte.php?op=helpdesk", $target);
+			if($desenvolvimento) $menuSuporte->addItem("Helpdesk", "admin-suporte.php?op=helpdesk", $target);
 			$menuSuporte->addItem("Gráficos", "admin-suporte.php?op=graficos", $target);
 			$menuSuporte->addItem("Monitoramento", "admin-suporte.php?op=monitoramento", $target);
 
@@ -94,18 +99,18 @@
 			
 			$menuCadastro->addSeparator();
 			$menuCadastro->addItem("Planos", "admin-cadastro.php?op=planos&tela=listagem", $target);
-			$menuCadastro->addItem("Produtos", "admin-cadastro.php?op=produtos&tela=listagem", $target);
+			if($desenvolvimento) $menuCadastro->addItem("Produtos", "admin-cadastro.php?op=produtos&tela=listagem", $target);
 			
 			$menuCadastroServicos	= new MMenu();
-			$menuCadastroServicos->addItem("Contratados (comprado)", "admin-cadastro.php?op=servicos&tela=contratados", $target);
-			$menuCadastroServicos->addItem("Fornecido (vendido)", "admin-cadastro.php?op=servicos&tela=fornecido", $target);
-			$menuCadastro->addSubmenu("Serviços", $menuCadastroServicos);			
+			if($desenvolvimento) $menuCadastroServicos->addItem("Contratados (comprado)", "admin-cadastro.php?op=servicos&tela=contratados", $target);
+			if($desenvolvimento) $menuCadastroServicos->addItem("Fornecido (vendido)", "admin-cadastro.php?op=servicos&tela=fornecido", $target);
+			if($desenvolvimento) $menuCadastro->addSubmenu("Serviços", $menuCadastroServicos);			
 
 
 			
-			$menuCadastro->addSeparator();
-			$menuCadastro->addItem("Centros de Custo", "admin-cadastro.php?op=centrodecustos&tela=listagem", $target);
-			$menuCadastro->addItem("Plano de Contas", "admin-cadastro.php?op=planodecontas&tela=listagem", $target);
+			if($desenvolvimento) $menuCadastro->addSeparator();
+			if($desenvolvimento) $menuCadastro->addItem("Centros de Custo", "admin-cadastro.php?op=centrodecustos&tela=listagem", $target);
+			if($desenvolvimento) $menuCadastro->addItem("Plano de Contas", "admin-cadastro.php?op=planodecontas&tela=listagem", $target);
 			
 			$menuCadastro->addSeparator();
 			$menuCadastroRelatorios	= new MMenu();
@@ -124,10 +129,10 @@
 			$menuFinanceiro = new MMenu();
 			
 			
-			$menuFinanceiro->addItem("Contas a Pagar", "admin-financeiro.php?op=relatorios&relatorio=faturamento", $target);
-			$menuFinanceiro->addItem("Contas a Receber", "admin-financeiro.php?op=relatorios&relatorio=faturamento", $target);
+			if($desenvolvimento) $menuFinanceiro->addItem("Contas a Pagar", "admin-financeiro.php?op=relatorios&relatorio=faturamento", $target);
+			if($desenvolvimento) $menuFinanceiro->addItem("Contas a Receber", "admin-financeiro.php?op=relatorios&relatorio=faturamento", $target);
 
-			$menuFinanceiro->addSeparator();
+			if($desenvolvimento) $menuFinanceiro->addSeparator();
 			$menuFinanceiroCobranca = new MMenu();
 			$menuFinanceiroCobranca->addItem("Bloqueios", "admin-financeiro.php?op=bloqueios", $target);
 
@@ -181,9 +186,9 @@
 			//
 			
 			$menuComercial = new MMenu();
-			$menuComercial->addItem("Promoções", "admin-administracao.php?op=altsenha", $target);
+			if($desenvolvimento) $menuComercial->addItem("Promoções", "admin-administracao.php?op=altsenha", $target);
 			
-			$menu->addSubmenu("Comercial", $menuComercial);
+			if($desenvolvimento) $menu->addSubmenu("Comercial", $menuComercial);
 			
 
 			//
@@ -194,7 +199,7 @@
 			$menuAdministracao->addItem("Alterar Minha Senha", "admin-administracao.php?op=altsenha", $target);
 			
 			$menuAdministracaoPreferencias 	= new MMenu();
-			$menuAdministracaoPreferencias->addItem("Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
+			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
 			$menuAdministracaoPreferencias->addItem("Central do Assinante","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			$menuAdministracaoPreferencias->addItem("E-mails","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			$menuAdministracaoPreferencias->addSeparator();
@@ -222,10 +227,10 @@
 			$menuAdministracao->addSubmenu("Ferramentas", $menuAdministracaoFerramentas);
 
 			$menuAdministracaoBancoDados = new MMenu();
-			$menuAdministracaoBancoDados->addItem("Eliminar Cliente", "admin-administracao.php?op=bancodados&eliminar=cliente", $target);
-			$menuAdministracaoBancoDados->addItem("Eliminar Contrato", "admin-administracao.php?op=bancodados&eliminar=contrato", $target);
-			$menuAdministracaoBancoDados->addItem("Eliminar Conta", "admin-administracao.php?op=bancodados&eliminar=conta", $target);
-			$menuAdministracao->addSubmenu("Banco de Dados", $menuAdministracaoBancoDados);
+			if($desenvolvimento) $menuAdministracaoBancoDados->addItem("Eliminar Cliente", "admin-administracao.php?op=bancodados&eliminar=cliente", $target);
+			if($desenvolvimento) $menuAdministracaoBancoDados->addItem("Eliminar Contrato", "admin-administracao.php?op=bancodados&eliminar=contrato", $target);
+			if($desenvolvimento) $menuAdministracaoBancoDados->addItem("Eliminar Conta", "admin-administracao.php?op=bancodados&eliminar=conta", $target);
+			if($desenvolvimento) $menuAdministracao->addSubmenu("Banco de Dados", $menuAdministracaoBancoDados);
 
 
 			$menuAdministracao->addSeparator();
