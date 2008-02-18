@@ -173,9 +173,9 @@ label {
 		<tr>
 			<td width="100" align="right" nowrap><label>Status:</label></td>
 			<td colspan="4">
-				<select name="status" id="status"  onChange="ProcessLoop(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+				<select name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
 				{foreach key=id item=valor from=$status_pop}
-				<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>
+					<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>
 				{/foreach}
 				</select>
 			</td>
