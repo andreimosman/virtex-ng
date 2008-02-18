@@ -25,7 +25,7 @@ function servidorValidaForm() {
 	var chave = document.getElementById("chave");
 	var usuario = document.getElementById("usuario");
 	var senha = document.getElementById("senha");
-	var confirme = document.getElementById("confirme");
+	var confirme = document.getElementById("confsenha");
 
 	if(estaVazio(hostname.value)) {
 		alert("O campo Hostname/Apelido precisa ser preenchido");
@@ -41,7 +41,7 @@ function servidorValidaForm() {
 		return false;
 	}
 
-	if (!validaIP(ip.value)) {
+	if (!ipValido(ip.value)) {
 		alert("O valor do campo IP é inválido");
 		ip.focus();
 		return false;
