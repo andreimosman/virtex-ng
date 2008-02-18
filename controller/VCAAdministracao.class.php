@@ -91,7 +91,7 @@
 				if( !$erroMensagem ) {
 					// Faz a alteração
 					// $dados = array("senha" => $nova_senha, "primeiro_login" => "f");
-					$admin->alteraAdmin($info["id_admin"],$info["admin"],$info["email"],$info["nome"],$nova_senha,$info["status"],"f");
+					$admin->alteraAdmin($info["id_admin"],$info["admin"],$info["email"],$info["nome"],$nova_senha,$info["status"], $info["$vendedor"], $info["$comissionado"], $info["$tipo_admin"], "f");
 
 					// Registrar as informações atualizadas na session
 					$info = $admin->obtemAdminPeloId($info["id_admin"]);

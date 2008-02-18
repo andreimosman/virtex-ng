@@ -53,7 +53,9 @@
 					break;
 				case 'preferencias':
 					$this->exibePreferencias();
-					break;					
+					break;	
+				case 'altsenha':
+					$this->exibeAlteracaoSenha();				
 				default:
 					// Do Something
 			}
@@ -271,6 +273,13 @@
 			
 			$this->atribui("titulo",$titulo);
 		}
+		
+		
+		protected function exibeAlteracaoSenha() {
+			$titulo = " :: Alterar Senha";
+			$this->_file = "administracao_altsenha.html";
+			$this->nomeSessao .= $titulo;
+		}		
 		
 		
 		protected function obtemItensMenuPreferencias($tela) {
