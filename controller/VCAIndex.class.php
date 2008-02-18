@@ -52,7 +52,7 @@
 			//
 
 			$menuSuporte = new MMenu();
-			$menuSuporte->addItem("Helpdesk", "admin-suporte.php?op=graficos", $target);
+			$menuSuporte->addItem("Helpdesk", "admin-suporte.php?op=helpdesk", $target);
 			$menuSuporte->addItem("Gráficos", "admin-suporte.php?op=graficos", $target);
 			$menuSuporte->addItem("Monitoramento", "admin-suporte.php?op=monitoramento", $target);
 
@@ -94,18 +94,18 @@
 			
 			$menuCadastro->addSeparator();
 			$menuCadastro->addItem("Planos", "admin-cadastro.php?op=planos&tela=listagem", $target);
-			$menuCadastro->addItem("Produtos", "admin-cadastro.php?op=planos&tela=listagem", $target);
+			$menuCadastro->addItem("Produtos", "admin-cadastro.php?op=produtos&tela=listagem", $target);
 			
 			$menuCadastroServicos	= new MMenu();
-			$menuCadastroServicos->addItem("Contratados (comprado)", "admin-cadastro.php?op=planos&tela=listagem", $target);
-			$menuCadastroServicos->addItem("Fornecido (vendido)", "admin-cadastro.php?op=planos&tela=listagem", $target);
+			$menuCadastroServicos->addItem("Contratados (comprado)", "admin-cadastro.php?op=servicos&tela=contratados", $target);
+			$menuCadastroServicos->addItem("Fornecido (vendido)", "admin-cadastro.php?op=servicos&tela=fornecido", $target);
 			$menuCadastro->addSubmenu("Serviços", $menuCadastroServicos);			
 
 
 			
 			$menuCadastro->addSeparator();
-			$menuCadastro->addItem("Centros de Custo", "admin-cadastro.php?op=planos&tela=listagem", $target);
-			$menuCadastro->addItem("Plano de Contas", "admin-cadastro.php?op=planos&tela=listagem", $target);
+			$menuCadastro->addItem("Centros de Custo", "admin-cadastro.php?op=centrodecustos&tela=listagem", $target);
+			$menuCadastro->addItem("Plano de Contas", "admin-cadastro.php?op=planodecontas&tela=listagem", $target);
 			
 			$menuCadastro->addSeparator();
 			$menuCadastroRelatorios	= new MMenu();

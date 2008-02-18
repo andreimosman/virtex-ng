@@ -114,7 +114,7 @@
 			
 			$chave = @$_REQUEST["chave"];
 		
-			$url = "admin-configuracoes.php?op=equipamentos&tela=servidores";
+			$url = "admin-cadastro.php?op=equipamentos&tela=servidores";
 	
 			$this->_view->atribui("id_servidor",$id_servidor);
 			
