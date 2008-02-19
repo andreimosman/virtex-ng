@@ -33,7 +33,7 @@ function ipValido(string) {
 
 	partes = string.split(".");
 	for(i=0; i<partes.length; i++) {
-		if(parteInt(partes[i]) > 255 || parteInt(partes[i]) < 0) return false;
+		if(parseInt(partes[i]) > 255 || parseInt(partes[i]) < 0) return false;
 	}
 
 	return true;
