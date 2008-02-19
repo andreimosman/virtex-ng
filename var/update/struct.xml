@@ -1928,10 +1928,46 @@
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_cliente>
+   <id_condominio_cobranca >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_condominio_cobranca>
+   <id_bloco_cobranca >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_bloco_cobranca>
   </fields>
   <indexes >
   </indexes>
   <constraints >
+   <cbtb_condominio_cobranca_fkey >
+    <type >f</type>
+    <table_oid >2837322</table_oid>
+    <table >cbtb_endereco_cobranca</table>
+    <foreign_oid >3149695</foreign_oid>
+    <foreign_table >catb_condominio</foreign_table>
+    <conkey >{9}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_condominio_cobranca</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_condominio</int>
+    </foreign_fields>
+   </cbtb_condominio_cobranca_fkey>
    <cntb_endereco_cobranca_id_cidade_fkey >
     <type >f</type>
     <table_oid >2837322</table_oid>
@@ -4038,10 +4074,46 @@
     <type >date</type>
     <mdb2type >date</mdb2type>
    </expedicao>
+   <id_condominio >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_condominio>
+   <id_bloco >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_bloco>
   </fields>
   <indexes >
   </indexes>
   <constraints >
+   <cltb_cliente_id_condominio_fkey >
+    <type >f</type>
+    <table_oid >2837407</table_oid>
+    <table >cltb_cliente</table>
+    <foreign_oid >3149695</foreign_oid>
+    <foreign_table >catb_condominio</foreign_table>
+    <conkey >{30}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_condominio</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_condominio</int>
+    </foreign_fields>
+   </cltb_cliente_id_condominio_fkey>
    <cltb_cliente_id_cidade_fkey >
     <type >f</type>
     <table_oid >2837407</table_oid>
@@ -4665,10 +4737,46 @@
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_cliente>
+   <id_condominio_instalacao >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_condominio_instalacao>
+   <id_bloco_instalacao >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_bloco_instalacao>
   </fields>
   <indexes >
   </indexes>
   <constraints >
+   <cntb_condominio_instalacao >
+    <type >f</type>
+    <table_oid >2837454</table_oid>
+    <table >cntb_endereco_instalacao</table>
+    <foreign_oid >3149695</foreign_oid>
+    <foreign_table >catb_condominio</foreign_table>
+    <conkey >{9}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_condominio_instalacao</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_condominio</int>
+    </foreign_fields>
+   </cntb_condominio_instalacao>
    <cntb_endereco_instalacao_id_cliente_fkey >
     <type >f</type>
     <table_oid >2837454</table_oid>
@@ -8826,7 +8934,7 @@
 </tables>
 <sequences >
  <adsq_id_admin >
-  <start >30</start>
+  <start >31</start>
   <increment >1</increment>
  </adsq_id_admin>
  <adsq_id_priv >
@@ -8834,7 +8942,7 @@
   <increment >1</increment>
  </adsq_id_priv>
  <cxsq_autenticacao >
-  <start >161</start>
+  <start >164</start>
   <increment >1</increment>
  </cxsq_autenticacao>
  <bktb_backup_id_backup_seq >
@@ -8854,7 +8962,7 @@
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >371</start>
+  <start >393</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -8862,15 +8970,15 @@
   <increment >1</increment>
  </cbsq_id_cobranca>
  <cbsq_id_endereco_cobranca >
-  <start >280</start>
+  <start >302</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbtb_faturas_id_cobranca_seq >
-  <start >3336</start>
+  <start >3552</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cxsq_id_fluxo >
-  <start >161</start>
+  <start >164</start>
   <increment >1</increment>
  </cxsq_id_fluxo>
  <cfsq_id_cobranca >
@@ -8890,7 +8998,7 @@
   <increment >1</increment>
  </cfsq_id_rede>
  <cfsq_servidor_id_servidor >
-  <start >5</start>
+  <start >11</start>
   <increment >1</increment>
  </cfsq_servidor_id_servidor>
  <cftb_links_id_link_seq >
@@ -8898,7 +9006,7 @@
   <increment >1</increment>
  </cftb_links_id_link_seq>
  <clsq_id_cliente >
-  <start >2033</start>
+  <start >2037</start>
   <increment >1</increment>
  </clsq_id_cliente>
  <clsq_id_cliente_produto >
@@ -8910,11 +9018,11 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >244</start>
+  <start >264</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >225</start>
+  <start >259</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <id_venda_seq >
@@ -8926,7 +9034,7 @@
   <increment >1</increment>
  </lgsq_id_exclusao>
  <lgsq_id_processo >
-  <start >987</start>
+  <start >994</start>
   <increment >1</increment>
  </lgsq_id_processo>
  <lgsq_id_remessa >
@@ -8942,7 +9050,7 @@
   <increment >1</increment>
  </lgtb_contas_excluidas_id_excluida_seq>
  <lgtb_reagendamento_id_reagendamento_seq >
-  <start >9</start>
+  <start >10</start>
   <increment >1</increment>
  </lgtb_reagendamento_id_reagendamento_seq>
  <lgtb_renovacao_id_renovacao_seq >
@@ -8966,7 +9074,7 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >493</start>
+  <start >502</start>
   <increment >1</increment>
  </spsq_id_spool>
  <pfsq_id_forma_pagamento >
@@ -8986,7 +9094,7 @@
   <increment >1</increment>
  </sptb_spool_id_spool>
  <prsq_id_produto >
-  <start >65</start>
+  <start >68</start>
   <increment >1</increment>
  </prsq_id_produto>
  <rdsq_id_accounting >
@@ -9002,11 +9110,11 @@
   <increment >1</increment>
  </cbtb_lote_cobranca_id_remessa_seq>
  <cbsq_id_remessa >
-  <start >125</start>
+  <start >126</start>
   <increment >1</increment>
  </cbsq_id_remessa>
  <evsq_id_evento >
-  <start >204</start>
+  <start >258</start>
   <increment >1</increment>
  </evsq_id_evento>
  <casq_id_condominio >
@@ -9018,7 +9126,7 @@
   <increment >1</increment>
  </casq_id_bloco>
  <cbsq_id_comissao >
-  <start >5</start>
+  <start >7</start>
   <increment >1</increment>
  </cbsq_id_comissao>
  <hdsq_id_grupo >
