@@ -15,7 +15,6 @@
 
 		protected function executa() {
 		
-			
 			$cfg_geral = $this->_cfg->config["geral"];
 			$desenvolvimento = $cfg_geral["desenvolvimento"];
 
@@ -200,9 +199,9 @@
 			
 			$menuAdministracaoPreferencias 	= new MMenu();
 			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
-			$menuAdministracaoPreferencias->addItem("Central do Assinante","admin-administracao.php?op=preferencias&tela=resumo", $target);
-			$menuAdministracaoPreferencias->addItem("E-mails","admin-administracao.php?op=preferencias&tela=resumo", $target);
-			$menuAdministracaoPreferencias->addSeparator();
+			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("Central do Assinante","admin-administracao.php?op=preferencias&tela=resumo", $target);
+			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("E-mails","admin-administracao.php?op=preferencias&tela=resumo", $target);
+			if($desenvolvimento) $menuAdministracaoPreferencias->addSeparator();
 			$menuAdministracaoPreferencias->addItem("Resumo","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			$menuAdministracaoPreferencias->addSeparator();
 			$menuAdministracaoPreferencias->addItem("Preferências Gerais","admin-administracao.php?op=preferencias&tela=geral", $target);

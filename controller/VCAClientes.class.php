@@ -836,7 +836,7 @@
 
 				case "amortizacao":
 
-					if( !($this->requirePrivLeitura("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_COBRANCA_AMORTIZACAO",false)) ) {
+					if( !($this->requirePrivLeitura("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO",false)) ) {
 						$this->acessoNegado();
 					}
 
@@ -858,7 +858,7 @@
 					//print_r($dadosLogin);
 					//echo "</pre>";
 
-					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_COBRANCA_AMORTIZACAO",false))) {
+					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO",false))) {
 						$desconto		= @$_REQUEST["desconto"];
 						$acrescimo		= @$_REQUEST["acrescimo"];
 						$amortizar		= @$_REQUEST["amortizar"];

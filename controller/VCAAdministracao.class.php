@@ -118,7 +118,7 @@
 		}
 
 		protected function executaAdministradores() {
-			$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
+			$this->requirePrivLeitura("_CADASTRO_ADMINISTRADORES");
 			$this->_view->atribuiVisualizacao("administradores");
 			$tela = @$_REQUEST["tela"] ? $_REQUEST["tela"] : "listagem";
 
@@ -133,7 +133,7 @@
 			$this->_view->atribui("id_admin", $id_admin);
 
 			$podeGravar = false;
-			if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
+			if( $this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES", false) ) {
 				$podeGravar = true;
 			}
 
@@ -153,7 +153,7 @@
 							}
 
 						} else {
-							$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
+							$this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES");
 							$this->administradores->alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status);
 
 							$url = "admin-administracao.php?op=administradores&tela=listagem";
@@ -165,7 +165,7 @@
 						}
 
 					} else { //Cadastro
-						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
+						$this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES");
 						if(!$this->_acao) {
 							$this->_view->atribui("acao","cadastrar");
 						} else {
@@ -207,7 +207,7 @@
 				case 'privilegio':
 
 
-					$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
+					$this->requirePrivLeitura("_CADASTRO_ADMINISTRADORES");
 
 
 					$acao = @$_REQUEST["acao"];
@@ -217,7 +217,7 @@
 
 
 					if($acao=="gravar"){
-						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
+						$this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES");
 						$this->administradores->gravaPrivilegioUsuario($id_admin,$acesso);
 						$this->_view->atribui("url","admin-administracao.php?op=administradores&tela=listagem");
 						$this->_view->atribui("mensagem","Privilégios gravados com sucesso!");
@@ -251,7 +251,7 @@
 
 						$podeGravar = false;
 
-						if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
+						if( $this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES", false) ) {
 							$podeGravar = true;
 						}
 
@@ -508,7 +508,7 @@
 
 		protected function executaBancoDados() {
 
-			//$this->requirePrivLeitura("_ADMINISTRACAO_BANCODADOS");
+			$this->requirePrivLeitura("_ADMINISTRACAO_BANCODADOS");
 			$this->_view->atribuiVisualizacao("bancodados");
 
 			$eliminar = @$_REQUEST["eliminar"];
@@ -550,8 +550,8 @@
 			$this->_view->atribuiVisualizacao("preferencias");
 			
 			if($tela != "registro") {
-				//$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS");
-				//if( $this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS",false)  ) {
+				//$this->requirePrivLeitura("_ADMINISTRACAO_PREFERENCIAS");
+				//if( $this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS",false)  ) {
 					$this->_view->atribui("podeGravar",true);
 				//} else {
 					//$this->_view->atribui("podeGravar",false);
@@ -584,7 +584,7 @@
 					$this->executaPreferenciasModeloContrato();
 					break;
 				case 'registro':
-					//$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS_REGISTRO");
+					//$this->requirePrivLeitura("_ADMINISTRACAO_PREFERENCIAS_REGISTRO");
 					$this->executaPreferenciasRegistro();
 					break;
 				case 'resumo':
@@ -642,7 +642,7 @@
 
 			$url = "admin-administracao.php?op=preferencias&tela=registro";
 			
-			//if( $this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS_REGISTRO",false) ) {
+			//if( $this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS_REGISTRO",false) ) {
 				$this->_view->atribui("podeGravar",true);
 			//} else {
 			//	$this->_view->atribui("podeGravar",false);
@@ -650,7 +650,7 @@
 			
 			
 			if ($acao == "upload"){
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS_REGISTRO");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS_REGISTRO");
 				$diretorio = "./etc";
 				$nome_aceitavel = "virtex.lic";
 				$file = $_FILES["arquivo_registro"];
@@ -832,7 +832,7 @@
 					$this->_view->atribui($vr,$vl);
 				}
 			} else {
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				
 				/**
 				 * Processar alterações
@@ -873,7 +873,7 @@
 					$this->_view->atribui($vr,$vl);
 				}
 			} else {
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				$this->preferencias->atualizaPreferenciasProvedor(
 																	@$_REQUEST["endereco"],
 																	@$_REQUEST["localidade"],
@@ -926,7 +926,7 @@
 				if( $acao == "alterar" ) {
 					// Rotina de alteração.
 					// echo "Alterar!!!<br>\n";
-					//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+					//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 					
 					$tx_juros = @$_REQUEST["tx_juros"];
 					$multa = @$_REQUEST["multa"];
@@ -963,11 +963,11 @@
 				if( !$id_forma_pagamento ) {
 					$this->_view->atribui("nossonumero_inicial", 1);
 					$this->_view->atribui("nossonumero_final", 10000000);
-					//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+					//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				}
 				
 				if( $acao ) {
-					//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+					//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 					
 					if( $id_forma_pagamento ) {
 						// Alteração
@@ -1007,7 +1007,7 @@
 			$acao = @$_REQUEST["acao"];
 			
 			if( $acao == "atualiza" ) {
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				// Executa a atualização
 				$disponivel = @$_REQUEST["disponivel"];
 				
@@ -1063,7 +1063,7 @@
 
 			
 			if( $acao == "cadastra" ) {
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				// Cadastra
 				$this->preferencias->cadastraBanda($valor_banda,$descricao_banda);
 				$this->_view->atribui("mensagem","Banda cadastrada com sucesso.");
@@ -1085,7 +1085,7 @@
 						}
 
 					} else {
-						//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+						//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 						if( $acao == "atualiza" ) {
 							// Update
 							$this->preferencias->atualizaBanda($id,$valor_banda,$descricao_banda);
@@ -1118,7 +1118,7 @@
 					$this->_view->atribui($vr,$vl);
 				}
 			} else {
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				$this->preferencias->atualizaMonitoramento($_REQUEST);
 				$this->_view->atribui("url","admin-administracao.php?op=preferencias&tela=monitoramento");
 				$this->_view->atribui("mensagem","Preferência atualizada com sucesso.");
@@ -1149,7 +1149,7 @@
 			$url_redir = "admin-administracao.php?op=preferencias&tela=links";
 			
 			if( $acao == "cadastra" ) {
-				//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+				//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 				// Cadastra
 				$this->preferencias->cadastraLink($titulo_link,$url,$descricao,$target);
 				$this->_view->atribui("url",$url_redir);
@@ -1170,7 +1170,7 @@
 						}
 						
 					} else {
-						//$this->requirePrivGravacao("_CONFIGURACOES_PREFERENCIAS");
+						//$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 						if($acao == "atualiza") {
 							$this->preferencias->atualizaLink($id_link,$titulo_link,$url,$descricao,$target);
 							$mensagem = "Link externo alterado com sucesso.";

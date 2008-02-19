@@ -28,17 +28,17 @@
 		
 			switch($this->_op) {
 				case 'equipamentos':
-					//$this->requirePrivLeitura("_CONFIGURACOES_EQUIPAMENTOS");
+					$this->requirePrivLeitura("_CADASTRO_EQUIPAMENTOS");
 					$this->executaEquipamentos();
 					break;
 					
 				case 'preferencias':
-					//$this->requirePrivLeitura("_CONFIGURACOES_PREFERENCIAS");
+					$this->requirePrivLeitura("_ADMINISTRACAO_PREFERENCIAS");
 					$this->executaPreferencias();
 					break;
 					
 				case 'relatorios':
-					//$this->requirePrivLeitura("_CONFIGURACOES_RELATORIOS");
+					$this->requirePrivLeitura("_CADASTRO_RELATORIOS");
 					$this->executaRelatorios();
 					break;
 					
@@ -132,13 +132,13 @@
 								$this->_view->atribui($vr,$vl);
 							}
 							
-							//if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
-							//	$this->_view->atribui("podeGravar",false);
-							//}
+							if( !$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false) ) {
+								$this->_view->atribui("podeGravar",false);
+							}
 							
 						} else {
 							// Processar alteração
-							//$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+							$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
 							$equipamentos->atualizaServidor($id_servidor, $hostname, $ip, $porta, $chave, $usuario, $senha, $disponivel);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Servidor atualizado com sucesso.");
@@ -147,7 +147,7 @@
 						}
 					} else {
 						// Cadastro
-						//$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+						$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
 						$this->_view->atribui("podeGravar",true);
 						if( $acao ) {
 							// Cadastrar
@@ -218,9 +218,9 @@
 									$this->_view->atribui($vr,$vl);
 								}
 
-								//if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
-								//	$this->_view->atribui("podeGravar",false);
-								//}
+								if( !$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false) ) {
+									$this->_view->atribui("podeGravar",false);
+								}
 
 							}
 						} else {
@@ -231,7 +231,7 @@
 							$this->_view->atribuiVisualizacao("msgredirect");
 						}
 					} else {
-						//$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+						$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
 						$this->_view->atribui("podeGravar",true);
 
 						if( $acao ) {
@@ -287,13 +287,13 @@
 							while(list($vr,$vl)=each($dados)) {
 								$this->_view->atribui($vr,$vl);
 							}
-							//if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
-							//	$this->_view->atribui("podeGravar",false);
-							//}
+							if( !$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false) ) {
+								$this->_view->atribui("podeGravar",false);
+							}
 							
 						} else {
 							//ALTERAR
-							//$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+							$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
 							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao);
 							
 							$url = "admin-configuracoes.php?op=equipamentos&tela=nas";
@@ -304,7 +304,7 @@
 						
 					} else {
 						// echo "CADASTRO<br>\n";
-						//$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS");
+						$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
 						$this->_view->atribui("podeGravar",true);
 						
 						if( $acao ) {
@@ -345,11 +345,11 @@
 						$this->_view->atribui("registros",$registros);
 					} else {
 						// Cadastro
-						//if( !$this->requirePrivGravacao("_CONFIGURACOES_EQUIPAMENTOS",false) ) {
-						//	$this->_view->atribui("podeGravar",false);
-						//} else {
+						if( !$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false) ) {
+							$this->_view->atribui("podeGravar",false);
+						} else {
 							$this->_view->atribui("podeGravar",true);
-						//}
+						}
 
 						if( $info["tipo_nas"] == "I" ) {
 							// IP
@@ -672,7 +672,7 @@
 		
 		
 		protected function executaAdministradores() {
-			//$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
+			$this->requirePrivLeitura("_CADASTRO_ADMINISTRADORES");
 			$this->_view->atribui("podeGravar", true);
 			$this->_view->atribuiVisualizacao("administradores");
 			$tela = @$_REQUEST["tela"] ? $_REQUEST["tela"] : "listagem";
@@ -691,9 +691,9 @@
 			$this->_view->atribui("id_admin", $id_admin);
 
 			$podeGravar = false;
-			//if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
+			if( $this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES", false) ) {
 				$podeGravar = true;
-			//}
+			}
 
 			switch($tela) {
 				case 'cadastro':
@@ -711,7 +711,7 @@
 							}
 
 						} else {
-							$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
+							$this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES");
 							$this->administradores->alteraAdmin($id_admin, $admin, $email, $nome, $senha, $status, $vendedor, $comissionado, $tipo_admin);
 
 							$url = "admin-cadastro.php?op=administradores&tela=listagem";
@@ -723,7 +723,7 @@
 						}
 
 					} else { //Cadastro
-						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
+						$this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES");
 						if(!$this->_acao) {
 							$this->_view->atribui("acao","cadastrar");
 						} else {
@@ -765,7 +765,7 @@
 				case 'privilegio':
 
 
-					$this->requirePrivLeitura("_ADMINISTRACAO_ADMINISTRADORES");
+					$this->requirePrivLeitura("_CADASTRO_ADMINISTRADORES");
 
 
 					$acao = @$_REQUEST["acao"];
@@ -775,7 +775,7 @@
 
 
 					if($acao=="gravar"){
-						$this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES");
+						$this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES");
 						$this->administradores->gravaPrivilegioUsuario($id_admin,$acesso);
 						$this->_view->atribui("url","admin-cadastro.php?op=administradores&tela=listagem");
 						$this->_view->atribui("mensagem","Privilégios gravados com sucesso!");
@@ -809,7 +809,7 @@
 
 						$podeGravar = false;
 
-						if( $this->requirePrivGravacao("_ADMINISTRACAO_ADMINISTRADORES", false) ) {
+						if( $this->requirePrivGravacao("_CADASTRO_ADMINISTRADORES", false) ) {
 							$podeGravar = true;
 						}
 

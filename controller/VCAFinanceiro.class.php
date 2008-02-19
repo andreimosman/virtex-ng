@@ -128,7 +128,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	
 		$this->_view->atribuiVisualizacao("cobranca");
 	
-		$this->requirePrivGravacao("_COBRANCA_AMORTIZACAO");
+		$this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO");
 		$id_cobranca = @$_REQUEST["id_cobranca"];
 
 		$texto_pesquisa = @$_REQUEST["texto_pesquisa"];
