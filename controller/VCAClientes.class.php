@@ -74,7 +74,7 @@
 			$cadastro = VirtexModelo::factory("cadastro");
 			$condominios = $cadastro->obtemCondominio();
 			
-			$this->_view->atribui("condominios", json_encode($condominios));
+			$this->_view->atribui("condominios", MJSon::encode($condominios));
 
 			if( $this->id_cliente ) {
 				if( $this->extra_op ) {
@@ -369,8 +369,8 @@
 					$cadastro = VirtexModelo::factory("cadastro");
 					$condominios = $cadastro->obtemCondominio();
 					$condominios_instalacao = $cadastro->obtemCondominio(NULL, true);
-					$this->_view->atribui("condominios", json_encode($condominios));					
-					$this->_view->atribui("condominios_instalacao", json_encode($condominios_instalacao));					
+					$this->_view->atribui("condominios", MJSon::encode($condominios));					
+					$this->_view->atribui("condominios_instalacao", MJSon::encode($condominios_instalacao));					
 
 					$this->requirePrivGravacao("_CLIENTES_CONTRATOS");
 
@@ -1252,7 +1252,7 @@
 					
 					$cadastro = VirtexModelo::factory("cadastro");
 					$condominios = $cadastro->obtemCondominio();
-					$this->_view->atribui("condominios", json_encode($condominios));						
+					$this->_view->atribui("condominios", MJSon::encode($condominios));						
 
 					if( trim($info["tipo_conta"]) == "BL" || trim($info["tipo_conta"]) == "D") {
 
