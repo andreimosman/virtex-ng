@@ -107,12 +107,20 @@
 			if( !$this->extra_op && $this->_acao ) {
 				$this->requirePrivGravacao("_CLIENTES");
 				try {
+					$dados = @$_REQUEST;
+					if(isset($dados["id_condominio"]) && !$dados["id_condominio"]) unset($dados["id_condominio"]);
+					if(isset($dados["id_bloco"]) && !$dados["id_bloco"]) unset($dados["id_bloco"]);
+					
+					echo "<PRE>";
+					print_r($dados);
+					echo "</PRE>";
+					
 					if( $this->id_cliente ) {
-						$this->clientes->altera($this->id_cliente,@$_REQUEST);
+						$this->clientes->altera($this->id_cliente, $dados);
 						$mensagem = "Cliente alterado com sucesso.";
 						$id_cliente = $this->id_cliente;
 					} else {
-						$id_cliente = $this->clientes->cadastra(@$_REQUEST);
+						$id_cliente = $this->clientes->cadastra($dados);
 						$mensagem = "Cliente cadastrado com sucesso.";
 					}
 
