@@ -353,7 +353,7 @@ function checkForm() {
 					<tr>
 						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
 								<input type="hidden" name="id_cidade"  id="id_cidade" value="{$id_cidade}" />
-								<select class="{$estilo}" style="width:310px" name="id_cidade_combo" id="id_cidade_combo" tabindex="10" onchange="javascript:document.getElementById('id_cidade').value=this.value; alert(document.getElementById('id_cidade').value)" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+								<select class="{$estilo}" style="width:310px" name="id_cidade_combo" id="id_cidade_combo" tabindex="10" onchange="javascript:document.getElementById('id_cidade').value=this.value;" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 								{foreach item=a from=$cidades_disponiveis}
 
 								<option value='{$a.id_cidade}' {if $a.id_cidade == $id_cidade}selected{/if}>{$a.cidade}
@@ -361,7 +361,9 @@ function checkForm() {
 								{/foreach}
 
 							</select>
+
 							</font>
+							<script>document.getElementById("id_cidade").value = document.getElementById("id_cidade_combo").value;</script>
 						</td>
 					</tr>
 				</table>
@@ -450,5 +452,6 @@ if( !document.cadastro.nome_razao.disabled ) {
 	document.cadastro.nome_razao.focus();
 }
 {/literal}
+
 </script>
 </html>
