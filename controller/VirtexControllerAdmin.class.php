@@ -89,7 +89,7 @@
 			$this->_loginScript = "admin-login.php";
 			$this->_changePasswordScript = "admin-administracao.php?op=altsenha";
 			
-			$this->_registroScript = "admin-configuracoes.php?op=preferencias&tela=registro";
+			$this->_registroScript = "admin-administracao.php?op=preferencias&tela=registro";
 			
 		}
 		
