@@ -8934,19 +8934,19 @@
 </tables>
 <sequences >
  <adsq_id_admin >
-  <start >32</start>
+  <start >33</start>
   <increment >1</increment>
  </adsq_id_admin>
  <adsq_id_priv >
-  <start >33</start>
+  <start >32</start>
   <increment >1</increment>
  </adsq_id_priv>
  <cxsq_autenticacao >
-  <start >164</start>
+  <start >165</start>
   <increment >1</increment>
  </cxsq_autenticacao>
  <bktb_backup_id_backup_seq >
-  <start >102</start>
+  <start >103</start>
   <increment >1</increment>
  </bktb_backup_id_backup_seq>
  <blsq_carne_nossonumero >
@@ -8958,11 +8958,11 @@
   <increment >1</increment>
  </blsq_nosso_numero_banco>
  <cbsq_id_carne >
-  <start >75</start>
+  <start >76</start>
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >393</start>
+  <start >394</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -8970,19 +8970,19 @@
   <increment >1</increment>
  </cbsq_id_cobranca>
  <cbsq_id_endereco_cobranca >
-  <start >302</start>
+  <start >303</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbtb_faturas_id_cobranca_seq >
-  <start >3552</start>
+  <start >3553</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cxsq_id_fluxo >
-  <start >164</start>
+  <start >166</start>
   <increment >1</increment>
  </cxsq_id_fluxo>
  <cfsq_id_cobranca >
-  <start >2</start>
+  <start >5</start>
   <increment >1</increment>
  </cfsq_id_cobranca>
  <cfsq_id_nas >
@@ -8990,15 +8990,15 @@
   <increment >1</increment>
  </cfsq_id_nas>
  <cfsq_id_pop >
-  <start >90</start>
+  <start >91</start>
   <increment >1</increment>
  </cfsq_id_pop>
  <cfsq_id_rede >
-  <start >1057</start>
+  <start >2493</start>
   <increment >1</increment>
  </cfsq_id_rede>
  <cfsq_servidor_id_servidor >
-  <start >11</start>
+  <start >12</start>
   <increment >1</increment>
  </cfsq_servidor_id_servidor>
  <cftb_links_id_link_seq >
@@ -9006,7 +9006,7 @@
   <increment >1</increment>
  </cftb_links_id_link_seq>
  <clsq_id_cliente >
-  <start >2038</start>
+  <start >8002</start>
   <increment >1</increment>
  </clsq_id_cliente>
  <clsq_id_cliente_produto >
@@ -9018,11 +9018,11 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >264</start>
+  <start >1463</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >259</start>
+  <start >271</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <id_venda_seq >
@@ -9034,7 +9034,7 @@
   <increment >1</increment>
  </lgsq_id_exclusao>
  <lgsq_id_processo >
-  <start >994</start>
+  <start >998</start>
   <increment >1</increment>
  </lgsq_id_processo>
  <lgsq_id_remessa >
@@ -9050,7 +9050,7 @@
   <increment >1</increment>
  </lgtb_contas_excluidas_id_excluida_seq>
  <lgtb_reagendamento_id_reagendamento_seq >
-  <start >10</start>
+  <start >11</start>
   <increment >1</increment>
  </lgtb_reagendamento_id_reagendamento_seq>
  <lgtb_renovacao_id_renovacao_seq >
@@ -9074,15 +9074,15 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >502</start>
+  <start >511</start>
   <increment >1</increment>
  </spsq_id_spool>
  <pfsq_id_forma_pagamento >
-  <start >13</start>
+  <start >14</start>
   <increment >1</increment>
  </pfsq_id_forma_pagamento>
  <pfsq_id_modelo_contrato >
-  <start >18</start>
+  <start >19</start>
   <increment >1</increment>
  </pfsq_id_modelo_contrato>
  <sptb_spool_id_spool_seq >
@@ -9094,7 +9094,7 @@
   <increment >1</increment>
  </sptb_spool_id_spool>
  <prsq_id_produto >
-  <start >68</start>
+  <start >69</start>
   <increment >1</increment>
  </prsq_id_produto>
  <rdsq_id_accounting >
@@ -9110,11 +9110,11 @@
   <increment >1</increment>
  </cbtb_lote_cobranca_id_remessa_seq>
  <cbsq_id_remessa >
-  <start >126</start>
+  <start >125</start>
   <increment >1</increment>
  </cbsq_id_remessa>
  <evsq_id_evento >
-  <start >262</start>
+  <start >271</start>
   <increment >1</increment>
  </evsq_id_evento>
  <casq_id_condominio >
@@ -9122,15 +9122,15 @@
   <increment >1</increment>
  </casq_id_condominio>
  <casq_id_bloco >
-  <start >6</start>
+  <start >8</start>
   <increment >1</increment>
  </casq_id_bloco>
  <cbsq_id_comissao >
-  <start >7</start>
+  <start >8</start>
   <increment >1</increment>
  </cbsq_id_comissao>
  <hdsq_id_grupo >
-  <start >10</start>
+  <start >11</start>
   <increment >1</increment>
  </hdsq_id_grupo>
 </sequences>
