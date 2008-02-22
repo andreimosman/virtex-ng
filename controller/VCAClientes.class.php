@@ -111,10 +111,6 @@
 					if(isset($dados["id_condominio"]) && !$dados["id_condominio"]) unset($dados["id_condominio"]);
 					if(isset($dados["id_bloco"]) && !$dados["id_bloco"]) unset($dados["id_bloco"]);
 					
-					echo "<PRE>";
-					print_r($dados);
-					echo "</PRE>";
-					
 					if( $this->id_cliente ) {
 						$this->clientes->altera($this->id_cliente, $dados);
 						$mensagem = "Cliente alterado com sucesso.";
@@ -975,6 +971,7 @@
 		}
 
 		protected function executaConta() {
+				
 			$this->_view->atribuiVisualizacao("conta");
 			$tipo = trim($_REQUEST["tipo"]);
 			$id_conta 	= @$_REQUEST["id_conta"];
