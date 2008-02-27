@@ -29,7 +29,6 @@
 			
 			return($this->bd->obtemRegistros($sql));
 			
-		
 		}
 		
 		public static function listaTipoPessoa() {

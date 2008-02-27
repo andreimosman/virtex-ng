@@ -73,7 +73,7 @@
 
 		public function obtemEnderecoCobranca($id_cliente_produto) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
-			return($this->cbtb_endereco_cobranca->obtemUnico($filtro));
+			return($this->cbtb_endereco_cobranca->obtemUnico($filtro, "id_endereco_cobranca DESC"));
 		}
 
 

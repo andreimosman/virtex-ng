@@ -142,6 +142,9 @@ function Cancelar() {
 }
 
 function contratoObtemPlano(tipo,id_produto) {
+
+
+
 	var lista = null;
 
 	if(tipo == "BL") {
@@ -158,6 +161,7 @@ function contratoObtemPlano(tipo,id_produto) {
 
 	if( lista != null ) {
 		for(i=0;i<lista.length;i++) {
+
 			if( lista[i].id_produto == id_produto ) {
 				return lista[i];
 			}
@@ -498,6 +502,8 @@ function contratoAlteraFormaPagamento() {
 function contratoAlteraProduto() {
 	var frm=document.contratacao;
 
+
+
 	desabilita(frm.data_contratacao);
 	desabilita(frm.vigencia);
 	desabilita(frm.dia_vencimento);
@@ -511,8 +517,11 @@ function contratoAlteraProduto() {
 	desabilita(frm.valor_comodato);
 
 
+
 	desabilita(frm.pagamento);
 	contratoDesabilitaFormaPagamento();
+
+
 
 	if( frm.id_cliente_produto.value == '' ) {
 		desabilita(frm.username);
@@ -521,6 +530,9 @@ function contratoAlteraProduto() {
 		desabilita(frm.confsenha);
 	}
 
+
+
+
 	//window.alert("CONTRATO: " + contrato);
 
 	if( frm.id_produto.value == "" && frm.tipo_produto_original.value != '' ) {
@@ -528,14 +540,24 @@ function contratoAlteraProduto() {
 		frm.id_produto.value = frm.id_produto_original.value;
 	}
 
+
+
+
 	if( frm.id_produto.value != "" ) {
+
+
+
 		produto = contratoObtemPlano(frm.tipo.value,frm.id_produto.value);
 
 		habilita(frm.data_contratacao);
 		habilita(frm.vigencia);
 
 
+
 		if( produto.valor > 0 ) {
+
+
+
 			// Produto pago. Habilitar campos de valores
 			habilita(frm.dia_vencimento);
 			habilita(frm.carencia);
@@ -565,7 +587,11 @@ function contratoAlteraProduto() {
 			}
 		} else {
 			cortesia = true;
+
+
 		}
+
+
 
 		if( frm.id_cliente_produto.value == '' ) {
 			habilita(frm.username);
@@ -574,7 +600,10 @@ function contratoAlteraProduto() {
 			habilita(frm.confsenha);
 		}
 
+
+
 	}
+
 }
 
 function contratoAlteraComodato() {
@@ -613,6 +642,9 @@ function formOnFocusSuf(obj,sufixo) {
 
 function checkStatusFields(tag) {
 
+	 var id_condominio_cobranca = document.getElementById('id_condominio_cobranca');
+	 var id_condominio_instalacao = document.getElementById('id_condominio_instalacao');
+
      if ( tag.name == "difEnderecoMail" ) {
 
        if ( tag.checked == false ) {
@@ -623,7 +655,9 @@ function checkStatusFields(tag) {
           desabilita(document.getElementById('cep_cobranca'));
           desabilita(document.getElementById('id_condominio_cobranca'));
           desabilita(document.getElementById('id_bloco_cobranca'));
-          document.getElementById('id_condominio_cobranca').value="";
+
+          if(id_condominio_cobranca) id_condominio_cobranca.value = "";
+
        }
        else {
           habilita(document.getElementById('endereco_cobranca'));
@@ -644,7 +678,8 @@ function checkStatusFields(tag) {
           desabilita(document.getElementById('cep_instalacao'));
           desabilita(document.getElementById('id_condominio_instalacao'));
           desabilita(document.getElementById('id_bloco_instalacao'));
-          document.getElementById('id_condominio_instalacao').value="";
+
+          if(id_condominio_instalacao) document.getElementById('id_condominio_instalacao').value="";
        }
        else {
           habilita(document.getElementById('endereco_instalacao'));
@@ -664,6 +699,8 @@ function calculaDiaProximaFatura() {
 
 	// year, mount, date
 	var sD = document.getElementById('data_contratacao').value.split("/");
+
+
    	var frm = document.contratacao;
 
     var dia_ven = document.getElementById("dia_vencimento").value;
@@ -693,10 +730,11 @@ function calculaDiaProximaFatura() {
     	data_base.setDate(dia_ven);
     	data_base.setMonth(mes - 1);
     	t_dia = data_base.getDate();
-
-    	if( t_dia == 0 || dia_ven == 0 ) {
+		if(confirm(tdia + " <---> " + dia_ven))return;
+    	if( t_dia == 0 || dia_ven == 0 || !t_dia || !dia_ven ) {
     		break;
     	}
+
     }
 
 
@@ -1063,7 +1101,7 @@ function validarData(campo){
 		<td align="center" colspan=4><input type="checkbox" name="difEnderecoMail" id="difEnderecoMail" OnClick="checkStatusFields(this);" ><label>Especificar outro endere&ccedil;o pra cobran&ccedil;a</label></td>
     </tr>
 
-	{if !$condominios == "[]"}
+	{if $condominios != "[]"}
   	<tr>
 			<td align="right"><strong>Condomínio:</strong></td>
 			<td align="left">
@@ -1163,7 +1201,7 @@ function validarData(campo){
 					</tr>
 					<tr>
 						<td align="right"><label>Produto:</label></td>
-						<td colspan="3"><select style="width: 250px;" name="id_produto" id="id_produto" onChange="contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="formOnFocus(this);" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></select></td>
+						<td colspan="3"><select style="width: 250px;" name="id_produto" id="id_produto" onChange="javascript: contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="formOnFocus(this);" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></select></td>
 					</tr>
 					<tr>
 						<td align="right" width="110"><label>Dt. Contratação:</label></td>
@@ -1386,7 +1424,7 @@ function validarData(campo){
 
 
 						<tr>
-							<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></th>
+							<td colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></td>
 						</tr>
 						<tr>
 						<td colspan=4 >
@@ -1394,11 +1432,11 @@ function validarData(campo){
 						</td>
 						</tr>
 
-						{if $condominios_instalacao}
+						{if $condominios != "[]"}
 						<tr>
 							<td align="right" width="110"><label>Condominio:</label></td>
 							<td colspan=3>
-								<select name="id_condominio_instalacao" id="id_condominio_instalacao" onchange="javascript:AjustarCamposFormularioContratoInstalacao('contratacao', this.selectedIndex -1 , condominios);" DISABLED>
+								<select name="id_condominio_instalacao" class="fieldWithoutFocus" id="id_condominio_instalacao" onchange="javascript:AjustarCamposFormularioContratoInstalacao('contratacao', this.selectedIndex -1 , condominios);" DISABLED>
 									<option value="">-- SELECIONE --</option>
 								</select>
 							</td>
@@ -1407,7 +1445,7 @@ function validarData(campo){
 						<tr>
 							<td align="right" width="110"><label>Bloco:</label></td>
 							<td colspan=3>
-								<select name="id_bloco_instalacao" id="id_bloco_instalacao" DISABLED>
+								<select name="id_bloco_instalacao" id="id_bloco_instalacao" class="fieldWithoutFocus" DISABLED>
 									<option value="">-- SELECIONE --</option>
 								</select>
 							</td>

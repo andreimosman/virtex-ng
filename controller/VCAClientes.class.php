@@ -1262,7 +1262,8 @@
 					if( trim($info["tipo_conta"]) == "BL" || trim($info["tipo_conta"]) == "D") {
 
 						$endereco_instalacao = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
-						 if(!count($endereco_instalacao)){
+						
+						if(!count($endereco_instalacao)){
 							$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);
 							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
 																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"],$this->id_cliente);
