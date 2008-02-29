@@ -31,7 +31,8 @@
 		 *
 		 * Executar alguma ação para que o erro não apareça para o usuário final.
 		 */
-		//print_r($e->getTrace());
+		
+		/**print_r($e->getTrace());*/
 		
 		echo "CONTROLLER INEXISTENTE ;): $tipo_interface - $sessao";		
 		
