@@ -55,6 +55,9 @@
 					case 'helpdesk': 
 						self::$modelosInstanciados[$modelo] = new MODELO_Helpdesk();
 						break;
+					case 'radius':
+						self::$modelosInstanciados[$modelo] = new MODELO_Radius();
+						break;
 					default:
 						throw new ExcecaoModeloInexistente();
 
