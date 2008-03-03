@@ -122,7 +122,17 @@
 			<input type=hidden name="id_forma_pagamento" value="{if $forma_pagamento == 'BL'}{$id_forma_pagamento_BL}{/if}{if $forma_pagamento == 'DA'}{$id_forma_pagamento_DA}{/if}{if $forma_pagamento == 'MO'}{$id_forma_pagamento_MO}{/if}{if $forma_pagamento == 'PC'}{$id_forma_pagamento_PC}{/if}" >
 
  			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
-			<td colspan=3  align="left"><span style="font-family: arial; font-size: 10px;">{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+			<td colspan=3  align="left">
+				<span style="font-family: arial; font-size: 10px;">
+					{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]}
+						{$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}
+					{elseif $formaPagamento.tipo_cobranca == "MO"}
+						Sistema manual com exportação.
+					{else}
+						Não atrelado
+					{/if}
+				</span>
+			</td>
 		</tr>
 		{if $formaPagamento.tipo_cobranca == "DA"}
 		<tr>

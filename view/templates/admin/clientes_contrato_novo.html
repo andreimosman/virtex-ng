@@ -444,6 +444,36 @@ function contratoAlteraFormaPagamentoDA() {
 	}
 }
 
+
+function contratoAlteraFormaPagamentoNA() {
+	var frm=document.contratacao;
+
+	var fp = getCheckedRadio("forma_pagamento");
+	if( fp != null ) {
+		valor = fp.value;
+	} else {
+		valor = null;
+	}
+
+	if( frm.agencia != undefined && frm.agencia != null && frm.conta != undefined && frm.conta != null ) {
+		frm.agencia.disabled = true;
+		frm.agencia.className="disabledFP";
+		frm.conta.disabled = true;
+		frm.conta.className="disabledFP";
+	}
+	if( fp != null && !fp.disabled ) {
+		if(  valor == "NA" && frm.id_forma_pagamento_NA.value != "" ) {
+			if( frm.agencia != undefined && frm.agencia != null && frm.conta != undefined && frm.conta != null ) {
+				frm.agencia.disabled = false;
+				frm.agencia.className="fieldWithoutFocusFP";
+				frm.conta.disabled = false;
+				frm.conta.className="fieldWithoutFocusFP";
+			}
+		}
+	}
+}
+
+
 function contratoAlteraFormaPagamento() {
 	var frm=document.contratacao;
 
@@ -465,6 +495,9 @@ function contratoAlteraFormaPagamento() {
 	}
 	if( frm.id_forma_pagamento_MO != undefined && frm.id_forma_pagamento_MO != null ) {
 		frm.id_forma_pagamento_MO.disabled = true;
+	}
+	if( frm.id_forma_pagamento_NA != undefined && frm.id_forma_pagamento_NA != null ) {
+		frm.id_forma_pagamento_NA.disabled = true;
 	}
 
 	if( fp != null && !fp.disabled ) {
@@ -489,6 +522,12 @@ function contratoAlteraFormaPagamento() {
 		if( frm.id_forma_pagamento_MO != undefined ) {
 			if( valor == "MO" ) {
 				frm.id_forma_pagamento_MO.disabled = false;
+			}
+		}
+
+		if( frm.id_forma_pagamento_NA != undefined ) {
+			if( valor == "NA" ) {
+				frm.id_forma_pagamento_NA.disabled = false;
 			}
 		}
 	}
@@ -1277,31 +1316,38 @@ function validarData(campo){
 						</td-->
 						<td colspan=2>
 							<table border=0 class="lista" width="100%" cellspacing=0 cellpadding=0>
+							{assign var=estilo value='impar'}
 							{foreach name=registros key=tipo item=v from=$formasPagamento}
-								{if count($v)}
-									{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+								{if count($v) }
+									{if $estilo=='impar'}{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 									<tr>
 										<td width="10" class='{$estilo}'><label><input type="radio" name="forma_pagamento" id="forma_pagamento" value="{$tipo}" onClick="javascript:contratoAlteraFormaPagamento()" {if $tipo == $forma_pagamento_original}CHECKED{/if}></td>
 										<td class='{$estilo}'>
 											<b>{$tiposFormaPgto[$tipo]}</b><br><span style="font-family: arial; font-size: 8px;">
-											{if count($v) == 1}
-												{if $tipo == "PC" || $tipo == "DA" || $tipo == "BL"}{$bancos[$v.0.codigo_banco]} - convênio {$v.0.convenio}{else}Sistema manual com exportação.{/if}
-												<input type="hidden" name="id_forma_pagamento_{$tipo}" id="id_forma_pagamento_{$tipo}" value="{$v.0.id_forma_pagamento}">
-											{else}
+
 												<table border=0 cellpadding=0 cellspacing=0>
 													<tr>
 														<td>
 															<select name="id_forma_pagamento_{$tipo}" id="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"} onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
 																<option value="">-- SELECIONE --</option>
 																{foreach item=f from=$v}
-																	<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
-																		{if $tipo == "MO"}
-																			{$f.id_forma_pagamento}
-																		{/if}
-																		{if $tipo == "DA" || $tipo == "BL"}
+
+
+																	{if $tipo == "DA" || $tipo == "BL" && $f.carne == 't'}
+																		<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
 																			{$bancos[$f.codigo_banco]} - convênio {$f.convenio}
-																		{/if}
-																	</option>
+																		</option>
+																	{elseif $tipo == "MO"}
+																		<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
+																			{$f.id_forma_pagamento}
+																		</option>
+																	{elseif $tipo == "PC"}
+																		<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
+																			{$bancos[$f.codigo_banco]} - convênio {$f.convenio}
+																		</option>
+																	{/if}
+
+
 																{/foreach}
 															</select>
 														</td>
@@ -1321,13 +1367,21 @@ function validarData(campo){
 													</tr>
 													{/if}
 												</table>
-											{/if}
+
 											</span>
 											</label>
 										</td>
 									</tr>
+									<tr>
 								{/if}
 							{/foreach}
+
+							<tr> {if $estilo=='impar'}{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+								<td class='{$estilo}'><input type="radio" name="forma_pagamento" id="forma_pagamento" value="NA" onClick="javascript:contratoAlteraFormaPagamento()" /></td>
+								<td class='{$estilo}'>
+									<b>Não atrelar</b>
+								</td>
+							</tr>
 							</table>
 
 						</td>
