@@ -386,6 +386,7 @@
 
 					// Dados comuns
 					$tiposFormaPgto = $this->preferencias->obtemTiposFormaPagamento();
+					
 					$this->_view->atribui("tiposFormaPgto",$tiposFormaPgto);
 
 					$bancos = $this->preferencias->obtemListaBancos();
@@ -440,8 +441,8 @@
 						/**
 						 * Formas de Pagamento - Agrupadas por tipo
 						 */
-						$formasPagamento = $this->preferencias->obtemFormasPagamento('t');
-
+						$formasPagamento = $this->preferencias->obtemFormasPagamento('t');					
+						
 						$f = array_keys($tiposFormaPgto);
 						$formas = array();
 						for($i=0;$i<count($f);$i++) {
@@ -453,7 +454,6 @@
 						}
 
 						$this->_view->atribui("formasPagamento",$formas);
-
 
 						/**
 						 * Tipos de Pagamento (pré e pós pago).
@@ -608,7 +608,11 @@
 							// Seleção de dados para exibição na tela de confirmação.
 
 						}
+						
 
+						if(@$_REQUEST["forma_pagamento"] == "NA") { 
+							$id_forma_pagamento = "9999";
+						}
 
 						if( !$id_forma_pagamento ) {
 							$id_forma_pagamento = @$_REQUEST["id_forma_pagamento_" . @$_REQUEST["forma_pagamento"]];
@@ -617,8 +621,7 @@
 								$this->_view->atribui("formaPagamento",$formaPagamento);
 							}
 						}
-
-
+						
 
 						if( $acao == "gravar_novo_contrato" ) {
 
