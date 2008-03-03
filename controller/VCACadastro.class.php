@@ -172,10 +172,6 @@
 			
 			$url = "admin-cadastro.php?op=equipamentos&tela=pops";
 			
-			echo "<PRE>";
-			print_r($_REQUEST);
-			echo "</pre>";
-			
 			$id_pop = @$_REQUEST["id_pop"];
 			$nome = @$_REQUEST["nome"];			
 			$info = @$_REQUEST["info"];
@@ -220,9 +216,6 @@
 									$info = @$_REQUEST;
 								} else {
 									$info = $equipamentos->obtemPop($id_pop);
-									echo "<PRE>";
-									print_r($info);
-									echo "</PRE>";
 								}
 								while(list($vr,$vl)=each($info)) {
 									$this->_view->atribui($vr,$vl);
