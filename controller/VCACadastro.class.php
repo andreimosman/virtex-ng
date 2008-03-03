@@ -170,7 +170,11 @@
 			
 			$acao = @$_REQUEST["acao"];
 			
-			$url = "admin-configuracoes.php?op=equipamentos&tela=pops";
+			$url = "admin-cadastro.php?op=equipamentos&tela=pops";
+			
+			echo "<PRE>";
+			print_r($_REQUEST);
+			echo "</pre>";
 			
 			$id_pop = @$_REQUEST["id_pop"];
 			$nome = @$_REQUEST["nome"];			
@@ -179,6 +183,9 @@
 			$id_pop_ap = @$_REQUEST["id_pop_ap"];
 			$status = @$_REQUEST["status"];
 			$ipaddr = @$_REQUEST["ipaddr"];
+			$macaddr = @$_REQUEST["macaddr"];
+			$bloquearmac = @$_REQUEST["bloquearmac"];
+			$clientemacpop = @$_REQUEST["clientemacpop"];
 			$id_servidor = @$_REQUEST["id_servidor"];
 			$ativar_monitoramento = @$_REQUEST["ativar_monitoramento"];
 			
@@ -213,6 +220,9 @@
 									$info = @$_REQUEST;
 								} else {
 									$info = $equipamentos->obtemPop($id_pop);
+									echo "<PRE>";
+									print_r($info);
+									echo "</PRE>";
 								}
 								while(list($vr,$vl)=each($info)) {
 									$this->_view->atribui($vr,$vl);
@@ -225,7 +235,7 @@
 							}
 						} else {
 							// Processar alteração								
-							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento);
+							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $macaddr, $bloquearmac, $clientemacpop);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Pop atualizado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
@@ -236,7 +246,7 @@
 
 						if( $acao ) {
 							// Cadastrar							
-							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento);
+							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $macaddr, $bloquearmac, $clientemacpop);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Pop cadastrado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
@@ -296,7 +306,7 @@
 							$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
 							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao);
 							
-							$url = "admin-configuracoes.php?op=equipamentos&tela=nas";
+							$url = "admin-cadastro.php?op=equipamentos&tela=nas";
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","NAS atualizado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");							
@@ -311,7 +321,7 @@
 							//CADASTRAR							
 							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao);
 							
-							$url = "admin-configuracoes.php?op=equipamentos&tela=nas&subtela=cadastro";
+							$url = "admin-cadastro.php?op=equipamentos&tela=nas&subtela=cadastro";
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","NAS cadastrado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");							

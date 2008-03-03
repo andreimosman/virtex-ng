@@ -110,6 +110,8 @@ label {
 			return false;
 		}
 
+		if(!confereCampoMAC()) return false;
+
 		if(estaVazio(status.value)) {
 			alert("Um status deve ser selecionado.");
 			status.value="";
@@ -132,6 +134,45 @@ label {
 			}
 		}
 	}
+
+
+	function confereCampoMAC() {
+		var macaddr = document.getElementById("macaddr");
+		var bloquearmac = document.getElementById("bloquearmac");
+		var tipo = document.getElementById("tipo");
+		var clientemacpop = document.getElementById("clientemacpop");
+		var divClienteMacPop = document.getElementById("divClienteMacPop");
+
+		if(estaVazio(macaddr.value)) {
+			bloquearmac.disabled = true;
+			bloquearmac.checked= false;
+			return true;
+		}
+
+		if(!macValido(macaddr.value)) {
+			alert("Endereço de MAC Address inserido no campo é inválido");
+			macaddr.value="";
+			macaddr.focus();
+			bloquearmac.disabled = true;
+			bloquearmac.checked= false;
+			divClienteMacPop.style.display = "none";
+			clientemacpop.disabled=true;
+			return false;
+		}
+
+		if(tipo.value == "CL" && !estaVazio(macaddr.value)) {
+			divClienteMacPop.style.display = "block";
+			clientemacpop.disabled=false;
+		} else {
+			divClienteMacPop.style.display = "none";
+			clientemacpop.disabled=true;
+		}
+
+		bloquearmac.disabled = false;
+		return true;
+	}
+
+
 </script>
 {/literal}
 <center>
@@ -157,7 +198,7 @@ label {
 		<tr>
 			<td width="100" align="right" nowrap><label>Tipo:</label></td>
 			<td width="24%">
-				<select name="tipo" id="tipo" onChange="preenchePopAp();" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+				<select name="tipo" id="tipo" onChange="preenchePopAp(); confereCampoMAC();" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
 				{foreach key=id item=nome from=$tipo_pop}
 				<option value='{$id}'{if $id == $tipo}selected{/if}>{$nome} </option>
 				{/foreach}
@@ -170,6 +211,26 @@ label {
 				</select>
 			</td>
 		</tr>
+
+		<tr>
+			<td width="100" align="right" nowrap><label>MAC:</label></td>
+			<td colspan=2><input name="macaddr" type="text" id="macaddr" value="{$macaddr}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
+
+			<td width="100" align="left" valign="middle" nowrap>
+				<input name="bloquearmac" type="checkbox" id="bloquearmac" value="t" DISABLED /><label>Bloquear MAC</label>
+			</td>
+		</tr>
+
+		<tr>
+			<td width="100" align="right"></td>
+			<td colspan=3  nowrap>
+				<div id="divClienteMacPop" style="position:relative; display:none;">
+					<input name="clientemacpop" type="checkbox" id="clientemacpop" value="t"  />
+					<label>Clientes acessam a internet com o MAC do equipamento</label>
+				</div>
+			</td>
+		</tr>
+
 		<tr>
 			<td width="100" align="right" nowrap><label>Status:</label></td>
 			<td colspan="4">
@@ -261,5 +322,8 @@ label {
 <script language="JavaScript">
 	habilita_monitor();
 	preenchePopAp();
+	confereCampoMAC();
+	{if $clientemacpop == 't'}document.getElementById("clientemacpop").checked = true;{/if}
+	{if $bloquearmac == 't'}document.getElementById("bloquearmac").checked = true;{/if}
 </script>
 </html>
