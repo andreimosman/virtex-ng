@@ -26,6 +26,7 @@
 			/**
 			 * Autenticação.
 			 */
+
 			
 			if( $acao == "login" ) {
 				// Fazer o login
