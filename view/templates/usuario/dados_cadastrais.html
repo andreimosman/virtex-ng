@@ -2,89 +2,44 @@
 	<style>
 	*{
 		font-family:tahoma, arial, verdana;
-		font-size:11px;
+		font-size:12px;
 	}
 	strong{
 		color:#6E7D9A;
 	}
 	</style>
 {/literal}
+	<table class="lista" border=0  width="400" align="center">
 
-<table align='center'>
-	<tr>
-		<td align="right"><strong>#{$cliente.id_cliente}</strong></td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Nome/Razão Social:</strong></td>
-		<td>{$cliente.nome_razao}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Tipo Pessoa:</strong></td>
-		<td>{if $cliente.tipo_pessoa=="F"}Física{else}Jurídica{/if}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>RG:</strong></td>
-		<td>{$cliente.rg_inscr}/{$cliente.rg_expedicao}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>CPF/CNPJ:</strong></td>
-		<td>{$cliente.cpf_cnpj}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>E-Mail:</strong></td>
-		<td>{$cliente.email}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Endereço:</strong></td>
-		<td>{$cliente.endereco}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Complemento:</strong></td>
-		<td>{$cliente.complemento}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Cidade</strong></td>
-		<td>{$cidade_uf.cidade}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>UF</strong></td>
-		<td>{$cidade_uf.uf}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>CEP</strong></td>
-		<td>{$cliente.cep}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Bairro:</strong></td>
-		<td>{$cliente.bairro}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Telefone Comercial:</strong></td>
-		<td>{$cliente.fone_comercial}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Telefone Residencial:</strong></td>
-		<td>{$cliente.fone_comercial}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Telefone Celular:</strong></td>
-		<td>{$cliente.fone_celular}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Banco:</strong></td>
-		<td>{$cliente.banco}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Conta Corrente:</strong></td>
-		<td>{$cliente.conta_corrente}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Agência:</strong></td>
-		<td>{$cliente.agencia}</td>
-	</tr>
-	<tr>
-		<td align="right"><strong>Dia Pagamento:</strong></td>
-		<td>{$cliente.dia_pagamento}</td>
-	</tr>
-</table>
+		<tr>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
+			<td align="left">{$cliente.nome_razao}</td>
+			<input type=hidden name="id_cliente" value="{$id_cliente}" >
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
+			<td align="left">{$cliente.cpf_cnpj}&nbsp;</td>
+			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG:{else}Inscrição{/if}</strong></td>
+			<td align="left">{$cliente.rg_inscr}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Endereço:</strong></td>
+			<td align="left" colspan="2">{$cliente.endereco}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Complemento:</strong></td>
+			<td colspan="2">{$cliente.complemento}&nbsp;</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Bairro:</strong></td>
+			<td align="left">{$cliente.bairro}</td>
+			<td><strong>CEP:</strong>&nbsp;{$cliente.cep}</td>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<td align="left" colspan="3">{$cidade_uf.cidade}-{$cidade_uf.uf}&nbsp;</td>
+		</tr>
+	</table>
+
+
 {include file="footer.html"}

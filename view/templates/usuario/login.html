@@ -1,10 +1,68 @@
-
-{if $mensagem}<p>{$mensagem}</p>{/if}
+{literal}
+	<style>
+	#login{
+		width:373px;
+		height:258px;
+		background-image:url(view/templates/imagens/background_box_login.gif);
+		margin:auto;
+		font-family:Tahoma, Verdana, Arial;
+		font-size:12px;
+		margin-top:30px;
+		color:#586d8c;
+		padding-top:30px;
+	}
+	input{
+		border:1px solid #cacaca;
+		font-size:11px;
+		padding-top:2px;
+		padding-left:2px;
+		padding-right:2px;
+		padding-bottom:2px;
+		height:20px;
+		width:150px;
+		color:#586d8c;
+	}
+	span{
+		font-family:Tahoma, Verdana, Arial;
+		font-size:10px;
+		text-transform:uppercase;
+		font-weight:bold;
+		color:#586d8c;
+	}
+	.titulo{
+		font-size:18px;
+		padding-left:15px;
+		font-family:Tahoma, Verdana, Arial;
+		font-weight:bold;
+		color:#586d8c;
+	}
+	</style>
+{/literal}
 <form method="post" action="{$smarty.server.PHP_SELF}">
 <input type="hidden" name="op" value="login">
 <input type="hidden" name="acao" value="login">
-Usuario/Email: <input type="text" name="username" value=""><br>
-Senha: <input type="text" name="password">
-<input type="submit" value="Ok">
-
+<table align="center">
+	<tr>
+		<td>
+			<div id="login">
+				<h2 class="titulo">&nbsp;&nbsp;&nbsp;Central do Assinante</h2>
+				{if $mensagem}<p style="color:red;" align="center">{$mensagem}</p>{/if}
+				<table style="margin-top:30px;margin-left:50px;">
+					<tr>
+						<td align="right"><span>usuário / e-mail:</span></td>
+						<td><input type="text" name="username" value=""></td>
+					</tr>
+					<tr>
+						<td align="right"><span>senha:</span></td>
+						<td><input type="password" name="password"></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" value="Ok" style="width:60px; font-size:10px;color:black;"></td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+</table>
 </form>
