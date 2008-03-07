@@ -1,6 +1,7 @@
 <?
 	class VCASuporte extends VirtexControllerAdmin {
 	
+		protected $helpdesk;
 	
 		public function __construct() {
 			parent::__construct();
@@ -9,6 +10,7 @@
 		public function init() {
 			parent::init();
 			$this->_view = VirtexViewAdmin::factory("suporte");
+			$this->helpdesk = VirtexModelo::factory("helpdesk");
 		}
 		
 		protected function executa() {
@@ -28,6 +30,9 @@
 				case 'relatorios':
 					$this->executaRelatorios();
 					break;
+				case 'helpdesk':
+					$this->executaHelpdesk();
+					break;					
 				default:
 					// do something
 			}
@@ -52,8 +57,6 @@
 			
 			}
 			
-
-
 		}
 		
 		protected function executaIPCalc() {
@@ -322,6 +325,68 @@
 			}
 			
 		}
+		
+		
+		
+		protected function executaHelpdesk() {
+			$this->requirePrivLeitura("_SUPORTE_RELATORIOS");
+			$tela = @$_REQUEST["tela"];
+			$this->_view->atribuiVisualizacao("helpdesk");
+			$this->_view->atribui("tela",$tela);
+			
+			$dadosLogin = $this->_login->obtem("dados");
+					
+			switch($tela) {			
+				case 'listagem':
+				default:
+					$chamados_pendentes = $this->helpdesk->obtemChamadosPendentesPeloResponsavel($dadosLogin["id_admin"]);
+					
+					$array_grupos = $this->helpdesk->obtemListaGrupos();
+					$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();				
+					
+					
+					//Agrupa todos os chamados dos grupos que o administrador participa
+					$grupos_pertencentes = $this->helpdesk->obtemListaGruposPertencentesAdmin($dadosLogin["id_admin"], 't');					
+					$chamados_por_grupo = array();
+					
+					foreach($grupos_pertencentes as $chave => $valor) {
+						$chamados_por_grupo[$valor["id_grupo"]] = array("nome" => $valor["nome"], "chamados" => array());
+						$chamados_grupo = $this->helpdesk->obtemChamadosPendentesPeloGrupo($valor["id_grupo"]);
+						
+						foreach($chamados_grupo as $chaveg => $valorg) {
+							if($valorg["responsavel"] != $dadosLogin["id_admin"]) {
+								$chamados_por_grupo[$valorg["id_grupo"]]["chamados"][] = $valorg;
+							}
+						}						
+											
+					}				
+					
+					//matriz de responsáveis(remake)
+					$responsaveis = array();
+					foreach($array_responsaveis as $chave => $valor) {
+						$responsaveis[$valor[id_admin]] = $valor["admnome"];
+					}
+
+					//matriz de grupos(remake)
+					$grupos = array();
+					foreach($array_grupos as $chave => $valor) {
+						$grupos[$valor[id_grupo]] = $valor["nome"];
+					}
+					
+					$this->_view->atribui("chamados_por_grupo",$chamados_por_grupo);
+					$this->_view->atribui("responsaveis",$responsaveis);
+					$this->_view->atribui("grupos",$grupos);
+					$this->_view->atribui("tipos_chamado",$tipos_chamado);
+					$this->_view->atribui("chamados_terminados",$chamados_terminados);
+					$this->_view->atribui("chamados_pendentes", $chamados_pendentes);
+					break;
+			}
+			
+			
+			
+
+		}		
+		
 		
 	}
 

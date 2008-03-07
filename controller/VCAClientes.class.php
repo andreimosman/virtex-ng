@@ -4,7 +4,7 @@
 
 		protected $clientes;
 		protected $id_cliente;
-
+		protected $helpdesk;
 		protected $itensMenu;
 
 
@@ -19,6 +19,7 @@
 			$this->_view = VirtexViewAdmin::factory("clientes");
 			$this->clientes = VirtexModelo::factory("clientes");
 			$this->eventos = VirtexModelo::factory("eventos");
+			$this->helpdesk = VirtexModelo::factory("helpdesk");
 
 
 			// Inicializações
@@ -53,6 +54,10 @@
 
 				case 'conta':
 					$this->executaConta();
+					break;
+				
+				case 'helpdesk':
+					$this->executaHelpdesk();
 					break;
 
 				default:
@@ -356,14 +361,9 @@
 							$this->_view->atribui("mensagem",$msg);
 							$this->_view->atribuiVisualizacao("msgredirect");
 
-
-
 						}
 
-
 					}
-
-
 					break;
 
 				case 'migrar':
@@ -1524,6 +1524,272 @@
 			$this->_view->atribuiVisualizacao("eliminar");
 			echo "EXECUTA ELIMINAR<br>\n";
 		}
+		
+
+		protected function executaHelpdesk() {
+			
+			$this->_view->atribuiVisualizacao("helpdesk");
+			
+			$id_cliente = @$_REQUEST["id_cliente"];
+			$tela = @$_REQUEST["tela"];
+			$op = @$_REQUEST["op"];
+			$acao = @$_REQUEST["acao"];
+			
+			$this->_view->atribui("tela", $tela);
+			$this->_view->atribui("op", $op);
+			
+			$info_cliente = $this->clientes->obtemPeloId($id_cliente);
+			
+			$dadosLogin = $this->_login->obtem("dados");
+			
+			$this->_view->atribui("dadosLogin", $dadosLogin);
+			$this->_view->atribui("id_cliente", $id_cliente);
+			$this->_view->atribui("nome_razao", $info_cliente["nome_razao"]);
+			
+			switch($tela) {
+				case 'cadastro': 		//Cadastro de novos chamados
+					if(!$acao) {
+						$contas = VirtexModelo::factory("contas");
+						
+						$tipos = $this->helpdesk->obtemTiposChamado();
+						$origens = $this->helpdesk->obtemOrigensChamado();
+						$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
+						$status_chamado = $this->helpdesk->obtemStatusChamado();
+						$dadosLogin = $this->_login->obtem("dados");
+
+						$grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
+						$responsaveis = $this->helpdesk->obtemListaAdminGrupo();
+						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
+
+						$this->_view->atribui("chamados_pendentes", $chamados_pendentes);
+						$this->_view->atribui("criado_por", $dadosLogin["id_admin"]);
+						$this->_view->atribui("acao", "gravar");
+						$this->_view->atribui("contas_cliente", $contas_cliente);
+						$this->_view->atribui("tipos", $tipos);
+						$this->_view->atribui("origens", $origens);
+						$this->_view->atribui("classificacoes", $classificacoes);
+						$this->_view->atribui("status_chamado", $status_chamado);
+						$this->_view->atribui("grupos", $grupos);
+						$this->_view->atribui("responsaveis", MJson::encode($responsaveis));
+					} else  {
+					
+						//Faz outras coisas
+						$tipo = @$_REQUEST["tipo"];
+						$criado_por = @$_REQUEST["criado_por"];
+						$id_grupo = @$_REQUEST["id_grupo"];
+						$assunto = @$_REQUEST["assunto"];
+						$descricao = @$_REQUEST["descricao"];
+						$origem = @$_REQUEST["origem"];
+						$classificacao = @$_REQUEST["classificacao"];
+						$responsavel= @$_REQUEST["responsavel"];
+						$id_cliente = @$_REQUEST["id_cliente"];
+						$id_conta = @$_REQUEST["id_conta"];
+						$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+						
+						
+						$id_cliente = $id_cliente ? $id_cliente : 0;
+						$id_conta = $id_conta ? $id_conta : 0;
+						$id_cliente_produto = $id_cliente_produto ? $id_cliente_produto : 0;
+						$responsavel = $responsavel ? $responsavel : null;					
+						
+						if($id_conta) {
+							$contas = VirtexModelo::factory("contas");
+							$conta = $contas->obtemContaPeloId($id_conta);
+							$id_cliente_produto = $conta["id_cliente_produto"];
+						}
+
+						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$responsavel,$id_cliente,$id_cliente_produto,$id_conta);
+					
+						$mensagem = "";
+						$url = "";
+						if($id_chamado) {
+							$mensagem = "Chamado aberto com sucesso.";
+							$url = "admin-clientes.php?op=desktop&tela=listagem&id_cliente=$id_cliente";
+						} else {
+							$mensagem = "Erro ao criar o chamado.";
+							$url = "admin-clientes.php?op=desktop&tela=listagem&id_cliente=$id_cliente";
+						}
+						
+						$this->_view->atribui("mensagem",$mensagem);
+						$this->_view->atribui("url","admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente=$id_cliente");
+						$this->_view->atribuiVisualizacao("msgredirect");
+					
+					}
+					break;
+				
+				
+				case 'alteracao': 		//Alteração de chamados existentes
+				
+					$id_chamado = $_REQUEST["id_chamado"];
+				
+					if(!$acao) { 
+					
+						//Seleciona o chamado desejado
+						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
+						
+						$contas = VirtexModelo::factory("contas");
+						
+						$tipos = $this->helpdesk->obtemTiposChamado();
+						$origens = $this->helpdesk->obtemOrigensChamado();
+						$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
+						$status_chamado = $this->helpdesk->obtemStatusChamado();
+
+						$array_grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
+						$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();
+						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
+						$historico_chamado = $this->helpdesk->obtemHistoricoChamado($id_chamado);
+						
+						//matriz de responsáveis(remake)
+						$responsaveis = array();
+						foreach($array_responsaveis as $chave => $valor) {
+							$responsaveis[$valor[id_admin]] = $valor["admnome"];
+						}
+						
+						//matriz de grupos(remake)
+						$grupos = array();
+						foreach($array_grupos as $chave => $valor) {
+							$grupos[$valor[id_grupo]] = $valor["nome"];
+						}
+						
+						//confirma se o usuário pertence ao grupo
+						$admin_grupo = false;
+						$pertence_grupo = false;
+						$admin_usuario = $this->helpdesk->obtemListaAdminGrupo($chamado["id_grupo"], $dadosLogin["id_admin"]);
+						$grupo_usuarios = $this->helpdesk->obtemListaAdminGrupo($chamado["id_grupo"] );
+						
+						if(count($admin_usuario)) {
+							if($admin_usuario["ativo"]) {
+								$pertence_grupo = true;
+							}
+							
+							if($admin_usuario["admin"] && $admin_usuario["ativo"]) { 
+								$admin_grupo = true;
+							}	
+						}
+
+						$this->_view->atribui("grupo_usuarios", $grupo_usuarios);
+						$this->_view->atribui("usuario_grupo", $pertence_grupo);
+						$this->_view->atribui("admin_grupo", $admin_grupo);
+						$this->_view->atribui("historico_chamado", $historico_chamado);
+						$this->_view->atribui("chamado", $chamado);
+						$this->_view->atribui("criado_por", $dadosLogin["id_admin"]);
+						$this->_view->atribui("tipos", $tipos);
+						$this->_view->atribui("origens", $origens);
+						$this->_view->atribui("classificacoes", $classificacoes);
+						$this->_view->atribui("status_chamado", $status_chamado);
+						$this->_view->atribui("grupos", $grupos);
+						$this->_view->atribui("responsaveis", $responsaveis); 
+						
+					} else {
+					
+						//Faz outras coisas
+						$tipo = @$_REQUEST["tipo"];
+						$senha_admin = @$_REQUEST["senha_admin"];
+						
+						$erro="";
+	
+						if($dadosLogin["senha"] != md5($senha_admin)) {
+							$erro = "Senha não confere";
+						}
+						
+						$this->_view->atribui("erro", $erro);
+						$this->_view->atribui("acao", "alteracao");
+						$this->_view->atribui("id_chamado", $id_chamado);
+						$this->_view->atribui("id_cliente", $id_cliente);
+						
+						$mensagem="";
+						$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado";
+						
+						if($erro) {
+							$mensagem="Operação não permitida: Senha não confere";
+						} else {
+											
+							switch($acao) {
+								case 'comentar':
+									$comentario = @$_REQUEST["comentario"];
+									$this->helpdesk->adicionaHistoricoChamado($id_chamado,"Comentário",$comentario,$dadosLogin["id_admin"]);
+									$mensagem = "Comentário efetuado com sucesso";
+									break;
+									
+								case 'delegar':
+									$responsavel = @$_REQUEST["responsavel"];
+									$novoresponsavel = @$_REQUEST["novoresponsavel"];
+									$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $novoresponsavel);
+									$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
+									$mensagem = "Delegação efetuada com sucesso";
+									break;	
+								case 'pegar':
+									$responsavel = @$_REQUEST["responsavel"];
+									$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $responsavel);
+									$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
+									$mensagem = "Tomada de posse de chamado efetuada com sucesso";
+									break;	
+								case 'resolver':
+									$novostatus = @$_REQUEST["novostatus"];
+									$comentario = @$_REQUEST["comentariofim"];
+									
+									if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_PENDENTE || $novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_PENDENTE_CLI || $novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO) {
+										$this->helpdesk->alteraStatus($id_chamado, $novostatus, $dadosLogin["id_admin"], $comentario);
+									} 
+									//RESOLVIDO
+									else if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO) {
+										$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $id_admin, $comentario);
+									} 
+									//FECHADO
+									else if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO) {
+										$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $id_admin, $comentario);
+									}
+									
+									$mensagem = "Tomada de posse de chamado efetuada com sucesso";
+									break;									
+							}
+							
+						}
+
+						$this->_view->atribui("mensagem",$mensagem);
+						$this->_view->atribui("url","admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado");
+						$this->_view->atribuiVisualizacao("msgredirect");
+						
+					} 
+					break; 
+								
+				
+				case 'listagem':
+				default:
+										
+					$chamados_pendentes = $this->helpdesk->obtemChamadosPendentesPorCliente($id_cliente);
+					$chamados_terminados = $this->helpdesk->obtemChamadosFinalizadosPorCliente($id_cliente);
+					$tipos_chamado = $this->helpdesk->obtemTiposChamado();
+					
+					$array_grupos = $this->helpdesk->obtemListaGrupos();
+					$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();					
+					
+					//matriz de responsáveis(remake)
+					$responsaveis = array();
+					foreach($array_responsaveis as $chave => $valor) {
+						$responsaveis[$valor[id_admin]] = $valor["admnome"];
+					}
+
+					//matriz de grupos(remake)
+					$grupos = array();
+					foreach($array_grupos as $chave => $valor) {
+						$grupos[$valor[id_grupo]] = $valor["nome"];
+					}
+					
+
+					$this->_view->atribui("responsaveis",$responsaveis);
+					$this->_view->atribui("grupos",$grupos);
+					$this->_view->atribui("tipos_chamado",$tipos_chamado);
+					$this->_view->atribui("chamados_pendentes",$chamados_pendentes);
+					$this->_view->atribui("chamados_terminados",$chamados_terminados);
+					
+					break;
+
+			}
+
+
+		}
+		
 
 	}
 
