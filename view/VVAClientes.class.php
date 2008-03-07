@@ -36,6 +36,7 @@
 			$itensMenu[] = array("texto" => "Discado", "url" => "admin-clientes.php?op=conta&tipo=D&id_cliente=".$this->obtem("id_cliente"));
 			$itensMenu[] = array("texto" => "Hospedagem", "url" => "admin-clientes.php?op=conta&tipo=H&id_cliente=".$this->obtem("id_cliente"));
 			$itensMenu[] = array("texto" => "Contrato/Faturas", "url" => "admin-clientes.php?op=contrato&id_cliente=".$this->obtem("id_cliente"));
+			$itensMenu[] = array("texto" => "Helpdesk", "url" => "admin-clientes.php?op=helpdesk&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
 			
 			return($itensMenu);
 			
@@ -64,6 +65,10 @@
 					
 				case 'contrato':
 					$this->exibeContrato();
+					break;
+					
+				case 'helpdesk':
+					$this->exibeHelpdesk();
 					break;
 					
 				default:
@@ -253,10 +258,40 @@
 			
 		}
 		
+		
 		protected function exibeEliminar() {
 			echo "EXIBE ELIMINAR<br>\n";
 			$this->atribuiTitulo();
 		}
+	
+	
+		protected function exibeHelpdesk() {
+		
+			$titulo = $this->obtem("nome_razao") . " :: Chamados";;			
+			$this->_file = "clientes_helpdesk_chamado.html";
+						
+			switch($this->obtem("tela")) {
+				case 'cadastro':
+					$titulo .= " :: Novo Chamado";
+					$this->_file = "clientes_helpdesk_chamado_novo.html";
+					break;
+
+				case 'alteracao':
+					$titulo .= " :: Alteracao";
+					$this->_file = "clientes_helpdesk_chamado_alteracao.html";
+					break;
+					
+				case 'listagem':
+				default:
+					$selecionavel = true;
+					$this->configureMenu($this->obtemItensMenu(),$selecionavel,true);
+					break;
+			}
+			
+			$this->atribui("titulo", $titulo);
+		
+		}
+		
 	
 	}
 

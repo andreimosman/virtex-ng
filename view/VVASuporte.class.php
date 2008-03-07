@@ -29,6 +29,9 @@
 				case 'relatorios':
 					$this->exibeRelatorios();
 					break;
+				case 'helpdesk':
+					$this->exibeHelpdesk();
+					break;
 				default:
 					// Do something
 			}
@@ -91,6 +94,18 @@
 		}
 		
 		
+		protected function exibeHelpdesk() {
+			$titulo = "Helpdesk";
+			
+			switch($this->obtem($tela)) {
+				case 'listagem':
+				default:
+					$titulo .= " :: Lista de Chamados";
+					$this->_file = "suporte_helpdesk_chamado.html";
+					break;
+			}
+		
+		}
 	
 	
 	
