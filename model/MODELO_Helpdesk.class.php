@@ -25,7 +25,7 @@
 			
 		}
 		
-	
+		
 		//Faz o cadastro de um novo grupo
 		public function cadastraGrupo($nome, $descricao, $ativo='t', $id_grupo_pai="") {
 			$dados = array("nome" => $nome, "descricao" => $descricao, "ativo" =>$ativo);
@@ -62,12 +62,8 @@
 		}
 		
 		//Faz a listagem de grupos
-		public function obtemListaGrupos($status="",$parentId="") {
-			$filtro = array();
-			if( $status ) {
-				$filtro["status"] = $status;
-			}
-			
+		public function obtemListaGrupos($filtro="",$parentId="") {
+			$filtro = array();			
 			return($this->_obtemGrupos($parentId,0,$filtro));
 		}
 		
@@ -103,10 +99,14 @@
 
 
 		//Retorna a listagem de administradores inclusos no grupo
-		public function obtemListaAdminGrupo($id_grupo, $id_admin=NULL) {
+		public function obtemListaAdminGrupo($id_grupo=NULL, $id_admin=NULL) {
 			return $this->hdtb_admin_grupo->obtemListaAdminGrupo($id_grupo, $id_admin);
 		}
 
+		//Retorna a listagem de grupos qual o administrador pertence
+		public function obtemListaGruposPertencentesAdmin($id_admin, $ativo=NULL) {
+			return $this->hdtb_admin_grupo->obtemListaGruposPertencentesAdmin($id_admin, $ativo);
+		}
 
 
 
@@ -115,7 +115,7 @@
 		 * Abertura de chamado ou ocorrência.
 		 */
 		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_serdor=0,$id_nas=0,$id_pop=0,$id_chamado_pai=null) {
-			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_gurpo, "assunto" => $assunto, "descricao" => $descricao, "odirem" => $origem, "classificacao" => $classificacao);
+			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_grupo, "assunto" => $assunto, "descricao" => $descricao, "odigem" => $origem, "classificacao" => $classificacao);
 			
 
 			if( $id_cliente ) $dados["id_cliente"] = $id_cliente;
@@ -133,11 +133,17 @@
 			
 			unset($dados);
 			
-			$this->adicionaHistoricoChamado($id_chamado,"Abertura do chamado", "", $criado_por);
+			$titulo_historico = ($tipo == 'OC') ? "Registro de ocorrência" : "Abertura do chamado";
+			
+			$this->adicionaHistoricoChamado($id_chamado, $titulo_historico, "", $criado_por);
 			
 			if( $responsavel ) {
 				$this->alteraResponsavelChamado($id_chamado,$criado_por,$responsavel);
 			}
+			
+			$status_inicial = ($tipo == 'OC')? PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO : PERSISTE_HDTB_CHAMADO::$STATUS_NOVO;
+			
+			$this->alteraStatus($id_chamado, $status_inicial, $criado_por);
 			
 			if( $id_chamado_pai ) {
 			
@@ -174,7 +180,9 @@
 		public function alteraResponsavelChamado($id_chamado,$id_admin,$id_novo_admin) {
 			$admin = VirtexModelo::factory("administradores");
 			$admin_responsavel = $admin->obtemAdminPeloId($id_novo_admin);
-			$this->adicionaHistoricoChamado($id_chamado,'Chamado atribuído a "' . $admin["admin"] . '" (' . $admin["nome"] . ")", "", $id_admin);
+			$this->adicionaHistoricoChamado($id_chamado,'Chamado atribuído a "' . $admin_responsavel["admin"] . '" (' . $admin_responsavel["nome"] . ")", "", $id_admin);
+			
+			$responsavel = $admin_responsavel["id_admin"];
 			
 			$dados = array("responsavel" => $responsavel);
 			$filtro = array("id_chamado" => $id_chamado);
@@ -185,7 +193,7 @@
 		/**
 		 * Alteração de status do chamado.
 		 */
-		public function alteraStatus($id_chamado, $status, $id_admin) {
+		public function alteraStatus($id_chamado, $status, $id_admin, $comentario="") {
 
 			$chamado = $this->obtemChamadoPeloId($id_chamado);
 			if( !count($chamado) ) return 0;
@@ -194,7 +202,7 @@
 			
 			$titulo = "Status alterado de '" . $listaStatus[$chamado["status"]] . "' para '" . $listaStatus[$status]. "'";
 			
-			$this->adicionaHistoricoChamado($id_chamado, $titulo, "", $id_admin);
+			$this->adicionaHistoricoChamado($id_chamado, $titulo, $comentario, $id_admin);
 			
 			$dados = array("status" => $status);
 			$filtro = array("id_chamado" => $id_chamado);
@@ -202,6 +210,44 @@
 			return($this->hdtb_chamado->altera($dados,$filtro));
 			
 		}
+		
+		
+		/**
+		 * Finaliza o chamado
+		 */
+		 public function finalizaChamado($id_chamado, $resolvido=true, $id_admin, $comentario="") {
+		 	
+		 	$status = PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO;
+		 	if(!$resolvido) {
+		 		$status = PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO;
+		 	}
+		 	
+		 	$titulo="";
+		 	
+		 	if($status == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO)
+		 		$titulo == "Chamado Resolvido";
+		 	else
+		 		$titulo == "Chamado Fechado";
+		 	
+		 	
+		 	$this->adicionaHistoricoChamado($id_chamado, $titulo, $comentario, $id_admin);
+
+			$dados = array("status" => $status, "fechamento" => "=now");
+		 	$filtro = array("id_chamado" => $id_chamado);	
+		 	
+		 	return($this->hdtb_chamado->altera($dados,$filtro));
+		 }
+		
+
+		/**
+		 * Lista o histórico de um chamado
+		 */
+		
+		public function obtemHistoricoChamado($id_chamado) { 
+			$filtro = array("id_chamado" => $id_chamado);			
+			return($this->hdtb_chamado_historico->obtem($filtro));
+		}
+		
 		
 		/**
 		 * Lista recursiva de chamados. Método utilizado por outros métodos com filtragens variadas.
@@ -230,15 +276,25 @@
 		 * Lista de chamados pendentes pelo criador
 		 */
 		public function obtemChamadosPendentesPeloCriador($criado_por) {
-			$filtro = array("status" => "NOT IN:OK::F", "criado_por" => $criado_por);
+			$filtro = array("status" => "!in:OK::F", "criado_por" => $criado_por);
 			return($this->hdtb_chamado->obtem($filtro));
 		}
 
+
 		/**
-		 * Lista de chamados pendentes pelo criador
+		 * Lista de chamados pendentes pelo Responsável
+		 */
+		public function obtemChamadosPendentesPeloResponsavel($responsavel) {
+			$filtro = array("status" => "!in:OK::F", "responsavel" => $responsavel);
+			return($this->hdtb_chamado->obtem($filtro));
+		}
+
+
+		/**
+		 * Lista de chamados pendentes pelo grupo
 		 */
 		public function obtemChamadosPendentesPeloGrupo($id_grupo) {
-			$filtro = array("status" => "NOT IN:OK::F", "id_grupo" => $id_grupo);
+			$filtro = array("status" => "!in:OK::F", "id_grupo" => $id_grupo);
 			return($this->hdtb_chamado->obtem($filtro));
 		}
 		
@@ -246,7 +302,7 @@
 		 * Lista de chamados pendentes sem responsavel
 		 */
 		public function obtemChamadosPendentesSemResponsavel() {
-			$filtro = array("status" => "NOT IN:OK::F", "responsavel" => "null");
+			$filtro = array("status" => "!in:OK::F", "responsavel" => "null");
 			return($this->hdtb_chamado->obtem($filtro));
 		}
 
@@ -254,7 +310,21 @@
 		 * Lista de chamados pendentes por cliente
 		 */
 		public function obtemChamadosPendentesPorCliente($id_cliente,$id_cliente_produto=null,$id_conta=null,$id_cobranca=null) {
-			$filtro = array("status" => "NOT IN:OK::F","id_cliente" => $id_cliente);
+			$filtro = array("status" => "!in:OK::F","id_cliente" => $id_cliente);
+			
+			if( $id_cliente_produto ) $filtro["id_cliente_produto"] = $id_cliente_produto;
+			if( $id_conta ) $filtro["id_conta"] = $id_conta;
+			if( $id_cobranca ) $filtro["id_cobranca"] = $id_cobranca;
+			
+			return($this->hdtb_chamado->obtem($filtro));
+		}
+
+
+		/**
+		 * Lista de chamados finalizados por cliente
+		 */
+		public function obtemChamadosFinalizadosPorCliente($id_cliente,$id_cliente_produto=null,$id_conta=null,$id_cobranca=null) {
+			$filtro = array("status" => "in:OK::F","id_cliente" => $id_cliente);
 			
 			if( $id_cliente_produto ) $filtro["id_cliente_produto"] = $id_cliente_produto;
 			if( $id_conta ) $filtro["id_conta"] = $id_conta;
@@ -268,7 +338,7 @@
 		 * Lista de chamados pendentes por equipamento
 		 */
 		public function obtemChamadosPendentesPorEquipamento($id_servidor=null,$id_nas=null,$id_pop=null) {
-			$filtro = array("status" => "NOT IN:OK::F");
+			$filtro = array("status" => "!in:OK::F");
 			
 			if( !$id_servidor && !$id_nas && !$id_po ) return(array());
 			
@@ -283,7 +353,7 @@
 		 * Obtem o chamado pelo ID.
 		 */
 		public function obtemChamadoPeloId($id_chamado) {
-			return($this->hdtb_chamado->obtemUnico(array("id_chamado",$id_chamado));
+			return($this->hdtb_chamado->obtemUnico(array("id_chamado"=>$id_chamado)));
 		}
 		
 		/**

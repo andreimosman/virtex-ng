@@ -1,0 +1,308 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #CACACA;
+	margin-right: 2px;
+
+}
+
+{/literal}
+</style>
+
+<script language="javascript1.2">
+
+var mresponsaveis = eval({$responsaveis});
+
+{literal}
+
+	reVazio = /^\s*$/;
+
+	function helpdeskValidaCadastro() {
+		formhelpdesk = document.getElementById("formhelpdesk");
+
+		for (i=0; i<formhelpdesk.length; i++) {
+			idstring = formhelpdesk[i].id;
+			if(idstring) {
+				estring = idstring;
+				estring += " = document.getElementById('" + idstring + "')";
+				//alert(estring);
+				eval (estring);
+			}
+		}
+
+		if(estaVazio(assunto.value)) {
+			alert("O campo assunto deve ser preenchido");
+			assunto.value="";
+			assunto.focus();
+			return false;
+		}
+
+
+		if(estaVazio(tipo.value)) {
+			alert("O tipo do chamado deve ser informado");
+			tipo.value="";
+			tipo.focus();
+			return false;
+		}
+
+
+		if(estaVazio(descricao.value)) {
+			alert("A descrição do chamado deve ser preenchida");
+			descricao.value="";
+			descricao.focus();
+			return false;
+		}
+
+
+		if(estaVazio(origem.value)) {
+			alert("A origem do chamado deve ser informada");
+			origem.value="";
+			origem.focus();
+			return false;
+		}
+
+		if(estaVazio(classificacao.value)) {
+			alert("A classificação do chamado deve ser informada");
+			classificacao.value="";
+			classificacao.focus();
+			return false;
+		}
+
+
+		if(estaVazio(id_grupo.value)) {
+			alert("O grupo de destino do chamado deve ser informado");
+			id_grupo.value="";
+			id_grupo.focus();
+			return false;
+		}
+
+	}
+
+	function formQuit(id_cliente) {
+		if(!confirm("Deseja realmente abandonar a edição deste chamado?")) return;
+		self.location = "admin-clientes.php?op=helpdesk&id_cliente=" + id_cliente;
+	}
+
+
+	function ReiniciarCampoResponsavel() {
+		var responsavel = document.getElementById("responsavel");
+
+		while(responsavel.length > 0) {
+			responsavel.remove(0);
+		}
+
+		opcao = document.createElement("option");
+		opcao.value = "";
+		opcao.text = "-- SELECIONE --";
+
+		try{
+			responsavel.add(opcao,null);
+		}catch(e) {
+			responsavel.add(opcao);
+		}
+
+	}
+
+	function AtualizaCampoResponsavel(id_grupo) {
+		ReiniciarCampoResponsavel();
+
+		var responsavel = document.getElementById("responsavel");
+
+		for(i=0;i<mresponsaveis.length;i++) {
+			item = mresponsaveis[i];
+
+			if(item.ativo == "f" || item.id_grupo != id_grupo) continue;
+
+			opcao = document.createElement("option");
+			opcao.value = item.id_admin;
+			opcao.text = item.admnome;
+
+			try{
+				responsavel.add(opcao,null);
+			}catch(e) {
+				responsavel.add(opcao);
+			}
+		}
+	}
+
+	function AtualizaFormCampoTipo(tipo) {
+		var responsavel = document.getElementById("responsavel");
+		if(tipo == "OC") {
+			responsavel.disabled = true;
+			responsavel.value="";
+		} else {
+			responsavel.disabled = false;
+		}
+
+	}
+
+
+{/literal}
+</script>
+
+
+<form name="formhelpdesk" id="formhelpdesk" method="post" action="admin-clientes.php" onSubmit="return helpdeskValidaCadastro()">
+	<input type="hidden" name="op" value="{$op}" />
+	<input type="hidden" name="tela" value="{$tela}" />
+
+	<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+	<input type="hidden" name="criado_por" id="criado_por" value="{$criado_por}" />
+	<input type="hidden" name="id_chamado" id="id_chamado" value="{$id_chamado}" />
+
+	<input type="hidden" name="acao" value="{$acao}" />
+
+	<table width="450" align="center" border=0 cellpadding=0 cellspacing=0>
+		<tr>
+			<td width="100%" valign="top" style="border-right: dotted 1px #cccccc; border-bottom: dotted 1px #cccccc">
+				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+					<tr>
+						<td colspan="4" bgcolor="#d5Efd5"><label>Dados do Chamado</label></td>
+					</tr>
+
+					<!-- CAMPO ASSUNTO -->
+					<tr>
+						<td align="right">
+							<label>Assunto:</label>
+						</td>
+						<td>
+							<input type="text" name="assunto" id="assunto" maxlength="250" value="{$assunto}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+
+					<!-- CAMPO ID_CONTA-->
+					<tr>
+						<td align="right">
+							<label>Conta Cliente:</label>
+						</td>
+						<td>
+							<select id="id_conta" name="id_conta" style="width:100%"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$contas_cliente key=k item=i}
+									<option value="{$i.id_conta}">
+									{$i.id_conta|string_format:"%05s"} - {$i.tipo_conta} - {$i.username}
+									</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
+					<!-- CAMPO TIPO -->
+					<tr>
+						<td align="right">
+							<label>Tipo:</label>
+						</td>
+						<td>
+							<select id="tipo" name="tipo" style="width:100%"  onchange="javascript:AtualizaFormCampoTipo(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$tipos key=k item=i}
+									<option value="{$k}">{$i}</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
+					<!-- CAMPO DESCRIÇÃO -->
+					<tr>
+						<td align="right" valign="top">
+							<label>Descrição:</label>
+						</td>
+						<td>
+							<TEXTAREA ROWS="7" COLS="40" style="width:100%" name="descricao" id="descricao"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$descricao}</TEXTAREA>
+						</td>
+					</tr>
+
+					<!-- CAMPO ORIGEM -->
+					<tr>
+						<td align="right">
+							<label>Origem:</label>
+						</td>
+						<td>
+							<select id="origem" name="origem" style="width:100%"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$origens key=k item=i}
+									<option value="{$k}">{$i}</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
+					<!-- CAMPO CLASSIFICACAO -->
+					<tr>
+						<td align="right">
+							<label>Classificação:</label>
+						</td>
+						<td>
+							<select id="classificacao" name="classificacao" style="width:100%"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$classificacoes key=k item=i}
+									<option value="{$k}">{$i}</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
+					<!-- CAMPO GRUPO -->
+					<tr>
+						<td align="right">
+							<label>Grupo:</label>
+						</td>
+						<td>
+							<select id="id_grupo" name="id_grupo" style="width:100%" onchange="javascript:AtualizaCampoResponsavel(this.value)";  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$grupos key=k item=i}
+									<option value="{$i.id_grupo}">{$i.nome}</option>
+								{/foreach}
+
+							</select>
+						</td>
+					</tr>
+
+					<!-- CAMPO RESPONSÁVEL -->
+					<tr>
+						<td align="right">
+							<label>Responsável:</label>
+						</td>
+						<td>
+							<select id="responsavel" name="responsavel" style="width:100%"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+							</select>
+						</td>
+					</tr>
+
+
+				</table>
+			</td>
+
+		</tr>
+		<tr>
+			<td align="center" width="100%">
+				<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:formQuit({$id_cliente});" />
+				<input type="submit" name="submit" class="botao" value="Cadastrar" />
+			</td>
+		</tr>
+	</table>
+</form>
+
+
+
+</body>
+</html>

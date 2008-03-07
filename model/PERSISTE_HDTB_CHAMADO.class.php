@@ -41,7 +41,7 @@
 										
 										);
 			$this->_chave 		= "id_chamado";
-			$this->_ordem 		= "datahora DESC";
+			$this->_ordem 		= "abertura DESC";
 			$this->_tabela		= "hdtb_chamado";
 			$this->_sequence	= "hdsq_id_chamado";	
 			//$this->_filtros		= array("ativo" => "boolean");
@@ -63,9 +63,9 @@
 			return(array(
 					self::$STATUS_NOVO => "Novo",
 					self::$STATUS_ABERTO => "Aberto",
-					self::$STATUS_PENDENTE => "Pendente"
+					self::$STATUS_PENDENTE => "Pendente",
 					self::$STATUS_PENDENTE_CLI => "Pentente Cliente",
-					self::$STATUS_FECHADO => "Fechado"
+					self::$STATUS_FECHADO => "Fechado",
 					self::$STATUS_RESOLVIDO => "Resolvido",
 				));
 		}

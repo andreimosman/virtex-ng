@@ -1,0 +1,497 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+
+<style>
+{literal}
+
+.form_pesquisa {
+	width: 400px;
+}
+
+.pesquisa_titulo {
+	font-family: verdana;
+	font-size: 12px;
+	font-color:
+}
+
+label {
+	font-family: verdana;
+	font-size: 12px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+{/literal}
+</style>
+
+<script language="javascript1.2" >
+{literal}
+
+	function NovoChamado(id_cliente) {
+		self.location = "admin-clientes.php?op=helpdesk&tela=cadastro&id_cliente=" + id_cliente;
+	}
+
+	function AlterarChamado(id_chamado) {
+		self.location = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado;
+	}
+
+	function ApresentarDiv(id_div, visivel) {
+		elemento = document.getElementById(id_div);
+		if (!elemento) return;
+
+		if(visivel) elemento.style.display = "block";
+		else elemento.style.display = "none";
+	}
+
+	function validaFormDelegarChamado() {
+		var novoresponsavel = document.getElementById("novoresponsavel");
+		var atualresponsavel = document.getElementById("atualresponsavel");
+		if(!novoresponsavel.value) {
+			alert("É necessário escolher um novo responsável para o chamado");
+			novoresponsavel.focus();
+			return false;
+		}
+
+		if(novoresponsavel.value == atualresponsavel.value) {
+			alert("Este usuário já é responsável pelo chamado. Não será possível delegar este chamado à este usuário.");
+			novoresponsavel.value="";
+			novoresponsavel.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	function validaFormComentarChamado() {
+		var comentario = document.getElementById("comentario");
+		if(estaVazio(comentario.value)) {
+			alert("É necessário preencher o campo comentário");
+			comentario.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	function validaFormResolverChamado() {
+		var novostatus = document.getElementById("novostatus");
+		var atualstatus = document.getElementById("atualstatus");
+		var comentariofim = document.getElementById("comentariofim");
+		var responsavel_chamado = document.getElementById("responsavel_chamado");
+
+		if(estaVazio(novostatus.value)) {
+			alert("É necessário indicar o status de término do chamado");
+			novostatus="";
+			novostatus.focus();
+			return false;
+		}
+
+		if((novostatus.value == 'A' ||novostatus.value == 'P'||novostatus.value == 'PC') && !responsavel_chamado.value) {
+			alert("Somente é possível alterar o status de um chamado para Aberto, Pendente ou Pendente com o cliente, se este já tiver um responsável");
+			novostatus.value="";
+			novostatus.focus();
+			return false;
+		}
+
+		if(atualstatus.value == novostatus.value) {
+			alert("O status escolhido é o atual do chamado. Não é possível movimentar o chamado para o mesmo status que ele se encontra");
+			novostatus.value="";
+			novostatus.focus();
+			return false;
+		}
+
+		if(estaVazio(comentariofim.value)) {
+			alert("É necessário preencher o campo comentário");
+			comentariofim.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	function escondeDivs() {
+		ApresentarDiv("divFormComentaChamado", false);
+		ApresentarDiv("divFormPegaChamado", false);
+		ApresentarDiv("divFormDelegaChamado", false);
+		ApresentarDiv("divFormResolveChamado", false);
+	}
+
+	function ambienteComentario() {
+		escondeDivs();
+		ApresentarDiv("divFormComentaChamado", true);
+	}
+
+	function ambienteDelegar() {
+		escondeDivs();
+		ApresentarDiv("divFormDelegaChamado", true);
+	}
+
+	function ambientePegar() {
+		escondeDivs();
+		ApresentarDiv("divFormPegaChamado", true);
+	}
+
+	function ambienteResolver() {
+		escondeDivs();
+		ApresentarDiv("divFormResolveChamado", true);
+	}
+
+{/literal}
+</script>
+
+
+
+<br>
+	<!-- ALTERAÇÃO DO CHAMADO -->
+
+<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="730" {if $tela == "cancelar_contrato"}style="border: solid 1px #FF0000;"{/if}>
+<tr>
+	<td align="left" style="border-bottom: solid 1px;">
+	&nbsp;Opções:
+	[<a href="admin-clientes.php?op=helpdesk&tela=listagem&id_cliente={$id_cliente}" {if !$usuario_grupo}style="color:green;font-weight:bold"{/if}>Voltar</a>]
+
+	{if $chamado.status != "OK" && $chamado.status != "F"}
+		{if $usuario_grupo}
+			{if !$chamado.responsavel}[<a href="javascript:void(null);" onclick="javascript:ambientePegar()"; style="color:green;font-weight:bold">Pegar</a>]{/if}
+			{if $chamado.responsavel == $dadosLogin.id_admin || $admin_grupo}[<a href="javascript:void(null);" onclick="javascript:ambienteResolver();" {if $chamado.responsavel == $dadosLogin.id_admin}style="color:green;font-weight:bold"{/if}>Fechar/Resolver</a>]{/if}
+			[<a href="javascript:void(null);" onclick="javascript:ambienteDelegar()"; {if !$chamado.responsavel}style="color:blue;font-weight:bold"{/if}>Delegar</a>]
+		{/if}
+	{/if}
+
+	[<a href="javascript:void(null);" onclick="javascript:ambienteComentario()";>Comentar</a>]
+
+
+	</td>
+</tr>
+
+{if $erro}
+<tr>
+	<td colspan='2' class="erro" align="center">{$erro}</td>
+</tr>
+{/if}
+
+<tr>
+<td align="center">
+	{if $contrato.status == "C"}<span style="color: #FF0000; font-size: 14px;"><strong>** CONTRATO CANCELADO **</strong></span>{/if}
+	{if $contrato.status == "M"}<span style="color: orange; font-size: 14px;"><strong>** CONTRATO MIGRADO **</strong></span>{/if}
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
+		<tr>
+			<th colspan=4>Detalhes do Chamado</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Número:</strong></td>
+			<td align="left">{$chamado.id_chamado|string_format:"%05s"}</td>
+
+			<td width="110" align="right"><strong>Status:</strong></td>
+			<td align="left">{$status_chamado[$chamado.status]}&nbsp;</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Data Abertura:</strong></td>
+			<td align="left">{$chamado.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</td>
+
+			{if $chamado.tipo != 'OC'}
+				<td width="110" align="right"><strong>Data Finaliza&ccedil;&atilde;o:</strong></td>
+				<td align="left" {if !$chamado.fechamento}style="color:red"{/if}>{if $chamado.fechamento}{$chamado.fechamento|date_format:"%d-%m-%Y / %H:%M"|upper}{else}N&atilde;o Finalizado{/if}</td>
+			{else}
+				<td colspan=2>&nbsp</td>
+			{/if}
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Grupo:</strong></td>
+			<td align="left">{$grupos[$chamado.id_grupo]}</td>
+
+			<td width="110" align="right"><strong>Responsável:</strong></td>
+			<td align="left" {if !$chamado.responsavel}style="color:red"{/if}>{if $chamado.responsavel}{$responsaveis[$chamado.responsavel]}{else}N&atilde;o foi delegado{/if}</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Criador:</strong></td>
+			<td align="left">{$responsaveis[$chamado.criado_por]}</td>
+
+			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td align="left">{$tipos[$chamado.tipo]}&nbsp;</td>
+
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Origem:</strong></td>
+			<td align="left">{$origens[$chamado.origem]}</td>
+
+			<td width="110" align="right"><strong>Classifica&ccedil;&atilde;o:</strong></td>
+			<td align="left">{$classificacoes[$chamado.classificacao]}</td>
+		</tr>
+
+	</table>
+
+
+	<br />
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
+		<tr>
+			<th colspan=4>Motivo</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Assunto:</strong></td>
+			<td align="left">{$chamado.assunto}</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right" valign="top"><strong>Descricao:</strong></td>
+			<td align="left">{$chamado.descricao|replace:"\n":'<br>'}</td>
+		</tr>
+
+	</table>
+	<br />
+
+
+{if !$chamado.responsavel}
+	<!-- PEGA CHAMADO -->
+	<div id="divFormPegaChamado" style="width:700px;position:relative; display:none;">
+		<form name="frmPegar" id="frmPegar" action="admin-clientes.php">
+			<input type="hidden" name="acao" id="acao" value="pegar" />
+			<input type="hidden" name="tela" id="tela" value="alteracao" />
+			<input type="hidden" name="op" id="op" value="helpdesk" />
+			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
+			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Pegar Chamado</span></th>
+				</tr>
+				<tr>
+					<!-- Lado Esquerdo -->
+					<td width="500">
+						<table border=0>
+							<tr>
+								<td align="center">
+									A confirma&ccedil;&atilde;o da senha &eacute suficiente para se tornar o responsável pelo chamado.
+									<input type="hidden" name="responsavel" id="responsavel" value="{$dadosLogin.id_admin}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- Confirmação -->
+					<td width="200" style="border-left:1px solid #000" valign="top">
+						<table border=0>
+							<tr>
+								<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+							</tr>
+							<tr>
+								<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+{/if}
+
+{if $admin_grupo}
+	<!-- DELEGA CHAMADO -->
+	<div id="divFormDelegaChamado" style="width:700px;position:relative; display:none;">
+		<form name="frmDelegar" id="frmDelegar" action="admin-clientes.php" onsubmit="javascript:return validaFormDelegarChamado();">
+			<input type="hidden" name="acao" id="acao" value="delegar" />
+			<input type="hidden" name="op" id="op" value="helpdesk" />
+			<input type="hidden" name="tela" id="tela" value="alteracao" />
+			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
+			<input type="hidden" name="atualresponsavel" id="atualresponsavel" value="{$chamado.responsavel}" />
+
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Delegar Chamado</span></th>
+				</tr>
+				<tr>
+					<!-- Lado Esquerdo -->
+					<td width="500">
+						<table border=0>
+							<tr>
+								<td align="right" width="110"><strong>Responsável:</strong></td>
+								<td align="right" width="110">
+									<select name="novoresponsavel" id="novoresponsavel" value="novoresponsavel" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);">
+										<option value="" >-- SELECIONE --</option>
+										{foreach from=$grupo_usuarios item=i}
+											<option value="{$i.id_admin}">{$responsaveis[$i.id_admin]}</option>
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- Confirmação -->
+					<td width="200" style="border-left:1px solid #000" valign="top">
+						<table border=0>
+							<tr>
+								<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+							</tr>
+							<tr>
+								<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+{/if}
+
+	<!-- COMENTA CHAMADO -->
+	<div id="divFormComentaChamado" style="width:700px;position:relative; display:none;">
+		<form name="frmComentar" id="frmComentar" action="admin-clientes.php" onsubmit="javascript:return validaFormComentarChamado();">
+			<input type="hidden" name="acao" id="acao" value="comentar" />
+			<input type="hidden" name="op" id="op" value="helpdesk" />
+			<input type="hidden" name="tela" id="tela" value="alteracao" />
+			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
+			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
+
+
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Comentar Chamado</span></th>
+				</tr>
+				<tr>
+					<!-- Lado Esquerdo -->
+					<td width="500">
+						<table border=0>
+							<tr>
+								<td align="right" width="110"><strong>Comentário:</strong></td>
+								<td align="right"><textarea name="comentario" id="comentario" rows="4" cols="30"></textarea></td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- Confirmação -->
+					<td width="200" style="border-left:1px solid #000" valign="middle">
+						<table border=0>
+							<tr>
+								<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+							</tr>
+							<tr>
+								<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+
+{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin}
+	<!-- RESOLVE/FECHAR CHAMADO -->
+	<div id="divFormResolveChamado" style="width:700px;position:relative; display:none;">
+		<form name="frmResolver" id="frmResolver" action="admin-clientes.php" onsubmit="javascript:return validaFormResolverChamado();">
+			<input type="hidden" name="acao" id="acao" value="resolver" />
+			<input type="hidden" name="op" id="op" value="helpdesk" />
+			<input type="hidden" name="tela" id="tela" value="alteracao" />
+			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
+			<input type="hidden" name="responsavel_chamado" id="responsavel_chamado" value="{$chamado.responsavel}" />
+			<input type="hidden" name="atualstatus" id="atualstatus" value="{$chamado.status}" />
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Finalizar/Pendenciar Chamado</span></th>
+				</tr>
+				<tr>
+					<!-- Lado Esquerdo -->
+					<td width="500">
+						<table border=0>
+							<tr>
+								<td align="right" width="110"><strong>Status:</strong></td>
+								<td align="left">
+									<select name="novostatus" id="novostatus" style="width:150px" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);">
+										<option value="">-- SELECIONE --</option>
+										<option value="A">Aberto</option>
+										<option value="P">Pendente</option>
+										<option value="PC">Pendente com o cliente</option>
+										<option value="OK">Resolvido</option>
+										<option value="F">Fechado</option>
+									</select>
+								</td>
+							</tr>
+
+							<tr>
+								<td align="right" width="110"><strong>Comentário:</strong></td>
+								<td align="right"><textarea name="comentariofim" id="comentariofim" rows="4" cols="30"></textarea></td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- Confirmação -->
+					<td width="200" style="border-left:1px solid #000" valign="middle">
+						<table border=0>
+							<tr>
+								<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+							</tr>
+							<tr>
+								<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+{/if}
+
+	<!-- HISTÓRICO DO CHAMADO -->
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
+		<tr>
+			<th colspan=4>Histórico do Chamado</th>
+		</tr>
+		<tr>
+			<td width="150" align="left" style="border-bottom:1px solid #000000"><strong>DATA/HORA</strong></td>
+			<td width="200" align="left" style="border-bottom:1px solid #000000"><strong>TITULO</strong></td>
+			<td width="100" align="left" style="border-bottom:1px solid #000000"><strong>ADMIN</strong></td>
+			<td width="250" align="left" style="border-bottom:1px solid #000000"><strong>COMENTARIO</strong></td>
+		</tr>
+
+		{foreach name=registros from=$historico_chamado item=i}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align="left" class='{$estilo}' >{$i.datahora|date_format:"%d-%m-%Y / %H:%M"|upper}</td>
+			<td align="left" class='{$estilo}' >{$i.titulo}</td>
+			<td align="left" class='{$estilo}' >{$responsaveis[$i.id_admin]}</td>
+			<td align="left" class='{$estilo}' >{$i.comentarios|replace:"\n":'<br>'}</td>
+		</tr>
+		{/foreach}
+
+	</table>
+	<br />
+
+
+</td>
+</tr>
+</table>
+<br>
+
+</body>
+</html>
