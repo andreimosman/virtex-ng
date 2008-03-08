@@ -35,7 +35,7 @@
 	</tr>
 	{foreach name=contratos item=r from=$contratos}
 		<tr>
-			<td width="380" style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><strong>#{$r.id_cliente_produto}</strong> | {$r.nome_produto} - {if $r.tipo_produto=="BL"}Banda Larga{elseif $r.tipo_produto=="D"}Discado{elseif $r.tipo_produto=="H"}Hospedagem{/if}</a></td>
+			<td width="380" style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><strong>#{$r.id_cliente_produto}</strong> | {$r.nome_produto}</a></td>
 			<td style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><img src="view/templates/imagens/icone_contrato.gif" alt="Ver Contrato" title="Ver Contrato" border="0" /></a></td>
 		</tr>
 	{/foreach}

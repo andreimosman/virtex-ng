@@ -57,12 +57,30 @@
 		
 		protected function executaHome() {
 			$this->_view->atribuiVisualizacao("home");
+			
+			$cobranca = VirtexModelo::factory("cobranca");
+			
+			$dadosLogin = $this->_login->obtem("dados");
+			
+			$this->_view->atribui("cliente",$dadosLogin["cliente"]);
+			
+			$contratos = count($cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A"));
+			
+			$this->_view->atribui("contratos",$contratos);
+			
+			$preferencias = VirtexModelo::factory("preferencias");
+			
+			$provedor_geral = $preferencias->obtemPreferenciasGerais();
+			$this->_view->atribui("nome_provedor",$provedor_geral["nome"]);
+			
 					
 		}
 		
 		protected function executaDadosCadastrais() {
-			$this->_view->atribuiVisualizacao("dados_cadastrais");
 			
+			$this->_view->atribuiVisualizacao("dados_cadastrais");
+		
+		
 			$dadosLogin = $this->_login->obtem("dados");
 			
 			$preferencias = VirtexModelo::factory("preferencias");
@@ -73,7 +91,10 @@
 			
 			$this->_view->atribui("cidade_uf",$cidade_uf);
 
-			
+			$preferencias = VirtexModelo::factory("preferencias");
+						
+			$provedor_geral = $preferencias->obtemPreferenciasGerais();
+			$this->_view->atribui("nome_provedor",$provedor_geral["nome"]);
 			
 			/*echo "<pre>";
 			print_r($cidade);
@@ -92,7 +113,12 @@
 			$contratos = $cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A");
 
 			$this->_view->atribui("contratos",$contratos);
-
+			
+			$preferencias = VirtexModelo::factory("preferencias");
+						
+			$provedor_geral = $preferencias->obtemPreferenciasGerais();
+			$this->_view->atribui("nome_provedor",$provedor_geral["nome"]);
+			
 			/*echo "<pre>";
 			print_r($contratos);
 			echo "</pre>";*/
@@ -138,10 +164,12 @@
 			$this->_view->atribui("valor_contrato",$contrato_detalhado["valor_produto"]);
 			$this->_view->atribui("download_kbps", $contrato_detalhado["bl_banda_download_kbps"]);
 			$this->_view->atribui("forma_pagamento",$forma_pagamento["descricao"]);
+			$this->_view->atribui("dominio_provedor",strtoupper($provedor_geral["dominio_padrao"]));
+			
 
-			echo "<pre>";
+			/*echo "<pre>";
 			print_r($contrato_detalhado);
-			echo "</pre>";
+			echo "</pre>";*/
 
 		
 		}

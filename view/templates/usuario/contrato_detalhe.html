@@ -1,12 +1,42 @@
+{if $tipo_produto=="BL"}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Contrato Banda-Larga</title>
+{literal}
+<style>
+	*{
+		font-family: Tahoma, Arial, Verdana;
+		font-size:12px;
+	}
+	a:link{
+				color: #6E7D9A;
+				text-decoration:none;
+		}
+		a:visited{
+				color: #6E7D9A;
+				text-decoration:none;
+		}
+		a:hover{
+				color: #DEE4F3;
+				text-decoration:none;
+		}
+		a:active{
+				color: #6E7D9A;
+				text-decoration:none;
+	}
+</style>
+{/literal}
+<title>Contrato</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="estilos1.css" rel="stylesheet" type="text/css">
+<!--<link href="view/templates/usuario/estilos1.css" rel="stylesheet" type="text/css">//-->
 </head>
 <body>
-<div style="width:550px;"><h1 align="CENTER"><img src="template/default/images/LOGO_PROVEDOR.gif" width="200" height="151"></h1><h1 align="CENTER"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">MINUTA
+<table align="center">
+	<tr>
+		<td align="left">
+<div style="width:570px;" align="left">
+<!--<h1 align="CENTER"><img src="template/default/images/LOGO_PROVEDOR.gif" width="200" height="151"></h1>//-->
+<h1 align="CENTER"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">MINUTA
 DE CONTRATO DE PRESTA&Ccedil;&Atilde;O DE SERVI&Ccedil;O<br>
 DE ACESSO &Agrave; INTERNET VIA TCP/IP</font></h1>
 <p align="JUSTIFY"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><br>
@@ -273,7 +303,7 @@ DE ACESSO &Agrave; INTERNET VIA TCP/IP</font></h1>
   que foi realizada pela {$nome_provedor}.<br>
   SERVI&Ccedil;OS ATIVADOS:<br>
   {$produto}<br>
-  {$tipo_produto}&#8211; POP {$pop}<br>
+  {if $tipo_produto=="BL"}Banda Larga{else if $tipo_produto=="D"}Discado{/if} &#8211; POP {$pop}<br>
   Acesso em r&aacute;dio enlace digital entre o Ponto de Presen&ccedil;a {$pop}
   e o Ponto de Repeti&ccedil;&atilde;o do Cliente.</font></p>
 <p><font face="Verdana, Arial, Helvetica, sans-serif" size="2"> Lembramos que
@@ -290,8 +320,359 @@ DE ACESSO &Agrave; INTERNET VIA TCP/IP</font></h1>
   Forma colocados os seguintes equipamentos pertencentes a virtex:</font></p>
 <p><font face="Verdana, Arial, Helvetica, sans-serif" size="2">{$localidade},
   {$hoje_extenso}.</font></p>
-<p align="center"><DIV ID="IMPRIMIR" align="CENTER"><strong><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><a href="javascript:window.print()">imprimir</a></font></strong></DIV></p>
+<p align="center"><DIV ID="IMPRIMIR" align="CENTER"><strong><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><table><tr><td><a href="javascript:window.print()"><img src="view/templates/imagens/print.gif" border="0"></a></td><td><a href="javascript:window.print()">clique para imprimir</a></td></tr></table></font></strong></DIV></p>
 <p>&nbsp;</p>
 </div>
+</td>
+</tr>
+</table>
 </body>
 </html>
+{else if $tipo_produto}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+{literal}
+<style>
+	*{
+		font-family: Tahoma, Arial, Verdana;
+		font-size:12px;
+	}
+	a:link{
+				color: #6E7D9A;
+				text-decoration:none;
+		}
+		a:visited{
+				color: #6E7D9A;
+				text-decoration:none;
+		}
+		a:hover{
+				color: #DEE4F3;
+				text-decoration:none;
+		}
+		a:active{
+				color: #6E7D9A;
+				text-decoration:none;
+	}
+</style>
+{/literal}
+<title>Contrato</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--<link href="view/templates/usuario/estilos1.css" rel="stylesheet" type="text/css">//-->
+</head>
+<body>
+<table align="center">
+	<tr>
+		<td align="left">
+<div style="width:570px;" align="left">
+<div align="CENTER"><font face="Verdana, Arial, Helvetica, sans-serif" size="3"><strong>INSTRUMENTO
+PARTICULAR DE CONTRATO<br>
+PARA PRESTA&Ccedil;&Atilde;O DE SERVI&Ccedil;O </strong></font></div>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2">A {$nome_provedor},
+  com sede em {$localidade}, inscrito no CNPJ/MF sob o n&ordm; {$cnpj_provedor},
+  doravante denominado simplesmente &#8220;{$dominio_provedor}&#8221;, e a pessoa f&iacute;sica/jur&iacute;dica
+  abaixo identificada que, para todos os efeitos, faz parte integrante deste contrato,
+  doravante denominado simplesmente &quot;CONTRATANTE&quot;, celebram o presente
+  contrato, que se reger&aacute; pelas cl&aacute;usulas e condi&ccedil;&otilde;es
+  abaixo:</font>
+<p align="center"><strong><font face="Verdana, Arial, Helvetica, sans-serif" size="3">Cadastro
+  do Usu&aacute;rio:</font></strong>
+<p class="menor"> <strong><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">Nome/Raz&atilde;o
+  Social:</font></strong><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">
+  {$cli.nome_razao}</font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><strong><br>
+  C.G.C/C.P.F:</strong> {$cli.cpf_cnpj}</font><br>
+  <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><strong>Endere&ccedil;o:</strong>
+  {$cli.endereco} - {$cli.cidade} - {$cli.estado}</font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><strong></strong></font><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><br>
+  </font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><strong>Telefones:
+  </strong> {$cli.fone_residencial}</font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><strong><br>
+  CEP:</strong> {$cli.cep}</font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000"><strong><br>
+  Plano:</strong> {$nome_produto} <strong><br>
+  Valor:</strong> {$valor_contrato} ({$valor_extenso}) mensais</font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">
+  <!--LOGIN: __________________________ Senha Inicial: ______________________Tel./Acesso: -->
+  <!--(Regras para cria&ccedil;&atilde;o da login/senha: o login pode ter no m&aacute;ximo
+  16 caracteres, n&atilde;o sendo poss&iacute;vel a utiliza&ccedil;&atilde;o de
+  espa&ccedil;os, acentos ou caracteres especiais e a] senha poder&aacute; conter
+  entre 3 e 8 caracteres.)-->
+  </font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">
+  1. Durante o prazo deste contrato, a {$dominio_provedor} colocar&aacute; &agrave; disposi&ccedil;&atilde;o
+  do CONTRATANTE, atrav&eacute;s de meios digitais de transmiss&atilde;o de informa&ccedil;&otilde;es,
+  seus servi&ccedil;os abaixo descritos:</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">
+  (i) o acesso e o uso individual pelo CONTRATANTE dos servi&ccedil;os prestados
+  pela {$dominio_provedor}, que disponibiliza tamb&eacute;m acesso &agrave; rede mundial
+  de computadores Internet, sendo que a utiliza&ccedil;&atilde;o por parte do
+  CONTRATANTE s&oacute; poder&aacute; ser efetuado do telefone citado no campo
+  Tel./Acesso.</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(ii)
+  um endere&ccedil;o principal de correio eletr&ocirc;nico (&quot;e-mail&quot;),
+  exclusivo para o CONTRATANTE; e</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(iii)
+  espa&ccedil;o em disco em nossos servidores de dois megabytes, para hospedagem
+  de site do CONTRATANTE.</font><br>
+  <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">p.
+  &uacute;nico: cabe &agrave; {$dominio_provedor}, apenas a configura&ccedil;&atilde;o e
+  instala&ccedil;&atilde;o do site em nossos servidores, n&atilde;o se obrigando
+  a confecciona-la nem tampouco pagar quaisquer taxas referentes a dom&iacute;nios
+  ou divulga&ccedil;&atilde;o do referido site. O endere&ccedil;o do site ser&aacute;:
+  http://www.{$dominio_provedor}.br/CONTRATANTE.</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">2.
+  Ap&oacute;s o pagamento da primeira mensalidade o CONTRATANTE ter&aacute; um
+  per&iacute;odo de trinta dias para utiliza&ccedil;&atilde;o dos servi&ccedil;os
+  oferecidos pela {$dominio_provedor}, o CONTRATANTE poder&aacute; ainda utilizar gratuitamente,
+  desde que respeitadas as obriga&ccedil;&otilde;es constantes deste documento,
+  os servi&ccedil;os da {$dominio_provedor} mencionados na cl&aacute;usula acima.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">3.
+     Durante o per&iacute;odo de vig&ecirc;ncia do presente contrato, o CONTRATANTE
+      poder&aacute; utilizar, com tempo ilimitado de acesso, e desde que respeitadas
+       as obriga&ccedil;&otilde;es constantes deste documento, os servi&ccedil;os
+       da  {$dominio_provedor} mencionados na cl&aacute;usula acima, podendo o CONTRATANTE,
+       a qualquer momento durante tal prazo, manifestar por escrito seu desinteresse
+       nos servi&ccedil;os
+  e produtos da {$dominio_provedor}, solicitando seu desligamento. Esta mensagem, a qual
+        poder&aacute; ser enviada atrav&eacute;s do endere&ccedil;o eletr&ocirc;nico
+         ou n&uacute;mero de fax descritos acima, dever&aacute; conter, NECESSARIAMENTE,
+          o n&uacute;mero de CGC/CPF utilizado no cadastramento. </font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">&Eacute;
+  IMPORTANTE OBSERVAR QUE SE O N&ordm; DE INSCRI&Ccedil;&Atilde;O NO CGC/CPF
+  N&Atilde;O
+  FOR INFORMADO OU ESTIVER INCORRETO, SER&Aacute; IMPOSS&Iacute;VEL PROCESSAR
+   A SOLICITA&Ccedil;&Atilde;O DE CANCELAMENTO PELA {$dominio_provedor}.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">3.1.
+  As partes desde j&aacute; expressamente acordam que tais comunica&ccedil;&otilde;es
+  referentes ao cancelamento dos servi&ccedil;os somente produzir&atilde;o efeito
+  no &uacute;ltimo dia do m&ecirc;s civil em que as mesmas forem recebidas pela
+  {$dominio_provedor}. Assim, o CONTRATANTE, ao solicitar o cancelamento da assinatura do
+  servi&ccedil;o, reconhece que ter&aacute; direito de uso at&eacute; o fim do
+  per&iacute;odo j&aacute; contratado, ficando o {$dominio_provedor} isento de ressarcimento
+  do valor j&aacute; pago, referente &uacute;nica e exclusivamente &agrave;quele
+  m&ecirc;s.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">4.
+  O CONTRATANTE, uma vez que tenha se tornado assinante da {$dominio_provedor}, ter&aacute;
+  direito:</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(i)
+  &agrave; acesso &agrave; Internet atrav&eacute;s da {$dominio_provedor};</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(ii)
+  a quantos e-mails adicionais desejar o CONTRATANTE oferecidos a si pr&oacute;prio
+  e/ou a pessoas f&iacute;sicas parentes de primeiro grau desde que observada
+  a condi&ccedil;&atilde;o que se segue: a n&atilde;o utiliza&ccedil;&atilde;o
+  do e-mail adicional por 3 meses consecutivos ocasionar&aacute; o seu cancelamento
+  e a sua disponibilidade para outros assinantes que assim o desejarem; e</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(iii)
+  os e-mails adicionais n&atilde;o fornecem acesso ao conte&uacute;do da {$dominio_provedor}
+  nem &agrave; conex&atilde;o na Internet, sendo destinados apenas para o envio
+  e recebimento de mensagens de e-mail. Somente o titular da conta ter&aacute;
+  acesso &agrave; Internet atrav&eacute;s da {$dominio_provedor}.</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">4.1.
+  O CONTRATANTE dever&aacute; possuir o equipamento m&iacute;nimo para acesso
+  (linha telef&ocirc;nica, computador, modem e os software necess&aacute;rios
+  &agrave; conex&atilde;o com a {$dominio_provedor}). A {$dominio_provedor} n&atilde;o se responsabiliza
+  pelas transa&ccedil;&otilde;es comerciais efetuadas on-line, as quais ser&atilde;o
+  de inteira responsabilidade de quem colocar produtos ou servi&ccedil;os &agrave;
+  venda via {$dominio_provedor} ou Internet. A {$dominio_provedor} tampouco se responsabiliza por
+  eventuais danos que venham a ocorrer nos equipamentos do CONTRATANTE provocados
+  pelo mau uso de qualquer software, hardware ou conex&otilde;es. A {$dominio_provedor}
+  n&atilde;o garante que o funcionamento do sistema de telefonia, RELATIVAMENTE
+  &Agrave; CONEX&Atilde;O TANTO COM A INTERNET, COMO COM ACESSO DISCADO, esteja
+  isento de falhas e/ou interrup&ccedil;&otilde;es.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">4.2.
+  O CONTRATANTE obriga-se a arcar com todos os custos e despesas decorrentes da
+  utiliza&ccedil;&atilde;o dos servi&ccedil;os, ainda que durante o per&iacute;odo
+  mencionado na cl&aacute;usula 2 acima, sem limita&ccedil;&atilde;o, as despesas
+  com as liga&ccedil;&otilde;es telef&ocirc;nicas utilizadas para o acesso.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">4.3.
+  O CONTRATANTE declara-se ciente que ao efetivar a assinatura ou transfer&ecirc;ncia
+  para qualquer outro plano de assinatura oferecido pela {$dominio_provedor}, todo e qualquer
+  suporte via atendimento telef&ocirc;nico ser&aacute; realizado pelos telefones
+  constantes da p&aacute;gina de cadastramento, sem direito a utiliza&ccedil;&atilde;o
+  do sistema gratuito de telefonia, assumindo integralmente os custos provenientes
+  de liga&ccedil;&otilde;es locais e interurbanas. O servi&ccedil;o de suporte
+  prestado via e-mail, fax ou salas de bate-papo ser&atilde;o gratuitos para todos
+  os planos. Durante o prazo de contato mencionado na cl&aacute;usula 2 acima,
+  fica assegurado ao CONTRATANTE o uso gratuito do servi&ccedil;o de suporte via
+  atendimento telef&ocirc;nico para todos os planos, observado o disposto na cl&aacute;usula
+  4.2, acima.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">5.
+  Para fins de cadastramento o CONTRATANTE criar&aacute; um nome (&quot;login&quot;)
+  e uma senha (&quot;password&quot;) e informar&aacute; &agrave; {$dominio_provedor} todos
+  os dados necess&aacute;rios para seu cadastramento, responsabilizando-se civil
+  e criminalmente por estas informa&ccedil;&otilde;es. Caso os dados informados
+  pelo CONTRATANTE no momento do cadastramento estejam errados ou incompletos,
+  impossibilitando a comprova&ccedil;&atilde;o e identifica&ccedil;&atilde;o do
+  CONTRATANTE, a {$dominio_provedor} ter&aacute; o direito de cancelar automaticamente a
+  conta no seu per&iacute;odo de contrato ou ap&oacute;s estar efetivada, ficando
+  a {$dominio_provedor} isento de qualquer responsabilidade ou ressarcimento ao CONTRATANTE.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">5.1.
+  Sem preju&iacute;zo do acima disposto, n&atilde;o ser&atilde;o aceitas e/ou
+  poder&atilde;o ser canceladas a qualquer tempo os endere&ccedil;os de correio
+  eletr&ocirc;nico (e-mail), os quais constem qualquer refer&ecirc;ncia no todo
+  ou em parte &agrave; {$nome_provedor} e/ou a express&atilde;o &quot;{$dominio_provedor}&quot;
+  independentemente desta &uacute;ltima representar as iniciais ou qualquer combina&ccedil;&atilde;o
+  do nome do CONTRATANTE, ou ainda que possam induzir outras pessoas em erro,
+  sendo certo que o CONTRATANTE responder&aacute; pelo uso indevido, tanto no
+  &acirc;mbito civil quanto penal, se for o caso.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">6.
+  Para ter acesso a conex&otilde;es simult&acirc;neas com o mesmo nome (&quot;login&quot;)
+  e a mesma senha (&quot;password&quot;) o CONTRATANTE dever&aacute; optar necessariamente
+  por um plano de assinatura que ofere&ccedil;a pagamento de horas adicionais
+  de uso al&eacute;m das horas b&aacute;sicas do plano escolhido. Os demais planos,
+  em hip&oacute;tese alguma, dar&atilde;o direito a conex&otilde;es simult&acirc;neas
+  com o mesmo nome (&quot;login&quot;) e a mesma senha (&quot;password&quot;).</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">7.
+  O CONTRATANTE ser&aacute; respons&aacute;vel por quaisquer encargos decorrentes
+  da utiliza&ccedil;&atilde;o da {$dominio_provedor} em seu nome e/ou com a sua senha (&quot;password&quot;),
+  devendo tomar todas as medidas necess&aacute;rias para IMPEDIR a utiliza&ccedil;&atilde;o
+  de sua senha por QUAISQUER terceiros. SOB PENA DE RESCIS&Atilde;O IMEDIATA DESTE
+  CONTRATO E PAGAMENTO DE MULTA NO VALOR DE DOZE VEZES O VALOR DA MENSALIDADE
+  DO PLANO ESCOLHIDO.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">7.1.
+  O CONTRATANTE declara estar ciente de que as contas de acesso a que tiver direito
+  em decorr&ecirc;ncia deste contrato ser&atilde;o para uso &uacute;nico e exclusivo
+  do mesmo, n&atilde;o podendo comercializ&aacute;-las, ced&ecirc;-las a terceiros
+  a qualquer t&iacute;tulo ou explor&aacute;-las economicamente de qualquer forma,
+  sob pena da rescis&atilde;o imediata do presente contrato, sem preju&iacute;zo
+  da responsabilidade pelas perdas e danos causados a {$dominio_provedor} em decorr&ecirc;ncia
+  do n&atilde;o cumprimento do disposto nesta cl&aacute;usula.</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">8.
+  Todos os materiais, software, marcas, tecnologias, nomes e programas veiculados
+  pela {$dominio_provedor} (com exce&ccedil;&atilde;o dos software expressamente identificados
+  como de dom&iacute;nio p&uacute;blico) s&atilde;o protegidos por direitos autorais,
+  sendo de propriedade da {$dominio_provedor} ou dos PROVEDORES INDEPENDENTES. Qualquer
+  viola&ccedil;&atilde;o a esses direitos pelo CONTRATANTE ou por TERCEIRO UTILIZANDO-SE
+  DE SUA SENHA (&quot;PASSWORD&quot;) ser&aacute; de RESPONSABILIDADE do CONTRATANTE,
+  implicando a ado&ccedil;&atilde;o das medidas legais aplic&aacute;veis e na
+  IMEDIATA rescis&atilde;o do presente contrato.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">8.1.
+  O CONTRATANTE ser&aacute; respons&aacute;vel por manter as configura&ccedil;&otilde;es
+  da m&aacute;quina para acesso aos servi&ccedil;os aqui contratados , sendo proibido
+  alterar endere&ccedil;os de m&aacute;quinas, IP (Internet Protocol) de rede
+  ou de correio eletr&ocirc;nico, na tentativa de responsabilizar terceiros ou
+  ocultar a identidade ou autoria. Na hip&oacute;tese de ocorr&ecirc;ncia dos
+  casos aqui mencionados, a {$dominio_provedor} poder&aacute; disponibilizar a qualquer
+  tempo &agrave;s autoridades competentes toda e qualquer informa&ccedil;&atilde;o
+  sobre o CONTRATANTE, bem como cancelar a conta automaticamente, sem pr&eacute;vio
+  aviso, respondendo o CONTRATANTE civil e penalmente pelos atos praticados</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">9.
+  Este contrato &eacute; celebrado por prazo indeterminado, entrando em vigor
+  na data de sua celebra&ccedil;&atilde;o. Qualquer uma das partes poder&aacute;,
+  a qualquer tempo, rescindir o presente contrato, mediante comunica&ccedil;&atilde;o
+  por escrito &agrave; outra parte (inclusive por fax ou e-mail), sem que isto
+  implique em infra&ccedil;&atilde;o ao presente acordo, ressalvado, contudo,
+  que, salvo na hip&oacute;tese abaixo mencionada, a {$dominio_provedor} n&atilde;o ter&aacute;
+  este direito durante o per&iacute;odo mencionado na cl&aacute;usula 2 acima.
+  Poder&aacute; a {$dominio_provedor}, no entanto, imediatamente rescindir o presente CONTRATO
+  durante o per&iacute;odo mencionado na cl&aacute;usula 2 acima, caso o CONTRATANTE
+  esteja violando ou viole qualquer disposi&ccedil;&atilde;o deste contrato.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">10.
+  A {$dominio_provedor} poder&aacute; alterar tanto em forma como em conte&uacute;do, suspender
+  ou cancelar, a seu exclusivo crit&eacute;rio, a qualquer tempo, quaisquer dos
+  servi&ccedil;os, produtos, utilidade ou aplica&ccedil;&atilde;o, disponibilizados
+  por si ou por terceiros, independente de qualquer aviso ao CONTRATANTE, n&atilde;o
+  implicando qualquer infra&ccedil;&atilde;o ao presente contrato.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">12.
+  A {$dominio_provedor} poder&aacute; modificar, adicionar ou remover quaisquer cl&aacute;usulas
+  ou condi&ccedil;&otilde;es deste contrato, comunicando ao CONTRATANTE por correio
+  eletr&ocirc;nico (&quot;e-mail&quot;), via postal ou qualquer outro meio eletr&ocirc;nico,
+  quando a altera&ccedil;&atilde;o implicar em restri&ccedil;&atilde;o das condi&ccedil;&otilde;es
+  inicialmente pactuadas. N&atilde;o havendo concord&acirc;ncia do CONTRATANTE
+  este poder&aacute; rescindir o contrato, sem qualquer &ocirc;nus, mediante comunica&ccedil;&atilde;o
+  por e-mail ou via postal, dentro do prazo de 15 (quinze) dias da data do envio
+  do e-mail ou do recebimento da carta, conforme crit&eacute;rio adotado.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">13.
+  O CONTRATANTE ser&aacute; respons&aacute;vel pelo uso dos servi&ccedil;os providos
+  pelo {$dominio_provedor}, em observ&acirc;ncia a todas as leis, decretos e regulamentos
+  nacionais, estaduais e municipais aplic&aacute;veis, e das Normas de Seguran&ccedil;a
+  e Privacidade publicadas e divulgadas pelo {$dominio_provedor}.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">14.
+  O pagamento da mensalidade, dependendo do plano escolhido pelo CONTRATANTE,
+  poder&aacute; ser efetuado conforme op&ccedil;&atilde;o no ato do cadastramento,
+  ou altera&ccedil;&atilde;o por parte do CONTRATANTE, atrav&eacute;s de Boleto
+  Banc&aacute;rio, D&eacute;bito em Conta Corrente, Boleto da {$dominio_provedor} (conforme
+  as op&ccedil;&otilde;es dispon&iacute;veis no ato do cadastramento).</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">14.1
+  No caso de impossibilidade do d&eacute;bito das mensalidades nas modalidades
+  acima descritas, a {$dominio_provedor} reserva-se o direito de emitir contra o CONTRATANTE
+  um boleto para cobran&ccedil;a dos servi&ccedil;os prestados, incluindo no boleto
+  taxa referente a despesas de manuseio e envio do mesmo.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">14.2
+  Na hip&oacute;tese do n&atilde;o pagamento na data prevista, o CONTRATANTE incorrer&aacute;
+  em:</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(i)
+  Juros de mora de 1% (um por cento) ao m&ecirc;s sobre o valor total do d&eacute;bito
+  calculado da data do vencimento at&eacute; a data do efetivo pagamento;</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(ii)
+  Atualiza&ccedil;&atilde;o monet&aacute;ria calculada da data do vencimento at&eacute;
+  a data do pagamento da obriga&ccedil;&atilde;o, pela varia&ccedil;&atilde;o
+  do IGP-M (&Iacute;ndice Geral de Pre&ccedil;os de Mercado), apurada pela Funda&ccedil;&atilde;o
+  Get&uacute;lio Vargas, no mesmo per&iacute;odo. Caso tal &iacute;ndice seja
+  extinto ser&aacute; adotado o &iacute;ndice oficial que o substituir, ou, na
+  falta desse, outro que contemple a menor periodicidade de reajuste permitida
+  por lei;</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(iii)
+  Multa morat&oacute;ria de 2% (dois por cento) calculada sobre o valor do d&eacute;bito,
+  cobrada de uma &uacute;nica vez.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">14.3
+  Qualquer atraso no pagamento das mensalidades dar&aacute; direito a {$dominio_provedor}
+  proceder &agrave; desativa&ccedil;&atilde;o do acesso do CONTRATANTE at&eacute;
+  o eventual pagamento.</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">15.
+  O CONTRATANTE EXPRESSAMENTE declara e garante, para todos os fins de direito:</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(i)
+  possuir capacidade jur&iacute;dica para celebrar este contrato e utilizar os
+  produtos e servi&ccedil;os objeto deste contrato;</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(ii)
+  SER financeiramente respons&aacute;vel pela utiliza&ccedil;&atilde;o dos produtos
+  e servi&ccedil;os objeto deste contrato E TER CONDI&Ccedil;&Otilde;ES FINANCEIRAS
+  DE ARCAR COM OS PAGAMENTOS, CUSTOS E DESPESAS DECORRENTES DESTE CONTRATO;</font>
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(iii)
+  reconhecer que o presente contrato se formaliza, vinculando as partes, COM a
+  aceita&ccedil;&atilde;o eletr&ocirc;nica do mesmo PELO CONTRATANTE, O QUE SE
+  FAR&Aacute; MEDIANTE O CLIQUE NO ESPA&Ccedil;O &quot;DE ACORDO COM O CONTRATO&quot;,
+  conforme abaixo mencionado; e</font> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">(v)
+  que leu e est&aacute; ciente e de pleno acordo com todos os termos e condi&ccedil;&otilde;es
+  deste contrato.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">16.
+  Este contrato constitui o entendimento integral entre o CONTRATANTE e a {$dominio_provedor}.
+  O CONTRATANTE n&atilde;o poder&aacute; ceder A TERCEIROS seus direitos decorrentes
+  deste contrato sem a pr&eacute;via anu&ecirc;ncia por escrito (inclusive por
+  fax ou e-mail) da {$dominio_provedor}.</font>
+<p class="menor"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">17.
+  As partes elegem o Foro Central da Comarca de Picos como competente para dirimir
+  quaisquer controv&eacute;rsias oriundas do presente contrato, &agrave; exclus&atilde;o
+  de qualquer outro, por mais privilegiado que seja.</font>
+<p class="menor">
+<p class="menor"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#000000">Picos-PI,{$hoje_extenso}
+  Validade do contrato: {$validade} </font>
+<table width="100%" border="0" cellspacing="2" cellpadding="0">
+  <tr>
+    <td width="50%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td bgcolor="#000000" height="1px"></td>
+        </tr>
+      </table></td>
+    <td width="50%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td bgcolor="#000000" height="1px"></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">{$nome_provedor}</font></td>
+    <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">{$cli.nome_razao}</font></td>
+  </tr>
+</table>
+
+<p id="imprimir" align="center"><strong><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><table><tr><td><a href="javascript:window.print()"><img src="view/templates/imagens/print.gif" border="0"></a></td><td><a href="javascript:window.print()">clique para imprimir</a></td></tr></table></font></strong></DIV></p>
+&nbsp;
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>
+{/if}

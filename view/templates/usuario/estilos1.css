@@ -1,0 +1,119 @@
+INPUT{
+	background: white;
+	font-family : Verdana;
+	font-size : 10px;
+	border : 1 solid #000000;
+}
+INPUT.escondido{
+	background: white;
+	font-family : Verdana;
+	font-size : 10px;
+	border : 0 solid #FFFFFF;
+}
+INPUT.disabled{
+	background: white;
+	font-family : Verdana;
+	font-size : 10px;
+	border : 1 solid #CCCCCC;
+}
+INPUT.enabled{
+	background: white;
+	font-family : Verdana;
+	font-size : 10px;
+	border : 1 solid #000000;
+}
+
+input.checkbox{
+	background: white;
+	font-family : Verdana;
+	font-size : 10px;
+	border : 0 solid #000000;
+}
+
+select{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000000;
+	text-decoration: none;
+	background: white; 
+	border: 1 solid #000000;
+}
+TEXTAREA{
+	background: white;
+	font-family : Verdana;
+	font-size : 10px;
+	border : 1 solid #000000;
+}
+A {
+	COLOR: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 9px; TEXT-DECORATION: none;
+	}
+A:link {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #000000; TEXT-DECORATION: underline;
+}
+p{
+COLOR: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; TEXT-DECORATION: none;
+}
+h1 {
+	font-family: Arial;
+	font-size: 20px;
+	font-style: bold;
+	line-height: normal;
+	font-weight: strong;
+	font-variant: normal;
+	text-transform: none;
+	color: #000000;
+	text-decoration: none;
+}
+h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: bold;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #000000;
+	text-decoration: none;
+}
+.box_fechada {
+	visibility: hidden;
+	display:none;
+}
+
+.box_aberta {
+	visibility: visible;
+	display:block;
+}
+
+@media screen {
+	#imprimir {
+		position:absolute;
+		left:8px;
+		top:8px;
+		font-family:arial,helvetica;
+		text-decoration: none;
+		font-size:12px;
+		font-color: #000000;
+		align: center;
+		vertical-align: bottom;
+		background-color:#CACAFF;
+		width:70px;
+		height:10px;
+		border-top-width: 1px;
+		border-right-width: 1px;
+		border-bottom-width: 1px;
+		border-left-width: 1px;
+		border-top-style: solid;
+		border-right-style: solid;
+		border-bottom-style: solid;
+		border-left-style: solid;
+
+
+	}
+}
