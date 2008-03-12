@@ -14,6 +14,18 @@
 			$this->_filtros		= array("id_endereco_instalacao" => "numeric", "id_conta" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric");
 		
 		}
+		
+		public function obtemEnderecoInstalacaoReferenciado($id_conta) {
+		
+			$sql  = "select endc.*, cnd.nome as conodminio_nome, cndb.nome, cid.cidade, cid.uf as bloco_nome from cntb_endereco_instalacao endc ";
+			$sql .= "LEFT OUTER JOIN catb_condominio cnd ON endc.id_condominio_instalacao = cnd.id_condominio ";
+			$sql .= "LEFT OUTER JOIN catb_condominio_bloco cndb ON endc.id_bloco_instalacao = cndb.id_bloco ";
+			$sql .= "LEFT OUTER JOIN cftb_cidade cid ON endc.id_cidade = cid.id_cidade ";
+			$sql .= "WHERE endc.id_conta = '$id_conta' ORDER BY id_endereco_instalacao desc limit 1 ";
+	
+			return($this->bd->obtemUnicoRegistro($sql));
+		
+		}
 	
 	
 	

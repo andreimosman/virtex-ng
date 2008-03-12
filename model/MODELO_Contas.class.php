@@ -398,6 +398,10 @@
 			return($this->cntb_endereco_instalacao->insere($dados));
 
 		}
+		
+		public function obtemEnderecoInstalacaoReferenciado($id_conta) {
+			return ($this->cntb_endereco_instalacao->obtemEnderecoInstalacaoReferenciado($id_conta));
+		}
 
 		/**
 		 * Obtem o endereço de instalação.

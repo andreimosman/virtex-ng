@@ -76,9 +76,10 @@
 			return($this->cbtb_endereco_cobranca->obtemUnico($filtro, "id_endereco_cobranca DESC"));
 		}
 
-
-
-
+		
+		public function obtemEnderecoCobrancaReferenciado($id_cliente_produto) {
+			return($this->cbtb_endereco_cobranca->obtemEnderecoCobrancaReferenciado($id_cliente_produto));
+		}
 
 
 		protected function prorata($data1,$data2,$valor_plano,$valor_comodato) {
