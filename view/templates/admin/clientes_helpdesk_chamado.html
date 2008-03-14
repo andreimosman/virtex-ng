@@ -47,7 +47,7 @@ label {
 	<table border=0 width="700">
 		<tr>
 			<td align="left"><label><b>Chamados abertos:</b></label></td>
-			<td align="right"><input type="button" name="botao" class="botao" value="Novo Chamado" onclick="javascript: NovoChamado({$id_cliente});" /></td>
+			<td align="right"><input type="button" name="botao" class="botao" value="Novo Chamado/Ocorrência" onclick="javascript: NovoChamado({$id_cliente});" /></td>
 		</tr>
 		<tr>
 			<td colspan=2>
@@ -56,8 +56,9 @@ label {
 					<tr>
 						<th align="center">COD</th>
 						<th align="center">ABERTURA</th>
-						<th align="center">TIPO</th>
-						<th align="center">STAT.</th>
+						<th align="center">PRI</th>
+						<th align="center">TP</th>
+						<th align="center">ST</th>
 						<th align="center">GRUPO/RESP</th>
 						<th align="left">ASSUNTO</th>
 					</tr>
@@ -67,8 +68,9 @@ label {
 					<tr>
 						<td align='right' align="center" width="40" class='{$estilo}'><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.id_chamado|string_format:"%05d"}</a></td>
 						<td class='{$estilo}' align="center" width="140"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
-						<td class='{$estilo}' align="center" width="50"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.tipo}</a></td>
-						<td class='{$estilo}' align="center" width="50"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.status}</a></td>
+						<td class='{$estilo}' align="center" width="30"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.prioridade}</a></td>
+						<td class='{$estilo}' align="center" width="35"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.tipo}</a></td>
+						<td class='{$estilo}' align="center" width="35"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.status}</a></td>
 						<td class='{$estilo}' align="center" width="150"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$grupos[$r.id_grupo]} {if $r.responsavel}<br /><b>{$responsaveis[$r.responsavel]}</b>{/if}</a></td>
 						<td class='{$estilo}' width="250"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.assunto}</a></td>
 					</tr>
@@ -80,18 +82,24 @@ label {
 
 					{if count($chamados_pendentes)}
 					<tr>
-						<td colspan="6" style="border-top: 1px solid #000">
+						<td colspan="7" style="border-top: 1px solid #000">
 							<table border=0 >
 								<tr>
-									<td><strong>Legenda</strong><td>
-									<td align="right"><b>TIPO:</b><td>
-									<td align="left"><b>CH</b> (Chamado) - <b>OC</b> (Pendente com o Responsável) - <b>OS</b> (Ordem de Serviço)
+									<td><strong>Legenda</strong></td>
+									<td align="right"><b>PRIODIDADE:</b></td>
+									<td align="left"><b>N</b> (Nenhuma) - <b>B</b> (Baixo) - <b>M</b> (Médio) - <b>A</b> (Alto) - <b>U</b> (Urgente)</td>
 								</tr>
 
 								<tr>
-									<td><strong>&nbsp;</strong><td>
-									<td align="right"><b>STATUS:</b><td>
-									<td align="left"><b>A</b> (Aberto) - <b>N</b> (Novo) - <b>P</b> (Pendente com o Responsável) - <b>PC</b> (Pendente com o Cliente)<td>
+									<td>&nbsp;</td>
+									<td align="right"><b>TIPO:</b></td>
+									<td align="left"><b>CH</b> (Chamado) - <b>OC</b> (Pendente com o Responsável) - <b>OS</b> (Ordem de Serviço)</td>
+								</tr>
+
+								<tr>
+									<td><strong>&nbsp;</strong></td>
+									<td align="right"><b>STATUS:</b></td>
+									<td align="left"><b>A</b> (Aberto) - <b>N</b> (Novo) - <b>P</b> (Pendente com o Responsável) - <b>PC</b> (Pendente com o Cliente)</td>
 								</tr>
 							</table>
 						</td>

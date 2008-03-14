@@ -35,8 +35,8 @@ label {
 		self.location = "admin-clientes.php?op=helpdesk&tela=cadastro&id_cliente=" + id_cliente;
 	}
 
-	function AlterarChamado(id_chamado) {
-		self.location = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado;
+	function AlterarChamado(id_chamado, id_cliente) {
+		self.location = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado + "&id_cliente=" + id_cliente;
 	}
 
 	function ApresentarDiv(id_div, visivel) {
@@ -113,6 +113,22 @@ label {
 		return true;
 	}
 
+
+	function validaFormPriorizarChamado() {
+		var prioridade_comentario = document.getElementById("prioridade_comentario");
+		var prioridade = document.getElementById("prioridade");
+		var prioridade_atual = document.getElementById("prioridade_atual");
+
+		if(estaVazio(prioridade_comentario.value)) {
+			alert("É necessário preencher o campo comentário");
+			comentario.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+
 	function escondeDivs() {
 		ApresentarDiv("divFormComentaChamado", false);
 		ApresentarDiv("divFormPegaChamado", false);
@@ -140,6 +156,11 @@ label {
 		ApresentarDiv("divFormResolveChamado", true);
 	}
 
+	function ambientePriorizar() {
+			escondeDivs();
+			ApresentarDiv("divFormPriorizaChamado", true);
+	}
+
 {/literal}
 </script>
 
@@ -148,24 +169,46 @@ label {
 <br>
 	<!-- ALTERAÇÃO DO CHAMADO -->
 
-<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="730" {if $tela == "cancelar_contrato"}style="border: solid 1px #FF0000;"{/if}>
+<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="730">
 <tr>
+	{* ----- MENU SUPERIOR COM AS OPÇÕES REFERENTES AO CHAMADO ----- *}
 	<td align="left" style="border-bottom: solid 1px;">
 	&nbsp;Opções:
-	[<a href="admin-clientes.php?op=helpdesk&tela=listagem&id_cliente={$id_cliente}" {if !$usuario_grupo}style="color:green;font-weight:bold"{/if}>Voltar</a>]
+	[<a href={if $chamado.tipo == 'OS'}"admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente={$id_cliente}&id_chamado={$chamado.id_chamado_pai}"{else}"admin-clientes.php?op=helpdesk&tela=listagem&id_cliente={$id_cliente}"{/if} {if !$usuario_grupo || $chamado.status == "OK" || $chamado.status == "F"}style="color:green;font-weight:bold"{/if}>Voltar</a>]
 
 	{if $chamado.status != "OK" && $chamado.status != "F"}
 		{if $usuario_grupo}
-			{if !$chamado.responsavel}[<a href="javascript:void(null);" onclick="javascript:ambientePegar()"; style="color:green;font-weight:bold">Pegar</a>]{/if}
-			{if $chamado.responsavel == $dadosLogin.id_admin || $admin_grupo}[<a href="javascript:void(null);" onclick="javascript:ambienteResolver();" {if $chamado.responsavel == $dadosLogin.id_admin}style="color:green;font-weight:bold"{/if}>Fechar/Resolver</a>]{/if}
+			{if !$chamado.responsavel}
+				[<a href="javascript:void(null);" onclick="javascript:ambientePegar()"; style="color:green;font-weight:bold">Pegar</a>]
+			{/if}
+		{/if}
+
+		{if $chamado.responsavel == $dadosLogin.id_admin || $chamado.criado_por == $dadosLogin.id_admin || $admin_grupo}
+			[<a href="javascript:void(null);" onclick="javascript:ambienteResolver();" {if $chamado.responsavel == $dadosLogin.id_admin}style="color:green;font-weight:bold"{/if}>Fechar/Resolver</a>]
+		{/if}
+
+		{if $usuario_grupo}
 			[<a href="javascript:void(null);" onclick="javascript:ambienteDelegar()"; {if !$chamado.responsavel}style="color:blue;font-weight:bold"{/if}>Delegar</a>]
 		{/if}
+
+		{if $chamado.tipo != 'OS'}
+			{if $admin_grupo || $chamado.criado_por == $dadosLogin.id_admin || $chamado.responsavel == $dadosLogin.id_admin}
+				[<a href="admin-clientes.php?op=helpdesk&tela=alteracao&subtela=ordemservico&id_chamado={$chamado.id_chamado}&id_cliente={$id_cliente}" {if !$ordem_servico}style="color:blue;font-weight:bold"{/if}>Gerar Ordem de Serviço</a>]
+			{/if}
+		{/if}
+
+		{if $chamado.criado_por == $dadosLogin.id_admin || $admin_grupo}
+			[<a href="javascript:void(null);" onclick="javascript:ambientePriorizar();">Priorizar</a>]
+		{/if}
+
 	{/if}
 
 	[<a href="javascript:void(null);" onclick="javascript:ambienteComentario()";>Comentar</a>]
 
 
 	</td>
+	{* // ----- MENU SUPERIOR COM AS OPÇÕES REFERENTES AO CHAMADO ----- *}
+
 </tr>
 
 {if $erro}
@@ -174,10 +217,11 @@ label {
 </tr>
 {/if}
 
+{* ----- INFORMAÇÕES SOBRE O CHAMADO ----- *}
 <tr>
 <td align="center">
-	{if $contrato.status == "C"}<span style="color: #FF0000; font-size: 14px;"><strong>** CONTRATO CANCELADO **</strong></span>{/if}
-	{if $contrato.status == "M"}<span style="color: orange; font-size: 14px;"><strong>** CONTRATO MIGRADO **</strong></span>{/if}
+	{if $chamado.status == "F"}<span style="color: #FF0000; font-size: 14px;"><strong>** CHAMADO FINALIZADO **</strong></span>{/if}
+	{if $chamado.status == "OK"}<span style="color: orange; font-size: 14px;"><strong>** CHAMADO RESOLVIDO **</strong></span>{/if}
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
 		<tr>
 			<th colspan=4>Detalhes do Chamado</th>
@@ -188,6 +232,11 @@ label {
 
 			<td width="110" align="right"><strong>Status:</strong></td>
 			<td align="left">{$status_chamado[$chamado.status]}&nbsp;</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Prioridade:</strong></td>
+			<td align="left">{$prioridades[$chamado.prioridade]}</td>
 		</tr>
 
 		<tr>
@@ -227,6 +276,7 @@ label {
 			<td align="left">{$classificacoes[$chamado.classificacao]}</td>
 		</tr>
 
+
 	</table>
 
 
@@ -248,7 +298,43 @@ label {
 	</table>
 	<br />
 
+{if count($info_os)}
 
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
+		<tr>
+			<th colspan=4>Informa&ccedil;&otilde;es do Atendimento</th>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Data Agendada:</strong></td>
+			<td align="left">{$info_os.agendamento}</td>
+
+			<td width="110" align="right"><strong>Per&iacute;odo:</strong></td>
+			<td align="left">{$periodos[$info_os.periodo]}</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Endere&ccedil;o</strong></td>
+			<td align="left" colspan=3>{$info_os.endereco_os} {if $info_os.complemento} - {$info_os.complemento}{/if}</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Bairro:</strong></td>
+			<td align="left">{$info_os.bairro_os}</td>
+
+			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<td align="left">{$info_os.cidade_os}</td>
+		</tr>
+
+	</table>
+	<br />
+
+{/if}
+
+{* //----- INFORMAÇÕES SOBRE O CHAMADO ----- *}
+
+
+{* ----- FORMULÁRIO DE PEGAR CHAMADO ----- *}
 {if !$chamado.responsavel}
 	<!-- PEGA CHAMADO -->
 	<div id="divFormPegaChamado" style="width:700px;position:relative; display:none;">
@@ -297,7 +383,10 @@ label {
 		</form>
 	</div>
 {/if}
+{* //----- FORMULÁRIO DE PEGAR CHAMADO ----- *}
 
+
+{* ----- FORMULÁRIO DE DELEGAÇÃO DE CHAMADO ----- *}
 {if $admin_grupo}
 	<!-- DELEGA CHAMADO -->
 	<div id="divFormDelegaChamado" style="width:700px;position:relative; display:none;">
@@ -324,7 +413,7 @@ label {
 									<select name="novoresponsavel" id="novoresponsavel" value="novoresponsavel" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);">
 										<option value="" >-- SELECIONE --</option>
 										{foreach from=$grupo_usuarios item=i}
-											<option value="{$i.id_admin}">{$responsaveis[$i.id_admin]}</option>
+											{if $i.id_admin != $chamado.responsavel}<option value="{$i.id_admin}">{$responsaveis[$i.id_admin]}{/if}</option>
 										{/foreach}
 									</select>
 								</td>
@@ -352,7 +441,10 @@ label {
 		</form>
 	</div>
 {/if}
+{* //----- FORMULÁRIO DE DELEGAÇÃO DE CHAMADO ----- *}
 
+
+{* ----- FORMULÁRIO DE COMENTÁRIO DE CHAMADO ----- *}
 	<!-- COMENTA CHAMADO -->
 	<div id="divFormComentaChamado" style="width:700px;position:relative; display:none;">
 		<form name="frmComentar" id="frmComentar" action="admin-clientes.php" onsubmit="javascript:return validaFormComentarChamado();">
@@ -399,8 +491,73 @@ label {
 			</table>
 		</form>
 	</div>
+{* //----- FORMULÁRIO DE COMENTÁRIO DE CHAMADO ----- *}
 
-{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin}
+
+{* ----- FORMULÁRIO DE PRIORIZAÇÃO DE CHAMADO ----- *}
+{if $admin_grupo || $chamado.criado_por == $dadosLogin.id_admin}
+	<!-- PRIORIZA CHAMADO -->
+	<div id="divFormPriorizaChamado" style="width:700px;position:relative; display:none;">
+		<form name="frmPriorizar" id="frmPriorizar" action="admin-clientes.php" onsubmit="javascript:return validaFormPriorizarChamado();">
+			<input type="hidden" name="acao" id="acao" value="priorizar" />
+			<input type="hidden" name="op" id="op" value="helpdesk" />
+			<input type="hidden" name="tela" id="tela" value="alteracao" />
+			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
+			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
+			<input type="hidden" name="prioridade_atual" id="prioridade_atual" value="{$chamado.prioridade}" />
+
+
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Priorizar Chamado</span></th>
+				</tr>
+				<tr>
+					<!-- Lado Esquerdo -->
+					<td width="500">
+						<table border=0>
+							<tr>
+								<td align="right"><strong>Prioridade:</strong></td>
+								<td>
+									<select id="prioridade" name="prioridade" style="width:100%"  onchange="javascript:AtualizaFormCampoTipo(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+										{foreach from=$prioridades key=k item=i}
+											{if $k != $chamado.prioridade}<option value="{$k}">{$i}</option>{/if}
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+
+							<tr>
+								<td align="right" width="110"><strong>Comentário:</strong></td>
+								<td align="right"><textarea name="prioridade_comentario" id="prioridade_comentario" rows="4" cols="30"></textarea></td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- Confirmação -->
+					<td width="200" style="border-left:1px solid #000" valign="middle">
+						<table border=0>
+							<tr>
+								<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+							</tr>
+							<tr>
+								<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+{/if}
+{* //----- FORMULÁRIO DE PRIORIZAÇÃO DE CHAMADO ----- *}
+
+{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin || $chamado.criado_por == $dadosLogin.id_admin}
 	<!-- RESOLVE/FECHAR CHAMADO -->
 	<div id="divFormResolveChamado" style="width:700px;position:relative; display:none;">
 		<form name="frmResolver" id="frmResolver" action="admin-clientes.php" onsubmit="javascript:return validaFormResolverChamado();">
@@ -425,11 +582,19 @@ label {
 								<td align="left">
 									<select name="novostatus" id="novostatus" style="width:150px" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);">
 										<option value="">-- SELECIONE --</option>
-										<option value="A">Aberto</option>
-										<option value="P">Pendente</option>
-										<option value="PC">Pendente com o cliente</option>
-										<option value="OK">Resolvido</option>
-										<option value="F">Fechado</option>
+										{* Somente o dono do chamado e o administrador doe grupo podem ter acesso a estas opçòes *}
+										{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin }
+											<option value="A">Aberto</option>
+											<option value="P">Pendente</option>
+											<option value="PC">Pendente com o cliente</option>
+										{/if}
+
+										{* Se o chamado não for uma ordem de serviço e não conter OS pendentes, então aparecerão as duas opções de conclusão do chamado *}
+										{if !count($os_pendentes)}
+											<option value="OK">Resolvido</option>
+											<option value="F">Fechado</option>
+										{/if}
+
 									</select>
 								</td>
 							</tr>
@@ -457,10 +622,53 @@ label {
 					</td>
 				</tr>
 
+				{* Caso não seja uma ordem de serviço, aparece a mensagem de advertência *}
+				{if $chamado.tipo != "OS"}
+				<tr>
+					<td colspan=2 style="border-top:1px solid #000">
+						<p style="font-size:10px;text-align:center">Os status RESOLVIDO e FINALIZADO só aparecerão quando não houverem Ordens de Serviço pendentes no chamado.</label>
+					</td>
+				</tr>
+				{/if}
+
 			</table>
+
 		</form>
 	</div>
 {/if}
+
+
+{* Se houverem ordens de serviço então exibe uma listagem com todas as ordens de chamado *}
+{if $ordens_servico_chamado}
+	<table class='lista' border=0 width='700' cellpadding=0 cellspacing=0 align="center">
+
+		<tr>
+			<th align="center">COD</th>
+			<th align="center">ABERTURA</th>
+			<th align="center">PRI</th>
+			<th align="center">STAT</th>
+			<th align="center">GRUPO/RESP</th>
+			<th align="left">ASSUNTO</th>
+		</tr>
+
+		{foreach name=registros item=r from=$ordens_servico_chamado}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td align='right' align="center" width="40" class='{$estilo}'><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.id_chamado|string_format:"%05d"}</a></td>
+			<td class='{$estilo}' align="center" width="140"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
+			<td class='{$estilo}' align="center" width="25"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.prioridade}</a></td>
+			<td class='{$estilo}' align="center" width="25"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.status}</a></td>
+			<td class='{$estilo}' align="center" width="150"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$grupos[$r.id_grupo]} {if $r.responsavel}<br /><b>{$responsaveis[$r.responsavel]}</b>{/if}</a></td>
+			<td class='{$estilo}' width="250"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.assunto}</a></td>
+		</tr>
+		{/foreach}
+
+
+	</table>
+	<br />
+{/if}
+
+
 
 	<!-- HISTÓRICO DO CHAMADO -->
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
