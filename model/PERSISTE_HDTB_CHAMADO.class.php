@@ -9,6 +9,7 @@
 		public static $TIPO_ORDEM_SERVICO	= 'OS';	/** UTILIZADO PRA VINCULAR UMA OS A UM CHAMADO */
 		
 		public static $ORIGEM_FONE			= 'F';	/** Telefone */
+		public static $ORIGEM_OPERADOR		= 'OP';	/** Operador */
 		public static $ORIGEM_MAIL			= 'E';	/** Email */
 		public static $ORIGEM_CONTATO		= 'CS';	/** Contato direto com atendente in site */
 		public static $ORIGEM_CHAT			= 'CH';	/** Chat */
@@ -24,13 +25,19 @@
 		public static $STATUS_PENDENTE_CLI	= 'PC';
 		public static $STATUS_RESOLVIDO		= 'OK';
 		public static $STATUS_FECHADO		= 'F';
+		
+		public static $PRIORIDADE_NENHUMA	= 'N';
+		public static $PRIORIDADE_BAIXA		= 'B';
+		public static $PRIORIDADE_MEDIA		= 'M';
+		public static $PRIORIDADE_ALTA		= 'A';
+		public static $PRIORIDADE_URGENTE	= 'U';
 	
 		public function __construct($bd=null) {
 			parent::__construct($bd);
-			$this->_campos	 	= array("id_chamado", "abertura", "fechamento", "tipo", "criado_por", "id_grupo", 
+			$this->_campos	 	= array("id_chamado", "abertura", "fechamento", "tipo", "criado_por", "id_grupo", "id_chamado_pai", 
 										"assunto", "descricao", "status", 
 										
-										"origem", "classificacao",
+										"origem", "classificacao","prioridade", 
 										"responsavel",
 										
 										"id_chamado_pai",

@@ -322,6 +322,10 @@ class VCACobranca extends VirtexControllerAdmin {
 
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
 
+		echo "<PRE>";
+		print_r($periodo_anos_fatura);
+		echo "</PRE>";
+
 		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas("10");
 
 		$formas = $this->preferencias->obtemFormasPagamentoGerarCobranca();

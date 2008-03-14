@@ -39,7 +39,7 @@
 				$sql .= "WHERE a.id_admin = $id_admin ";
 			}
 			
-			echo $sql . "<br><br>";
+			//echo $sql . "<br><br>";
 			
 			if($id_admin) {
 				$retorno = $this->bd->obtemUnicoRegistro($sql);

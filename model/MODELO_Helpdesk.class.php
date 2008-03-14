@@ -15,6 +15,8 @@
 		protected $hdtb_chamado;
 		protected $hdtb_chamado_historico;
 		
+		protected $hdtb_os;
+		
 		public function __construct() {
 			parent::__construct();
 			$this->hdtb_grupo 						= VirtexPersiste::factory("hdtb_grupo");
@@ -23,8 +25,15 @@
 			$this->hdtb_chamado						= VirtexPersiste::factory("hdtb_chamado");
 			$this->hdtb_chamado_historico			= VirtexPersiste::factory("hdtb_chamado_historico");
 			
+			$this->hdtb_os 							= VirtexPersiste::factory("hdtb_os");
+			
 		}
 		
+
+
+		/****************
+		 ****	GRUPOS
+		 *******************************************/
 		
 		//Faz o cadastro de um novo grupo
 		public function cadastraGrupo($nome, $descricao, $ativo='t', $id_grupo_pai="") {
@@ -108,14 +117,17 @@
 			return $this->hdtb_admin_grupo->obtemListaGruposPertencentesAdmin($id_admin, $ativo);
 		}
 
-
+		
+		/****************
+		 ****	CHAMADOS
+		 *******************************************/
 
 
 		/**
 		 * Abertura de chamado ou ocorrência.
 		 */
-		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_serdor=0,$id_nas=0,$id_pop=0,$id_chamado_pai=null) {
-			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_grupo, "assunto" => $assunto, "descricao" => $descricao, "odigem" => $origem, "classificacao" => $classificacao);
+		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_serdor=0,$id_nas=0,$id_pop=0,$id_chamado_pai=null) {
+			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_grupo, "assunto" => $assunto, "descricao" => $descricao, "origem" => $origem, "classificacao" => $classificacao);
 			
 
 			if( $id_cliente ) $dados["id_cliente"] = $id_cliente;
@@ -125,7 +137,9 @@
 			if( $id_servidor ) $dados["id_servidor"] = $id_servidor;
 			if( $id_nas ) $dados["id_nas"] = $id_nas;
 			if( $id_pop ) $dados["id_pop"] = $id_pop;
-
+			if( $prioridade ) $dados["prioridade"] = $prioridade;
+			
+			
 			// TODO: Registrar a abertura do chamado filho no chamado pai.
 			if( $id_chamado_pai ) $dados["id_chamado_pai"] = $id_chamado_pai;
 			
@@ -144,11 +158,12 @@
 			$status_inicial = ($tipo == 'OC')? PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO : PERSISTE_HDTB_CHAMADO::$STATUS_NOVO;
 			
 			$this->alteraStatus($id_chamado, $status_inicial, $criado_por);
+			$this->alteraPrioridade($id_chamado, $prioridade, $criado_por);
 			
 			if( $id_chamado_pai ) {
 			
-				$titulo = "Chamado filho criado";
-				$comentarios = "ID: $id_chamado\nTítulo: " . $this->$assunto . "\n";
+				$titulo = "Criação de chamado filho";
+				$comentarios = "ID: $id_chamado\nTítulo: $assunto";
 			
 				$this->adicionaHistoricoChamado($id_chamado_pai,$titulo,$comentarios, $criado_por);
 			}
@@ -157,6 +172,7 @@
 			return($id_chamado);
 			
 		}
+		
 		
 		/**
 		 * Adicionar comentário ao chamado.
@@ -170,6 +186,7 @@
 			
 			return($this->hdtb_chamado_historico->insere($dados));
 		}
+		
 		
 		/** 
 		 * Alteração do responsável pelo chamado.
@@ -189,6 +206,24 @@
 			
 			return($this->hdtb_chamado->altera($dados,$filtro));			
 		}
+		
+		
+		/** 
+		 * Alteração da prioridade pelo chamado.
+		 *
+		 *   Altera a prioridade e adiciona um comentário notificando a alteração.
+		 *
+		 */
+		public function alteraPrioridade($id_chamado,$nova_prioridade, $id_admin, $comentario="") {
+		
+			$prioridades = $this->obtemPrioridades();
+			$this->adicionaHistoricoChamado($id_chamado,"Prioridade do chamado alterada para '" . $prioridades[$nova_prioridade] . "'", $comentario, $id_admin);
+			$dados = array("prioridade" => $nova_prioridade);
+			$filtro = array("id_chamado" => $id_chamado);
+			
+			return($this->hdtb_chamado->altera($dados,$filtro));			
+		}
+		
 		
 		/**
 		 * Alteração de status do chamado.
@@ -225,9 +260,9 @@
 		 	$titulo="";
 		 	
 		 	if($status == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO)
-		 		$titulo == "Chamado Resolvido";
+		 		$titulo = "Chamado Resolvido";
 		 	else
-		 		$titulo == "Chamado Fechado";
+		 		$titulo = "Chamado Fechado";
 		 	
 		 	
 		 	$this->adicionaHistoricoChamado($id_chamado, $titulo, $comentario, $id_admin);
@@ -272,6 +307,7 @@
 
 		}
 		
+		
 		/**
 		 * Lista de chamados pendentes pelo criador
 		 */
@@ -298,6 +334,7 @@
 			return($this->hdtb_chamado->obtem($filtro));
 		}
 		
+		
 		/**
 		 * Lista de chamados pendentes sem responsavel
 		 */
@@ -306,11 +343,12 @@
 			return($this->hdtb_chamado->obtem($filtro));
 		}
 
+
 		/**
 		 * Lista de chamados pendentes por cliente
 		 */
 		public function obtemChamadosPendentesPorCliente($id_cliente,$id_cliente_produto=null,$id_conta=null,$id_cobranca=null) {
-			$filtro = array("status" => "!in:OK::F","id_cliente" => $id_cliente);
+			$filtro = array("status" => "!in:OK::F", "tipo" => "!in:OS", "id_cliente" => $id_cliente);
 			
 			if( $id_cliente_produto ) $filtro["id_cliente_produto"] = $id_cliente_produto;
 			if( $id_conta ) $filtro["id_conta"] = $id_conta;
@@ -318,13 +356,13 @@
 			
 			return($this->hdtb_chamado->obtem($filtro));
 		}
-
+		
 
 		/**
 		 * Lista de chamados finalizados por cliente
 		 */
 		public function obtemChamadosFinalizadosPorCliente($id_cliente,$id_cliente_produto=null,$id_conta=null,$id_cobranca=null) {
-			$filtro = array("status" => "in:OK::F","id_cliente" => $id_cliente);
+			$filtro = array("status" => "in:OK::F", "tipo"=>"!in:OS", "id_cliente" => $id_cliente);
 			
 			if( $id_cliente_produto ) $filtro["id_cliente_produto"] = $id_cliente_produto;
 			if( $id_conta ) $filtro["id_conta"] = $id_conta;
@@ -356,12 +394,14 @@
 			return($this->hdtb_chamado->obtemUnico(array("id_chamado"=>$id_chamado)));
 		}
 		
+		
 		/**
 		 * Obtem a lista de tipos de chamado.
 		 */
 		public function obtemTiposChamado() {
 			return($this->hdtb_chamado->obtemTipos());
 		}
+		
 		
 		/**
 		 * Obtem a lista das origens do chamado.
@@ -370,12 +410,14 @@
 			return($this->hdtb_chamado->obtemOrigens());
 		}
 		
+		
 		/**
 		 * Obtem a lista das classificações do chamado.
 		 */
 		public function obtemClassificacoesChamado() {
 			return($this->hdtb_chamado->obtemClassificacoes());
 		}
+		
 		
 		/**
 		 * Obtem a lista dos status do chamado.
@@ -385,6 +427,77 @@
 		}
 		
 
+		/**
+		 * Lista de Ordem de serviço pendentes por chamado
+		 */
+		public function obtemOrdemPedidoPendentesPorChamado($id_chamado) {
+			$filtro = array("status" => "!in:OK::F", "tipo" => "OS", "id_chamado_pai" => $id_chamado); 
+			return($this->hdtb_chamado->obtem($filtro));
+		}		
+		
+
+		/**
+		 * Lista de Ordem de serviço finalizados por chamado
+		 */
+		public function obtemOrdemPedidoFinalizadasPorChamado($id_chamado) {
+			$filtro = array("status" => "in:OK::F", "tipo" => "OS", "id_chamado_pai" => $id_chamado); 
+			return($this->hdtb_chamado->obtem($filtro));
+		}
+
+		
+		/****************
+		 ****	ORDENS DE SERVIÇO
+		 *******************************************/	
+
+		/**
+		 * Registra informaçòes da ordem de serviço
+		 */
+		public function registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $agendamento, $período) {
+		
+			$dados = array( 
+				"id_chamado" => $id_chamado, 
+				"datainicio" => "=now", 
+				"endereco_os" => $endereco_os, 
+				"complemento_os" => $complemento_os, 
+				"bairro_os" => $bairro_os, 
+				"cidade_os" => $cidade_os, 
+				"agendamento" => $agendamento,
+				"periodo" => $periodo
+				);
+		
+			return($this->hdtb_os->insere($dados));
+		
+		}
+		
+		
+		/**
+		 * Retorna a ordem de Serviço pelo id do chamado
+		 */
+		 
+		 public function obtemOrdemServicoPeloIdChamado($id_chamado) {
+		 	return($this->hdtb_os->obtemUnico(array("id_chamado" => $id_chamado)));
+		 }
+		
+		
+		/**
+		 * Retorna array com os períodos
+		 */
+		 
+		public function obtemPeriodos() {
+			return($this->hdtb_os->obtemPeriodos());			
+		}
+		
+		public function obtemPrioridades() {
+			$prioridades = array(
+				PERSISTE_HDTB_CHAMADO::$PRIORIDADE_NENHUMA		=>	"Nenhuma",
+				PERSISTE_HDTB_CHAMADO::$PRIORIDADE_BAIXA		=>	"Baixa", 
+				PERSISTE_HDTB_CHAMADO::$PRIORIDADE_MEDIA		=>	"Média",
+				PERSISTE_HDTB_CHAMADO::$PRIORIDADE_ALTA			=>	"Alta",
+				PERSISTE_HDTB_CHAMADO::$PRIORIDADE_URGENTE		=>	"Urgente"
+			);
+			
+			return $prioridades;
+		}
 	}
 
 ?>

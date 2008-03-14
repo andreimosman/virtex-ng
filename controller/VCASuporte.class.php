@@ -329,10 +329,12 @@
 		
 		
 		protected function executaHelpdesk() {
-			$this->requirePrivLeitura("_SUPORTE_RELATORIOS");
+		
 			$tela = @$_REQUEST["tela"];
+			$subtela = @$_REQUEST["subtela"];
 			$this->_view->atribuiVisualizacao("helpdesk");
 			$this->_view->atribui("tela",$tela);
+			$this->_view->atribui("subtela",$subtela);
 			
 			$dadosLogin = $this->_login->obtem("dados");
 					

@@ -267,7 +267,8 @@
 	
 		protected function exibeHelpdesk() {
 		
-			$titulo = $this->obtem("nome_razao") . " :: Chamados";;			
+			$titulo = $this->obtem("nome_razao") . " :: Chamados";;		
+			$subtela = $this->obtem("subtela");
 			$this->_file = "clientes_helpdesk_chamado.html";
 						
 			switch($this->obtem("tela")) {
@@ -277,10 +278,19 @@
 					break;
 
 				case 'alteracao':
-					$titulo .= " :: Alteracao";
-					$this->_file = "clientes_helpdesk_chamado_alteracao.html";
-					break;
+					$titulo .= " :: Chamado #";
+					$chamado = @$this->obtem("chamado");
+					$titulo .= $chamado["id_chamado"];
 					
+					$this->_file = "clientes_helpdesk_chamado_alteracao.html";
+					
+					if($subtela == "ordemservico") { 
+						$titulo .= " :: Gerar Ordem de Serviço";
+						$this->_file = "clientes_helpdesk_chamado_alteracao_ordemservico.html";
+					}
+					
+					break;
+
 				case 'listagem':
 				default:
 					$selecionavel = true;

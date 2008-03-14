@@ -97,13 +97,19 @@
 		protected function exibeHelpdesk() {
 			$titulo = "Helpdesk";
 			
-			switch($this->obtem($tela)) {
+			switch($this->obtem("tela")) {
 				case 'listagem':
 				default:
 					$titulo .= " :: Lista de Chamados";
 					$this->_file = "suporte_helpdesk_chamado.html";
+					if($this->obtem("subtela") == "mini") {
+						$this->_file = "suporte_helpdesk_chamado_mini.html";
+						$titulo = "";
+					}
 					break;
 			}
+			
+			$this->atribui("titulo",$titulo);
 		
 		}
 	

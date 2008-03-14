@@ -1531,7 +1531,9 @@
 			$this->_view->atribuiVisualizacao("helpdesk");
 			
 			$id_cliente = @$_REQUEST["id_cliente"];
+			$id_chamado_pai = @$_REQUEST["id_chamado_pai"];
 			$tela = @$_REQUEST["tela"];
+			$subtela = @$_REQUEST["subtela"];
 			$op = @$_REQUEST["op"];
 			$acao = @$_REQUEST["acao"];
 			
@@ -1542,6 +1544,10 @@
 			
 			$dadosLogin = $this->_login->obtem("dados");
 			
+			$prioridades = $this->helpdesk->obtemPrioridades();
+			
+			$this->_view->atribui("prioridades", $prioridades);
+			$this->_view->atribui("subtela", $subtela);
 			$this->_view->atribui("dadosLogin", $dadosLogin);
 			$this->_view->atribui("id_cliente", $id_cliente);
 			$this->_view->atribui("nome_razao", $info_cliente["nome_razao"]);
@@ -1555,11 +1561,11 @@
 						$origens = $this->helpdesk->obtemOrigensChamado();
 						$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
 						$status_chamado = $this->helpdesk->obtemStatusChamado();
-						$dadosLogin = $this->_login->obtem("dados");
 
 						$grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
 						$responsaveis = $this->helpdesk->obtemListaAdminGrupo();
 						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
+						$prioridades = $this->helpdesk->obtemPrioridades();
 
 						$this->_view->atribui("chamados_pendentes", $chamados_pendentes);
 						$this->_view->atribui("criado_por", $dadosLogin["id_admin"]);
@@ -1571,6 +1577,7 @@
 						$this->_view->atribui("status_chamado", $status_chamado);
 						$this->_view->atribui("grupos", $grupos);
 						$this->_view->atribui("responsaveis", MJson::encode($responsaveis));
+						$this->_view->atribui("prioridades", $prioridades);
 					} else  {
 					
 						//Faz outras coisas
@@ -1585,6 +1592,7 @@
 						$id_cliente = @$_REQUEST["id_cliente"];
 						$id_conta = @$_REQUEST["id_conta"];
 						$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+						$prioridade = @$_REQUEST["prioridade"];
 						
 						
 						$id_cliente = $id_cliente ? $id_cliente : 0;
@@ -1598,20 +1606,22 @@
 							$id_cliente_produto = $conta["id_cliente_produto"];
 						}
 
-						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$responsavel,$id_cliente,$id_cliente_produto,$id_conta);
-					
+						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta);						
+						$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
+						
 						$mensagem = "";
 						$url = "";
-						if($id_chamado) {
-							$mensagem = "Chamado aberto com sucesso.";
-							$url = "admin-clientes.php?op=desktop&tela=listagem&id_cliente=$id_cliente";
+						
+						if($confirma_chamado) {
+							$mensagem = "Chamado criado com sucesso.";
+							$url = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=$id_chamado&id_cliente=$id_cliente";
 						} else {
 							$mensagem = "Erro ao criar o chamado.";
 							$url = "admin-clientes.php?op=desktop&tela=listagem&id_cliente=$id_cliente";
 						}
 						
 						$this->_view->atribui("mensagem",$mensagem);
-						$this->_view->atribui("url","admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente=$id_cliente");
+						$this->_view->atribui("url",$url);
 						$this->_view->atribuiVisualizacao("msgredirect");
 					
 					}
@@ -1622,12 +1632,13 @@
 				
 					$id_chamado = $_REQUEST["id_chamado"];
 				
-					if(!$acao) { 
+					if(!$acao) {
 					
 						//Seleciona o chamado desejado
 						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 						
 						$contas = VirtexModelo::factory("contas");
+						$cobranca = VirtexModelo::factory("cobranca");		
 						
 						$tipos = $this->helpdesk->obtemTiposChamado();
 						$origens = $this->helpdesk->obtemOrigensChamado();
@@ -1637,6 +1648,7 @@
 						$array_grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
 						$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();
 						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
+						
 						$historico_chamado = $this->helpdesk->obtemHistoricoChamado($id_chamado);
 						
 						//matriz de responsáveis(remake)
@@ -1651,11 +1663,16 @@
 							$grupos[$valor[id_grupo]] = $valor["nome"];
 						}
 						
+						
 						//confirma se o usuário pertence ao grupo
 						$admin_grupo = false;
 						$pertence_grupo = false;
 						$admin_usuario = $this->helpdesk->obtemListaAdminGrupo($chamado["id_grupo"], $dadosLogin["id_admin"]);
 						$grupo_usuarios = $this->helpdesk->obtemListaAdminGrupo($chamado["id_grupo"] );
+						$os_pendentes = $this->helpdesk->obtemOrdemPedidoPendentesPorChamado($id_chamado);
+						$os_finalizados = $this->helpdesk->obtemOrdemPedidoFinalizadasPorChamado($id_chamado);
+						$ordens_servico_chamado = array_merge($os_pendentes, $os_finalizados);
+						
 						
 						if(count($admin_usuario)) {
 							if($admin_usuario["ativo"]) {
@@ -1666,12 +1683,22 @@
 								$admin_grupo = true;
 							}	
 						}
+						
+						$periodos = $this->helpdesk->obtemPeriodos();
+						$info_os = $this->helpdesk->obtemOrdemServicoPeloIdChamado($chamado["id_chamado"]);
+						
 
+						$this->_view->atribui("periodos", $periodos);
+						$this->_view->atribui("os_pendentes", $os_pendentes);
+						$this->_view->atribui("os_finalizados", $os_finalizados);						
+						$this->_view->atribui("ordens_servico_chamado", $ordens_servico_chamado);	
+						
 						$this->_view->atribui("grupo_usuarios", $grupo_usuarios);
 						$this->_view->atribui("usuario_grupo", $pertence_grupo);
 						$this->_view->atribui("admin_grupo", $admin_grupo);
 						$this->_view->atribui("historico_chamado", $historico_chamado);
 						$this->_view->atribui("chamado", $chamado);
+						$this->_view->atribui("info_os", $info_os);
 						$this->_view->atribui("criado_por", $dadosLogin["id_admin"]);
 						$this->_view->atribui("tipos", $tipos);
 						$this->_view->atribui("origens", $origens);
@@ -1680,79 +1707,169 @@
 						$this->_view->atribui("grupos", $grupos);
 						$this->_view->atribui("responsaveis", $responsaveis); 
 						
+						//Ações extras caso seja ordem de serviços
+						if($subtela == "ordemservico") {
+						
+							//Cria matriz de ids de contas
+							$enderecos_cobranca = array();
+							$enderecos_instalacao = array();
+							
+							foreach($contas_cliente as $chave => $valor) {	
+								$cobranca_temp = $cobranca->obtemEnderecoCobrancaReferenciado($valor["id_cliente_produto"]);
+								$instalacao_temp = $contas->obtemEnderecoInstalacaoReferenciado($valor["id_conta"]);
+								
+								if ($cobranca_temp) $enderecos_cobranca[$valor["id_conta"]] = $cobranca_temp;
+								if ($instalacao_temp) $enderecos_instalacao[$valor["id_conta"]] = $instalacao_temp;
+							}
+							
+
+							$tipos = $this->helpdesk->obtemTiposChamado();
+							$origens = $this->helpdesk->obtemOrigensChamado();
+							$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
+							$status_chamado = $this->helpdesk->obtemStatusChamado();
+
+							$grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
+							$contas_cliente = $contas->obtemContasPorCliente($id_cliente);	
+							$responsaveis = $this->helpdesk->obtemListaAdminGrupo();
+							$periodos = $this->helpdesk->obtemPeriodos();
+							
+							if($id_chamado) $this->_view->atribui("acao","gravar");
+							else $this->_view->atribui("acao","alterar");														
+							
+							$this->_view->atribui("periodos", $periodos);
+							$this->_view->atribui("enderecos_cobranca", MJson::encode($enderecos_cobranca));
+							$this->_view->atribui("enderecos_instalacao", MJson::encode($enderecos_instalacao));
+							$this->_view->atribui("grupos", $grupos);
+							$this->_view->atribui("contas_cliente", $contas_cliente);
+							$this->_view->atribui("responsaveis", MJson::encode($responsaveis));
+						}						
+						
 					} else {
 					
 						//Faz outras coisas
 						$tipo = @$_REQUEST["tipo"];
 						$senha_admin = @$_REQUEST["senha_admin"];
+						$subtela = @$_REQUEST["subtela"];
 						
 						$erro="";
-	
-						if($dadosLogin["senha"] != md5($senha_admin)) {
-							$erro = "Senha não confere";
-						}
-						
-						$this->_view->atribui("erro", $erro);
-						$this->_view->atribui("acao", "alteracao");
+						$mensagem="";
+						$url_redir="";
 						$this->_view->atribui("id_chamado", $id_chamado);
 						$this->_view->atribui("id_cliente", $id_cliente);
-						
-						$mensagem="";
-						$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado";
-						
-						if($erro) {
-							$mensagem="Operação não permitida: Senha não confere";
-						} else {
-											
-							switch($acao) {
-								case 'comentar':
-									$comentario = @$_REQUEST["comentario"];
-									$this->helpdesk->adicionaHistoricoChamado($id_chamado,"Comentário",$comentario,$dadosLogin["id_admin"]);
-									$mensagem = "Comentário efetuado com sucesso";
-									break;
-									
-								case 'delegar':
-									$responsavel = @$_REQUEST["responsavel"];
-									$novoresponsavel = @$_REQUEST["novoresponsavel"];
-									$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $novoresponsavel);
-									$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
-									$mensagem = "Delegação efetuada com sucesso";
-									break;	
-								case 'pegar':
-									$responsavel = @$_REQUEST["responsavel"];
-									$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $responsavel);
-									$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
-									$mensagem = "Tomada de posse de chamado efetuada com sucesso";
-									break;	
-								case 'resolver':
-									$novostatus = @$_REQUEST["novostatus"];
-									$comentario = @$_REQUEST["comentariofim"];
-									
-									if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_PENDENTE || $novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_PENDENTE_CLI || $novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO) {
-										$this->helpdesk->alteraStatus($id_chamado, $novostatus, $dadosLogin["id_admin"], $comentario);
-									} 
-									//RESOLVIDO
-									else if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO) {
-										$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $id_admin, $comentario);
-									} 
-									//FECHADO
-									else if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO) {
-										$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $id_admin, $comentario);
-									}
-									
-									$mensagem = "Tomada de posse de chamado efetuada com sucesso";
-									break;									
+	
+						if ($subtela == "ordemservico") {
+							
+							$tipo = @$_REQUEST["tipo"];
+							$criado_por = @$_REQUEST["criado_por"];
+							$id_grupo = @$_REQUEST["id_grupo"];
+							$assunto = @$_REQUEST["assunto"];
+							$descricao = @$_REQUEST["descricao"];
+							$origem = @$_REQUEST["origem"];
+							$classificacao = @$_REQUEST["classificacao"];
+							$responsavel= @$_REQUEST["responsavel"];
+							$id_cliente = @$_REQUEST["id_cliente"];
+							$id_conta = @$_REQUEST["id_conta"];
+							$id_cliente_produto = @$_REQUEST["id_cliente_produto"];		
+							$prioridade = @$_REQUEST["prioridade"];
+							
+							$agendamento = @$_REQUEST["agendamento"];
+							$periodo = @$_REQUEST["periodo"];
+							$endereco_os = @$_REQUEST["endereco_os"];
+							$complemento_os = @$_REQUEST["complemento_os"];
+							$bairro_os = @$_REQUEST["bairro_os"];
+							$cidade_os = @$_REQUEST["cidade_os"];
+							
+							
+							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta,0,0,0,0,$id_chamado_pai);
+							$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
+							
+							if($confirma_chamado) {
+								$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado_pai";
+								$mensagem = "Ordem de serviço criada com sucesso";
+							} else {
+								$mensagem = "Erro ao criar a ordem de serviço";
+								$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado_pai";
 							}
 							
-						}
+							if($agendamento && $confirma_chamado) {
+								$data_tmp = explode("/", $agendamento);
+								$data_agendamento = $data_tmp[2] . "-" . $data_tmp[1] . "-" . $data_tmp[0];
+								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $período);
+							}
+							
+						
+						
+						}else {
+						
+							if($dadosLogin["senha"] != md5($senha_admin)) {
+								$erro = "Senha não confere";
+							}
 
+							$this->_view->atribui("erro", $erro);
+							$this->_view->atribui("acao", "alteracao");
+							
+							$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado";
+							
+							if($erro) {
+								$mensagem="Operação não permitida: Senha não confere";
+							} else {
+
+								switch($acao) {
+									case 'comentar':
+										$comentario = @$_REQUEST["comentario"];
+										$this->helpdesk->adicionaHistoricoChamado($id_chamado,"Comentário",$comentario,$dadosLogin["id_admin"]);
+										$mensagem = "Comentário efetuado com sucesso";
+										break;
+
+									case 'delegar':
+										$responsavel = @$_REQUEST["responsavel"];
+										$novoresponsavel = @$_REQUEST["novoresponsavel"];
+										$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $novoresponsavel);
+										$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
+										$mensagem = "Delegação efetuada com sucesso.";
+										break;	
+									case 'pegar':
+										$responsavel = @$_REQUEST["responsavel"];
+										$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $responsavel);
+										$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
+										$mensagem = "Tomada de posse de chamado efetuada com sucesso.";
+										break;	
+									case 'resolver':
+										$novostatus = @$_REQUEST["novostatus"];
+										$comentario = @$_REQUEST["comentariofim"];
+
+										if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_PENDENTE || $novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_PENDENTE_CLI || $novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO) {
+											$this->helpdesk->alteraStatus($id_chamado, $novostatus, $dadosLogin["id_admin"], $comentario);
+										} 
+										//RESOLVIDO
+										else if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO) {
+											$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $dadosLogin["id_admin"], $comentario);
+										} 
+										//FECHADO
+										else if($novostatus == PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO) {
+											$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $dadosLogin["id_admin"], $comentario);
+										}
+
+										$mensagem = "Tomada de posse de chamado efetuada com sucesso.";
+										break;	
+									case 'priorizar':
+										$prioridade = @$_REQUEST["prioridade"];
+										$comentario = @$_REQUEST["prioridade_comentario"];
+										$this->helpdesk->alteraPrioridade($id_chamado, $prioridade, $dadosLogin["id_admin"], $comentario);
+										$mensagem = "Alteraçao de prioridade do chamado efetuada com sucesso.";
+										break;										
+								}
+
+							}
+
+						}
+						
 						$this->_view->atribui("mensagem",$mensagem);
-						$this->_view->atribui("url","admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado");
-						$this->_view->atribuiVisualizacao("msgredirect");
+						$this->_view->atribui("url",$url_redir);
+						$this->_view->atribuiVisualizacao("msgredirect");						
 						
 					} 
 					break; 
-								
 				
 				case 'listagem':
 				default:
