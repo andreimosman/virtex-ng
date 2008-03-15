@@ -102,7 +102,7 @@
 			$id_remessa = @$_REQUEST["id_remessa"];
 			$this->titulo .= "Gerar Cobrança/Boletos";
 			$this->_file .= "financeiro_cobranca_gerar_cobranca.html";
-			if($id_remessa) $this->_file = "cobranca_gerar_cobranca.html";
+			if($id_remessa) $this->_file = "financeiro_cobranca_gerar_cobranca.html";
 			$this->atribui("titulo", $this->titulo);
 		}
 

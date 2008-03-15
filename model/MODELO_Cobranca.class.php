@@ -27,6 +27,8 @@
 
 		protected $cbtb_comissao;
 		
+		protected $cbtb_remessa;
+		
 		protected static $moeda = 9;
 
 
@@ -50,6 +52,8 @@
 			$this->cbtb_lote_fatura = VirtexPersiste::factory("cbtb_lote_fatura");
 			
 			$this->cbtb_comissao = VirtexPersiste::factory("cbtb_comissao");
+			
+			$this->cbtb_remessa = VirtexPersiste::factory("cbtb_remessa");
 		}
 
 		public function obtemClienteProduto($id_cliente_produto) {
@@ -875,10 +879,21 @@
 
 			return ($this->cbtb_lote_cobranca->insere($dados));
 		}
-
+		
+		public function cadastraRemessa($arquivo, $id_remessa) {
+			return($this->cbtb_remessa->insere(array("datahora" => "=now", "arquivo" => $arquivo, "id_remessa" => $id_remessa)));
+		}	
+		
+		public function obtemRemessaPeloNomeArquivo($arquivo) {
+			return($this->cbtb_remessa->obtemUnico(array("arquivo" => $arquivo)));
+		}
 
 		public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {
-					return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo));
+			return ($this->cbtb_fatura->obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo));
+		}
+		
+		public function obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo) {
+			return ($this->cbtb_fatura->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo));
 		}
 
 		public function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento) {

@@ -250,16 +250,21 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$bancos = $this->preferencias->obtemListaBancos();
 		$this->_view->atribui("bancos",$bancos);
 
-
-		//echo "<pre>";
-		//print_r($formas);
-		//echo "</pre>";
-
+		
+		$pref_cobranca = $this->preferencias->obtemPreferenciasCobranca();
+		$pref_provedor = $this->preferencias->obtemPreferenciasProvedor();
+		$info_licenca = $this->licenca->obtemLicenca();
+		$nome_razao = $info_licenca["empresa"]["nome"];
+		$cnpj_empresa = $pref_provedor["cnpj"];
 
 
 		if ($acao == "gerar") {
 			$dados = array();
+			
 
+			//Mensagem a ser mostrada pós processamento
+			$mensagem = "";
+			
 			//Insere informações da remessa de cobranca
 			$data_referencia = "$ano-$mes";
 			$data_referencia_dia1 = "$ano-$mes-01";
@@ -269,64 +274,89 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$id_admin = $dadosLogin["id_admin"];
 			$id_forma_pagamento = @$_REQUEST["id_forma_pagamento"];
 
-			//phpinfo();
+			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+			
 
-			//echo "<pre>";
-			//print_r($_REQUEST);
-			//echo "</pre>";
+			if($formaPagto["carteira_registrada"] == 't' || $formaPagto["impressao_banco"] == 't') {
+			
+				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);	
+				
+				if (!$faturas){
+					$msg = "Não foram encontradas faturas para esse período.";				
+				} else {
+				
+					$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin,$id_forma_pagamento);
+					$msg = "Remessa cadastrada com sucesso.";
 
-			//die;
+					$remessa = MRemessa::factory($formaPagto["codigo_banco"]);
+					$remessa->init($formaPagto["agencia"], $formaPagto["conta"], $formaPagto["dv_conta"], $formaPagto["carteira"], $formaPagto["convenio"], $nome_razao, $cnpj_empresa, $pref_cobranca["tx_juros"]);
 
-			$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento);
+					$arquivo = "C" . date("ym");
+					$numero_geracao = 0;
 
-			if (!$resultado){
-				$msg = "Não foram encontradas faturas para esse período.";
+					do{
+						$numero_geracao++;
+						$arquivo_temp = $arquivo . "$numero_geracao";
+						echo "<br>$arquivo_temp<br>";
+						$resultado = $this->cobranca->obtemRemessaPeloNomeArquivo($arquivo, $id_remessa);
+					}while($resultado);
+
+					$arquivo .= "$numero_geracao";	//Nome de geração do arquivo
+
+					$numero_remessa = $this->cobranca->cadastraRemessa($arquivo);
+					$remessa->geraArquivoRemessa($arquivo,$faturas);	
+				
+				}
+				
+				
 			} else {
-				$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin,$id_forma_pagamento);
-				$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-				$msg = "Remessa cadastrada com sucesso.";
-			}
+			
+				$resultado = $this->cobranca->obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento);
 
-			$urlPreto = "view/templates/imagens/preto.gif";
-			$urlBranco = "view/templates/imagens/branco.gif";
-
-			/*echo "<pre>";
-			print_r($formaPagto);
-			echo "</pre>";*/
-
-
-			for($i=0; $i<count($resultado); $i++) {
-				$id_cobranca = $resultado[$i]["id_cobranca"];
-				//echo $id_cobranca;
-
-				$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
-
-				if( $formaPagto["tipo_cobranca"] == "BL" ) {
-
-					 $boleto = MBoleto::factory(
-					 								$formaPagto["codigo_banco"],$formaPagto["agencia"],
-					 								$formaPagto["conta"],$formaPagto["carteira"],
-					 								$formaPagto["convenio"],
-					 								$resultado[$i]["data"],$resultado[$i]["valor"],
-					 								$id_cobranca,9,$formaPagto["cnpj_agencia_cedente"],
-					 								$formaPagto["codigo_cedente"],
-					 								$formaPagto["operacao_cedente"]
-					 							);
-
-					$codigo_barra = $boleto->obtemCodigoBoleto();
-					$linha_digitavel = $boleto->obtemLinhaDigitavel();
-
-
+				if (!$resultado){
+					$msg = "Não foram encontradas faturas para esse período.";
+				} else {
+					$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin,$id_forma_pagamento);
+					$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+					$msg = "Lote cadastrado com sucesso.";
 				}
 
+				$urlPreto = "view/templates/imagens/preto.gif";
+				$urlBranco = "view/templates/imagens/branco.gif";
 
-				$this->cobranca->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca);
 
-				// $msg = "O Lote foi gerado para o período com sucesso!";
+				for($i=0; $i<count($resultado); $i++) {
+					$id_cobranca = $resultado[$i]["id_cobranca"];
+					//echo $id_cobranca;
 
+					$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
+
+					if( $formaPagto["tipo_cobranca"] == "BL" ) {
+
+						 $boleto = MBoleto::factory(
+														$formaPagto["codigo_banco"],$formaPagto["agencia"],
+														$formaPagto["conta"],$formaPagto["carteira"],
+														$formaPagto["convenio"],
+														$resultado[$i]["data"],$resultado[$i]["valor"],
+														$id_cobranca,9,$formaPagto["cnpj_agencia_cedente"],
+														$formaPagto["codigo_cedente"],
+														$formaPagto["operacao_cedente"]
+													);
+
+						$codigo_barra = $boleto->obtemCodigoBoleto();
+						$linha_digitavel = $boleto->obtemLinhaDigitavel();
+
+					}
+
+
+					$this->cobranca->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca);
+
+					// $msg = "O Lote foi gerado para o período com sucesso!";
+
+				}
 			}
 
-			$url = "admin-cobranca.php?op=gerar_cobranca";
+			$url = "admin-financeiro.php?op=gerar_cobranca";
 			$this->_view->atribui("url",$url);
 			$this->_view->atribui("mensagem", $msg);
 			$this->_view->atribuiVisualizacao("msgredirect");
@@ -336,6 +366,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		}
 
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
+
+		$this->_view->atribui("periodo_anos", $periodo_anos_fatura);
 
 		$ultimas_remessas = $this->cobranca->obtemUltimasRemessas("10");
 

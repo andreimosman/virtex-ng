@@ -153,6 +153,29 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 	}
 
 
+	public function obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo) {
+
+			$sql  = "SELECT * FROM cbtb_faturas ";
+			$sql .= "WHERE ";
+			$sql .= "	(nosso_numero IS NULL ";
+			$sql .= "	OR id_remessa IS NULL) ";
+			$sql .= "	AND id_forma_pagamento = 9999";
+
+
+			if($periodo == "PQ") {		//PRRIMEIRA QUINZENA
+				$sql .= " AND data BETWEEN '$data_referencia-01' AND '$data_referencia-15' ";
+			} else if ($periodo == "SQ") {	//SEGUNDA QUINZENA
+				$sql .= " AND data BETWEEN '$data_referencia-16' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+			} else { 		// MES COMPLETO
+				$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+			}
+
+			return ($this->bd->obtemRegistros($sql));
+
+	}
+
+
+
 	public	function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo,$id_forma_pagamento) {
 
 		$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
@@ -188,9 +211,9 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON (f.id_cobranca = r.id_cobranca) ";
 			$sql .="   INNER JOIN cbtb_cliente_produto cp ON (f.id_cliente_produto = cp.id_cliente_produto) ";
 			$sql .=" WHERE ";
-			$sql .="   id_remessa = $id_remessa ";
+			$sql .="   r.id_remessa = $id_remessa ";
 	
-			//echo $sql;
+			echo $sql;
 	
 	
 	
