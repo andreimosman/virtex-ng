@@ -80,11 +80,16 @@
 			return($this->cbtb_endereco_cobranca->obtemUnico($filtro, "id_endereco_cobranca DESC"));
 		}
 
+       	public function obtemFormatoRetorno() {
+       	    
+       	     // criar constants 
+       	     $combo_formato = array ('PAGCONTA' => 'PAGCONTAS', 'ITAU' => 'ITAU CNAB 400', 'BBCBR643' => 'BANCO DO BRASIL CBR 643');
+       	     return($combo_formato);
+       	}
 		
 		public function obtemEnderecoCobrancaReferenciado($id_cliente_produto) {
 			return($this->cbtb_endereco_cobranca->obtemEnderecoCobrancaReferenciado($id_cliente_produto));
 		}
-
 
 		protected function prorata($data1,$data2,$valor_plano,$valor_comodato) {
 
