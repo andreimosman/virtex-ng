@@ -393,8 +393,43 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 	protected function executaArquivos() {
 		$this->_view->atribuiVisualizacao("cobranca");
+			
+		$combo_formato = $this->cobranca->obtemFormatoRetorno();
 	
+		// processa request
+		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
+			// validacao input
+			$msg_error = array();
+			$clean = array();
+			$formato_retorno = @$_POST['formato_retorno'];
+		
+	
+			if(array_key_exists($formato_retorno, $combo_formato))
+				$clean['formato_retorno'] = $formato_retorno;
+		
+			
+			$uploaddir = './var/retorno/';
+			$nome_arquivo_retorno = 'cobranca-retorno' . date('YmdHis') . `.txt`;
+	
+			if (is_uploaded_file($_FILES['arquivo_retorno']['tmp_name'])) {
+			 	move_uploaded_file($_FILES['arquivo_retorno']['tmp_name'], $uploaddir . $nome_arquivo_retorno);   
+			}
+			else {
+				array_push($msg_error, 'Arquivo não foi enviado');
+			
+			}
+			
+			if (!array_key_exists('formato_retorno', $clean))
+				array_push($msg_error, 'Formato Inválido');
+		
+			var_dump($_FILES);
+		}
+		
+
 		$tela = @$_REQUEST["tela"];
+
+	
+		$this->_view->atribui('combo_formato', $combo_formato);
 		$this->_view->atribui("tela",$tela);
 
 	}
@@ -408,7 +443,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		if("cortesias" == $relatorio){
 			$contas = VirtexModelo::factory("contas");
 			$rs = $contas->obtemQtdeContasCortesiaDeCadaTipo();
-			$resumo["total"] = 0;
+				$resumo["total"] = 0;
 			foreach($rs as $row){
 				$resumo[$row["tipo_conta"]] = $row["num_contas"];
 				$resumo["total"]+=$row["num_contas"];

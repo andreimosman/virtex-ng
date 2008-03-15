@@ -107,7 +107,8 @@
 		}
 
 		protected function exibeArquivos() {
-			$this->_file = "financeiro_cobranca_arquivos.html";
+			
+			$this->_file = "financeiro_cobranca_retorno.html";
 			$this->titulo .= "Troca de Arquivos";
 			$this->atribui("titulo", $this->titulo);
 		}
