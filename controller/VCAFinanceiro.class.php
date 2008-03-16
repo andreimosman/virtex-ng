@@ -394,7 +394,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	protected function executaArquivos() {
 		$this->_view->atribuiVisualizacao("cobranca");
 			
-		$combo_formato = $this->cobranca->obtemFormatoRetorno();
+		$combo_formato = MRetorno::obtemFormatosRetorno();
 	
 		// processa request
 		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
@@ -402,15 +402,14 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$msg_error = array();
 			$clean = array();
 			$formato_retorno = @$_POST['formato_retorno'];
-		
-	
+			
 			if(array_key_exists($formato_retorno, $combo_formato))
 				$clean['formato_retorno'] = $formato_retorno;
 		
 			
 			$uploaddir = './var/retorno/';
-			$nome_arquivo_retorno = 'cobranca-retorno' . date('YmdHis') . `.txt`;
-	
+			$nome_arquivo_retorno = 'cobranca-retorno-' . date('YmdHis');
+			
 			if (is_uploaded_file($_FILES['arquivo_retorno']['tmp_name'])) {
 			 	move_uploaded_file($_FILES['arquivo_retorno']['tmp_name'], $uploaddir . $nome_arquivo_retorno);   
 			}
@@ -421,13 +420,115 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 			if (!array_key_exists('formato_retorno', $clean))
 				array_push($msg_error, 'Formato Inválido');
+					
+			if (empty($msg_error)) {
+				$retorno = MRetorno::factory($formato_retorno,$uploaddir . $nome_arquivo_retorno);
+				$registros = $retorno->obtemRegistros();
 		
-			var_dump($_FILES);
+				$dadosLogin = $this->_login->obtem("dados");
+				$admin['id_admin'] = $dadosLogin["id_admin"];
+						
+				// gravar log
+				$id_retorno = $this->cobranca->gravarLogRetorno($clean['formato_retorno'], $admin);
+										
+				foreach($registros as $reg) {
+					$observacoes = 'Arquivo de retorno';
+					switch($formato_retorno) {			
+					
+						case 'ITAU':
+							$id_cobranca = $reg['numero_documento'];
+							$nossonumero = $reg['nossonumero'];
+							$desconto = $reg['descontos'] + $reg['valor_abatimento'];
+							$acrescimo = $reg['juros_multa_mora'] + $reg['outros_creditos'];
+							$amortizar = $reg['valor_principal'];
+							$data_pagamento = $reg['data_ocorrencia'];
+							$codigo_ocorrencia = $reg['codigo_ocorrencia'];
+							$reagendar = null;
+							$reagendamento = null;
+		
+							// obtem fatura		
+							$fatura = $this->cobranca->obtemFaturaPorIdCobranca($id_cobranca);				
+							if (empty($fatura))
+								$fatura = $this->cobranca->obtemFaturaPeloNossoNumero($nosso_numero);
+					
+							if (empty($fatura))
+								continue;		
+					
+							// altera nosso numero ?
+							if ($codigo_ocorrencia == '') {
+								$this->cobranca->alteraNossoNumero($id_cobranca, $nossonumero);
+							} else {											
+								// armotizar fatura
+								$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);		
+							}						
+					
+							break;
+						
+						case 'PAGCONTAS':
+							$codigo_barras = $reg['codigo_barras'];
+
+							$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);										
+							
+							if (empty($fatura))
+								continue;
+														
+							$id_cobranca = $fatura['id_cobranca'];
+							$reagendar = null;
+							$reagendamento = null;
+							$data_pagamento = $reg['data_pagamento'];
+							$amortizar = (int) $reg['valor_recebido'];
+																
+							if ($amortizar > $fatura['valor_recebido']) {
+								$acrescimo = $armotizar - $fatura['valor_recebido'];
+								$desconto = 0;
+							}
+							elseif ($amortizar < $fatura['valor_recebido']) {
+								$acrescimo = 0;
+								$desconto = $fatura['valor_recebido'] - $amortizar;							
+							}
+							else {
+								$acrescimo = 0;
+								$desconto = 0;							
+							}			
+			
+							$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);
+							break;
+														
+						case 'BBCBR643':
+											
+							$nossonumero = $reg['nossonumero'];						
+							$fatura = $this->cobranca->obtemFaturaPeloNossoNumero($nossonumero);	
+
+							if (empty($fatura))
+								continue;
+							
+							$id_cobranca = $fatura['id_cobranca'];
+							$reagendar = null;
+							$reagendamento = null;
+							$data_pagamento = $reg['data_credito'];
+							$amortizar = $reg['valor_recebido'];
+					
+							/*
+							 * FIXME - validar desconto e acrescimo com Andrei.
+							 */
+					
+							$desconto = $reg['taxa_desconto'] + $reg['juros_desconto'] + $reg['iof_desconto'];
+							$acrescimo = $reg['juros_mora'] + $reg['outros_recebimentos'];
+	
+							$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);
+							
+							
+							break;						
+						
+						default:
+							continue;
+					
+					}
+				}
+			}					
 		}
 		
-
 		$tela = @$_REQUEST["tela"];
-
 	
 		$this->_view->atribui('combo_formato', $combo_formato);
 		$this->_view->atribui("tela",$tela);

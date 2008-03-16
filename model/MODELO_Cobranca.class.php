@@ -37,6 +37,8 @@
 			$this->cbtb_cliente_produto = VirtexPersiste::factory("cbtb_cliente_produto");
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
 			$this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
+			$this->cbtb_retorno = VirtexPersiste::factory("cbtb_retorno");
+
 
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
 			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
@@ -80,12 +82,6 @@
 			return($this->cbtb_endereco_cobranca->obtemUnico($filtro, "id_endereco_cobranca DESC"));
 		}
 
-       	public function obtemFormatoRetorno() {
-       	    
-       	     // criar constants 
-       	     $combo_formato = array ('PAGCONTA' => 'PAGCONTAS', 'ITAU' => 'ITAU CNAB 400', 'BBCBR643' => 'BANCO DO BRASIL CBR 643');
-       	     return($combo_formato);
-       	}
 		
 		public function obtemEnderecoCobrancaReferenciado($id_cliente_produto) {
 			return($this->cbtb_endereco_cobranca->obtemEnderecoCobrancaReferenciado($id_cliente_produto));
@@ -755,6 +751,19 @@
 		public function obtemFaturaPeloCodigoBarras ($codigo) {
 			return ($this->cbtb_fatura->obtemUnico (array ("cod_barra" => $codigo)));
 		}
+		
+		public function obtemFaturaPeloNossoNumero ($nosso_numero) {
+			return ($this->cbtb_fatura->obtemUnico (array ("nosso_numero" => $nosso_numero)));
+		}
+		
+		public function alteraNossoNumero($id_cobranca,$nosso_numero) {
+			$dados = array("nosso_numero" => (int)$nosso_numero);
+			$filtro = array("id_cobranca" => (int)$id_cobranca);
+			
+			return($this->cbtb_fatura->altera($dados,$filtro));
+	
+		}
+		
 
 		public function obtemAnosFatura() {
 			return $this->cbtb_fatura->obtemAnosFatura();
@@ -771,9 +780,30 @@
 			
 		}
 		
+		public function gravarLogRetorno($formato, $admin) {
+			$dados['data_hora'] = '=now';
+			$dados['formato'] = $formato;
+			$dados['id_admin'] = $admin['id_admin'];
+					
+			$id_retorno = $this->cbtb_retorno->insere($dados);
+			return($id_retorno);
+		}
+
+		public function atualizaLogRetorno($id_retorno, $numero_total_registros, $numero_registros_processados) {
+			$data['numero_total_registros'] = $numero_total_registros;
+			$data['numero_registros_processados'] = $numero_registros_processados;
+					
+		    if($this->cbtb_retorno->altera($dados,array("id_retorno" => $id_retorno)))
+		    	return true;
+		    else	
+		    	return false;
+		}
+		
+		
+		
 		
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
-					$reagendamento, $observacoes, $admin=array()){
+					$reagendamento, $observacoes, $admin=array(), $id_retorno = ""){
 
 			$contas = VirtexModelo::factory("contas");
 			$cobranca = VirtexModelo::factory("cobranca");
@@ -789,6 +819,10 @@
 			}
 
 			$totalDevido = $fatura["valor"] - $desconto + $acrescimo;
+
+			/* Grava codigo retorno */
+			if ($id_retorno > 0)
+				$data['id_retorno'] = $id_retorno;
 
 			if($amortizar > 0) {
 				$data["valor_pago"] = $fatura["valor_pago"] + $amortizar;
