@@ -211,9 +211,9 @@ label {
  				<tr>
 				 	<td width="100" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{$i.id_admin}</a></td>
 				 	<td width="250" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{$i.admnome}<a></td>
-				 	<td width="100" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{if $i.ativo}Ativo{else}Inativo{/if}<a></td>
+				 	<td width="100" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{if $i.admin == 't'}Sim{else}N&atilde;o{/if}<a></td>
+				 	<td width="125" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{if $i.ativo == 't'}Ativo{else}Inativo{/if}</a></td>
 				 	<td width="125" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{if $i.atvsis == 'A'}Ativo{else}Cancelado{/if}</a></td>
-				 	<td width="125" class="{$estilo}" align="center"><a href="admin-administracao.php?op=preferencias&tela=helpdesk&subtela=altera_usuario&id_admin={$i.id_admin}&id_grupo={$i.id_grupo}">{if $i.ativo}Ativo{else}Inativo{/if}</a></td>
  				</tr>
 
  				{foreachelse}

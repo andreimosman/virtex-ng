@@ -256,11 +256,18 @@
 							
 							$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela")), false, true);
 							break;
+
 						case "altera_usuario":
 						case "cadastro_usuarios":
 							$this->_file = "administracao_preferencias_helpdesk_cadastro_grupo_usuario.html";
 							$titulo .= " :: Helpdesk :: Gerenciamento do grupo \"" . $this->obtem("nome") . "\"";
 							break;
+
+						case "config":
+							$this->_file = "administracao_preferencias_helpdesk_configuracoes.html";
+							$titulo .= " :: Helpdesk :: Configurações";
+							break;
+
 						case "listagem":
 						default:
 							$this->_file = "administracao_preferencias_helpdesk_listagem.html";
@@ -293,7 +300,8 @@
 					$itensMenu[] = array("texto" => "Novo Modelo", "url" => "admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro");
 					break;
 				case 'helpdesk':
-					$itensMenu[] = array("texto" => "Novo Grupo", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo");
+					$itensMenu[] = array("texto" => "Novo: Grupo", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo");
+					$itensMenu[] = array("texto" => "Configurações", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=config");
 					break;
 			}
 			return($itensMenu);

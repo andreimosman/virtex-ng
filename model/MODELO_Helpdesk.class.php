@@ -28,8 +28,6 @@
 			$this->hdtb_os 							= VirtexPersiste::factory("hdtb_os");
 			
 		}
-		
-
 
 		/****************
 		 ****	GRUPOS
@@ -172,6 +170,15 @@
 			return($id_chamado);
 			
 		}
+		
+		
+		/**
+		 * Reabre um chamado preaviamente fechadi
+		 */
+		 public function reabreChamado($id_chamado, $id_admin, $comentarios='') {
+		 	$this->adicionaHistoricoChamado($id_chamado, 'Chamado reaberto', $comentarios, $id_admin);
+		 	$this->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $id_admin, '');
+		 }
 		
 		
 		/**

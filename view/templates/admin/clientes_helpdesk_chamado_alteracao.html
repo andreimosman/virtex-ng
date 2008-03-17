@@ -77,6 +77,19 @@ label {
 		return true;
 	}
 
+
+	function validaFormReabrirChamado() {
+		var comentario = document.getElementById("comentario_reabertura");
+		if(estaVazio(comentario.value)) {
+			alert("É necessário preencher o campo comentário");
+			comentario.focus();
+			return false;
+		}
+
+		return true;
+	}
+
+
 	function validaFormResolverChamado() {
 		var novostatus = document.getElementById("novostatus");
 		var atualstatus = document.getElementById("atualstatus");
@@ -134,6 +147,8 @@ label {
 		ApresentarDiv("divFormPegaChamado", false);
 		ApresentarDiv("divFormDelegaChamado", false);
 		ApresentarDiv("divFormResolveChamado", false);
+		ApresentarDiv("divFormReabreChamado", false);
+		ApresentarDiv("divFormPriorizaChamado", false);
 	}
 
 	function ambienteComentario() {
@@ -159,6 +174,11 @@ label {
 	function ambientePriorizar() {
 			escondeDivs();
 			ApresentarDiv("divFormPriorizaChamado", true);
+	}
+
+	function ambienteReabrir() {
+		escondeDivs();
+		ApresentarDiv("divFormReabreChamado", true);
 	}
 
 {/literal}
@@ -199,6 +219,12 @@ label {
 
 		{if $chamado.criado_por == $dadosLogin.id_admin || $admin_grupo}
 			[<a href="javascript:void(null);" onclick="javascript:ambientePriorizar();">Priorizar</a>]
+		{/if}
+
+	{else}
+
+		{if ($chamado.criado_por == $dadosLogin.id_admin || $admin_grupo) && $pode_reabrir}
+			[<a href="javascript:void(null);" onclick="javascript:ambienteReabrir();">Reabrir</a>]
 		{/if}
 
 	{/if}
@@ -492,6 +518,64 @@ label {
 		</form>
 	</div>
 {* //----- FORMULÁRIO DE COMENTÁRIO DE CHAMADO ----- *}
+
+
+
+
+{* ----- FORMULÁRIO DE REABERTURA DE CHAMADO ----- *}
+{if ($chamado.criado_por == $dadosLogin.id_admin || $admin_grupo) && $pode_reabrir}
+
+	<div id="divFormReabreChamado" style="width:700px;position:relative; display:none;">
+		<form name="frmComentar" id="frmComentar" action="admin-clientes.php" onsubmit="javascript:return validaFormReabrirChamado();">
+			<input type="hidden" name="acao" id="acao" value="reabrir" />
+			<input type="hidden" name="op" id="op" value="helpdesk" />
+			<input type="hidden" name="tela" id="tela" value="alteracao" />
+			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
+			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
+
+
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Reabrir Chamado</span></th>
+				</tr>
+				<tr>
+					<!-- Lado Esquerdo -->
+					<td width="500">
+						<table border=0>
+							<tr>
+								<td align="right" width="110"><strong>Comentário:</strong></td>
+								<td align="right"><textarea name="comentario_reabertura" id="comentario_reabertura" rows="4" cols="30"></textarea></td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- Confirmação -->
+					<td width="200" style="border-left:1px solid #000" valign="middle">
+						<table border=0>
+							<tr>
+								<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+							</tr>
+							<tr>
+								<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+
+{/if}
+{* //----- FORMULÁRIO DE REABERTURA DE CHAMADO ----- *}
+
+
+
 
 
 {* ----- FORMULÁRIO DE PRIORIZAÇÃO DE CHAMADO ----- *}

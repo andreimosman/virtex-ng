@@ -15,6 +15,7 @@
 		protected $pftb_preferencia_cobranca;
 		protected $pftb_forma_pagamento;
 		protected $pftb_modelo_contrato;
+		protected $pftb_preferencia_helpdesk;
 		
 		/**
 		 * Construtor do objeto.
@@ -36,6 +37,7 @@
 			$this->pftb_preferencia_cobranca	= VirtexPersiste::factory("pftb_preferencia_cobranca");
 			$this->pftb_forma_pagamento			= VirtexPersiste::factory("pftb_forma_pagamento");
 			$this->pftb_modelo_contrato			= VirtexPersiste::factory("pftb_modelo_contrato");
+			$this->pftb_preferencia_helpdesk	= VirtexPersiste::factory("pftb_preferencia_helpdesk");
 		}
 		
 		/**
@@ -586,6 +588,30 @@
 		 */
 		public function excluiLink($id) {
 			return($this->cftb_links->exclui(array("id_link" => $id)));
+		}
+		
+		
+		/**
+		 * Obtem as configuraçòes de helpdesk
+		 */
+		public function obtemPreferenciasHelpdesk() {
+		
+			$resultado = $this->pftb_preferencia_helpdesk->obtemUnico(array("id_preferencia" => 1));
+			if(!$resultado) { 
+				$this->pftb_preferencia_helpdesk->insere(array("id_preferencia" => 1));
+				$resultado = $this->pftb_preferencia_helpdesk->obtemUnico(array("id_preferencia" => 1));
+			}
+			
+			return $resultado;
+		}
+		
+		
+		/**
+		 * Altera as configurações de helpdesk 
+		 */
+		public function alteraPreferenciasHelpdesk($limite_tempo_reabertura_chamado) {
+			$dados = array(	"limite_tempo_reabertura_chamado"=>$limite_tempo_reabertura_chamado);
+			return ($this->pftb_preferencia_helpdesk->altera($dados, array("id_preferencia" => 1)));
 		}
 		
 		

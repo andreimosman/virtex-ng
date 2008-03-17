@@ -1636,7 +1636,30 @@
 					
 						//Seleciona o chamado desejado
 						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
-						
+
+						if($chamado) {
+							if($chamado["tipo"] == PERSISTE_HDTB_CHAMADO::$TIPO_CHAMADO && ($chamado["status"] == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO || $chamado["status"] == PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO)) {
+								
+								$preferencias = $this->preferencias->obtemPreferenciasHelpdesk();
+								
+								$data_fim = $chamado["fechamento"];
+								$data_fim = substr($data_fim,0,10);
+								$temp = explode('-', $data_fim);
+								
+								$data_fim = mktime(0,0,0,$temp[1],$temp[2],$temp[0]); 
+								$data_hoje = time();
+								
+								$data_diferenca = $data_hoje - $data_fim;
+								$data_diferenca = intval($data_diferenca / (60 * 60 * 24));
+								
+								if($data_diferenca < $preferencias["limite_tempo_reabertura_chamado"]) {
+									$this->_view->atribui("pode_reabrir", true);
+								}
+
+							}
+						}
+
+
 						$contas = VirtexModelo::factory("contas");
 						$cobranca = VirtexModelo::factory("cobranca");		
 						
@@ -1857,7 +1880,12 @@
 										$comentario = @$_REQUEST["prioridade_comentario"];
 										$this->helpdesk->alteraPrioridade($id_chamado, $prioridade, $dadosLogin["id_admin"], $comentario);
 										$mensagem = "Alteraçao de prioridade do chamado efetuada com sucesso.";
-										break;										
+										break;	
+									case 'reabrir':
+										$comentario = @$_REQUEST["comentario_reabertura"];
+										$this->helpdesk->reabreChamado($id_chamado, $dadosLogin["id_admin"], $comentario);
+										$mensagem = "Chamado reaberto com sucesso";
+										break;
 								}
 
 							}

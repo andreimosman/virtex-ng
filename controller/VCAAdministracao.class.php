@@ -920,7 +920,7 @@
 		
 		
 		//Funçao de execução do Preferências HELPDESK
-		function executaPreferenciasHelpdesk() {
+		function executaPreferenciasHelpdesk() { echo "<PRE>"; print_r($_REQUEST); echo "</PRE>";
 			$helpdesk = VirtexModelo::factory("helpdesk");
 		
 			$tela = @$_REQUEST["tela"];
@@ -970,7 +970,7 @@
 								$this->_view->atribui($chave, $valor);
 							}
 							
-							$usuarios_grupo = $helpdesk->obtemListaAdminGrupo($dados["id_grupo"]);
+							$usuarios_grupo = $helpdesk->obtemListaAdminGrupo($dados["id_grupo"]);							
 							$this->_view->atribui("usuarios_grupo", $usuarios_grupo);
 						}
 						
@@ -1026,7 +1026,28 @@
 						$this->_view->atribui("acao", "gravar");
 					}
 					break;
-					
+				
+				case 'config':
+					$preferencias = VirtexModelo::factory("preferencias");
+					if(!$this->_acao) {						
+						$preferencia_helpdesk = $preferencias->obtemPreferenciasHelpdesk();
+						$this->_view->atribui("preferencia", $preferencia_helpdesk);
+					} else {
+						
+						$limite_tempo_reabertura_chamado = @$_REQUEST["limite_tempo_reabertura_chamado"];
+	
+						$limite_tempo_reabertura_chamado = (!$limite_tempo_reabertura_chamado) ? 0 : $limite_tempo_reabertura_chamado;
+						$preferencias->alteraPreferenciasHelpdesk($limite_tempo_reabertura_chamado);
+						
+						$url_redir = "admin-administracao.php?op=preferencias&tela=helpdesk";
+						$mensagem = "Configurações alteradas com sucesso";
+						
+						$this->_view->atribui("url",$url_redir);
+						$this->_view->atribui("mensagem",$mensagem);
+						$this->_view->atribuiVisualizacao("msgredirect");							
+					}
+					break;
+				
 				case 'listagem':
 				default:
 					$registros = $helpdesk->obtemListaGrupos();
