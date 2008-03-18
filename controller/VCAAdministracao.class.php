@@ -645,6 +645,13 @@
 						// Lista de formas de pagamento
 						// echo "LISTA FORMAS<br>\n";
 						$formas = $this->preferencias->obtemFormasPagamento();
+						
+						for($i=0; $i<count($formas); $i++) {
+							if($formas[$i]["id_forma_pagamento"] == "9999") {
+								unset($formas[$i]);
+							}
+						}
+						
 						$this->_view->atribui("formas",$formas);						
 						//echo "<pre>";
 						//print_r($formas);
