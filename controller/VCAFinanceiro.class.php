@@ -45,6 +45,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			case 'relatorios_faturamento':
 				$this->executaRelatoriosFaturamento();
 				break;
+			case 'download_remessa';
+				$this->executaDownloadRemessa();
+				break;
 		}
 	}
 
@@ -396,6 +399,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 		$combo_formato = MRetorno::obtemFormatosRetorno();
 	
+		
 		// processa request
 		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
 			// validacao input
@@ -430,7 +434,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 						
 				// gravar log
 				$id_retorno = $this->cobranca->gravarLogRetorno($clean['formato_retorno'], $admin);
-										
+									
 				foreach($registros as $reg) {
 					$observacoes = 'Arquivo de retorno';
 					switch($formato_retorno) {			
@@ -545,7 +549,12 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		if( !$tela ) {
 			$tela = "retorno";
 		}
-	
+		
+		$retornos = $this->cobranca->obtemUltimosRetornos(30);
+		$remessas = $this->cobranca->obtemUltimasRemessasCriadas(30);
+		
+		$this->_view->atribui("retornos", $retornos);
+		$this->_view->atribui("remessas", $remessas);
 		$this->_view->atribui('combo_formato', $combo_formato);
 		$this->_view->atribui("tela",$tela);
 
@@ -883,6 +892,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$this->_view->atribui("lista", $dados);
 
 		}
-	}	
+	}
+	
+	public function executaDownloadRemessa() {
+		$id_remessa = $_REQUEST["id_remessa"];
+		$remessa = $this->cobranca->obtemRemessaPeloId($id_remessa);
+		$this->criaDownload("var/remessa", $remessa["arquivo"]);
+		
+	}
 }
 ?>

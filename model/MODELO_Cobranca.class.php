@@ -957,11 +957,25 @@
 
 		public function obtemUltimasRemessas($quantidade) {
 			return ($this->cbtb_lote_cobranca->obtemUltimasRemessas($quantidade));
-		}
+		}		
 		
 		public function obtemRemessaPeloId($id_remessa) {
 			return ($this->cbtb_remessa->obtemUnico(array("id_remessa" => $id_remessa)));
 		}
+		
+		public function obtemUltimosRetornos($quantidade) {
+			$extra = "datahora DESC";
+			$extra .= ($quantidade) ? " LIMIT $quantidade" :  "";
+			return ($this->cbtb_retorno->obtem("", $extra));
+		}
+		
+
+		public function obtemUltimasRemessasCriadas($quantidade) {
+			$extra = "datahora DESC";
+			$extra .= ($quantidade) ? " LIMIT $quantidade" :  "";
+			return ($this->cbtb_remessa->obtem("", $extra));
+		}	
+		
 
 		public function obtemFaturasPorRemessa($id_remessa) {
 			return ($this->cbtb_fatura->obtemFaturasPorRemessa($id_remessa));
