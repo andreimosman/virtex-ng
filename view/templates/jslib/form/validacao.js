@@ -76,3 +76,15 @@ function validaData(data_entrada) {
 	reData = /^((0[1-9]|[12]\d)\/(0[1-9]|1[0-2])|30\/(0[13-9]|1[0-2])|31\/(0[13578]|1[02]))\/\d{4}$/;
 	return reData.test(data_entrada);
 }
+
+
+/**
+ * validaUsername - valida uma string de username
+ * retorno:	true - se o username for válido
+ *		false - se o username for inválido
+ */
+ 
+function validaUsernameString(username) {
+	reUsername = /\s/g;
+	return !reUsername.test(username);
+}
