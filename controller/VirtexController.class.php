@@ -59,7 +59,16 @@
 			return(true);
 
 		}
-
+		
+		protected function criaDownload($caminhoParaOArquivo,$nomeArquivo) {
+			$tmpview = VirtexViewAdmin::factory("dummy");
+			$linkDownload = $caminhoParaOArquivo . "/" .  $nomeArquivo;
+			$tmpview->atribui("linkDownload", $linkDownload);
+			$tmpview->atribui("nomeArquivo", $nomeArquivo);
+			$tmpview->exibe();
+		}
+		
+		
 		protected function __construct() {
 			parent::__construct();
 
@@ -168,6 +177,7 @@
 				$this->_view->exibe();
 			}
 		}
+		
 	}
 
 ?>

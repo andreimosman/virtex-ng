@@ -45,6 +45,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			case 'relatorios_faturamento':
 				$this->executaRelatoriosFaturamento();
 				break;
+			case 'download_remessa':
+				$this->executaDownloadRemessa();
+				break;
 		}
 	}
 
@@ -236,6 +239,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 	protected function executaGerarCobranca() {
 	
+		
+		
 		$this->_view->atribuiVisualizacao("cobranca");
 
 		$acao = @$_REQUEST["acao"];
@@ -256,6 +261,12 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$info_licenca = $this->licenca->obtemLicenca();
 		$nome_razao = $info_licenca["empresa"]["nome"];
 		$cnpj_empresa = $pref_provedor["cnpj"];
+		
+		$tempnome = $_SERVER["SCRIPT_FILENAME"];
+		$ref_dir = substr($tempnome, 0, strrpos($tempnome, "/")+1);
+		//$arquivo = $ref_dir . $arquivo; 
+		
+		
 
 
 		if ($acao == "gerar") {
@@ -275,36 +286,50 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$id_forma_pagamento = @$_REQUEST["id_forma_pagamento"];
 
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
-			
 
 			if($formaPagto["carteira_registrada"] == 't' || $formaPagto["impressao_banco"] == 't') {
 			
-				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);	
+				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);				
 				
 				if (!$faturas){
 					$msg = "Não foram encontradas faturas para esse período.";				
 				} else {
 				
-					$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin,$id_forma_pagamento);
+					$id_remessa = $this->cobranca->cadastraLoteCobranca($data_referencia_dia1, $periodo, $id_admin,$id_forma_pagamento);			
+					
 					$msg = "Remessa cadastrada com sucesso.";
+					
 
 					$remessa = MRemessa::factory($formaPagto["codigo_banco"]);
 					$remessa->init($formaPagto["agencia"], $formaPagto["conta"], $formaPagto["dv_conta"], $formaPagto["carteira"], $formaPagto["convenio"], $nome_razao, $cnpj_empresa, $pref_cobranca["tx_juros"]);
 
 					$arquivo = "C" . date("ym");
 					$numero_geracao = 0;
+					
+					$diretorio = "var/remessa/";
 
 					do{
 						$numero_geracao++;
-						$arquivo_temp = $arquivo . "$numero_geracao";
-						echo "<br>$arquivo_temp<br>";
-						$resultado = $this->cobranca->obtemRemessaPeloNomeArquivo($arquivo, $id_remessa);
-					}while($resultado);
+						$arquivo_temp = $arquivo . "$numero_geracao" . ".txt";
+						$resultado = $this->cobranca->obtemRemessaPeloNomeArquivo($arquivo_temp, $id_remessa);
+					} while($resultado);
 
-					$arquivo .= "$numero_geracao";	//Nome de geração do arquivo
 
-					$numero_remessa = $this->cobranca->cadastraRemessa($arquivo);
-					$remessa->geraArquivoRemessa($arquivo,$faturas);	
+					
+					$arquivo .= "$numero_geracao" . ".txt";	//Nome de geração do arquivo
+
+					$numero_remessa = $this->cobranca->cadastraRemessa($arquivo, $id_remessa);
+					
+					foreach($faturas as $chave => $valor) {
+						$id_cobranca = $valor["id_cobranca"];
+						$ret_lote = $this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
+						$ret_fat = $this->cobranca->alteraRemessaFatura($id_remessa, $id_cobranca);
+					}					
+					
+					$diretorio = "var/remessa/";
+					$arquivo = $ref_dir . $diretorio . $arquivo;
+					
+					$remessa->geraArquivoRemessa($arquivo, $faturas);					
 				
 				}
 				
@@ -330,6 +355,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					//echo $id_cobranca;
 
 					$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
+					//$this->cobranca->alteraRemessaFatura($fatura[$i]["id_cobranca"], $id_remessa);
 
 					if( $formaPagto["tipo_cobranca"] == "BL" ) {
 
@@ -363,7 +389,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 			// VirtexView::simpleRedirect($url);
 
-		}
+		} 
+		
+		
 
 		$periodo_anos_fatura = $this->cobranca->obtemAnosFatura();
 
@@ -382,14 +410,20 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$ultimas_remessas[$i]["forma_pagto"] = $ultimas_remessas[$i]["id_forma_pagamento"] ? $this->preferencias->obtemFormaPagamento($ultimas_remessas[$i]["id_forma_pagamento"]) : array();
 		}
 
-		//echo "<pre>";
-		//print_r($ultimas_remessas);
-		//echo "</pre>";
-
 		$this->_view->atribui("ultimas_remessas", $ultimas_remessas);
 
 
 	}
+	
+	
+	public function executaDownloadRemessa() {
+
+		$id_remessa = @$_REQUEST["id_remessa"];
+		$remessa = $this->cobranca->obtemRemessaPeloId($id_remessa);
+		$arquivo_remessa = $remessa["arquivo"];
+		$this->criaDownload("var/remessa", $arquivo_remessa);
+	}
+	
 
 	protected function executaArquivos() {
 		$this->_view->atribuiVisualizacao("cobranca");
