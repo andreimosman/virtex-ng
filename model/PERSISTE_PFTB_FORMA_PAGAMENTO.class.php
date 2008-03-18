@@ -22,7 +22,7 @@
 			$bancos["1"] 	= "Banco do Brasil S/A";
 			$bancos["237"] 	= "Banco Bradesco S/A";
 			$bancos["104"] 	= "Caixa Econômica Federal";
-			$bancos["341"] 	= "Banco Itaú";
+			$bancos["341"] 	= "Banco Itaú S/A";
 			
 			return($bancos);
 			
