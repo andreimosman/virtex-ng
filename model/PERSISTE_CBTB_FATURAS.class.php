@@ -11,12 +11,12 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 	public function __construct($bd=null) {
 		parent::__construct();
 
-		$this->_campos 		= array("id_cliente_produto", "data", "descricao", "valor", "status", "observacoes", "reagendamento", "pagto_parcial", "data_pagamento", "desconto", "acrescimo", "valor_pago", "id_cobranca", "cod_barra", "anterior", "id_carne", "nosso_numero", "linha_digitavel", "nosso_numero_banco", "tipo_retorno", "email_aviso", "id_forma_pagamento","id_retorno");
+		$this->_campos 		= array("id_cliente_produto", "data", "descricao", "valor", "status", "observacoes", "reagendamento", "pagto_parcial", "data_pagamento", "desconto", "acrescimo", "valor_pago", "id_cobranca", "cod_barra", "anterior", "id_carne", "nosso_numero", "linha_digitavel", "nosso_numero_banco", "tipo_retorno", "email_aviso", "id_forma_pagamento", "id_remessa", "id_retorno");
 		$this->_chave 		= "id_cobranca";
 		$this->_ordem 		= "";
 		$this->_tabela 		= "cbtb_faturas";
 		$this->_sequence	= "cbtb_faturas_id_cobranca_seq";
-		$this->_filtros		= array("id_cliente_produto"=>"number", "data"=>"date", "valor"=>"number", "reagendamento"=>"date", "pagto_parcial"=>"number", "data_pagamento"=>"date", "desconto"=>"number", "acrescimo"=>"number", "valor_pago"=>"number", "id_cobranca"=>"number", "anterior"=>"bool", "id_carne"=>"number", "nosso_numero_banco"=>"number", "tipo_retorno"=>"number", "email_aviso"=>"bool", "id_forma_pagamento"=>"number");
+		$this->_filtros		= array("id_cliente_produto"=>"number", "data"=>"date", "valor"=>"number", "reagendamento"=>"date", "pagto_parcial"=>"number", "data_pagamento"=>"date", "desconto"=>"number", "acrescimo"=>"number", "valor_pago"=>"number", "id_cobranca"=>"number", "anterior"=>"bool", "id_carne"=>"number", "nosso_numero_banco"=>"number", "tipo_retorno"=>"number", "email_aviso"=>"bool", "id_forma_pagamento"=>"number", "id_remessa"=>"number");
 
 	}
 
@@ -157,8 +157,8 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 
 			$sql  = "SELECT * FROM cbtb_faturas ";
 			$sql .= "WHERE ";
-			$sql .= "	(nosso_numero IS NULL ";
-			$sql .= "	OR id_remessa IS NULL) ";
+			$sql .= "	nosso_numero IS NULL ";
+			$sql .= "	AND id_remessa IS NULL ";
 			$sql .= "	AND id_forma_pagamento = 9999";
 
 
@@ -169,6 +169,8 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			} else { 		// MES COMPLETO
 				$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
 			}
+			
+			//echo $sql;
 
 			return ($this->bd->obtemRegistros($sql));
 
@@ -213,10 +215,8 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			$sql .=" WHERE ";
 			$sql .="   r.id_remessa = $id_remessa ";
 	
-			echo $sql;
-	
-	
-	
+			//echo $sql;
+			
 			return ($this->bd->obtemRegistros($sql));
 	
 	}

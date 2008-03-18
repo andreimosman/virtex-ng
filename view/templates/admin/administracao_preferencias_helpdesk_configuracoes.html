@@ -1,0 +1,62 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+
+.fieldDisabled {
+	font-family: verdana;
+	font-size: 10px;
+	border: solid 1px #909090;
+	background: #CACACA;
+	margin-right: 2px;
+
+}
+
+{/literal}
+</style>
+
+<script language="javascript1.2">
+</script>
+
+
+<form name="grupo" id="grupo" method="post" action="admin-administracao.php">
+	<input type="hidden" name="op" value="preferencias">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="subtela" value="{$subtela}">
+	<input type="hidden" name="acao" value="alterar">
+
+	<table width="300" align="center" class='lista' border=0 cellpadding=0 cellspacing=0>
+
+		<tr>
+			<th bgcolor="#d5Efd5" colspan=2><label>CHAMADOS</label></th>
+		</tr>
+
+		<tr>
+			<td align="right" nowrap><label>Tempo limite para reabertura:</label></td>
+			<td nowrap><input type="text" name="limite_tempo_reabertura_chamado" value="{$preferencia.limite_tempo_reabertura_chamado}" id="limite_tempo_reabertura_chamado" class="fieldWithoutFocus" style="width:30px" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" />dias</td>
+		</tr>
+
+
+		<tr>
+			<td align="center" colspan="2" width="100%" style="border-top:1px dotted #000">
+					<input type="button" class="botao" name="voltar" value="Voltar" />
+					<input type="submit" name="submit" class="botao" value="Alterar" />
+			</td>
+		</tr>
+	</table>
+</form>
+
+</body>
+</html>

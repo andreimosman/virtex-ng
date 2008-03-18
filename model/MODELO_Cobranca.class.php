@@ -557,6 +557,12 @@
 			$dados = array("status" => "E");
 			return($this->cbtb_fatura->altera($dados,$filtro));
 		}
+		
+		public function alteraRemessaFatura($id_remessa, $id_cobranca) {
+			$filtro = array("id_cobranca" => $id_cobranca);
+			$dados = array("id_remessa" => $id_remessa);
+			return($this->cbtb_fatura->altera($dados,$filtro));
+		}
 
 		public function obtemFaturasPorCarne($id_carne) {
 			$filtro = array("status" => "A", "id_carne" => $id_carne);
@@ -952,6 +958,10 @@
 
 		public function obtemUltimasRemessas($quantidade) {
 			return ($this->cbtb_lote_cobranca->obtemUltimasRemessas($quantidade));
+		}
+		
+		public function obtemRemessaPeloId($id_remessa) {
+			return ($this->cbtb_remessa->obtemUnico(array("id_remessa" => $id_remessa)));
 		}
 
 		public function obtemFaturasPorRemessa($id_remessa) {

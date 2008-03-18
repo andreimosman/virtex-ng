@@ -108,7 +108,13 @@
 			<td width="150" align=center >{if !$r.id_forma_pagamento}&nbsp;{else}{if $r.forma_pagto.tipo_cobranca=="BL"}Boleto{/if} {if $r.forma_pagto.tipo_cobranca=="DA"}Débito Automático{/if} - {$bancos[$r.forma_pagto.codigo_banco]} - convênio {$r.forma_pagto.convenio}{/if}</td>
 			<td class='{$estilo}' width="150"  align='center'><a href="admin-financeiro.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.data_referencia|date_format:"%d/%m/%Y"}{if $.periodo=="MT"} <em>(Todo o mês)</em>{else if $r.periodo=="PQ"} <em>(Parcial)</em>{/if}</a></td>
 			<td class='{$estilo}' align='center'><a href="admin-financeiro.php?op=gerar_lista_faturas&id_remessa={$r.id_remessa}">{$r.qtfaturas}</a></td>
-			<td class='{$estilo}' align='center' width='18'><a href="admin-financeiro.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/print.gif" width="17" height="17" alt="Imprimir Boletos" title="Imprimir Boletos"  border="0"/></a></td>
+			<td class='{$estilo}' align='center' width='18'>
+				{if $r.arquivo_remessa}
+					<a href="admin-financeiro.php?op=download_remessa&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/arquivo.png" width="25" height="25" alt="Baixar Arquivo" title="Baixar Arquivo"  border="0"/></a>
+				{else}
+					<a href="admin-financeiro.php?op=gerar_lista_boletos&id_remessa={$r.id_remessa}"><img src="view/templates/imagens/print.gif" width="17" height="17" alt="Imprimir Boletos" title="Imprimir Boletos"  border="0"/></a>
+				{/if}
+			</td>
 		</tr>
 		{/foreach}
 	</table>

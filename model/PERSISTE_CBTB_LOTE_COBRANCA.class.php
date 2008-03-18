@@ -16,16 +16,28 @@ class PERSISTE_CBTB_LOTE_COBRANCA extends VirtexPersiste {
 
 
 	public function obtemUltimasRemessas($quantidade) {
-
+			/**
 			$sql  = "SELECT cob.id_remessa, cob.data_geracao, cob.id_forma_pagamento, cob.periodo, cob.data_referencia, cob.id_admin, ";
 			$sql .= "(SELECT  count(*) FROM cbtb_lote_fatura fat WHERE fat.id_remessa = cob.id_remessa) as qtfaturas ";
 			$sql .= "FROM cbtb_lote_cobranca cob ";
 			$sql .= "ORDER BY id_remessa DESC ";
 			$sql .= "LIMIT $quantidade";
+			*/
+			
+			$sql  = "SELECT ";
+			$sql .= "	cob.id_remessa, cob.data_geracao, cob.id_forma_pagamento, cob.periodo, cob.data_referencia, cob.id_admin,  ";
+			$sql .= "	(SELECT  count(*) FROM cbtb_lote_fatura fat WHERE fat.id_remessa = cob.id_remessa) as qtfaturas, ";
+			$sql .= "	rem.arquivo as arquivo_remessa ";
+			$sql .= "FROM cbtb_lote_cobranca cob  ";
+			$sql .= "LEFT OUTER JOIN cbtb_remessa rem ON rem.id_remessa = cob.id_remessa ";
+			$sql .= "ORDER BY cob.id_remessa DESC  ";
+			$sql .= "LIMIT $quantidade ";
 
-	/////echo $sql;
+			/////echo $sql;
 			return ($this->bd->obtemRegistros($sql));
 	}
+	
+
 
 	public function obtemDadosLote($id_remessa) {
 			$sql  = "SELECT id_remessa, data_geracao, periodo, data_referencia, id_admin ";
