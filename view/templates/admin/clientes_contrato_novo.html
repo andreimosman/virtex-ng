@@ -67,9 +67,9 @@ function showResponseEmail(originalRequest) {
 
 returnStatusUsername = false;
 function validaUsername(){
-	username = document.getElementById('username');
+	username = document.getElementById('username').value;
 	dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
-	tipo = document.getElementById('tipo');
+	tipo = document.getElementById('tipo').value;
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
 
@@ -81,10 +81,13 @@ function validaUsername(){
 			onComplete: showResponseUsername,
 			asynchronous: false
 		});
+
+
 	return 	returnStatusUsername;
 }
 
 function showResponseUsername(originalRequest) {
+
 	if ( !getReturn(originalRequest.responseText)){
 		document.getElementById('username').value = "";
 		if( document.getElementById('username').enabled ) {
@@ -851,30 +854,41 @@ function showResponse(originalRequest) {
 function validacao(frm ) {
 	var migracao = false;
 
-	if( !document.getElementById('tipo') ) {
+	if( !document.getElementById('tipo').value ) {
 		window.alert("É necessário escolher o tipo de contrato.");
 		return false;
 	}
 
-	if( document.getElementById('tipo') != '' && document.getElementById('id_produto_original') != '') {
+	if( document.getElementById('tipo').value != '' && document.getElementById('id_produto_original').value != '') {
 		migracao = true;
-		if( document.getElementById('id_produto_original') == document.getElementById('id_produto') ) {
+		if( document.getElementById('id_produto_original').value == document.getElementById('id_produto').value ) {
 			window.alert("Você deve escolher outro plano para migrar o contrato.");
 			return false;
 		}
 	}
 
 	if( !migracao ) {
-			username = document.getElementById('username');
-			criar_email = document.getElementById('criar_email');
+			username = document.getElementById('username').value;
+			criar_email = document.getElementById('criar_email').value;
+			id_produto = document.getElementById('id_produto').value;
 
-			if(document.getElementById('tipo') == "BL") {
+			if(!id_produto) {
+				alert("É necessário escolher um produto para efetuar a contratação.");
+				return false;
+			}
+
+			if(document.getElementById('tipo').value == "BL") {
 				if(!checkDadosConexao()){
 					return false;
 				}
 			}
 
-			if(username.value != ""){
+			if(username != ""){
+				if(!validaUsernameString(username)) {
+					alert("Não é permitido a inserção de espaços e caracteres especiais no username.");
+					return false;
+				}
+
 				if(!validaUsername()){
 					return false;
 				}
@@ -1377,7 +1391,7 @@ function validarData(campo){
 							{/foreach}
 
 							<tr> {if $estilo=='impar'}{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
-								<td class='{$estilo}'><input type="radio" name="forma_pagamento" id="forma_pagamento" value="NA" onClick="javascript:contratoAlteraFormaPagamento()" /></td>
+								<td class='{$estilo}'><input type="radio" name="forma_pagamento" id="forma_pagamento" value="NA" onClick="javascript:contratoAlteraFormaPagamento()" CHECKED/></td>
 								<td class='{$estilo}'>
 									<b>Não atrelar</b>
 								</td>
@@ -1557,12 +1571,17 @@ function validarData(campo){
 			</td>
 {/if}
 		</tr>
+	</table>
+
+	<center><br>
+	<table border=0 width=720>
 		<tr valign="top">
 			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
 				<input type="button" name="prosseguir" id="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" id="submit" value="Prosseguir" class="botao">
 			</td>
 		</tr>
 	</table>
+	</center>
 
 
 </form>
