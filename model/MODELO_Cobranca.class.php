@@ -28,6 +28,7 @@
 		protected $cbtb_comissao;
 		
 		protected $cbtb_remessa;
+		protected $cbtb_retorno;
 		
 		protected static $moeda = 9;
 
@@ -787,22 +788,20 @@
 		}
 		
 		public function gravarLogRetorno($formato, $admin) {
-			$dados['data_hora'] = '=now';
+			$dados['datahora'] = '=now';
 			$dados['formato'] = $formato;
 			$dados['id_admin'] = $admin['id_admin'];
 					
-			$id_retorno = $this->cbtb_retorno->insere($dados);
-			return($id_retorno);
+			return($this->cbtb_retorno->insere($dados));
 		}
 
-		public function atualizaLogRetorno($id_retorno, $numero_total_registros, $numero_registros_processados) {
+		public function atualizaLogRetorno($id_retorno, $numero_total_registros, $numero_registros_processados,$data_geracao) {
 			$data['numero_total_registros'] = $numero_total_registros;
 			$data['numero_registros_processados'] = $numero_registros_processados;
+			
+			$data['data_geracao'] = $data_geracao ? $data_geracao : '=now';
 					
-		    if($this->cbtb_retorno->altera($dados,array("id_retorno" => $id_retorno)))
-		    	return true;
-		    else	
-		    	return false;
+		    return($this->cbtb_retorno->altera($dados,array("id_retorno" => $id_retorno)));
 		}
 		
 		

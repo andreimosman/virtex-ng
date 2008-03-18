@@ -110,6 +110,18 @@
 			
 			$this->_file = "financeiro_cobranca_retorno.html";
 			$this->titulo .= "Troca de Arquivos";
+			
+			$menu = array();
+			
+			$menu[] = array("texto" => "Retorno", "url" => "admin-financeiro.php?op=arquivos&tela=retorno");
+			$menu[] = array("texto" => "Remessa", "url" => "admin-financeiro.php?op=arquivos&tela=remessa");
+			
+			$selected = $this->obtem("tela") == "remessa" ? 2 : 1;
+			
+			$this->titulo .= " :: " . ($this->obtem("tela") == "remessa" ? "Remessa" : "Retorno");
+
+			$this->configureMenu($menu,true,true, $selected);
+			
 			$this->atribui("titulo", $this->titulo);
 		}
 

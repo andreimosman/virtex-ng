@@ -19,8 +19,8 @@ function sessionMenuChanged(obj) {
 			{if count($sessionMenu.itens) && $sessionMenu.visible}
 			<select name="userMenu" class="selectMenu" onChange="sessionMenuChanged(this)">
 				<option value="">-- MENU --</option>
-				{foreach item=r from=$sessionMenu.itens}
-				<option value="{$r.url}">{$r.texto}</option>
+				{foreach item=r from=$sessionMenu.itens name="sessionMenu"}
+				<option value="{$r.url}" {if $smarty.foreach.sessionMenu.iteration == $sessionMenuSelected}SELECTED{/if}>{$r.texto}</option>
 				{/foreach}
 			</select>
 			{/if}

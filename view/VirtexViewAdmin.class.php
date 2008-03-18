@@ -27,9 +27,10 @@
 
 		}
 
-		public function configureMenu($itens=array(),$enabled=true,$visible=true) {
-			$menu = array("itens" => $itens,"enabled" => $enabled, "visible" => $visible);			
+		public function configureMenu($itens=array(),$enabled=true,$visible=true,$selected=0) {
+			$menu = array("itens" => $itens,"enabled" => $enabled, "visible" => $visible);
 			$this->atribui("sessionMenu", $menu);
+			$this->atribui("sessionMenuSelected", $selected);
 		}
 		
 		protected function obtemListaBoolean() {
