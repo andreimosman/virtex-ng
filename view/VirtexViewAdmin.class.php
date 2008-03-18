@@ -93,6 +93,11 @@
 					$retorno = new VVAFinanceiro();
 					break;	
 					
+					
+				case 'dummy':
+					$retorno = new VVADummy();
+					break;
+					
 				default:
 					throw new ExcecaoView(255,"View não disponível");
 					
