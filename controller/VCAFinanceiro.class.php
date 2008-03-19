@@ -448,8 +448,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			}
 			else {
 				array_push($msg_error, 'Arquivo não foi enviado');
-			
 			}
+			
+			//echo "<pre>";
+			//print_r($_FILES['arquivo_retorno']);
+			//echo "</pre>";
+			
+			//die;
 			
 			if (!array_key_exists('formato_retorno', $clean))
 				array_push($msg_error, 'Formato Inválido');
@@ -462,10 +467,16 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$admin['id_admin'] = $dadosLogin["id_admin"];
 						
 				// gravar log
-				$id_retorno = $this->cobranca->gravarLogRetorno($clean['formato_retorno'], $admin);
+				$id_retorno = $this->cobranca->gravarLogRetorno($clean['formato_retorno'], $_FILES['arquivo_retorno']["name"], $uploaddir . $nome_arquivo_retorno, $admin);
+				
+				$numeroTotalRegistros = 0;
+				$numeroRegistrosProcessados = 0;
+				
+				$numeroRegistrosComErro = 0;
 									
 				foreach($registros as $reg) {
 					$observacoes = 'Arquivo de retorno';
+					$numeroTotalRegistros++;
 					switch($formato_retorno) {			
 					
 						case 'ITAU':
@@ -493,14 +504,15 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							} else {											
 								// armotizar fatura
 								$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);	
+								$numeroRegistrosProcessados++;
 							}						
 					
 							break;
 						
 						case 'PAGCONTAS':
-							$codigo_barras = $reg['codigo_barras'];
-							print_r ($reg);
-							exit;
+							//$codigo_barras = $reg['codigo_barras'];
+							//print_r ($reg);
+							//exit;
 	
 
 							$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);										
@@ -515,8 +527,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							$amortizar = (int) $reg['valor_recebido'];
 							
 							$valor_receber = $fatura['valor'] - $fatura['valor_pago'];
-					
-													
 														
 							if ($valor_receber > $reg['valor_recebido']) {
 								$acrescimo = $valor_receber - $amortizar;
@@ -530,8 +540,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 								$acrescimo = 0;
 								$desconto = 0;							
 							}			
-			
-							$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);
+							try {
+								$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);
+								$numeroRegistrosProcessados++;
+							} catch(Exception $e) {
+								$numeroRegistrosComErro++;
+							}
+							
 							break;
 														
 						case 'BBCBR643':
@@ -556,6 +571,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							$acrescimo = $reg['juros_mora'] + $reg['outros_recebimentos'];
 	
 							$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);
+							$numeroRegistrosProcessados++;
 							
 							
 							break;						
@@ -566,8 +582,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					}
 				}
 				
+				// echo "TESTE!!!";
+				
 				$data_geracao = $retorno->obtemDataGeracao();
+				
 				// ATUALIZA LOG RETORNO
+				$numeroRegistrosSemCorrespondencia = $numeroTotalRegistros - $numeroRegistrosProcessados - $numeroRegistrosComErro;
+				$this->cobranca->atualizaLogRetorno($id_retorno, $numeroTotalRegistros, $numeroRegistrosProcessados, $numeroRegistrosComErro, $numeroRegistrosSemCorrespondencia, $data_geracao);
 				
 				
 			}					

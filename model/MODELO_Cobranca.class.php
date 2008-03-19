@@ -788,33 +788,40 @@
 			
 		}
 		
-		public function gravarLogRetorno($formato, $admin) {
+		public function gravarLogRetorno($formato, $arquivo_enviado, $arquivo, $admin) {
 			$dados['datahora'] = '=now';
 			$dados['formato'] = $formato;
+			$dados['arquivo_enviado'] = $arquivo_enviado;
+			$dados['arquivo'] = $arquivo;
 			$dados['id_admin'] = $admin['id_admin'];
 					
 			return($this->cbtb_retorno->insere($dados));
 		}
 
-		public function atualizaLogRetorno($id_retorno, $numero_total_registros, $numero_registros_processados,$data_geracao) {
+		public function atualizaLogRetorno($id_retorno, $numero_total_registros, $numero_registros_processados, $numero_registros_com_erro, $numero_registros_sem_correspondencia, $data_geracao) {
 			$data['numero_total_registros'] = $numero_total_registros;
 			$data['numero_registros_processados'] = $numero_registros_processados;
+			$data['numero_registros_com_erro'] = $numero_registros_com_erro;
+			$data['numero_registros_sem_correspondencia'] = $numero_registros_sem_correspondencia;
 			
 			$data['data_geracao'] = $data_geracao ? $data_geracao : '=now';
-					
-		    return($this->cbtb_retorno->altera($dados,array("id_retorno" => $id_retorno)));
+		    return($this->cbtb_retorno->altera($data,array("id_retorno" => $id_retorno)));
 		}
 		
 		
 		
 		
 		public function amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar,
-					$reagendamento, $observacoes, $admin=array(), $id_retorno = ""){
+					$reagendamento, $observacoes, $admin=array(), $id_retorno = "", $data_credito = ""){
 
 			$contas = VirtexModelo::factory("contas");
 			$cobranca = VirtexModelo::factory("cobranca");
+			$caixa = VirtexModelo::factory("caixa");
+
 			$fatura = $this->obtemFaturaPorIdCobranca($id_cobranca);
 			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
+			
+			if( !$data_credito ) $data_credito = $data_pagamento;
 			
 			$data = array();
 
@@ -875,6 +882,12 @@
 
 			$seek["id_cobranca"] = $id_cobranca;
 			$this->cbtb_fatura->altera($data,$seek);
+			
+			if( $id_retorno ) {
+				$caixa->pagamentoViaRetorno($amortizar,$data_pagamento,$data_credito,$id_cobranca,$id_retorno);
+			} else {
+				$caixa->pagamentoComDinheiro($amortizar,$data_credito,$id_cobranca,$admin["admin"]);
+			}
 			
 			//Remanejamento e verificação de contas bloqueadas
 			//$contrato = $this->obtemContrato($fatura["id_cliente_produto"]);

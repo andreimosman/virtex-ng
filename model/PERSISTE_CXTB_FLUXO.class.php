@@ -81,7 +81,7 @@
 		/**
 		 * Pagamento via arquivo de retorno do banco (boleto/título).
 		 */
-		public function pagamentoViaBoleto($valor,$data_registro,$data_compensacao,$id_cobranca,$arquivo) {
+		public function pagamentoViaRetorno($valor,$data_registro,$data_compensacao,$id_cobranca,$arquivo) {
 			$dados = array(
 							"valor" => $valor, 
 							"tipo_movimentacao" => self::$TIPO_MOV_ENTRADA,

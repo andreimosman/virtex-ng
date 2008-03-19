@@ -58,6 +58,9 @@
 					case 'radius':
 						self::$modelosInstanciados[$modelo] = new MODELO_Radius();
 						break;
+					case 'caixa':
+						self::$modelosInstanciados[$modelo] = new MODELO_FluxoCaixa();
+						break;
 					default:
 						throw new ExcecaoModeloInexistente();
 
