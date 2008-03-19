@@ -62,7 +62,11 @@
 		
 		protected function criaDownload($caminhoParaOArquivo,$nomeArquivo) {
 			$tmpview = VirtexViewAdmin::factory("dummy");
-			$linkDownload = $caminhoParaOArquivo . "/" .  $nomeArquivo;
+			
+			$linkDownload = "";
+			$linkDownload .= $caminhoParaOArquivo;
+			$linkDownload .= ($linkDownload) ? "/$nomeArquivo" : $nomeArquivo;
+			
 			$tmpview->atribui("linkDownload", $linkDownload);
 			$tmpview->atribui("nomeArquivo", $nomeArquivo);
 			$tmpview->exibe();
