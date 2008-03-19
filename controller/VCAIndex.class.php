@@ -56,7 +56,7 @@
 			//
 
 			$menuSuporte = new MMenu();
-			if($desenvolvimento) $menuSuporte->addItem("Helpdesk", "admin-suporte.php?op=helpdesk", $target);
+			$menuSuporte->addItem("Helpdesk", "admin-suporte.php?op=helpdesk", $target);
 			$menuSuporte->addItem("Gráficos", "admin-suporte.php?op=graficos", $target);
 			$menuSuporte->addItem("Monitoramento", "admin-suporte.php?op=monitoramento", $target);
 
@@ -198,7 +198,7 @@
 			$menuAdministracao->addItem("Alterar Minha Senha", "admin-administracao.php?op=altsenha", $target);
 			
 			$menuAdministracaoPreferencias 	= new MMenu();
-			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
+			$menuAdministracaoPreferencias->addItem("Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
 			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("Central do Assinante","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("E-mails","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			if($desenvolvimento) $menuAdministracaoPreferencias->addSeparator();
