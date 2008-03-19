@@ -984,6 +984,18 @@
 			return ($this->cbtb_retorno->obtem("", $extra));
 		}
 		
+		public function obtemRetornoPeloArquivoEnviado($arquivo_nome) {
+			$dados = array("arquivo_enviado" => $arquivo_nome);
+			$retorno = $this->cbtb_retorno->obtemUnico($dados);
+			return $retorno;
+		}
+		
+		public function obtemRetornoPeloId($id_retorno) {
+			$dados = array("id_retorno" => $id_retorno);
+			$retorno = $this->cbtb_retorno->obtemUnico($dados);
+			return $retorno;
+		}
+		
 
 		public function obtemUltimasRemessasCriadas($quantidade) {
 			$extra = "datahora DESC";

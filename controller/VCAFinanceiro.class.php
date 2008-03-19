@@ -427,18 +427,30 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$this->_view->atribuiVisualizacao("cobranca");
 			
 		$combo_formato = MRetorno::obtemFormatosRetorno();
+		
+		$msg = "Retorno efetuado com sucesso";
+		$url = "admin-financeiro.php?op=arquivos";
+		$msg_error = array();
 	
 		
 		// processa request
 		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
 			// validacao input
-			$msg_error = array();
+			
 			$clean = array();
+			
 			$formato_retorno = @$_POST['formato_retorno'];
 			
 			if(array_key_exists($formato_retorno, $combo_formato))
 				$clean['formato_retorno'] = $formato_retorno;
 		
+			$arquivo_retorno = $this->cobranca->obtemRetornoPeloArquivoEnviado($_FILES['arquivo_retorno']);
+			//$arquivo_retorno = $this->cobranca->obtemRetornoPeloArquivoEnviado("Pc280306.txt");
+			
+			if($arquivo_retorno) {
+				array_push($msg_error, 'Arquivo já foi enviado anteriormente');
+			}
+			
 			
 			$uploaddir = './var/retorno/';
 			$nome_arquivo_retorno = 'cobranca-retorno-' . date('YmdHis');
@@ -591,7 +603,16 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$this->cobranca->atualizaLogRetorno($id_retorno, $numeroTotalRegistros, $numeroRegistrosProcessados, $numeroRegistrosComErro, $numeroRegistrosSemCorrespondencia, $data_geracao);
 				
 				
-			}					
+			} else {
+			
+				$msg = $msg_error[0];
+				
+			}
+			
+			
+			$this->_view->atribui("url",$url);
+			$this->_view->atribui("mensagem", $msg);
+			$this->_view->atribuiVisualizacao("msgredirect");
 		}
 		
 		$tela = @$_REQUEST["tela"];
@@ -945,10 +966,20 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	}
 	
 	public function executaDownloadRemessa() {
-		$id_remessa = $_REQUEST["id_remessa"];
-		$remessa = $this->cobranca->obtemRemessaPeloId($id_remessa);
-		$this->criaDownload("var/remessa", $remessa["arquivo"]);
+		$id_remessa = @$_REQUEST["id_remessa"];
+		$id_retorno = @$_REQUEST["id_retorno"];
 		
+		if ($id_remessa) {
+			$remessa = $this->cobranca->obtemRemessaPeloId($id_remessa);
+			$this->criaDownload("var/remessa", $remessa["arquivo"]);
+		} else if ($id_retorno) {
+			$retorno = $this->cobranca->obtemRetornoPeloId($id_retorno);
+			$nomecompleto = $retorno["arquivo"];
+			$diretorio = substr($nomecompleto, 0, strrpos($nomecompleto, "/"));
+			$arquivo = substr($nomecompleto, strrpos($nomecompleto, "/")+1);
+			
+			$this->criaDownload($diretorio, $arquivo);
+		}
 	}
 }
 ?>

@@ -126,6 +126,7 @@
 				<th>NRPE</th>
 				<th>NRSC</th>
 				<th>NRPS</th>
+				<th>&nbsp;</th>
 			</tr>
 
 			{foreach from=$retornos name=registros item=i}
@@ -134,9 +135,14 @@
 				<td align="center" class='{$estilo}'>{$i.datahora|date_format:"%d-%m-%Y"}</td>
 				<td align="center" class='{$estilo}'>{$i.formato}</td>
 				<td align="center" class='{$estilo}'>{$i.numero_total_registros}</td>
-				<td align="center" class='{$estilo}'>&nbsp;</td>
-				<td align="center" class='{$estilo}'>&nbsp;</td>
+				<td align="center" class='{$estilo}'>{$i.numero_registros_com_erro}</td>
+				<td align="center" class='{$estilo}'>{$i.numero_registros_sem_correspondencia}</td>
 				<td align="center" class='{$estilo}'>{$i.numero_registros_processados}</td>
+
+				<td align="left" class='{$estilo}'>
+					<a href="admin-financeiro.php?op=download_remessa&id_retorno={$i.id_retorno}"><img src="view/templates/imagens/arquivo.png" width="25" height="25" alt="Baixar Arquivo" title="Baixar Arquivo"  border="0"/></a>
+				</td>
+
 			</tr>
 			{/foreach}
 
