@@ -259,8 +259,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$info_licenca = $this->licenca->obtemLicenca();
 		$nome_razao = $info_licenca["empresa"]["nome"];
 		$cnpj_empresa = $pref_provedor["cnpj"];
-
-
+		
+		
 		if ($acao == "gerar") {
 			$dados = array();
 			
@@ -279,10 +279,29 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 			
+			$id_forma_pagamento_fatura = ($formaPagto["carteira_registrada"] == 't' || $formaPagto["impressao_banco"] == 't') ? 9999 : id_forma_pagamento;
+			
+			//Faz a captura de todos os contratos com vigência 0
+			$contratos_vzero = $this->cobranca->obtemContratosVigenciaZero($id_forma_pagamento);		
+			
+			foreach($contratos_vzero as $chave => $item) {
+				$fatura_retorno = $this->cobranca->obtemFaturaPorContratoPeriodo($data_referencia, $periodo, $item["id_cliente_produto"]);	
+				
+				if(!$fatura_retorno) {
+					$valor_fatura = floatval($item["valor_produto"]);
+					$valor_fatura += floatval($item["valor_comodato"]);
+					$valor_fatura -= floatval($item["desconto_promo"]);
+					
+					$data_referencia_fatura = $data_referencia . "-" . $item["vencimento"];
+
+					$this->cobranca->cadastraFatura($item["id_cliente_produto"], $data_referencia, $data_referencia_fatura, $valor_fatura, $id_forma_pagamento_fatura, $item["nome_produto"]);
+				}
+			}			
+			
 
 			if($formaPagto["carteira_registrada"] == 't' || $formaPagto["impressao_banco"] == 't') {
 			
-				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);	
+				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);
 				
 				if (!$faturas){
 					$msg = "Não foram encontradas faturas para esse período.";				
@@ -300,14 +319,24 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					do{
 						$numero_geracao++;
 						$arquivo_temp = $arquivo . "$numero_geracao";
-						echo "<br>$arquivo_temp<br>";
 						$resultado = $this->cobranca->obtemRemessaPeloNomeArquivo($arquivo, $id_remessa);
 					}while($resultado);
 
-					$arquivo .= "$numero_geracao";	//Nome de geração do arquivo
-
-					$numero_remessa = $this->cobranca->cadastraRemessa($arquivo);
-					$remessa->geraArquivoRemessa($arquivo,$faturas);	
+					$arquivo .= "$numero_geracao" . ".txt";	//Nome de geração do arquivo
+					
+					//Ajusta diretório de gravação
+					$scriptname = $_SERVER["SCRIPT_FILENAME"];
+					$scriptdir = substr($scriptname, 0, strrpos($scriptname, "/"));
+					$remessadir = $scriptdir . "/var/remessa/";
+					
+					$numero_remessa = $this->cobranca->cadastraRemessa($arquivo, $id_remessa);
+					
+					foreach($faturas as $chave => $item) {
+						$this->cobranca->cadastraLoteFatura($id_remessa, $item["id_cobranca"]);
+						$this->cobranca->alteraRemessaFatura($id_remessa, $item["id_cobranca"]);
+					}					
+					
+					$remessa->geraArquivoRemessa($remessadir . $arquivo,$faturas);	
 				
 				}
 				

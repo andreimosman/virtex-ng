@@ -177,6 +177,23 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 	}
 
 
+	public function obtemFaturaPorContratoPeriodo($data_referencia, $periodo, $id_contrato) {
+
+		$sql  = "SELECT id_cobranca FROM cbtb_faturas ";
+		$sql .= "WHERE id_cliente_produto = '$id_contrato'";
+
+		if($periodo == "PQ") {		//PRRIMEIRA QUINZENA
+			$sql .= " AND data BETWEEN '$data_referencia-01' AND '$data_referencia-15' ";
+		} else if ($periodo == "SQ") {	//SEGUNDA QUINZENA
+			$sql .= " AND data BETWEEN '$data_referencia-16' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+		} else { 		// MES COMPLETO
+			$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
+		}
+
+		//echo "SQL: $sql<br>\n";
+		return ($this->bd->obtemUnicoRegistro($sql));
+	}	
+
 
 	public	function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo,$id_forma_pagamento) {
 

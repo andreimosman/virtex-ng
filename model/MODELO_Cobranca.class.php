@@ -500,7 +500,7 @@
 		}
 
 
-	    protected function cadastraFatura($id_cliente_produto, $id_cobranca, $data, $valor, $id_forma_pagamento, $descricao = "",
+	    public function cadastraFatura($id_cliente_produto, $id_cobranca, $data, $valor, $id_forma_pagamento, $descricao = "",
 	                                      $id_carne = 0, $nosso_numero = "", $linha_digitavel = "", $cod_barra = "") {
 
 	      $dados = array("id_cliente_produto"=>$id_cliente_produto, "data"=>$data, "valor"=>$valor, "status"=>"A", "id_forma_pagamento"=>$id_forma_pagamento);
@@ -562,7 +562,8 @@
 		public function alteraRemessaFatura($id_remessa, $id_cobranca) {
 			$filtro = array("id_cobranca" => $id_cobranca);
 			$dados = array("id_remessa" => $id_remessa);
-			return($this->cbtb_fatura->altera($dados,$filtro));
+			$retorno = $this->cbtb_fatura->altera($dados,$filtro);
+			return $retorno;
 		}
 
 		public function obtemFaturasPorCarne($id_carne) {
@@ -950,7 +951,8 @@
 							);
 
 			$this->cbtb_lote_fatura->insere($dados);
-		}
+		}	
+		
 		public function InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca) {
 			return ($this->cbtb_fatura->InsereCodigoBarraseLinhaDigitavel($codigo_barra, $linha_digitavel, $id_cobranca));
 		}
@@ -985,11 +987,27 @@
 			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadas());
 		}
 		
+		public function obtemContratosVigenciaZero($id_forma_pagamento='') {
+			$filtro = array(	"vigencia" => "0",
+								"status" => "A"
+							);
+							
+			if ($id_forma_pagamento) {
+				$filtro["id_forma_pagamento"] = $id_forma_pagamento;
+			}
+			
+			return($this->cbtb_contrato->obtem($filtro));
+		}		
+		
 		public function obtemContratosFaturasAtrasadasBloqueios($carencia="",$tempo_banco=2,$id_cliente_produto="") {	
 			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
 			if(!$carencia) $carencia = $preferenciasCobranca["carencia"];
 			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco,$id_cliente_produto));
 		}
+		
+		public function obtemFaturaPorContratoPeriodo($data_referencia, $periodo, $id_contrato) {
+			return ($this->cbtb_fatura->obtemFaturaPorContratoPeriodo($data_referencia, $periodo, $id_contrato));
+		}			
 		
 		public function obtemFaturasPorRemessaGeraBoleto($id_remessa) {
 			return ($this->cbtb_fatura->obtemFaturasPorRemessaGeraBoleto($id_remessa));
