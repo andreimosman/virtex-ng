@@ -927,7 +927,7 @@
 		
 		
 		//Funçao de execução do Preferências HELPDESK
-		function executaPreferenciasHelpdesk() { echo "<PRE>"; print_r($_REQUEST); echo "</PRE>";
+		function executaPreferenciasHelpdesk() { 
 			$helpdesk = VirtexModelo::factory("helpdesk");
 		
 			$tela = @$_REQUEST["tela"];
