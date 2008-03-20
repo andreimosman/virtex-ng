@@ -6,9 +6,9 @@
 		public function __construct($bd=null) {
 			parent::__construct($bd);
 			$this->_campos	 	= array("id_cliente", "data_cadastro", "nome_razao", "tipo_pessoa", "rg_inscr", "rg_expedicao", "cpf_cnpj", 
-										"email", "endereco", "complemento", "id_cidade", "estado", "cep", "bairro", "fone_comercial",
+										"email", "email2", "email3", "email4","endereco", "complemento", "id_cidade", "estado", "cep", "bairro", "fone_comercial",
 										"fone_residencial", "fone_celular", "contato", "banco", "conta_corrente", "agencia", "dia_pagamento", 
-										"ativo", "obs", "provedor", "excluido", "info_cobranca", "id_condominio", "id_bloco"
+										"ativo", "obs", "provedor", "excluido", "info_cobranca", "id_condominio", "id_bloco", "nascimento"
 									);
 			$this->_chave 		= "id_cliente";
 			$this->_ordem 		= "nome_razao";
