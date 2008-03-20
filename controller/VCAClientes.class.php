@@ -116,6 +116,13 @@
 					if(isset($dados["id_condominio"]) && !$dados["id_condominio"]) unset($dados["id_condominio"]);
 					if(isset($dados["id_bloco"]) && !$dados["id_bloco"]) unset($dados["id_bloco"]);
 					
+					if($dados["nascimento"]) {
+						$datatemp = explode("/", $dados["nascimento"]);
+						$dados["nascimento"] = "$datatemp[2]-$datatemp[1]-$datatemp[0]";
+					} else {
+						$dados["nascimento"] = null;
+					}
+					
 					if( $this->id_cliente ) {
 						$this->clientes->altera($this->id_cliente, $dados);
 						$mensagem = "Cliente alterado com sucesso.";
