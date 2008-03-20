@@ -415,15 +415,20 @@ label {
 				</label>
 			</td>
 		</tr>
+
+		{if $data_instalacao}
 		<tr>
 			<td align="right" width="110"><label>Status:</label></td>
 			<td colspan='3' align='left'>
 				<select name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+					{if $status == 'I' }<option value="I" selected='selected'>Não Ativo</option>{/if}
 					<option value="A" {if $status == 'A'}selected='selected'{/if}>Ativo</option>
 					<option value="B" {if $status == 'B'}selected='selected'{/if}>Bloqueado</option>
 				</select>
 			</td>
 		</tr>
+		{/if}
+
 		<tr>
 			<td align="right" width="110"><label>Tipo:</label></td>
 			<td colspan='3' align='left'>
@@ -442,6 +447,30 @@ label {
 		</tr>
 		{/if}
 	</table>
+
+
+	<table cellspacing="0" cellpadding="0" class="boxContratacao">
+		<tr>
+			<th colspan=2 align="left">&nbsp; &nbsp;<label>Dados da Instala&ccedil;&atilde;o:</label></th>
+		</tr>
+		<tr>
+			<td align="right" width="110"><label>Dt. Instala&ccedil;&atilde;o:</label></td>
+			<td align='left'>
+				<input type="text" name="data_instalacao" id="data_instalacao" value='{$data_instalacao|date_format:"%d/%m/%Y"}' class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled || $data_instalacao}disabled='disabled'{/if} />
+			</td>
+		</tr>
+
+		{if $data_ativacao}
+		<tr>
+			<td align="right" width="110"><label>Dt. Ativa&ccedil;&atilde;o:</label></td>
+			<td align='left'>
+				<label><strong>{$data_ativacao|date_format:"%d/%m/%Y"}</strong></label>
+				<input type="hidden" name="conta_ativada" id="conta_ativada" value="1" />
+			</td>
+		</tr>
+		{/if}
+	</table>
+
 
 	{if $tipo == "BL"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">

@@ -1123,6 +1123,9 @@
 					$observacoes 		= @$_REQUEST["observacoes"];
 					$quota 				= @$_REQUEST["quota"];
 					$dominio 			= $preferenciasGerais["dominio_padrao"];
+					$data_instalacao 	= @$_REQUEST["data_instalacao"];
+					$data_ativacao 		= "";
+					$conta_ativada 		= @$_REQUEST["conta_ativada"];
 
 					$tipo_hospedagem	= @$_REQUEST["tipo_hospedagem"];
 					$dominio_hospedagem = @$_REQUEST["dominio_hospedagem"];
@@ -1133,6 +1136,8 @@
 
 					$selecao_redeip		= @$_REQUEST["selecao_redeip"];
 
+					if(!$status) $status = "N";
+					else if(!$data_instalacao && $status != "I" && !$conta_ativada) $data_ativacao = date("Y-m-d");
 
 					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
 					$url = "admin-clientes.php?op=conta&tipo=".@$contrato["tipo_produto"]."&id_cliente=".$this->id_cliente;
@@ -1147,7 +1152,7 @@
 							//die;
 
 							$contas->alteraContaBandaLarga($id_conta,$senha, $status,$observacoes,$conta_mestre,
-									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip,$alterar_endereco);
+									$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip, $alterar_endereco);
 
 							if($difEnderecoSetup){ 
 								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
@@ -1199,6 +1204,17 @@
 																@$contaAtual["upload_kbps"], @$contaNova["upload_kbps"],
 																@$contaAtual["download_kbps"], @$contaNova["download_kbps"]
 																);
+																
+						if($data_ativacao) {
+							$contas->alteraDataAtivacao($id_conta, $data_ativacao);
+						}
+						
+						if($data_instalacao) {
+							$data = explode("/", $data_instalacao);
+							$data_instalacao = "$data[2]-$data[1]-$data[0]"; 
+							$contas->alteraDataInstalacao($id_conta, $data_instalacao);
+							$contas->alteraConta($id_conta,$senha,"I");
+						}
 
 						$this->_view->atribui("url",$url);
 						$this->_view->atribui("mensagem",$msg);
