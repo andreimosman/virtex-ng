@@ -85,6 +85,7 @@ function cadastroVoltar() {
 
 function checkForm() {
 	frm = document.cadastro;
+	nascimento = document.getElementById('nascimento');
 
 	if( frm.nome_razao.value.length == 0 ) {
 		window.alert("O campo 'nome/razão social' não pode ser deixado em branco.");
@@ -103,6 +104,15 @@ function checkForm() {
 		 */
 		 validacaoDoctos = isCnpj(frm.cpf_cnpj.value);
 		 msgErro = "CNPJ Inválido";
+	}
+
+	if( nascimento.value ) {
+		if(!validaData( nascimento.value) ) {
+			alert("Data de nascimento inválida");
+			nascimento.value="";
+			nascimento.focus();
+			return false;
+		}
 	}
 
 	if( !validacaoDoctos ) {
@@ -136,16 +146,25 @@ function checkForm() {
 
 			<table width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="77%"><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Nome/Raz&atilde;o
+					<td width="100%" colspan=2><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Nome/Raz&atilde;o
 						Social</font> </p></td>
-					<td width="23%"> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Pessoa</font></p></td>
+				</tr>
+				<tr>
+					<td width="100%" colspan=2><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+						<input class="{$estilo}" style="width:100%" name="nome_razao" type="text"  id="nome_razao3" value="{$nome_razao}" size="38" maxlength="50" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"  tabindex="1">
+						</font></p></td>
+				</tr>
+
+				<tr>
+					<td width="50%"><p align="justify"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif">Data Nascimento</font> </p></td>
+					<td width="50%"> <p align="left"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Pessoa</font></p></td>
 				</tr>
 				<tr>
 					<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-						<input class="{$estilo}" style="width:200px" name="nome_razao" type="text"  id="nome_razao3" value="{$nome_razao}" size="38" maxlength="50" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"  tabindex="1">
+						<input class="{$estilo}" style="width:99%" name="nascimento" type="text"  id="nascimento" value='{$nascimento|date_format:"%d/%m/%Y"}' size="38" maxlength="50" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"  tabindex="1">
 						</font></p></td>
 					<td><p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-						<select class="{$estilo}" style="width:100px" name='tipo_pessoa' tabindex="2" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
+						<select class="{$estilo}" style="width:99%" name='tipo_pessoa' tabindex="2" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)">
 							{foreach key=id item=nome from=$lista_tp_pessoa}
 								<option value='{$id}'{if $id == $tipo_pessoa}selected{/if}>{$nome}</option>
 							{/foreach}
@@ -414,11 +433,31 @@ function checkForm() {
 			<td width=320>
 				<table width="100%" border=0 cellpadding="0" cellspacing="0">
 					<tr>
-						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Email</font></td>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Email 1</font></td>
 					</tr>
 					<tr>
-						<td>
-							<input class="{$estilo}" style="width:310px" tabindex="13" name="email"type="text" id="email7" value="{$email}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<td><input class="{$estilo}" style="width:310px" tabindex="13" name="email"type="text" id="email7" value="{$email}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+					</tr>
+
+					<tr>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Email 2</font></td>
+					</tr>
+					<tr>
+						<td><input class="{$estilo}" style="width:310px" tabindex="13" name="email2"type="text" id="email71" value="{$email2}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+					</tr>
+
+					<tr>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Email 3</font></td>
+					</tr>
+					<tr>
+						<td><input class="{$estilo}" style="width:310px" tabindex="13" name="email3"type="text" id="email72" value="{$email3}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+					</tr>
+
+					<tr>
+						<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Email 4</font></td>
+					</tr>
+					<tr>
+						<td><input class="{$estilo}" style="width:310px" tabindex="13" name="email4"type="text" id="email73" value="{$email4}" size="59" maxlength="255" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 					</tr>
 				</table>
 			</td>
