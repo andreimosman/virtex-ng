@@ -452,7 +452,7 @@
 			$prefGeral = $this->preferencias->obtemPreferenciasGerais();
 			$dominio_padrao = $prefGeral["dominio_padrao"];
 
-			$status_conta = "A";
+			$status_conta = "N";
 			$obs = "";
 			$conta_mestre = "t";
 

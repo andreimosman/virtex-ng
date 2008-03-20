@@ -503,6 +503,20 @@
 			$this->cntb_conta->altera($dados,array("id_conta"=>$id_conta));
 
 		}
+		
+		
+		public function alteraDataAtivacao($id_conta, $data_ativacao) {
+			$dados = array("data_ativacao" => $data_ativacao);
+			$filtro = array("id_conta" => $id_conta);
+			$this->cntb_conta->altera($dados, $filtro);
+		}
+
+
+		public function alteraDataInstalacao($id_conta, $data_instalacao) {
+			$dados = array("data_instalacao" => $data_instalacao);
+			$filtro = array("id_conta" => $id_conta);
+			$this->cntb_conta->altera($dados, $filtro);
+		}
 
 		/**
 		 * Altera uma conta de Banda Larga.
