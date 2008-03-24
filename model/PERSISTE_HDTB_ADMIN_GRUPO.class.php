@@ -49,7 +49,7 @@
 			return $retorno;
 		}
 		
-		
+		// Retorna a lista de grupos que pertencem ao admin
 		public function obtemListaGruposPertencentesAdmin($id_admin, $ativo=NULL) {
 		
 			$sql  = "SELECT ";
@@ -68,6 +68,3 @@
 	}
 		
 ?>
-
-
- 
