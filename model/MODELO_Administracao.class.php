@@ -32,7 +32,7 @@
 			return ($this->adtb_admin->obtemUnico(array("admin"=>$username)));
 		}
 
-		public function cadastraAdmin($id_admin, $admin, $email, $nome, $senha, $status, $vendedor, $comissionado, $primeiro_login) {
+		public function cadastraAdmin($admin, $email, $nome, $senha, $status, $vendedor, $comissionado, $primeiro_login) {
 			$dados = array("admin"=>trim($admin), "email"=>trim($email), "nome"=>trim($nome), "status"=>trim($status), "senha"=>md5(trim($senha)), "vendedor" => $vendedor, "comissionado" => $comissionado, "tipo_admin" => $tipo_admin, "primeiro_login"=>$primeiro_login);
 
 			return ($this->adtb_admin->insere($dados));
