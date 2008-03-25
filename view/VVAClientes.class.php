@@ -273,7 +273,7 @@
 						
 			switch($this->obtem("tela")) {
 				case 'cadastro':
-					$titulo .= " :: Novo Chamado";
+					$titulo .= " :: Novo Chamado/Ocorr&ecirc;ncia";
 					$this->_file = "clientes_helpdesk_chamado_novo.html";
 					break;
 

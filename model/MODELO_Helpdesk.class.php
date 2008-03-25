@@ -124,7 +124,7 @@
 		/**
 		 * Abertura de chamado ou ocorrência.
 		 */
-		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_serdor=0,$id_nas=0,$id_pop=0,$id_chamado_pai=null) {
+		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_servidor=0,$id_nas=0,$id_pop=0,$id_chamado_pai=null) {
 			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_grupo, "assunto" => $assunto, "descricao" => $descricao, "origem" => $origem, "classificacao" => $classificacao);
 			
 
@@ -238,11 +238,14 @@
 		public function alteraStatus($id_chamado, $status, $id_admin, $comentario="") {
 
 			$chamado = $this->obtemChamadoPeloId($id_chamado);
+			
 			if( !count($chamado) ) return 0;
 			
 			$listaStatus = $this->obtemStatusChamado();
 			
-			$titulo = "Status alterado de '" . $listaStatus[$chamado["status"]] . "' para '" . $listaStatus[$status]. "'";
+			$antigo_status = @$listaStatus[$chamado["status"]];
+			
+			$titulo = "Status alterado de '" . $antigo_status . "' para '" . $listaStatus[$status]. "'";
 			
 			$this->adicionaHistoricoChamado($id_chamado, $titulo, $comentario, $id_admin);
 			
@@ -459,7 +462,7 @@
 		/**
 		 * Registra informaçòes da ordem de serviço
 		 */
-		public function registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $agendamento, $período) {
+		public function registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $agendamento, $periodo) {
 		
 			$dados = array( 
 				"id_chamado" => $id_chamado, 
