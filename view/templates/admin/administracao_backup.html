@@ -49,9 +49,9 @@ BACKUP & RECUPERAÇÃO
 <br /><br />
 <table class="lista" border="1" width="400px" cellpadding="0" cellspacing="0">
 	<tr>
-		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&tela=inicio">Início</a></td>
-		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&tela=fazer_backup">Fazer Backup</a></td>
-		<td rowspan="2" align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&tela=historico">Histórico</a></td>
+		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&ferramenta=backup&tela=inicio">Início</a></td>
+		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&ferramenta=backup&tela=fazer_backup">Fazer Backup</a></td>
+		<td rowspan="2" align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&ferramenta=backup&tela=historico">Histórico</a></td>
 	</tr>
 
 </table>
@@ -65,64 +65,80 @@ Acione o suporte tecnico <b>Mosman Consultoria</b> na necessidade de efetuar uma
 </div>
 
 <br /><br />
-{if $tela == 'inicio' || !$tela == 'inicio'}
+{if $tela == 'inicio' || $tela == 'historico'}
 <div id="cont" align="center">
-<span class="apoio">Últimos Backups Realizados</span>
-	<table class="lista" border="1" width="400px" cellpadding="0" cellspacing="0">
+<span class="apoio">{if $tela=='historico'}Histórico dos {else}Últimos {/if}Backups Realizados</span>
+	<table class="lista" border="0" width="600px" cellpadding="0" cellspacing="0">
 		<tr>
 			<th>Data</th>
 			<th>Status</th>
 			<th>Admin</th>
-			<th>&nbsp;</th>
+			<th>Arquivos</th>
 		</tr>
+		{foreach name=backup item=backup from=$backups}
+		{if ($smarty.foreach.backup.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
-			<td align="center">Oie</td>
+			<td class='{$estilo}' align="center" valign="top">{$backup.datahora|date_format:"%d/%m/%Y %H:%M:%S"}</td>
+			<td class='{$estilo}' align="center" valign="top">{$backup.status}</td>
+			<td class='{$estilo}' align="left" valign="top">{if !$backup.id_admin}** Automático **{else}{$backup.admin.admin}{/if}</td>
+			<td class='{$estilo}' align="left" valign="top">
+				<table cellspacing=0 cellpadding=0 width='100%' style='font-size: 9px'>
+				{foreach item=arquivo from=$backup.arquivos}
+					<tr>
+						<td align="right" width=90 style="padding-right: 10px">{$arquivo.tamanho}</td>
+						<td align="left">
+							{if $backup.status == 'OK' && $arquivo.filesize > 0}<a href='admin-administracao.php?op=ferramentas&ferramenta=backup&tela=download&id_arquivo={$arquivo.id_arquivo}'>{/if}{$arquivo.nome_sem_prefixo}{if $backup.status == 'OK' && $arquivo.filesize > 0}</a>{/if}<br>
+						</td>
+					</tr>
+				{/foreach}
+				</table>
+			</td>
 		</tr>
-		
+		{/foreach}
+
 	</table>
 </div>
 <br /><br />
 {/if}
 {if $tela == 'fazer_backup'}
-<div id="backup" align="center">
-	<table class="lista" border="0" width="400px" cellpadding="0" cellspacing="0">
-		<tr><th colspan="2">Marque quais backups você quer efetuar</th></tr>
-		<tr><td align="right">Configurações <input type="checkbox" name="123" value="123" /></td></tr>
-		<tr><td align="right">Banco de Dados <input type="checkbox" name="123" value="123" /></td></tr>
-		<tr><td align="right">Sistema de arquivos <input type="checkbox" name="123" value="123" /></td></tr>
-		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-		<tr><th colspan="2">Dados (pode demorar alguns minutos)</th></tr>
-		<tr><td align="right">Hospedagens <input type="checkbox" name="123" value="123" /></td></tr>
-		<tr><td align="right">Emails <input type="checkbox" name="123" value="123" /></td></tr>
-		<tr><td align="right">Estatisticas <input type="checkbox" name="123" value="123" /></td></tr>
-		<tr><td>&nbsp;</td><td><input type="submit" name="123" value="Fazer Backup" /></td></tr>
-	</table>
-	
-	
-</div>
-<br /><br />
-{/if}
-{if $tela == 'historico'}
-<div id="cont" align="center">
-<span class="apoio">Histórico de Backups</span>
-	<table class="lista" border="0" width="400px" cellpadding="0" cellspacing="0">
-		<tr>
-			<th align="left">Data</th>
-			<th>Status</th>
-			<th>Admin</th>
-			<th>&nbsp;</th>
-		</tr>
-		<tr>
-			<td>oie</td>
-			<td align="center">oie</td>
-			<td align="center">oie</td>
-			<td align="center">oie</td>
-		</tr>
 
-</div>
+<script language="JavaScript">
+{literal}
+
+function verificaBackup() {
+
+
+	if( !document.getElementById("backupC").checked && !document.getElementById("backupE").checked && !document.getElementById("backupD").checked ) {
+		window.alert("Selecione ao menos uma das opções de backup");
+		return false;
+	}
+
+	return true;
+
+}
+
+{/literal}
+</script>
+
+<form method="post" action="admin-administracao.php" onSubmit="return verificaBackup();">
+<input type="hidden" name="op" value="ferramentas">
+<input type="hidden" name="ferramenta" value="backup">
+<input type="hidden" name="tela" value="fazer_backup">
+	<table class="lista" border="0" width="600px" cellpadding="0" cellspacing="0" align="center">
+		<tr><th colspan="3">Selecione o backup</th></tr>
+		<tr>
+			<td align="right"><input type="checkbox" name="backup[C]" value="1" id="backupC" />Configurações do VA</td>
+			<td align="right"><input type="checkbox" name="backup[E]" value="1" id="backupE"/>Banco de Dados (estrutura)</td>
+			<td align="right"><input type="checkbox" name="backup[D]" value="1" id="backupD" checked/>Banco de Dados (dados)</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="center">
+				<input type="submit" name="submit" value="Gerar Backup" class="botao">
+			</td>
+		</tr>
+	</table>
+</form>
+<br /><br />
 {/if}
 </body>
 </html>

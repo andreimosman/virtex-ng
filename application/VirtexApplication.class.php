@@ -35,13 +35,13 @@
 		protected $ext_iface;	// Interface externa
 		
 		protected $infoNAS;
-
-
+		
 		/**
 		 * Construtor.
 		 */
 		public function __construct() {
 			parent::__construct();
+			
 			$this->options = array();
 			$this->params = array();
 			
@@ -156,6 +156,17 @@
 		public function executa() {
 		
 		}
+
+		protected function obtemOpcao($opcao) {
+			for($i=0;$i<count($this->options);$i++) {			
+				if( @$this->options[$i][0] == $opcao) {
+					return($this->options[$i]);
+				}
+			}
+			
+			return(null);
+		}
+
 
 	}
 

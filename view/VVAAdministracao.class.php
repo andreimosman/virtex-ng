@@ -123,9 +123,19 @@
 
 		protected function exibeFerramentas() {
 			// echo "EF";
-			$this->_file = "administracao_backup.html";
-
-			$titulo = "Backup";
+			
+			$tela = $this->obtem("tela");
+			
+			if( $this->obtem("ferramenta") == "backup" ) {
+				$this->_file = "administracao_backup.html";
+				$titulo = "Backup";
+				
+				if( $tela == "historico" ) {
+					$titulo .= " :: Historico";
+				} else if( $tela == "fazer_backup" ) {
+					$titulo .= " :: Fazer Backup";
+				}
+			}
 
 
 			$this->atribui("titulo", $titulo);
