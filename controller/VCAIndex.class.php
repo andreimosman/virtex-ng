@@ -113,9 +113,11 @@
 			
 			$menuCadastro->addSeparator();
 			$menuCadastroRelatorios	= new MMenu();
-			$menuCadastroRelatorios->addItem("Carga por AP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=ap", $target);
-			$menuCadastroRelatorios->addItem("Carga por POP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=pop", $target);
-			$menuCadastroRelatorios->addItem("Carga por NAS", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=nas", $target);			
+			$menuCadastroRelatoriosEquipamentos = new MMenu();			
+			$menuCadastroRelatoriosEquipamentos->addItem("Carga por AP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=ap", $target);
+			$menuCadastroRelatoriosEquipamentos->addItem("Carga por POP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=pop", $target);
+			$menuCadastroRelatoriosEquipamentos->addItem("Carga por NAS", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=nas", $target);			
+			$menuCadastroRelatorios->addSubmenu("Equipamentos",$menuCadastroRelatoriosEquipamentos);
 			$menuCadastro->addSubmenu("Relatórios", $menuCadastroRelatorios);
 
 
@@ -142,41 +144,51 @@
 			$menuFinanceiroCobranca->addItem("Gerar Cobrança/Boletos", "admin-financeiro.php?op=gerar_cobranca", $target);
 			$menuFinanceiroCobranca->addItem("Troca de Arquivos", "admin-financeiro.php?op=arquivos",$target);
 
-			$menuFinanceiroCobranca->addSeparator();
-			$menuFinanceiroCobrancaRelatorios = new MMenu();
-			$menuFinanceiroCobrancaRelatorios->addItem("Atrasos", "admin-financeiro.php?op=relatorios_cobranca&relatorio=atrasos", $target);
-			$menuFinanceiroCobrancaRelatorios->addItem("Reagendamentos", "admin-financeiro.php?op=relatorios_cobranca&relatorio=reagendamentos", $target);
-			$menuFinanceiroCobrancaRelatorios->addItem("Bloqueios e Desbloqueios", "admin-financeiro.php?op=relatorios_cobranca&relatorio=bloqueios_desbloqueios", $target);
-			$menuFinanceiroCobrancaRelatorios->addSeparator();
-			$menuFinanceiroCobrancaRelatorios->addItem("Emails de Cobrança", "admin-financeiro.php?op=relatorios_cobranca&relatorio=emails_cobranca", $target);
-			$menuFinanceiroCobrancaRelatorios->addSeparator();
-			$menuFinanceiroCobrancaRelatorios->addItem("Cortesias", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cortesias", $target);
-			$menuFinanceiroCobrancaRelatorios->addSeparator();
-			$menuFinanceiroCobrancaRelatorios->addItem("Adesões", "admin-financeiro.php?op=relatorios_cobranca&relatorio=adesoes", $target);
-			$menuFinanceiroCobrancaRelatorios->addItem("Cancelamentos", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cancelamentos", $target);
-			$menuFinanceiroCobrancaRelatorios->addItem("Evolução", "admin-financeiro.php?op=relatorios_cobranca&relatorio=evolucao", $target);
-			$menuFinanceiroCobrancaRelatorios->addSeparator();
-			$menuFinanceiroCobrancaRelatorios->addItem("Clientes por Produto", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cliente_produto", $target);
-			$menuFinanceiroCobrancaRelatorios->addItem("Clientes por Tipo Produto", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cliente_tipo_produto", $target);
-			$menuFinanceiroCobranca->addSubmenu("Relatórios",$menuFinanceiroCobrancaRelatorios);
+			// $menuFinanceiroCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca = new MMenu();
+			$menuFinanceiroRelatoriosCobranca->addItem("Atrasos", "admin-financeiro.php?op=relatorios_cobranca&relatorio=atrasos", $target);
+			$menuFinanceiroRelatoriosCobranca->addItem("Reagendamentos", "admin-financeiro.php?op=relatorios_cobranca&relatorio=reagendamentos", $target);
+			$menuFinanceiroRelatoriosCobranca->addItem("Bloqueios e Desbloqueios", "admin-financeiro.php?op=relatorios_cobranca&relatorio=bloqueios_desbloqueios", $target);
+			$menuFinanceiroRelatoriosCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca->addItem("Emails de Cobrança", "admin-financeiro.php?op=relatorios_cobranca&relatorio=emails_cobranca", $target);
+			$menuFinanceiroRelatoriosCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca->addItem("Cortesias", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cortesias", $target);
+			$menuFinanceiroRelatoriosCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca->addItem("Adesões", "admin-financeiro.php?op=relatorios_cobranca&relatorio=adesoes", $target);
+			$menuFinanceiroRelatoriosCobranca->addItem("Cancelamentos", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cancelamentos", $target);
+			$menuFinanceiroRelatoriosCobranca->addItem("Evolução", "admin-financeiro.php?op=relatorios_cobranca&relatorio=evolucao", $target);
+			$menuFinanceiroRelatoriosCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca->addItem("Clientes por Produto", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cliente_produto", $target);
+			$menuFinanceiroRelatoriosCobranca->addItem("Clientes por Tipo Produto", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cliente_tipo_produto", $target);
+			// $menuFinanceiroCobranca->addSubmenu("Relatórios",$menuFinanceiroCobrancaRelatorios);
 
 			$menuFinanceiro->addSubmenu("Cobrança",$menuFinanceiroCobranca);
 			
-			$menuFinanceiroFaturamento = new MMenu();
-			$menuFinanceiroFaturamentoRelatorios 	= new MMenu();
-			$menuFinanceiroFaturamentoRelatorios->addItem("Faturamento Anual", "admin-financeiro.php?op=relatorios_faturamento&relatorio=faturamento", $target);
-			$menuFinanceiroFaturamentoRelatorios->addItem("Faturamento por Produto ", "admin-financeiro.php?op=relatorios_faturamento&relatorio=por_produto", $target);
-			$menuFinanceiroFaturamentoRelatorios->addItem("Faturamento por Período ", "admin-financeiro.php?op=relatorios_faturamento&relatorio=por_periodo", $target);
-			$menuFinanceiroFaturamentoRelatorios->addSeparator();
-			$menuFinanceiroFaturamentoRelatorios->addItem("Previsão de Faturamento", "admin-financeiro.php?op=relatorios_faturamento&relatorio=previsao", $target);
-			$menuFinanceiroFaturamento->addSubmenu("Relatorios", $menuFinanceiroFaturamentoRelatorios);
-			$menuFinanceiro->addSubmenu("Faturamento", $menuFinanceiroFaturamento);
+			// $menuFinanceiroFaturamento = new MMenu();
+			$menuFinanceiroRelatoriosFaturamento = new MMenu();
+			$menuFinanceiroRelatoriosFaturamento->addItem("Faturamento Anual", "admin-financeiro.php?op=relatorios_faturamento&relatorio=faturamento", $target);
+			$menuFinanceiroRelatoriosFaturamento->addItem("Faturamento por Produto ", "admin-financeiro.php?op=relatorios_faturamento&relatorio=por_produto", $target);
+			$menuFinanceiroRelatoriosFaturamento->addItem("Faturamento por Período ", "admin-financeiro.php?op=relatorios_faturamento&relatorio=por_periodo", $target);
+			$menuFinanceiroRelatoriosFaturamento->addSeparator();
+			$menuFinanceiroRelatoriosFaturamento->addItem("Previsão de Faturamento", "admin-financeiro.php?op=relatorios_faturamento&relatorio=previsao", $target);
+			//$menuFinanceiroFaturamento->addSubmenu("Relatorios", $menuFinanceiroFaturamentoRelatorios);
+			
+			// $menuFinanceiro->addSubmenu("Faturamento", $menuFinanceiroFaturamento);
 			
 			$menu->addSubmenu("Financeiro", $menuFinanceiro);
+
+
 			
 			$menuFinanceiro->addSeparator();
 			$menuFinanceiroRelatorios = new MMenu();
 			$menuFinanceiroRelatorios->addItem("Fluxo de Caixa", "admin-financeiro.php?op=relatorios&relatorio=faturamento", $target);
+			$menuFinanceiroRelatorios->addSubmenu("Faturamento", $menuFinanceiroRelatoriosFaturamento );
+			$menuFinanceiroRelatorios->addSubmenu("Cobrança", $menuFinanceiroRelatoriosCobranca );
+			
+			
+			
+			
+			
 			$menuFinanceiro->addSubmenu("Relatórios", $menuFinanceiroRelatorios);
 			
 			
@@ -198,7 +210,6 @@
 			$menuAdministracao->addItem("Alterar Minha Senha", "admin-administracao.php?op=altsenha", $target);
 			
 			$menuAdministracaoPreferencias 	= new MMenu();
-			$menuAdministracaoPreferencias->addItem("Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
 			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("Central do Assinante","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			if($desenvolvimento) $menuAdministracaoPreferencias->addItem("E-mails","admin-administracao.php?op=preferencias&tela=resumo", $target);
 			if($desenvolvimento) $menuAdministracaoPreferencias->addSeparator();
@@ -206,7 +217,8 @@
 			$menuAdministracaoPreferencias->addSeparator();
 			$menuAdministracaoPreferencias->addItem("Preferências Gerais","admin-administracao.php?op=preferencias&tela=geral", $target);
 			$menuAdministracaoPreferencias->addItem("Preferências Provedor","admin-administracao.php?op=preferencias&tela=provedor", $target);
-			$menuAdministracaoPreferencias->addItem("Preferencias Cobrança","admin-administracao.php?op=preferencias&tela=cobranca", $target);
+			$menuAdministracaoPreferencias->addItem("Preferências Cobrança","admin-administracao.php?op=preferencias&tela=cobranca", $target);
+			$menuAdministracaoPreferencias->addItem("Preferências Helpdesk","admin-administracao.php?op=preferencias&tela=helpdesk", $target);
 			$menuAdministracaoPreferencias->addSeparator();
 			$menuAdministracaoPreferencias->addItem("Modelos de Contrato","admin-administracao.php?op=preferencias&tela=modelos", $target);
 			$menuAdministracaoPreferencias->addSeparator();
@@ -216,12 +228,12 @@
 			$menuAdministracaoPreferencias->addItem("Links Externos","admin-administracao.php?op=preferencias&tela=links", $target);
 			$menuAdministracaoPreferencias->addSeparator();
 			$menuAdministracaoPreferencias->addItem("Registro do Software","admin-administracao.php?op=preferencias&tela=registro", $target);
-			$menuAdministracao->addSubmenu("Preferências", $menuAdministracaoPreferencias);				
+			$menuAdministracao->addSubmenu("Preferências", $menuAdministracaoPreferencias);
 
 
 			$menuAdministracao->addSeparator();
 			$menuAdministracaoFerramentas = new MMenu();
-			$menuAdministracaoFerramentas->addItem("Envio de E-mails", "admin-administracao.php?op=ferramentas&ferramenta=backup", $target);
+			// $menuAdministracaoFerramentas->addItem("Envio de E-mails", "admin-administracao.php?op=ferramentas&ferramenta=backup", $target);
 			$menuAdministracaoFerramentas->addItem("Backup & Restore", "admin-administracao.php?op=ferramentas&ferramenta=backup", $target);
 			$menuAdministracao->addSubmenu("Ferramentas", $menuAdministracaoFerramentas);
 

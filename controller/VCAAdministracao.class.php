@@ -152,6 +152,8 @@
 		}
 		
 		protected function executaFerramentaBackup() {
+			$this->requirePrivGravacao("_ADMINISTRACAO_FERRAMENTAS_BACKUP");
+
 			$backup = VirtexModelo::factory("backup");
 			
 			$tela = $this->_view->obtem("tela");
@@ -240,7 +242,7 @@
 
 
 		}
-
+		
 		protected function executaRelatorioEventos() {
 
 			$this->requirePrivLeitura("_ADMINISTRACAO_RELATORIOS");
