@@ -22,6 +22,14 @@
 					break;
 				case 'administradores':
 					$itensMenu[] = array("texto" => "Novo: Administrador", "url"=> "admin-administracao.php?op=administradores&tela=cadastro");
+					break;
+				case 'ferramentas':
+					if( $this->obtem("ferramenta") == "backup" ) {
+						$itensMenu[] = array("texto" => "Resumo", "url" => "admin-administracao.php?op=ferramentas&ferramenta=backup&tela=inicio");
+						$itensMenu[] = array("texto" => "Fazer Backup", "url" => "admin-administracao.php?op=ferramentas&ferramenta=backup&tela=fazer_backup");
+						$itensMenu[] = array("texto" => "Historico", "url" => "admin-administracao.php?op=ferramentas&ferramenta=backup&tela=historico");
+					}
+					break;
 				default:
 					// Do something
 			}
@@ -125,6 +133,8 @@
 			// echo "EF";
 			
 			$tela = $this->obtem("tela");
+			
+			$this->configureMenu($this->obtemItensMenu(),false,true);
 			
 			if( $this->obtem("ferramenta") == "backup" ) {
 				$this->_file = "administracao_backup.html";

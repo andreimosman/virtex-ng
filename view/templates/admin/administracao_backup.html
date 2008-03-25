@@ -43,23 +43,8 @@
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="administracao_header.html"}
-
-<div id="cont" align="center">
-BACKUP & RECUPERAÇÃO
-<br /><br />
-<table class="lista" border="1" width="400px" cellpadding="0" cellspacing="0">
-	<tr>
-		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&ferramenta=backup&tela=inicio">Início</a></td>
-		<td align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&ferramenta=backup&tela=fazer_backup">Fazer Backup</a></td>
-		<td rowspan="2" align="center" class="cont_int"><a href="admin-administracao.php?op=ferramentas&ferramenta=backup&tela=historico">Histórico</a></td>
-	</tr>
-
-</table>
-
-</div>
-<br />
-<div id="trecho" align="center">
-A restauração do backup efetuado, deverá ser feita por
+<div id="trecho" align="justify">
+<STRONG>NOTA:</STRONG> A restauração do backup efetuado, deverá ser feita por
 tecnicos homologados para garantir a segurança de seus dados
 Acione o suporte tecnico <b>Mosman Consultoria</b> na necessidade de efetuar uma recuperação de backup.
 </div>
@@ -124,12 +109,12 @@ function verificaBackup() {
 <input type="hidden" name="op" value="ferramentas">
 <input type="hidden" name="ferramenta" value="backup">
 <input type="hidden" name="tela" value="fazer_backup">
-	<table class="lista" border="0" width="600px" cellpadding="0" cellspacing="0" align="center">
-		<tr><th colspan="3">Selecione o backup</th></tr>
+	<table class="lista" border="0" width="500px" cellpadding="0" cellspacing="0" align="center">
+		<tr><th colspan="3">Backup do Sistema</th></tr>
 		<tr>
-			<td align="right"><input type="checkbox" name="backup[C]" value="1" id="backupC" />Configurações do VA</td>
-			<td align="right"><input type="checkbox" name="backup[E]" value="1" id="backupE"/>Banco de Dados (estrutura)</td>
-			<td align="right"><input type="checkbox" name="backup[D]" value="1" id="backupD" checked/>Banco de Dados (dados)</td>
+			<td align="left"><input type="checkbox" name="backup[C]" value="1" id="backupC" />Configurações do VA</td>
+			<td align="left"><input type="checkbox" name="backup[E]" value="1" id="backupE"/>Banco de Dados (estrutura)</td>
+			<td align="left"><input type="checkbox" name="backup[D]" value="1" id="backupD" checked/>Banco de Dados (dados)</td>
 		</tr>
 		<tr>
 			<td colspan="3" align="center">
