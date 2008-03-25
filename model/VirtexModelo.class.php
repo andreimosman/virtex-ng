@@ -61,6 +61,9 @@
 					case 'caixa':
 						self::$modelosInstanciados[$modelo] = new MODELO_FluxoCaixa();
 						break;
+					case 'backup':
+						self::$modelosInstanciados[$modelo] = new MODELO_Backup();
+						break;
 					default:
 						throw new ExcecaoModeloInexistente();
 

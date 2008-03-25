@@ -123,17 +123,25 @@
 		protected function executaFerramentas() {
 			$ferramenta = @$_REQUEST["ferramenta"];
 			$this->_view->atribuiVisualizacao("ferramentas");
+			
+			
+			if( !$ferramenta ) {
+				$ferramenta = "backup";
+			}
+			
+			$this->_view->atribui("ferramenta",$ferramenta);
 
 			$tela = @$_REQUEST["tela"];
 			$this->_view->atribui("tela",$tela);
+
 
 			switch($ferramenta) {
 				case 'backup':
 					/**
 					 * Rotina de backup
 					 */
-
-
+					$this->executaFerramentaBackup();
+					
 
 
 
@@ -141,6 +149,76 @@
 					break;
 
 			}
+		}
+		
+		protected function executaFerramentaBackup() {
+			$backup = VirtexModelo::factory("backup");
+			
+			$tela = $this->_view->obtem("tela");
+			if( !$tela ) {
+				$tela = "inicio";
+			}
+			
+			$this->_view->atribui("tela",$tela);
+			
+			if( $tela == "inicio" || $tela == "historico" ) {
+				$limite = ($tela == "historico"?0:5);
+				$backups = $backup->obtemBackups($limite);
+				$this->_view->atribui("backups", $backups);
+			} else if( $tela == "fazer_backup" ) {
+				$submit = @$_REQUEST["submit"];
+				$opBackup = @$_REQUEST["backup"];
+
+				$dadosLogin = $this->_login->obtem("dados");
+
+				if( $submit && is_array($opBackup) ) {
+					// echo "GERAR BACKUP!!!";
+					// echo "PHP: " . ;
+					
+					$param = "-R " . $dadosLogin["id_admin"];
+					
+					if( @$opBackup["D"] ) {
+						$param .= " -D";
+					}
+					
+					if( @$opBackup["E"] ) {
+						$param .= " -E";
+					}
+
+					if( @$opBackup["C"] ) {
+						$param .= " -C";
+					}
+										
+					$comando = $this->SO->obtemPHP() . " bin/vtx-backup.php " . trim($param);
+					$this->SO->executa($comando);
+					
+					$url = "admin-administracao.php?op=ferramentas&ferramenta=backup&tela=inicio";
+					$mensagem = "Backup realizado com sucesso.";
+					$this->_view->atribui("url",$url);
+					$this->_view->atribui("mensagem",$mensagem);
+					$this->_view->atribui("target","_self");
+					$this->_view->atribuiVisualizacao("msgredirect");
+					return;
+				}
+				
+				//echo "<pre>";
+				//print_r($opBackup);
+				//echo "</pre>";
+				
+			
+			} else if( $tela == "download" ) {
+				// echo "DOWNLOAD";
+				$id_arquivo = @$_REQUEST["id_arquivo"];
+				if( $id_arquivo ) {
+					$arquivo = $backup->obtemArquivo($id_arquivo);
+					
+					$this->criaDownload($arquivo["path"], $arquivo["nome"]);
+					
+				}
+				
+				return;
+			}
+		
 		}
 
 		protected function executaRelatorios() {
@@ -321,15 +399,16 @@
 					break;
 				case 'helpdesk':
 					$this->executaPreferenciasHelpdesk();
+					break;
 				default:
 					// Do Something
+					// $this->executaValidacaoPreferencias();
 					break;
 				
 			}
 			
 		}
-		
-		
+				
 		protected function executaPreferenciasResumo() {
 			$acao = @$_REQUEST["acao"];
 			
