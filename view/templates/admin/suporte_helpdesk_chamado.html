@@ -39,6 +39,68 @@ label {
 	<br /><br />
 	<center>
 
+	<!-- Ordens de serviço do usuário -->
+
+	<table border=0 width="700">
+		<tr>
+			<td align="left"><label><b>Ordens de Serviço de {$dadosLogin.nome}</b></label></td>
+		</tr>
+		<tr>
+			<td>
+				<table class='lista' border=0 width='100%' cellpadding=0 cellspacing=0 align="center">
+					{if count($os_usuario)}
+					<tr>
+						<th align="center">COD</th>
+						<th align="center">ABERTURA</th>
+						<th align="center">STAT.</th>
+						<th align="center">GRUPO/RESP</th>
+						<th align="left">ASSUNTO</th>
+					</tr>
+					{/if}
+					{foreach name=registros item=r from=$os_usuario}
+					{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+					<tr>
+						<td align='right' align="center" width="40" class='{$estilo}'><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.id_chamado|string_format:"%05d"}</a></td>
+						<td class='{$estilo}' align="center" width="140"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
+						<td class='{$estilo}' align="center" width="50"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.status}</a></td>
+						<td class='{$estilo}' align="center" width="150"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$grupos[$r.id_grupo]} {if $r.responsavel}<br /><b>{$responsaveis[$r.responsavel]}</b>{/if}</a></td>
+						<td class='{$estilo}' width="300"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.assunto}</a></td>
+					</tr>
+					{foreachelse}
+					<tr>
+						<td height="110" valign="middle" align="center"><B>VOCÊ NÃO POSSUI ORDENS DE SERVIÇO</B></td>
+					</tr>
+					{/foreach}
+
+
+					{if count($chamados_pendentes)}
+					<tr>
+						<td colspan="6" style="border-top: 1px solid #000">
+							<table border=0 >
+								<tr>
+									<td><strong>Legenda</strong><td>
+									<td align="right"><b>STATUS:</b><td>
+									<td align="left"><b>A</b> (Aberto) - <b>N</b> (Novo) - <b>P</b> (Pendente com o Responsável) - <b>PC</b> (Pendente com o Cliente)<td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					{/if}
+
+				</table>
+			</td>
+		</tr>
+	</table>
+
+
+
+	<br />
+	<div style="height:1px;width:700px; border-top:1px solid #ccc"></div>
+	<br />
+
+
+
+	<!-- Chamados do usuário -->
 	<table border=0 width="700">
 		<tr>
 			<td align="left"><label><b>Chamados Abertos de {$dadosLogin.nome}</b></label></td>
@@ -46,25 +108,23 @@ label {
 		<tr>
 			<td>
 				<table class='lista' border=0 width='100%' cellpadding=0 cellspacing=0 align="center">
-					{if count($chamados_pendentes)}
+					{if count($chamados_usuario)}
 					<tr>
 						<th align="center">COD</th>
 						<th align="center">ABERTURA</th>
-						<th align="center">TIPO</th>
 						<th align="center">STAT.</th>
 						<th align="center">GRUPO/RESP</th>
 						<th align="left">ASSUNTO</th>
 					</tr>
 					{/if}
-					{foreach name=registros item=r from=$chamados_pendentes}
+					{foreach name=registros item=r from=$chamados_usuario}
 					{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 					<tr>
 						<td align='right' align="center" width="40" class='{$estilo}'><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.id_chamado|string_format:"%05d"}</a></td>
 						<td class='{$estilo}' align="center" width="140"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
-						<td class='{$estilo}' align="center" width="50"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.tipo}</a></td>
 						<td class='{$estilo}' align="center" width="50"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.status}</a></td>
 						<td class='{$estilo}' align="center" width="150"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$grupos[$r.id_grupo]} {if $r.responsavel}<br /><b>{$responsaveis[$r.responsavel]}</b>{/if}</a></td>
-						<td class='{$estilo}' width="250"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.assunto}</a></td>
+						<td class='{$estilo}' width="300"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$r.id_cliente}')">{$r.assunto}</a></td>
 					</tr>
 					{foreachelse}
 					<tr>
@@ -79,12 +139,6 @@ label {
 							<table border=0 >
 								<tr>
 									<td><strong>Legenda</strong><td>
-									<td align="right"><b>TIPO:</b><td>
-									<td align="left"><b>CH</b> (Chamado) - <b>OC</b> (Pendente com o Responsável) - <b>OS</b> (Ordem de Serviço)
-								</tr>
-
-								<tr>
-									<td><strong>&nbsp;</strong><td>
 									<td align="right"><b>STATUS:</b><td>
 									<td align="left"><b>A</b> (Aberto) - <b>N</b> (Novo) - <b>P</b> (Pendente com o Responsável) - <b>PC</b> (Pendente com o Cliente)<td>
 								</tr>

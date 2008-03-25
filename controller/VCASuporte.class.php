@@ -343,6 +343,17 @@
 				default:
 					$chamados_pendentes = $this->helpdesk->obtemChamadosPendentesPeloResponsavel($dadosLogin["id_admin"]);
 					
+					$chamados_usuario = array();
+					$os_usuario = array();
+					
+					foreach($chamados_pendentes as $chave => $valor) {
+						if($valor["tipo"] == "OS")
+							array_push($os_usuario, $valor);
+						else if($valor["tipo"] == "CH")
+							array_push($chamados_usuario, $valor);
+					}
+					
+					
 					$array_grupos = $this->helpdesk->obtemListaGrupos();
 					$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();				
 					
@@ -366,21 +377,23 @@
 					//matriz de responsáveis(remake)
 					$responsaveis = array();
 					foreach($array_responsaveis as $chave => $valor) {
-						$responsaveis[$valor[id_admin]] = $valor["admnome"];
+						$responsaveis[$valor["id_admin"]] = $valor["admnome"];
 					}
 
 					//matriz de grupos(remake)
 					$grupos = array();
 					foreach($array_grupos as $chave => $valor) {
-						$grupos[$valor[id_grupo]] = $valor["nome"];
+						$grupos[$valor["id_grupo"]] = $valor["nome"];
 					}
 					
 					$this->_view->atribui("chamados_por_grupo",$chamados_por_grupo);
 					$this->_view->atribui("responsaveis",$responsaveis);
 					$this->_view->atribui("grupos",$grupos);
-					$this->_view->atribui("tipos_chamado",$tipos_chamado);
-					$this->_view->atribui("chamados_terminados",$chamados_terminados);
+					//$this->_view->atribui("tipos_chamado",$tipos_chamado);
+					//$this->_view->atribui("chamados_terminados",$chamados_terminados);
 					$this->_view->atribui("chamados_pendentes", $chamados_pendentes);
+					$this->_view->atribui("chamados_usuario", $chamados_usuario);
+					$this->_view->atribui("os_usuario", $os_usuario);
 					break;
 			}
 			
