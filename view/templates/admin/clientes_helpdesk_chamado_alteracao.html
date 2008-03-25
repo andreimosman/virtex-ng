@@ -641,6 +641,7 @@ label {
 {/if}
 {* //----- FORMULÁRIO DE PRIORIZAÇÃO DE CHAMADO ----- *}
 
+{* FECHACAR/RESOLVER CHAMADO *}
 {if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin || $chamado.criado_por == $dadosLogin.id_admin}
 	<!-- RESOLVE/FECHAR CHAMADO -->
 	<div id="divFormResolveChamado" style="width:700px;position:relative; display:none;">
@@ -684,7 +685,7 @@ label {
 							</tr>
 
 							<tr>
-								<td align="right" width="110"><strong>Comentário:</strong></td>
+								<td align="right" width="110"><strong>Laudo de Resolu&ccedil;&atilde;o/Fechamento:</strong></td>
 								<td align="right"><textarea name="comentariofim" id="comentariofim" rows="4" cols="30"></textarea></td>
 							</tr>
 						</table>

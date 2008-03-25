@@ -180,9 +180,24 @@ var mresponsaveis = eval({$responsaveis});
 			<td width="100%" valign="top">
 				<table border=0 cellspacing=0 cellpadding=1 width="100%">
 
+					<!-- CAMPO TIPO -->
+					<tr>
+						<td align="right" width="110">
+							<label>Tipo:</label>
+						</td>
+						<td>
+							<select id="tipo" name="tipo" style="width:100%"  onchange="javascript:AtualizaFormCampoTipo(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$tipos key=k item=i}
+									{if $k != 'OS'}<option value="{$k}">{$i}</option>{/if}
+								{/foreach}
+							</select>
+						</td>
+					</tr>
+
 					<!-- CAMPO ASSUNTO -->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Assunto:</label>
 						</td>
 						<td>
@@ -193,7 +208,7 @@ var mresponsaveis = eval({$responsaveis});
 
 					<!-- CAMPO ID_CONTA-->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Conta Cliente:</label>
 						</td>
 						<td>
@@ -208,24 +223,9 @@ var mresponsaveis = eval({$responsaveis});
 						</td>
 					</tr>
 
-					<!-- CAMPO TIPO -->
-					<tr>
-						<td align="right">
-							<label>Tipo:</label>
-						</td>
-						<td>
-							<select id="tipo" name="tipo" style="width:100%"  onchange="javascript:AtualizaFormCampoTipo(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="">-- SELECIONE --</option>
-								{foreach from=$tipos key=k item=i}
-									{if $k != 'OS'}<option value="{$k}">{$i}</option>{/if}
-								{/foreach}
-							</select>
-						</td>
-					</tr>
-
 					<!-- CAMPO PRIORIDADE -->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Prioridade:</label>
 						</td>
 						<td>
@@ -239,7 +239,7 @@ var mresponsaveis = eval({$responsaveis});
 
 					<!-- CAMPO DESCRIÇÃO -->
 					<tr>
-						<td align="right" valign="top">
+						<td align="right" valign="top" width="110">
 							<label>Descrição:</label>
 						</td>
 						<td>
@@ -249,7 +249,7 @@ var mresponsaveis = eval({$responsaveis});
 
 					<!-- CAMPO ORIGEM -->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Origem:</label>
 						</td>
 						<td>
@@ -264,7 +264,7 @@ var mresponsaveis = eval({$responsaveis});
 
 					<!-- CAMPO CLASSIFICACAO -->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Classificação:</label>
 						</td>
 						<td>
@@ -279,7 +279,7 @@ var mresponsaveis = eval({$responsaveis});
 
 					<!-- CAMPO GRUPO -->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Grupo:</label>
 						</td>
 						<td>
@@ -295,7 +295,7 @@ var mresponsaveis = eval({$responsaveis});
 
 					<!-- CAMPO RESPONSÁVEL -->
 					<tr>
-						<td align="right">
+						<td align="right" width="110">
 							<label>Responsável:</label>
 						</td>
 						<td>
