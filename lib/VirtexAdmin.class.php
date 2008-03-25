@@ -12,6 +12,9 @@
 		protected $_startdb;
 		
 		protected $licenca;
+				
+		// Sistema Operacional
+		protected $SO;
 	
 		protected function __construct() {
 			$this->licenca		= new VirtexLicenca();
@@ -24,8 +27,10 @@
 			// Inicializações
 			if( $this->_startdb && @$this->_cfg->config["DB"]["dsn"] ) {
 				// TODO: Try/Catch
-				$bd = MDatabase::getInstance(@$this->_cfg->config["DB"]["dsn"],@$this->_cfg->config["geral"]["dsn"]);
+				MDatabase::getInstance(@$this->_cfg->config["DB"]["dsn"],@$this->_cfg->config["geral"]["dsn"]);
 			}
+			
+			$this->SO = new SOFreeBSD();
 
 			$this->init();
 		
