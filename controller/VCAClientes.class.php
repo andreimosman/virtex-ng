@@ -1655,6 +1655,7 @@
 					
 						//Seleciona o chamado desejado
 						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
+						
 
 						if($chamado) {
 							if($chamado["tipo"] == PERSISTE_HDTB_CHAMADO::$TIPO_CHAMADO && ($chamado["status"] == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO || $chamado["status"] == PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO)) {
@@ -1674,9 +1675,35 @@
 								if($data_diferenca < $preferencias["limite_tempo_reabertura_chamado"]) {
 									$this->_view->atribui("pode_reabrir", true);
 								}
-
 							}
+							
+							//Confere a existência de determinados campos relacionados
+							
+							//CLIENTE
+							if($chamado["id_cliente"]) {
+								$info_cliente_chamado = $this->clientes->obtemPeloId($chamado["id_cliente"]);
+								$chamado["cliente_nome"] = @$info_cliente_chamado["nome_razao"];	
+							}
+							
+							//CONTA
+							if ($chamado["id_conta"]) {
+								$contas = VirtexModelo::factory("contas");
+								$cobranca = VirtexModelo::factory("cobranca");
+								
+								$info_conta_chamado = $contas->obtemContaPeloId($chamado["id_conta"]);
+								$info_contrato_chamado = $cobranca->obtemContratoPeloId($info_conta_chamado["id_cliente_produto"]);								
+								
+								$chamado["conta_username"] 		= @$info_conta_chamado["username"];
+								$chamado["conta_tipo"] 			= @$info_conta_chamado["tipo_conta"];
+								$chamado["conta_dominio"] 		= @$info_conta_chamado["dominio"];
+								$chamado["conta_contrato"]		= @$info_conta_chamado["id_cliente_produto"];
+								$chamado["conta_produto"]		= @$info_contrato_chamado["nome_produto"];
+								
+								
+								//$chamado["conta_produto"]		= @$info_conta_chamado["id_cliente_produto"];
+							}							
 						}
+						
 
 
 						$contas = VirtexModelo::factory("contas");

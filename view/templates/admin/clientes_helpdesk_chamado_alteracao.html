@@ -252,6 +252,16 @@ label {
 		<tr>
 			<th colspan=4>Detalhes do Chamado</th>
 		</tr>
+
+
+		{* -- Insere informações do cliente -- *}
+		<tr>
+			<td width="110" align="right"><strong>Cliente:</strong></td>
+			<td align="left" colspan=3><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$chamado.id_cliente}">{$chamado.cliente_nome}</a></td>
+		</tr>
+		{* //-- Insere informações do cliente -- *}
+
+
 		<tr>
 			<td width="110" align="right"><strong>Número:</strong></td>
 			<td align="left">{$chamado.id_chamado|string_format:"%05s"}</td>
@@ -279,34 +289,77 @@ label {
 
 		<tr>
 			<td width="110" align="right"><strong>Grupo:</strong></td>
-			<td align="left">{$grupos[$chamado.id_grupo]}</td>
+			<td align="left" width="240">{$grupos[$chamado.id_grupo]}</td>
 
 			<td width="110" align="right"><strong>Responsável:</strong></td>
-			<td align="left" {if !$chamado.responsavel}style="color:red"{/if}>{if $chamado.responsavel}{$responsaveis[$chamado.responsavel]}{else}N&atilde;o foi delegado{/if}</td>
+			<td align="left"  width="240" {if !$chamado.responsavel}style="color:red"{/if}>{if $chamado.responsavel}{$responsaveis[$chamado.responsavel]}{else}N&atilde;o foi delegado{/if}</td>
 		</tr>
 
 		<tr>
 			<td width="110" align="right"><strong>Criador:</strong></td>
-			<td align="left">{$responsaveis[$chamado.criado_por]}</td>
+			<td align="left" width="240">{$responsaveis[$chamado.criado_por]}</td>
 
 			<td width="110" align="right"><strong>Tipo:</strong></td>
-			<td align="left">{$tipos[$chamado.tipo]}&nbsp;</td>
+			<td align="left" width="240">{$tipos[$chamado.tipo]}&nbsp;</td>
 
 		</tr>
 
 		<tr>
 			<td width="110" align="right"><strong>Origem:</strong></td>
-			<td align="left">{$origens[$chamado.origem]}</td>
+			<td align="left" width="240">{$origens[$chamado.origem]}</td>
 
 			<td width="110" align="right"><strong>Classifica&ccedil;&atilde;o:</strong></td>
-			<td align="left">{$classificacoes[$chamado.classificacao]}</td>
+			<td align="left" width="240">{$classificacoes[$chamado.classificacao]}</td>
 		</tr>
 
 
 	</table>
-
-
 	<br />
+
+	{* ----- INFORMAÇÕES DA CONTA ----- *}
+	{if $chamado.id_conta}
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
+		<tr>
+			<th colspan=4>Informa&ccedil;&otilde;es da Conta</th>
+		</tr>
+		<tr>
+			<td width="110" align="right"><strong>Conta:</strong></td>
+			<td align="left" width="240"><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$chamado.conta_tipo}&id_cliente={$chamado.id_cliente}&id_conta={$chamado.id_conta}">{$chamado.conta_username}</a></td>
+
+			<td width="110" align="right"><strong>Contrato:</strong></td>
+			<td align="left" width="240"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$chamado.id_cliente}&id_cliente_produto={$chamado.conta_contrato}">{$chamado.conta_contrato}</a></td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Produto:</strong></td>
+			<td align="left" width="240">{$chamado.conta_produto}</td>
+
+			<td width="110" align="right"><strong>Tipo da Conta:</strong></td>
+			<td align="left" width="240">
+				{if $chamado.conta_tipo == "BL"}
+					Banda Larga
+				{elseif $chamado.conta_tipo == "H"}
+					Hospedagem
+				{elseif $chamado.conta_tipo == "D"}
+					Discado
+				{elseif $chamado.conta_tipo == "E"}
+					E-mail
+				{/if}
+			</td>
+		</tr>
+
+		<tr>
+			<td width="110" align="right"><strong>Dom&iacute;nio:</strong></td>
+			<td align="left" colspan=3>{$chamado.conta_dominio}</td>
+		</tr>
+
+	</table>
+	<br />
+	{/if}
+	{* //----- INFORMAÇÕES DA CONTA ----- *}
+
+
+	{* ----- MOTIVO DO CHAMADO ----- *}
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
 		<tr>
 			<th colspan=4>Motivo</th>
@@ -323,6 +376,7 @@ label {
 
 	</table>
 	<br />
+	{* //----- MOTIVO DO CHAMADO ----- *}
 
 {if count($info_os)}
 
