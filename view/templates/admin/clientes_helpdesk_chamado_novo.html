@@ -127,7 +127,8 @@ var mresponsaveis = eval({$responsaveis});
 		var responsavel = document.getElementById("responsavel");
 
 		for(i=0;i<mresponsaveis.length;i++) {
-			item = mresponsaveis[i];
+
+			var item = mresponsaveis[i];
 
 			if(item.ativo == "f" || item.id_grupo != id_grupo) continue;
 
