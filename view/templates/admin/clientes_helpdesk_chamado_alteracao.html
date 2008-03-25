@@ -324,15 +324,13 @@ label {
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Conta:</strong></td>
-			<td align="left" width="240"><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$chamado.conta_tipo}&id_cliente={$chamado.id_cliente}&id_conta={$chamado.id_conta}">{$chamado.conta_username}</a></td>
+			<td align="left" width="240"><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$chamado.conta_tipo}&id_cliente={$chamado.id_cliente}&id_conta={$chamado.id_conta}">{$chamado.id_conta} - {$chamado.conta_username}</a></td>
 
 			<td width="110" align="right"><strong>Contrato:</strong></td>
-			<td align="left" width="240"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$chamado.id_cliente}&id_cliente_produto={$chamado.conta_contrato}">{$chamado.conta_contrato}</a></td>
+			<td align="left" width="240"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$chamado.id_cliente}&id_cliente_produto={$chamado.conta_contrato}">{$chamado.conta_contrato} - {$chamado.conta_produto}</a></td>
 		</tr>
 
 		<tr>
-			<td width="110" align="right"><strong>Produto:</strong></td>
-			<td align="left" width="240">{$chamado.conta_produto}</td>
 
 			<td width="110" align="right"><strong>Tipo da Conta:</strong></td>
 			<td align="left" width="240">
@@ -346,12 +344,11 @@ label {
 					E-mail
 				{/if}
 			</td>
+
+			<td width="110" align="right"><strong>Dom&iacute;nio:</strong></td>
+			<td align="left" width="240">{$chamado.conta_dominio}</td>
 		</tr>
 
-		<tr>
-			<td width="110" align="right"><strong>Dom&iacute;nio:</strong></td>
-			<td align="left" colspan=3>{$chamado.conta_dominio}</td>
-		</tr>
 
 	</table>
 	<br />
