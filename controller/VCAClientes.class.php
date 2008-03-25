@@ -1696,13 +1696,13 @@
 						//matriz de responsáveis(remake)
 						$responsaveis = array();
 						foreach($array_responsaveis as $chave => $valor) {
-							$responsaveis[$valor[id_admin]] = $valor["admnome"];
+							$responsaveis[$valor["id_admin"]] = $valor["admnome"];
 						}
 						
 						//matriz de grupos(remake)
 						$grupos = array();
 						foreach($array_grupos as $chave => $valor) {
-							$grupos[$valor[id_grupo]] = $valor["nome"];
+							$grupos[$valor["id_grupo"]] = $valor["nome"];
 						}
 						
 						
