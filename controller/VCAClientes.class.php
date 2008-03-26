@@ -1173,7 +1173,9 @@
 															"apto_instalacao" => @$_REQUEST["apto_instalacao"]
 														);
 
-								if($info_endereco != $endereco_instalacao){
+								if($info_endereco != $endereco_instalacao){  
+								
+								
 									$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
 																		$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $endereco_instalacao["apto_instalacao"],$this->id_cliente);
 								}
@@ -1238,14 +1240,19 @@
 															"bairro" => @$_REQUEST["bairro_instalacao"],
 															"id_cidade" => @$_REQUEST["id_cidade_instalacao"],
 															"complemento" => @$_REQUEST["complemento_instalacao"],
-															"cep" => @$_REQUEST["cep_instalacao"]
+															"cep" => @$_REQUEST["cep_instalacao"],
+															"id_condominio_instalacao" => @$_REQUEST["id_condominio_instalacao"], 
+															"id_bloco_instalacao" => @$_REQUEST["id_bloco_instalacao"],
+															"apto_instalacao" => @$_REQUEST["apto_instalacao"]
 														);
 							} else { 
 								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
 							}
-
+							
+							
+							
 							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $this->id_cliente);
+																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $endereco_instalacao["apto_instalacao"] ,$this->id_cliente);
 							$msg = "Conta cadastrada com sucesso.";
 						} elseif("E" == $tipo){
 
@@ -1289,10 +1296,11 @@
 
 						$endereco_instalacao = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
 						
-						if(!count($endereco_instalacao)){
+						if(!$endereco_instalacao){
 							$endereco_instalacao = $this->clientes->obtemPeloId($this->id_cliente);
+							
 							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"],$this->id_cliente);
+																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio"], $endereco_instalacao["id_bloco"], $endereco_instalacao["apto"],$this->id_cliente);
 						}
 
 						$nas = $equipamentos->obtemNAS($info["id_nas"]);
@@ -1853,6 +1861,14 @@
 							$bairro_os = @$_REQUEST["bairro_os"];
 							$cidade_os = @$_REQUEST["cidade_os"];
 							
+							$id_condominio_os = @$_REQUEST["id_condominio"];
+							$id_bloco_os = @$_REQUEST["id_bloco"];
+							$apto = @$_REQUEST["apto"];
+							
+							
+							//Entra procedimento aqui para adquirir o nome do condominio e as informações necessárias para o seu funcionamento;
+							
+							
 							
 							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta,0,0,0,0,$id_chamado_pai);
 							$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
@@ -1873,7 +1889,7 @@
 							
 						
 						
-						}else {
+						} else {
 						
 							if($dadosLogin["senha"] != md5($senha_admin)) {
 								$erro = "Senha não confere";
