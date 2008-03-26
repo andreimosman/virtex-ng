@@ -93,12 +93,10 @@
 				 $texto = fread($fd,filesize($this->arquivoEstrutura));
 				 fclose($fd);
 			}
-			
-			$file_info  = $xml->x2a($texto,"database");
-			
-			// print_r($file_info);
-			unset($texto);
 
+			$file_info  = $xml->x2a($texto,"database");
+			unset($texto);
+			
 			$bd = MDatabase::getInstance();
 			$bd->preparaReverso();
 
@@ -106,8 +104,6 @@
 			
 			$script = $bd->scriptModificacao($local_info,$file_info);
 			echo $bd->script2text($script);
-
-			
 			
 		}
 		
