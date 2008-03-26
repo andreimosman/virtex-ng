@@ -191,8 +191,7 @@
 						$param .= " -C";
 					}
 										
-					$comando = $this->SO->obtemPHP() . " bin/vtx-backup.php " . trim($param);
-					$this->SO->executa($comando);
+					$comando = $this->SO->obtemPHP() . "  " . getcwd() . "/bin/vtx-backup.php " . trim($param);
 					
 					$url = "admin-administracao.php?op=ferramentas&ferramenta=backup&tela=inicio";
 					$mensagem = "Backup realizado com sucesso.";
