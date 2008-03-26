@@ -209,6 +209,7 @@
 			$this->_view->atribuiVisualizacao("contrato");
 			$this->_view->atribui("id_cliente",$this->id_cliente);
 			$info = $this->clientes->obtemPeloId($this->id_cliente);
+			
 
 			$this->_view->atribui("nome_razao",$info["nome_razao"]);
 			$this->_view->atribui("endereco",$info["endereco"]);
@@ -218,6 +219,7 @@
 			$this->_view->atribui("cep",$info["cep"]);
 			$this->_view->atribui("id_condominio",$info["id_condominio"]);
 			$this->_view->atribui("id_bloco",$info["id_bloco"]);
+			$this->_view->atribui("apto",$info["apto"]);
 
 			$tela = @$_REQUEST["tela"];
 			$this->_view->atribui("tela",$tela);
@@ -683,8 +685,8 @@
 
 								$pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
 
-								$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"], "id_condominio_cobranca" => @$_REQUEST["id_condominio_cobranca"], "id_bloco_cobranca" => $_REQUEST["id_bloco_cobranca"] );
-								$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"], "id_condominio_instalacao" => $_REQUEST["id_condominio_instalacao"], "id_bloco_instalacao" => $_REQUEST["id_bloco_instalacao"] );
+								$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"], "id_condominio_cobranca" => @$_REQUEST["id_condominio_cobranca"], "id_bloco_cobranca" => $_REQUEST["id_bloco_cobranca"], "apto_cobranca" => $_REQUEST["apto_cobranca"] );
+								$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"], "id_condominio_instalacao" => $_REQUEST["id_condominio_instalacao"], "id_bloco_instalacao" => $_REQUEST["id_bloco_instalacao"], "apto_instalacao" => $_REQUEST["apto_instalacao"] );
 								
 								$dados_conta = array();
 								$cria_e = 0;
@@ -1167,11 +1169,13 @@
 															"complemento" => @$_REQUEST["complemento_instalacao"],
 															"cep" => @$_REQUEST["cep_instalacao"],
 															"id_condominio_instalacao" => @$_REQUEST["id_condominio_instalacao"], 
-															"id_bloco_instalacao" => @$_REQUEST["id_bloco_instalacao"]
+															"id_bloco_instalacao" => @$_REQUEST["id_bloco_instalacao"],
+															"apto_instalacao" => @$_REQUEST["apto_instalacao"]
 														);
+
 								if($info_endereco != $endereco_instalacao){
 									$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																		$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $this->id_cliente);
+																		$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $endereco_instalacao["apto_instalacao"],$this->id_cliente);
 								}
 							}
 							$msg = "Conta alterada com sucesso.";
@@ -1302,6 +1306,7 @@
 						$this->_view->atribui("cep",$endereco_instalacao["cep"]);
 						$this->_view->atribui("id_condominio_instalacao",$endereco_instalacao["id_condominio_instalacao"]);
 						$this->_view->atribui("id_bloco_instalacao",$endereco_instalacao["id_bloco_instalacao"]);
+						$this->_view->atribui("apto_instalacao",$endereco_instalacao["apto_instalacao"]);
 
 					}
 

@@ -5,13 +5,13 @@
 		public function __construct($bd=null) {
 			parent::__construct();
 			
-			$this->_campos		= array("id_endereco_instalacao","id_conta","endereco","complemento","bairro","id_cidade","cep","id_cliente", "id_condominio_instalacao", "id_bloco_instalacao");
+			$this->_campos		= array("id_endereco_instalacao","id_conta","endereco","complemento","bairro","id_cidade","cep","id_cliente", "id_condominio_instalacao", "id_bloco_instalacao", "apto_instalacao");
 			$this->_chave 		= "id_endereco_instalacao";
 			$this->_ordem		= "id_endereco_instalacao DESC";
 			$this->_tabela		= "cntb_endereco_instalacao";
 			$this->_sequence	= "cnsq_id_endereco_instalacao";
 			
-			$this->_filtros		= array("id_endereco_instalacao" => "numeric", "id_conta" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric");
+			$this->_filtros		= array("id_endereco_instalacao" => "numeric", "id_conta" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric", "id_bloco_instalacao" => "numeric");
 		
 		}
 		

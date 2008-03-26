@@ -377,7 +377,7 @@
 		/**
 		 * Cadastra o endereço de instalação.
 		 */
-		public function cadastraEnderecoInstalacao($id_conta,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_condominio_instalacao, $id_bloco_instalacao, $id_cliente) {
+		public function cadastraEnderecoInstalacao($id_conta,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_condominio_instalacao, $id_bloco_instalacao, $apto_instalacao, $id_cliente) {
 			// TODO: Verificar se já existe outro endereço p/ esta conta. Caso exista tirar o endereço da conta antes de cadastrar a conta.
 
 
@@ -389,7 +389,8 @@
 							"cep" => $cep,
 							"id_cliente" => $id_cliente,
 							"id_condominio_instalacao" => $id_condominio_instalacao,
-							"id_bloco_instalacao" => $id_bloco_instalacao
+							"id_bloco_instalacao" => $id_bloco_instalacao,
+							"apto_instalacao" => $apto_instalacao
 							);
 							
 			if( $id_conta ) {

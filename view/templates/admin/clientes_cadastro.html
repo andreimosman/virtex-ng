@@ -226,6 +226,7 @@ function checkForm() {
 			</td>
 		</tr>
 
+		{* -- CAMPOS CONDOMINIO -- *}
 		{if $condominios != "[]"}
 		<tr>
 			<td width=320>
@@ -234,23 +235,34 @@ function checkForm() {
 						<td width="50%">
 							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Condomínio</font></p>
 						</td>
-
-						<td width="50%">
-							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Bloco</font></p>
-						</td>
 					</tr>
 					<tr>
-						<td width="50%">
+						<td colspan=2>
 							<select name="id_condominio" id="id_condominio" class="{$estilo}" style="width:98%" onchange="javascript:AjustarCamposFormulario('cadastro', this.selectedIndex -1 , condominios);"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								<option value="">-- SELECIONE --</option>
 							</select>
+					</tr>
+
+					<tr valign="bottom">
+						<td width="75%">
+							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Bloco</font></p>
 						</td>
 
+						<td width="25%">
+							<p align="justify"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Apto</font></p>
+						</td>
+					</tr>
+					<tr>
 						<td width="50%">
 							<select name="id_bloco" id="id_bloco" class="{$estilo}" style="width:98%"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" DISABLED>
 								<option value="">-- SELECIONE --</option>
 							</select>
 						</td>
+
+						<td width="50%">
+							<input type="text" name="apto" id="apto" class="{$estilo}" style="width:98%" value="{$apto}"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" DISABLED/>
+						</td>
+
 					</tr>
 				</table>
 
@@ -258,7 +270,7 @@ function checkForm() {
 
 		</tr>
 		{/if}
-
+		{* //-- CAMPOS CONDOMINIO -- *}
 
 		<tr>
 			<td width=320>

@@ -27,10 +27,12 @@ function AjustarCamposFormulario(formulario, indice, condominio) {
 		endereco.value = "";
 		complemento.value = "";
 		bairro.value = "";
-		cep.value = "";
+		cep.value = "";		
 		id_cidade_combo.selectedIndex = 0;
 		id_cidade.value = id_cidade_combo.value;
 		id_bloco.disabled = true;
+		//apto.value = "";
+		apto.disabled = true;
 		ApagarItensCombo('id_bloco', '-- SELECIONE --');
 		
 	} else {
@@ -41,6 +43,7 @@ function AjustarCamposFormulario(formulario, indice, condominio) {
 		cep.readonly = true;
 		id_cidade_combo.disabled = true;
 		id_bloco.disabled = false
+		apto.disabled = false;
 		
 		endereco.value = condominio[indice].endereco;
 		complemento.value = condominio[indice].complemento;
@@ -85,6 +88,8 @@ function AjustarCamposFormularioContratoCobranca(formulario, indice, condominio)
 		complemento_cobranca.value = "";
 		bairro_cobranca.value = "";
 		cep_cobranca.value = "";
+		//apto_cobranca.value = "";
+		apto_cobranca.disabled = true;
 		id_cidade_cobranca_combo.selectedIndex = 0;
 		id_cidade_cobranca.value = id_cidade_cobranca_combo.value;
 		id_bloco_cobranca.disabled = true;
@@ -96,7 +101,8 @@ function AjustarCamposFormularioContratoCobranca(formulario, indice, condominio)
 		bairro_cobranca.readonly = true;
 		cep_cobranca.readonly = true;
 		id_cidade_cobranca_combo.disabled = true;
-		id_bloco_cobranca.disabled = false
+		id_bloco_cobranca.disabled = false;
+		apto_cobranca.disabled = false;
 		
 		endereco_cobranca.value = condominio[indice].endereco;
 		complemento_cobranca.value = condominio[indice].complemento;
@@ -141,6 +147,8 @@ function AjustarCamposFormularioContratoInstalacao(formulario, indice, condomini
 		complemento_instalacao.value = "";
 		bairro_instalacao.value = "";
 		cep_instalacao.value = "";
+		//apto_instalacao.value = "";
+		apto_instalacao.disabled = true;
 		id_cidade_instalacao_combo.selectedIndex = 0;
 		id_cidade_instalacao.value = id_cidade_instalacao_combo.value;
 		id_bloco_instalacao.disabled = true;
@@ -153,6 +161,7 @@ function AjustarCamposFormularioContratoInstalacao(formulario, indice, condomini
 		cep_instalacao.readonly = true;
 		id_cidade_instalacao_combo.disabled = true;
 		id_bloco_instalacao.disabled = false
+		apto_instalacao.disabled = false;
 		
 		endereco_instalacao.value = condominio[indice].endereco;
 		complemento_instalacao.value = condominio[indice].complemento;
@@ -168,7 +177,7 @@ function AjustarCamposFormularioContratoInstalacao(formulario, indice, condomini
 
 
 function AjustarCamposFormularioContaCadastro(formulario, indice, condominio) {
-
+/*
 	formref = document.getElementById(formulario);
 	
 	if(!formref) {
@@ -197,6 +206,8 @@ function AjustarCamposFormularioContaCadastro(formulario, indice, condominio) {
 		complemento_instalacao.value = "";
 		bairro_instalacao.value = "";
 		cep_instalacao.value = "";
+		//apto_instalacao.value = "";
+		apto_instalacao.disabled = true;		
 		id_cidade_instalacao_combo.selectedIndex = 0;
 		id_cidade_instalacao.value = id_cidade_instalacao_combo.value;
 		id_bloco_instalacao.disabled = true;
@@ -208,7 +219,8 @@ function AjustarCamposFormularioContaCadastro(formulario, indice, condominio) {
 		bairro_instalacao.readonly = true;
 		cep_instalacao.readonly = true;
 		id_cidade_instalacao_combo.disabled = true;
-		id_bloco_instalacao.disabled = false
+		id_bloco_instalacao.disabled = false;
+		apto_instalacao.disabled = false;
 		
 		endereco_instalacao.value = condominio[indice].endereco;
 		complemento_instalacao.value = condominio[indice].complemento;
@@ -219,7 +231,7 @@ function AjustarCamposFormularioContaCadastro(formulario, indice, condominio) {
 		
 		AtualizaComboBloco('id_bloco_instalacao', condominio[indice].id_condominio, null,  true);
 	}
-	
+*/	
 }
 
 

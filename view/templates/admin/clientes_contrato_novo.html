@@ -697,6 +697,7 @@ function checkStatusFields(tag) {
           desabilita(document.getElementById('cep_cobranca'));
           desabilita(document.getElementById('id_condominio_cobranca'));
           desabilita(document.getElementById('id_bloco_cobranca'));
+          desabilita(document.getElementById('apto_cobranca'));
 
           if(id_condominio_cobranca) id_condominio_cobranca.value = "";
 
@@ -708,6 +709,7 @@ function checkStatusFields(tag) {
           habilita(document.getElementById('id_cidade_cobranca'));
           habilita(document.getElementById('cep_cobranca'));
           habilita(document.getElementById('id_condominio_cobranca'));
+
        }
     }
     else if ( tag.name == "difEnderecoSetup" ) {
@@ -720,6 +722,7 @@ function checkStatusFields(tag) {
           desabilita(document.getElementById('cep_instalacao'));
           desabilita(document.getElementById('id_condominio_instalacao'));
           desabilita(document.getElementById('id_bloco_instalacao'));
+          desabilita(document.getElementById('apto_instalacao'));
 
           if(id_condominio_instalacao) document.getElementById('id_condominio_instalacao').value="";
        }
@@ -730,6 +733,7 @@ function checkStatusFields(tag) {
           habilita(document.getElementById('id_cidade_instalacao'));
           habilita(document.getElementById('cep_instalacao'));
           habilita(document.getElementById('id_condominio_instalacao'));
+
        }
     }
 }
@@ -1168,6 +1172,15 @@ function validarData(campo){
 					<option value="">-- SELECIONE --</option>
 				</select>
 			</td>
+	</tr>
+
+	<tr>
+			<td align="right">&nbsp;</td>
+			<td align="left">&nbsp;</td>
+      		<td align="right" ><strong>Apto:</strong></td>
+			<td align="left" >
+				<input type="text" value="{$apto}" name="apto_cobranca" id="apto_cobranca" class="disabled" DISABLED/>
+			</td>
     </tr>
 	{/if}
 
@@ -1492,7 +1505,7 @@ function validarData(campo){
 
 
 						<tr>
-							<td colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></td>
+							<th colspan=4 align="left">&nbsp; &nbsp;<label>Endere&ccedil;o de Instala&ccedil;&atilde;o:</label></td>
 						</tr>
 						<tr>
 						<td colspan=4 >
@@ -1516,6 +1529,13 @@ function validarData(campo){
 								<select name="id_bloco_instalacao" id="id_bloco_instalacao" class="fieldWithoutFocus" DISABLED>
 									<option value="">-- SELECIONE --</option>
 								</select>
+							</td>
+						</tr>
+
+						<tr>
+							<td align="right" width="110"><label>Apto:</label></td>
+							<td colspan=3>
+								<input type="text" value="{$apto_instalacao}" name="apto_instalacao" id="apto_instalacao" class="disabled" DISABLED>
 							</td>
 						</tr>
 						{/if}

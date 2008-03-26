@@ -63,7 +63,7 @@
 			return($this->cbtb_cliente_produto->obtemUnico(array("id_cliente_produto"=>$id_cliente_produto)));
 		}
 
-		public function cadastraEnderecoCobranca($id_cliente_produto,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_condominio_cobranca,$id_bloco_cobranca,$id_cliente) {
+		public function cadastraEnderecoCobranca($id_cliente_produto,$endereco,$complemento,$bairro,$id_cidade,$cep,$id_condominio_cobranca,$id_bloco_cobranca, $apto_cobranca, $id_cliente) {
 			$dados = array(
 							"id_cliente_produto" => $id_cliente_produto,
 							"endereco" => $endereco,
@@ -73,7 +73,8 @@
 							"cep" => $cep,
 							"id_condominio_cobranca" => $id_condominio_cobranca,
 							"id_bloco_cobranca" => $id_bloco_cobranca,
-							"id_cliente" => $id_cliente
+							"id_cliente" => $id_cliente,
+							"apto_cobranca" => $apto_cobranca
 							);
 			$this->cbtb_endereco_cobranca->insere($dados);
 		}
@@ -463,7 +464,7 @@
 			$dados["id_cliente"] = $id_cliente;
 			$dados["id_cliente_produto"] = $id_cliente_produto;
 
-			$this->cadastraEnderecoCobranca($id_cliente_produto,$dados["endereco"],$dados["complemento"],$dados["bairro"],$dados["id_cidade"],$dados["cep"],$dados["id_condominio_cobranca"], $dados["id_bloco_cobranca"], $id_cliente);
+			$this->cadastraEnderecoCobranca($id_cliente_produto,$dados["endereco"],$dados["complemento"],$dados["bairro"],$dados["id_cidade"],$dados["cep"],$dados["id_condominio_cobranca"], $dados["id_bloco_cobranca"], $dados["apto_cobranca"], $id_cliente);
 
 			if( count($dados_conta) ) {
 
@@ -488,7 +489,7 @@
 					$conta_mestre, $dados_produto["quota_por_conta"]);
 				}
 
-				$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],$endereco_instalacao["id_cidade"],$endereco_instalacao["cep"],$endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"],$id_cliente);
+				$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],$endereco_instalacao["id_cidade"],$endereco_instalacao["cep"],$endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"],$endereco_instalacao["apto_instalacao"], $id_cliente);
 				
 				
 

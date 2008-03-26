@@ -346,6 +346,7 @@ label {
           desabilita(document.getElementById('cep_instalacao'));
           desabilita(document.getElementById('id_condominio_instalacao'));
           desabilita(document.getElementById('id_bloco_instalacao'));
+          desabilita(document.getElementById('apto_instalacao'));
 
           //document.getElementById('id_cidade_instalacao').value = document.getElementById('id_cidade_instalacao_combo').value;
        }
@@ -356,6 +357,7 @@ label {
           habilita(document.getElementById('id_cidade_instalacao_combo'));
           habilita(document.getElementById('cep_instalacao'));
           habilita(document.getElementById('id_condominio_instalacao'));
+		  habilita(document.getElementById('apto_instalacao'));
 
           if(document.getElementById('id_condominio_instalacao').value) {
           	habilita(document.getElementById('id_bloco_instalacao'));
@@ -590,16 +592,24 @@ label {
 			{if $condominios != "[]"}
 			<tr>
 				<td align="right"><label>Condomínio:</label></td>
-				<td align="left">
-					<select name="id_condominio_instalacao" id="id_condominio_instalacao" class="disabled" onchange="javascript:AjustarCamposFormularioContratoInstalacao('frmConta', this.selectedIndex -1 , condominios);" DISABLED>
+				<td align="left" colspan=3>
+					<select name="id_condominio_instalacao" id="id_condominio_instalacao" class="disabled" style="width:210px" onchange="javascript:AjustarCamposFormularioContratoInstalacao('frmConta', this.selectedIndex -1 , condominios);" DISABLED>
 						<option value="">-- SELECIONE --</option>
 					</select>
 				</td>
+			</tr>
+
+			<tr>
 				<td align="right"><label>Bloco:</label></td>
 				<td align="left">
 					<select name="id_bloco_instalacao" id="id_bloco_instalacao" class="disabled" DISABLED>
 						<option value="">-- SELECIONE --</option>
 					</select>
+				</td>
+
+				<td align="right"><label>Apto:</label></td>
+				<td align="left">
+					<input type="text" name="apto_instalacao" id="apto_instalacao" class="disabled" DISABLED value="{$apto_instalacao}" />
 				</td>
 			</tr>
 			{/if}
