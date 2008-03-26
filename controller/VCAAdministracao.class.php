@@ -192,6 +192,7 @@
 					}
 										
 					$comando = $this->SO->obtemPHP() . "  " . getcwd() . "/bin/vtx-backup.php " . trim($param);
+					$this->SO->executa($comando);
 					
 					$url = "admin-administracao.php?op=ferramentas&ferramenta=backup&tela=inicio";
 					$mensagem = "Backup realizado com sucesso.";
