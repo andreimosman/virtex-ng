@@ -418,7 +418,7 @@ label {
 			</td>
 		</tr>
 
-		{if $data_instalacao}
+		{if $data_instalacao || ($status != "N" && $status != "I")}
 		<tr>
 			<td align="right" width="110"><label>Status:</label></td>
 			<td colspan='3' align='left'>
@@ -451,6 +451,7 @@ label {
 	</table>
 
 
+	{if ($data_ativacao && $data_instalacao) && ($status != "N" && $status != "I")}
 	<table cellspacing="0" cellpadding="0" class="boxContratacao">
 		<tr>
 			<th colspan=2 align="left">&nbsp; &nbsp;<label>Dados da Instala&ccedil;&atilde;o:</label></th>
@@ -462,17 +463,22 @@ label {
 			</td>
 		</tr>
 
+
 		{if $data_ativacao}
 		<tr>
 			<td align="right" width="110"><label>Dt. Ativa&ccedil;&atilde;o:</label></td>
 			<td align='left'>
 				<label><strong>{$data_ativacao|date_format:"%d/%m/%Y"}</strong></label>
-				<input type="hidden" name="conta_ativada" id="conta_ativada" value="1" />
+
 			</td>
 		</tr>
 		{/if}
 	</table>
+	{/if}
 
+	{if $data_ativacao || ($status != "N" && $status != "I")}
+		<input type="hidden" name="conta_ativada" id="conta_ativada" value="1" />
+	{/if}
 
 	{if $tipo == "BL"}
 		<table cellspacing="0" cellpadding="0" class="boxContratacao">
