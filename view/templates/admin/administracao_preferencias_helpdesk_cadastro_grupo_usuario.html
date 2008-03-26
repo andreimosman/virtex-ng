@@ -103,14 +103,14 @@ label {
 		<tr>
 			<!-- LADO ESQUERDO DO FORMULÁRIO -->
 			<td valign="top" style="border-bottom: dotted 1px #cccccc">
-				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+				<table border=0 cellspacing=0 cellpadding=1 width="300">
 					<tr>
 						<td bgcolor="#d5Efd5" colspan=2><label>Dados do Administrador</label></td>
 					</tr>
 
 					<tr>
 						<td width="100" align="right"><label>Administrador</label></td>
-						<td>
+						<td width="200">
 							{if $acao == "gravar"}
 							<select name="id_admin" id="id_admin" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								<option value="">-- SELECIONE --</option>
@@ -127,7 +127,7 @@ label {
 
 					<tr>
 						<td width="100" align="right"><label>Adm. do Grupo</label></td>
-						<td>
+						<td width="200">
 							<select name="admin" id="admin" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								<option value="t">Sim</option>
 								<option value="f">Não</option>
@@ -137,7 +137,7 @@ label {
 
 					<tr>
 						<td width="100" align="right"><label>Ativo</label></td>
-						<td>
+						<td width="200">
 							<select name="ativo" id="ativo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								<option value="t">Sim</option>
 								<option value="f">Não</option>
