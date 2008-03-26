@@ -141,7 +141,7 @@
 		}
 
 		public function obtemContasSemMac() {
-			$filtro = array("mac" => "null:","status"=>"in:A::B");
+			$filtro = array("mac" => "null:","status"=>"A");
 
 			return($this->cntb_conta_bandalarga->obtem($filtro));
 		}
