@@ -1535,7 +1535,7 @@ function validarData(campo){
 						<tr>
 							<td align="right" width="110"><label>Apto:</label></td>
 							<td colspan=3>
-								<input type="text" value="{$apto_instalacao}" name="apto_instalacao" id="apto_instalacao" class="disabled" DISABLED>
+								<input type="text" value="{$apto}" name="apto_instalacao" id="apto_instalacao" class="disabled" DISABLED>
 							</td>
 						</tr>
 						{/if}
@@ -2017,8 +2017,10 @@ contratoAlteraFormaPagamentoDA();
 				AtualizaComboBloco('id_bloco_cobranca', '{$id_condominio}', '{$id_bloco}');
 			{/if}
 			document.getElementById('id_bloco_cobranca').disabled = true;
+			document.getElementById('apto_cobranca').disabled = true;
 
 		{/if}
+
 	{/if}
 {/if}
 </script>
