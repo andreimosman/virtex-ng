@@ -1075,7 +1075,7 @@
 					
 					if($this->_acao == "gravar") {	//GRAVA UM NOVO USUARIO
 						
-						$retorno = $helpdesk->cadastraUsuarioGrupo($dados["id_grupo"], $dados["id_admin"], $dados["admin"], $dados["ativo"]);
+						$retorno = $helpdesk->cadastraUsuarioGrupo($dados["id_grupo"], $dados["id_admin"], $dados["nome_admin"], $dados["admin"] , $dados["ativo"]);
 						$url_redir = "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo&visualizacao=1&id_grupo=" . $dados["id_grupo"];
 						$mensagem = "Administrador cadastrado com sucesso";
 						$this->_view->atribui("url",$url_redir);
@@ -1084,7 +1084,7 @@
 						
 					} else if ($this->_acao == "alterar") {
 
-						$retorno = $helpdesk->alteraUsuarioGrupo($dados["id_grupo"], $dados["id_admin"], $dados["admin"], $dados["ativo"]);
+						$retorno = $helpdesk->alteraUsuarioGrupo($dados["id_grupo"], $dados["id_admin"], $dados["nome_admin"], $dados["admin"], $dados["ativo"]);
 						$url_redir = "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo&visualizacao=1&id_grupo=" . $dados["id_grupo"];
 						$mensagem = "Administrador alterado com sucesso";
 						$this->_view->atribui("url",$url_redir);
