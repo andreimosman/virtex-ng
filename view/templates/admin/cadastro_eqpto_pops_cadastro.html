@@ -81,6 +81,7 @@ label {
 	function valida_ip(ip){
 		if(!ipValido(ip.value)){
 			alert('o IP '+ip.value+' não é válido.');
+			  ip.value="";
 			  ip.focus();
 			  return false;
 		}
@@ -189,7 +190,7 @@ label {
 		</tr>
 		<tr>
 		  <td width="100" align="right" nowrap><label>Nome:</label></td>
-		  <td colspan="3"><input name="nome" type="text" id="nome" value="{$nome}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" /></td>
+		  <td colspan="3"><input name="nome" type="text" id="nome" value="{$nome}" size="40" maxlength="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" /></td>
 		</tr>
 		<tr>
 		  <td width="100" align="right" nowrap><label>Info:</label></td>
@@ -214,7 +215,7 @@ label {
 
 		<tr>
 			<td width="100" align="right" nowrap><label>MAC:</label></td>
-			<td colspan=2><input name="macaddr" type="text" id="macaddr" value="{$macaddr}" size="40" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
+			<td colspan=2><input name="macaddr" type="text" id="macaddr" value="{$macaddr}" size="40" maxlength="17" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
 
 			<td width="100" align="left" valign="middle" nowrap>
 				<input name="bloquearmac" type="checkbox" id="bloquearmac" value="t" DISABLED /><label>Bloquear MAC</label>
