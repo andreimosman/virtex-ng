@@ -745,21 +745,21 @@
 								$erroMensagem = "Já existe outro usuário cadastrado com este email";
 							}
 							
-							echo "<PRE>"; print_r(@$_REQUEST); echo "</PRE>";
-
+							
 							if(!$erroMensagem) {
 								$this->administradores->cadastraAdmin($admin, $email, $nome, $senha, $status, $vendedor, $comissionado, $tipo_admin, TRUE);
-								//$this->_view->atribui("url",$url);
-								//$this->_view->atribui("mensagem",$mensagem);
-								//$this->_view->atribuiVisualizacao("msgredirect");
+								$this->_view->atribui("url",$url);
+								$this->_view->atribui("mensagem",$mensagem);
+								$this->_view->atribuiVisualizacao("msgredirect");
 							} else {
 								while(list($vr,$vl)=each(@$_REQUEST)) {
 									$this->_view->atribui($vr,$vl);
 								}
 
+
 								$this->_view->atribui("erroMensagem",$erroMensagem);
 
-							}
+							} 
 
 						}
 
