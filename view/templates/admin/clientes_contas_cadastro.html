@@ -160,9 +160,9 @@ label {
 
 	returnStatusUsername = false;
 	function validaUsername(){
-		username = document.getElementById('username');
+		username = document.getElementById('username').value;
 		dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
-		tipo = document.getElementById('tipo');
+		tipo = document.getElementById('tipo').value;
 		var url = "admin-ajax.php";
 		var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
 
@@ -174,20 +174,21 @@ label {
 				onComplete: showResponseUsername,
 				asynchronous: false
 			});
+
+
 		return 	returnStatusUsername;
 	}
 
 	function showResponseUsername(originalRequest) {
-		try {
-			if ( !getReturn(originalRequest.responseText)){
-				document.getElementById('username').value = "";
+
+		if ( !getReturn(originalRequest.responseText)){
+			document.getElementById('username').value = "";
+			if( document.getElementById('username').enabled ) {
 				document.getElementById('username').focus();
-				returnStatusUsername = false;
-			} else {
-				returnStatusUsername = true;
 			}
-		} catch(e){
-			alert(e.description);
+			returnStatusUsername = false;
+		} else {
+			returnStatusUsername = true;
 		}
 	}
 
@@ -235,9 +236,17 @@ label {
 		var nas = document.getElementById('id_nas');
 		var pop = document.getElementById('id_pop');
 
+
+
 {/literal}{if !$id_conta}{literal}
 		var username = document.getElementById('username');
 		if(username.value != ""){
+
+			if(!validaUsernameString(username.value)) {
+				alert("Não é permitido a inserção de espaços e caracteres maúsculos e caracteres especiais diferentes de \".\" e \"_\" no username.");
+				return false;
+			}
+
 			if(!validaUsername()){
 				return false;
 			}
@@ -261,7 +270,6 @@ label {
 				return false;
 			}
 		}
-
 
 
 

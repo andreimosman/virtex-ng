@@ -888,8 +888,8 @@ function validacao(frm ) {
 			}
 
 			if(username != ""){
-				if(!validaUsernameString(username)) {
-					alert("Não é permitido a inserção de espaços e caracteres especiais no username.");
+				if(!validaUsernameString(username.value)) {
+					alert("Não é permitido a inserção de espaços e caracteres maúsculos e caracteres especiais diferentes de \".\" e \"_\" no username.");
 					return false;
 				}
 
