@@ -85,6 +85,6 @@ function validaData(data_entrada) {
  */
  
 function validaUsernameString(username) {
-	reUsername = /\s/g;
-	return !reUsername.test(username);
+	reUsername = /^[a-z0-9\._]+$/;
+	return reUsername.test(username);
 }
