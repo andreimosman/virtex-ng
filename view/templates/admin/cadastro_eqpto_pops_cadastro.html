@@ -139,14 +139,14 @@ label {
 
 	function confereCampoMAC() {
 		var macaddr = document.getElementById("macaddr");
-		var bloquearmac = document.getElementById("bloquearmac");
+		var usa_mac_ap = document.getElementById("usa_mac_ap");
 		var tipo = document.getElementById("tipo");
 		var clientemacpop = document.getElementById("clientemacpop");
 		var divClienteMacPop = document.getElementById("divClienteMacPop");
 
 		if(estaVazio(macaddr.value)) {
-			bloquearmac.disabled = true;
-			bloquearmac.checked= false;
+			//bloquearmac.disabled = true;
+			//bloquearmac.checked= false;
 			return true;
 		}
 
@@ -154,8 +154,8 @@ label {
 			alert("Endereço de MAC Address inserido no campo é inválido");
 			macaddr.value="";
 			macaddr.focus();
-			bloquearmac.disabled = true;
-			bloquearmac.checked= false;
+			//bloquearmac.disabled = true;
+			//bloquearmac.checked= false;
 			divClienteMacPop.style.display = "none";
 			clientemacpop.disabled=true;
 			return false;
@@ -169,7 +169,7 @@ label {
 			clientemacpop.disabled=true;
 		}
 
-		bloquearmac.disabled = false;
+		//bloquearmac.disabled = false;
 		return true;
 	}
 
@@ -218,7 +218,7 @@ label {
 			<td colspan=2><input name="macaddr" type="text" id="macaddr" value="{$macaddr}" size="40" maxlength="17" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
 
 			<td width="100" align="left" valign="middle" nowrap>
-				<input name="bloquearmac" type="checkbox" id="bloquearmac" value="t" DISABLED /><label>Bloquear MAC</label>
+				<input name="usa_mac_ap" type="checkbox" id="usa_mac_ap" value="t" /><label>Usar MAC do AP</label>
 			</td>
 		</tr>
 
@@ -325,6 +325,6 @@ label {
 	preenchePopAp();
 	confereCampoMAC();
 	{if $clientemacpop == 't'}document.getElementById("clientemacpop").checked = true;{/if}
-	{if $bloquearmac == 't'}document.getElementById("bloquearmac").checked = true;{/if}
+	{if $usa_mac_ap == 't'}document.getElementById("usa_mac_ap").checked = true;{/if}
 </script>
 </html>
