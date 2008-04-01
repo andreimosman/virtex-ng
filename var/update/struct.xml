@@ -436,83 +436,6 @@
   <constraints >
   </constraints>
  </aged_rdtb_accounting>
- <bktb_backup >
-  <inherits ></inherits>
-  <fields >
-   <id_backup >
-    <notnull >1</notnull>
-    <nativetype >int4</nativetype>
-    <length >4</length>
-    <unsigned ></unsigned>
-    <default ></default>
-    <autoincrement >1</autoincrement>
-    <type >integer</type>
-    <mdb2type >integer</mdb2type>
-   </id_backup>
-   <data_backup >
-    <notnull ></notnull>
-    <nativetype >date</nativetype>
-    <default ></default>
-    <type >date</type>
-    <mdb2type >date</mdb2type>
-   </data_backup>
-   <status_backup >
-    <notnull ></notnull>
-    <nativetype >varchar</nativetype>
-    <length >4</length>
-    <fixed ></fixed>
-    <default ></default>
-    <type >text</type>
-    <mdb2type >text</mdb2type>
-   </status_backup>
-   <admin >
-    <notnull ></notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
-    <unsigned ></unsigned>
-    <default ></default>
-    <type >integer</type>
-    <mdb2type >integer</mdb2type>
-   </admin>
-   <operador_backup >
-    <notnull ></notnull>
-    <nativetype >varchar</nativetype>
-    <length >2</length>
-    <fixed ></fixed>
-    <default ></default>
-    <type >text</type>
-    <mdb2type >text</mdb2type>
-   </operador_backup>
-   <data >
-    <notnull ></notnull>
-    <nativetype >timestamp</nativetype>
-    <default >now()</default>
-    <type >timestamp</type>
-    <mdb2type >timestamp</mdb2type>
-   </data>
-  </fields>
-  <indexes >
-  </indexes>
-  <constraints >
-   <bktb_backup_pkey >
-    <type >p</type>
-    <table_oid >326773</table_oid>
-    <table >bktb_backup</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_backup</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </bktb_backup_pkey>
-  </constraints>
- </bktb_backup>
  <catb_condominio >
   <inherits ></inherits>
   <fields >
@@ -3538,6 +3461,21 @@
     <type >boolean</type>
     <mdb2type >boolean</mdb2type>
    </bloquearmac>
+   <mac >
+    <notnull ></notnull>
+    <nativetype >macaddr</nativetype>
+    <length >6</length>
+    <default ></default>
+    <type >macaddr</type>
+    <mdb2type >macaddr</mdb2type>
+   </mac>
+   <usa_mac_ap >
+    <notnull ></notnull>
+    <nativetype >bool</nativetype>
+    <default >false</default>
+    <type >boolean</type>
+    <mdb2type >boolean</mdb2type>
+   </usa_mac_ap>
   </fields>
   <indexes >
   </indexes>
@@ -10109,17 +10047,13 @@
 </tables>
 <sequences >
  <adsq_id_admin >
-  <start >34</start>
+  <start >39</start>
   <increment >1</increment>
  </adsq_id_admin>
  <adsq_id_priv >
   <start >32</start>
   <increment >1</increment>
  </adsq_id_priv>
- <bktb_backup_id_backup_seq >
-  <start >103</start>
-  <increment >1</increment>
- </bktb_backup_id_backup_seq>
  <blsq_carne_nossonumero >
   <start >69097</start>
   <increment >1</increment>
@@ -10185,7 +10119,7 @@
   <increment >1</increment>
  </cfsq_id_nas>
  <cfsq_id_pop >
-  <start >93</start>
+  <start >94</start>
   <increment >1</increment>
  </cfsq_id_pop>
  <cfsq_id_rede >
@@ -10201,7 +10135,7 @@
   <increment >1</increment>
  </cftb_links_id_link_seq>
  <clsq_id_cliente >
-  <start >8004</start>
+  <start >8005</start>
   <increment >1</increment>
  </clsq_id_cliente>
  <clsq_id_cliente_produto >
@@ -10213,11 +10147,11 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >1501</start>
+  <start >1506</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >321</start>
+  <start >335</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <cxsq_autenticacao >
@@ -10229,7 +10163,7 @@
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >395</start>
+  <start >406</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
@@ -10289,7 +10223,7 @@
   <increment >1</increment>
  </lgtb_status_conta_id_processo_seq>
  <pfsq_id_forma_pagamento >
-  <start >17</start>
+  <start >19</start>
   <increment >1</increment>
  </pfsq_id_forma_pagamento>
  <pfsq_id_modelo_contrato >
@@ -10313,7 +10247,7 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >568</start>
+  <start >573</start>
   <increment >1</increment>
  </spsq_id_spool>
  <sptb_spool_id_spool_seq >
