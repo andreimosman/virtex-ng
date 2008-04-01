@@ -303,6 +303,46 @@
 							"num_perdas" => $num_perdas, "num_erros" => $num_erros, "num_ping" => $num_ping, "status" => $status);
 			return($this->sttb_pop_status->insere($dados));
 		}
+		
+		
+		/**
+		 * Obtem a árvore de pops até a raiz
+		 */
+		public function obtemArvorePop($id_pop) {
+			
+			$pop = $this->obtemPop($id_pop);
+			
+			$retorno = array($pop);
+			
+			while( $pop["id_pop_ap"] != "" && $pop["id_pop_ap"] != null ) {
+				$pop = $this->obtemPop($pop["id_pop_ap"]);
+				$retorno[] = $pop;
+			}
+			
+			return($retorno);
+
+		}
+		
+		/**
+		 * obtem o MAC do POP (se aplicável)
+		 */
+		public function macPOP($id_pop) {
+			$arvore = $this->obtemArvorePop($id_pop);
+			
+			$retorno = "";
+			
+			for($i=0;$i<count($arvore);$i++) {
+				if( $arvore[$i]["clientemacpop"] == 't' && $arvore[$i]["mac"] ) {
+					$retorno = $arvore[$i]["mac"];
+				}
+			}
+			
+			return($retorno);
+		}
+		
+		
+		
+		
 	
 	}
 
