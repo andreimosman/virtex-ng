@@ -264,9 +264,9 @@
 			return($this->cftb_pop->enumTipoPop());
 		}
 		
-		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $macaddr, $usa_mac_ap, $clientemacpop) {
+		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
 			$filtro = array("id_pop"=>$id_pop);
-			$dados = array("nome"=>$nome, "info"=>$info, "status" => $status, "macaddr" => $macaddr);
+			$dados = array("nome"=>$nome, "info"=>$info, "status" => $status, "mac" => $mac);
 			if( $tipo ) {
 				$dados["tipo"] = $tipo;
 			}
@@ -274,18 +274,16 @@
 			$dados["ipaddr"] = $ipaddr ? $ipaddr : null; 			
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
 			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : null; 	
-			$dados["usa_mac_ap"] = $usa_mac_ap ? $usa_mac_ap : 'f';
 			$dados["clientemacpop"] = $clientemacpop ? $clientemacpop : 'f';			
 			return($this->cftb_pop->altera($dados,$filtro));
 		}
 		
-		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $macaddr, $usa_mac_ap, $clientemacpop) {
-			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status, "macaddr"=> $macaddr);
+		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
+			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status, "mac"=> $mac);
 			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
 			$dados["ipaddr"] = $ipaddr ? $ipaddr : null;
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 						
 			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : 'f';
-			$dados["usa_mac_ap"] = $usa_mac_ap ? $usa_mac_ap : 'f';
 			$dados["clientemacpop"] = $clientemacpop ? $clientemacpop : 'f';
 			return($this->cftb_pop->insere($dados));			
 		}

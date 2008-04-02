@@ -138,8 +138,7 @@ label {
 
 
 	function confereCampoMAC() {
-		var macaddr = document.getElementById("macaddr");
-		var usa_mac_ap = document.getElementById("usa_mac_ap");
+		var macaddr = document.getElementById("mac");
 		var tipo = document.getElementById("tipo");
 		var clientemacpop = document.getElementById("clientemacpop");
 		var divClienteMacPop = document.getElementById("divClienteMacPop");
@@ -215,10 +214,10 @@ label {
 
 		<tr>
 			<td width="100" align="right" nowrap><label>MAC:</label></td>
-			<td colspan=2><input name="macaddr" type="text" id="macaddr" value="{$macaddr}" size="40" maxlength="17" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
+			<td colspan=2><input name="mac" type="text" id="mac" value="{$mac}" size="40" maxlength="17" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
 
-			<td width="100" align="left" valign="middle" nowrap>
-				<input name="usa_mac_ap" type="checkbox" id="usa_mac_ap" value="t" /><label>Usar MAC do AP</label>
+			<td width="100" align="left" valign="middle" nowrap>&nbsp;
+				{* <input name="bloquearmac" type="checkbox" id="bloquearmac" value="t" /><label>Bloquear MAC</label> *}
 			</td>
 		</tr>
 

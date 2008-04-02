@@ -179,8 +179,7 @@
 			$id_pop_ap = @$_REQUEST["id_pop_ap"];
 			$status = @$_REQUEST["status"];
 			$ipaddr = @$_REQUEST["ipaddr"];
-			$macaddr = @$_REQUEST["macaddr"];
-			$bloquearmac = @$_REQUEST["bloquearmac"];
+			$mac = @$_REQUEST["mac"];
 			$clientemacpop = @$_REQUEST["clientemacpop"];
 			$id_servidor = @$_REQUEST["id_servidor"];
 			$ativar_monitoramento = @$_REQUEST["ativar_monitoramento"];
@@ -228,7 +227,7 @@
 							}
 						} else {
 							// Processar alteração								
-							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $macaddr, $bloquearmac, $clientemacpop);
+							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Pop atualizado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
@@ -239,7 +238,7 @@
 
 						if( $acao ) {
 							// Cadastrar							
-							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $macaddr, $bloquearmac, $clientemacpop);
+							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Pop cadastrado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
