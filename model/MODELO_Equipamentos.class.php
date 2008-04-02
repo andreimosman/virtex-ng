@@ -14,10 +14,14 @@
 		
 		protected $spool;
 		
+		// Performance stuff
+		protected $cacheArvore;
+		protected $cacheArvoreMAC;
+		
 	
 		public function __construct() {
 			parent::__construct();
-		
+			
 			$this->cftb_servidor 	= VirtexPersiste::factory("cftb_servidor");
 			$this->cftb_pop 		= VirtexPersiste::factory("cftb_pop");
 			$this->cftb_nas 		= VirtexPersiste::factory("cftb_nas");
@@ -28,6 +32,9 @@
 			$this->sttb_pop_status 	= VirtexPersiste::factory("sttb_pop_status");
 			
 			$this->spool = null;
+			
+			$this->cacheArvore = array();
+			$this->cacheArvoreMAC = array();
 			
 		}
 		
@@ -266,6 +273,9 @@
 		
 		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
 			$filtro = array("id_pop"=>$id_pop);
+			
+			if( !$mac ) $mac = NULL;
+			
 			$dados = array("nome"=>$nome, "info"=>$info, "status" => $status, "mac" => $mac);
 			if( $tipo ) {
 				$dados["tipo"] = $tipo;
@@ -308,6 +318,11 @@
 		 */
 		public function obtemArvorePop($id_pop) {
 			
+			if( @$this->cacheArvore[$id_pop] ) {
+				return($this->cacheArvore[$id_pop]);
+			}
+		
+			
 			$pop = $this->obtemPop($id_pop);
 			
 			$retorno = array($pop);
@@ -317,6 +332,8 @@
 				$retorno[] = $pop;
 			}
 			
+			$this->cacheArvore[$id_pop] = $retorno;
+			
 			return($retorno);
 
 		}
@@ -325,6 +342,10 @@
 		 * obtem o MAC do POP (se aplicável)
 		 */
 		public function macPOP($id_pop) {
+			if( @$this->cacheArvoreMAC[$id_pop] ) {
+				return($this->cacheArvoreMAC[$id_pop]);
+			}
+		
 			$arvore = $this->obtemArvorePop($id_pop);
 			
 			$retorno = "";
@@ -335,12 +356,14 @@
 				}
 			}
 			
+			$this->cacheArvoreMAC[$id_pop] = $retorno;
+			
 			return($retorno);
 		}
 		
-		
-		
-		
+		public function obtemPOPsPeloServidor($id_servidor) {
+			return($this->cftb_pop->obtem(array("id_servidor" => $id_servidor, "status" => "A")));
+		}
 	
 	}
 

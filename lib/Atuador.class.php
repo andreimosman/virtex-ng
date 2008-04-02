@@ -19,12 +19,16 @@
 
 		
 		protected $SO;
+		protected $contas;
+		protected $equipamentos;
 
 		
 	
 
 		public function __construct() {
-			$this->SO = new SOFreeBSD();			
+			$this->SO = new SOFreeBSD();
+			$this->contas = VirtexModelo::factory("contas");
+			$this->equipamentos = VirtexModelo::factory("equipamentos");
 		}
 		
 		public function configuraRede($interface,$ip,$mascara,$gateway="") {
@@ -46,6 +50,22 @@
 			} else {
 				$this->SO->ifUnConfig($interface,$addr->obtemUltimoIP());
 				$this->SO->deletaRegraSP($id,self::$FW_SUB_BASERULE);
+			}
+			
+			
+			// Verificar de existe MAC configurado no equipamento e atribuir o bloqueio de MAC
+			$nas = $this->equipamentos->obtemNAS($id_nas);
+			if( @$nas["id_servidor"] ) {
+				$pops = $this->equipamentos->obtemPOPsPeloServidor($dados_nas["id_servidor"]);
+				for($i=0;$i<count($pops);$i++) {
+					if( $pops[$i]["ipaddr"] && $pops[$i]["status"] == "A" ) {
+						$macArvore = $this->equipamentos->macPOP($pops[$i]["id_pop"]);
+						$this->SO->removeARP($pops[$i]["ipaddr"]);
+						if( $macArvore ) {
+							$this->SO->atribuiARP($pops[$i]["ipaddr"],$macArvore);
+						}
+					}
+				}
 			}
 			
 			return(true);
@@ -75,9 +95,29 @@
 			}
 			
 			$ip = $addr->obtemUltimoIP();
+
+			
+			
+			
+			// $mac = 
+			
 			if( $op == MODELO_Spool::$ADICIONAR ) {
+
+				if( $this->infoNAS[$id_nas]["tipo_nas"] == "I" ) {
+					$conta = $this->contas->obtemContaPeloId($id);
+					if( @$conta["id_pop"] ) {
+						$macPOP = $this->equipamentos->macPOP($id_pop);
+
+						if( $macPOP ) {
+							$mac = $macPOP;
+						}
+					}
+				}
+
+
 				$this->SO->ifConfig($interface,$addr->obtemPrimeiroIP(),$addr->obtemMascara());
 				$this->SO->adicionaRegraBW($id,$baserule,$basepipe_in,$basepipe_out,$interface,$this->ext_iface,$ip,$mac,$upload*$fator,$download*$fator,$username);
+				
 			} else {
 				$this->SO->ifUnConfig($interface,$addr->obtemPrimeiroIP());
 				$this->SO->deletaRegraBW($id,$baserule,$basepipe_in,$basepipe_out);

@@ -79,8 +79,9 @@
 					$interface = $this->tcpip[$id_nas];
 					for($i=0;$i<count($info);$i++) {
 						$this->atuador->processaInstrucaoInfraestrutura($id_nas,$interface,$info[$i]["id_rede"],MODELO_Spool::$ADICIONAR,$info[$i]["rede"]);
-					}
+					}					
 				}
+				
 			}
 			
 			echo "OK\n";
