@@ -587,6 +587,23 @@
     <type >text</type>
     <mdb2type >text</mdb2type>
    </observacoes>
+   <contato_nome >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >50</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </contato_nome>
+   <contato_fone >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <fixed ></fixed>
+    <default >40</default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </contato_fone>
   </fields>
   <indexes >
   </indexes>
@@ -3438,15 +3455,6 @@
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_servidor>
-   <macaddr >
-    <notnull ></notnull>
-    <nativetype >varchar</nativetype>
-    <length >17</length>
-    <fixed ></fixed>
-    <default ></default>
-    <type >text</type>
-    <mdb2type >text</mdb2type>
-   </macaddr>
    <clientemacpop >
     <notnull ></notnull>
     <nativetype >bool</nativetype>
@@ -3469,13 +3477,6 @@
     <type >macaddr</type>
     <mdb2type >macaddr</mdb2type>
    </mac>
-   <usa_mac_ap >
-    <notnull ></notnull>
-    <nativetype >bool</nativetype>
-    <default >false</default>
-    <type >boolean</type>
-    <mdb2type >boolean</mdb2type>
-   </usa_mac_ap>
   </fields>
   <indexes >
   </indexes>
@@ -9575,6 +9576,103 @@
   <constraints >
   </constraints>
  </prtb_produto_hospedagem>
+ <public_catb_condominio >
+  <inherits ></inherits>
+  <fields >
+   <id_condominio >
+    <notnull ></notnull>
+    <nativetype >float8</nativetype>
+    <length >8</length>
+    <default ></default>
+    <type >float8</type>
+    <mdb2type >float8</mdb2type>
+   </id_condominio>
+   <nome >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </nome>
+   <zelador_nome >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </zelador_nome>
+   <sindico_nome >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </sindico_nome>
+   <endereco >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </endereco>
+   <bairro >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </bairro>
+   <id_cidade >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </id_cidade>
+   <cep >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </cep>
+   <Telefones >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >254</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </Telefones>
+   <quantidade_edificios >
+    <notnull ></notnull>
+    <nativetype >float8</nativetype>
+    <length >8</length>
+    <default ></default>
+    <type >float8</type>
+    <mdb2type >float8</mdb2type>
+   </quantidade_edificios>
+  </fields>
+  <indexes >
+  </indexes>
+  <constraints >
+  </constraints>
+ </public_catb_condominio>
  <rdtb_accounting >
   <inherits ></inherits>
   <fields >
@@ -10119,7 +10217,7 @@
   <increment >1</increment>
  </cfsq_id_nas>
  <cfsq_id_pop >
-  <start >94</start>
+  <start >95</start>
   <increment >1</increment>
  </cfsq_id_pop>
  <cfsq_id_rede >
@@ -10163,7 +10261,7 @@
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >406</start>
+  <start >408</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
