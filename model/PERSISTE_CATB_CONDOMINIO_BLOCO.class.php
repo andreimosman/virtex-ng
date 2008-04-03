@@ -6,10 +6,11 @@
 		public function __construct($bd=null) {
 			parent::__construct($bd);
 			$this->_campos	 	= array("id_condominio", "id_bloco", "nome", "numero_andares", "apartamentos_andar", "total_apartamentos", "situacao", "id_pop", "observacoes");
-			$this->_chave 		= "id_bloco";
+			$this->_chave 		= "id_bloco";			
 			$this->_ordem 		= "nome";
 			$this->_tabela		= "catb_condominio_bloco";
 			$this->_sequence	= "casq_id_bloco";
+			$this->_filtro 		= array("numero_andares" => "number", "apartamentos_andar" => "number", "total_apartamentos" => "number", "id_pop" => "number");
 		}
 		
 		
@@ -45,17 +46,15 @@
 
 			$dados = array (
 				"nome" => $nome,
-				"numero_andares" => $numero_andares, 
-				"apartamentos_andar" => $apartamentos_andar,
-				"total_apartamentos" => $total_apartamentos, 
 				"situacao" => $situacao,
-				"id_pop" => $id_pop,
-				"observacoes" => $observacoes,
+				"observacoes" => $observacoes
 			);
 			
-			echo "<PRE>";
-			print_r($dados);
-			echo "</PRE>";
+			
+			$dados["numero_andares"] = $numero_andares ? $numero_andares : NULL;
+			$dados["apartamentos_andar"] = $apartamentos_andar ? $apartamentos_andar : NULL;
+			$dados["total_apartamentos"] = $total_apartamentos ? $total_apartamentos : NULL;
+			$dados["id_pop"] = $id_pop ? $id_pop : NULL;
 
 			$this->altera($dados, array("id_bloco" => $id_bloco));
 		}
