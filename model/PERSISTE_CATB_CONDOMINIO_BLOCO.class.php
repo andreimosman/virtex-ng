@@ -71,7 +71,7 @@
 			$sql .= "	cb.id_condominio, cb.id_bloco, cb.nome, cb.numero_andares, cb.apartamentos_andar ";
 			$sql .= "	, cb.total_apartamentos, cb.situacao, cb.id_pop, cb.observacoes, pop.nome as popnome ";
 			$sql .= "FROM ";
-			$sql .= "	catb_condominio_bloco cb INNER JOIN cftb_pop pop ON cb.id_pop = pop.id_pop ";
+			$sql .= "	catb_condominio_bloco cb LEFT OUTER JOIN cftb_pop pop ON cb.id_pop = pop.id_pop ";
 			
 			$extrasql = "";
 			
