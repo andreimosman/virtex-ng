@@ -430,6 +430,12 @@
 
 					}
 
+					$parcelas_instalacao = @$_REQUEST["parcelas_instalacao"];
+					if( !$parcelas_instalacao ) {
+						$parcelas_instalacao = 1;
+					}
+					$this->_view->atribui("parcelas_instalacao",$parcelas_instalacao);
+
 					if( !$acao ) {
 						//Cidades disponiveis
 						$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
@@ -595,7 +601,8 @@
 
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
-						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],@$_REQUEST["pro_rata"],@$_REQUEST["limite_prorata"]);
+												
+						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],@$_REQUEST["pro_rata"],@$_REQUEST["limite_prorata"],$parcelas_instalacao);
 						$this->_view->atribui("faturas",$faturas);
 
 
@@ -631,7 +638,6 @@
 							}
 						}
 						
-
 						if( $acao == "gravar_novo_contrato" ) {
 
 							$erro = "";

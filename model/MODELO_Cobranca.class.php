@@ -13,6 +13,7 @@
 		protected $cbtb_carne;
 		protected $pftb_forma_pagamento;
 		protected $cbtb_fatura;
+		// protected $cbtb_fatura_itens;
 		protected $preferencias;
 		
 		protected $lgtb_reagendamento;
@@ -42,6 +43,7 @@
 
 
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
+			// $this->cbtb_fatura_itens = VirtexPersiste::factory("cbtb_fatura_itens");
 			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
 
 			$this->pftb_forma_pagamento = VirtexPersiste::factory("pftb_forma_pagamento");
@@ -123,14 +125,33 @@
 		 *   -> comodato
 		 *   ->
 		 */
-		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata) {
+		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao) {
 			$faturas = array();
 
  			$descontos_aplicados = 0;
 			$meses_cobrados = 0;
+			
+			$parcelaInstalacao = $tx_instalacao / $parcelamento_instalacao;
+			$parcelaInstalacao = (float) number_format($parcelaInstalacao,2,".","");
+			
+			$parcelasInstCobradas = 0;
+			
+			// echo "TX INST: $tx_instalacao<br>\n";
+			// echo "NUM PARC: $parcelamento_instalacao<br>\n";
+			// echo "PARC INST: $parcelaInstalacao<br>\n";
 
+			// Se a vigência do contrato for menor que o parcelamento da instalação gera pelo menos as faturas do parcelamento.
+			if( $tx_instalacao && $vigencia < $parcelamento_instalacao ) {
+				$vigencia = $parcelamento_instalacao;
+			}
+			
+			if( $vigencia < $desconto_periodo ) {
+				$vigencia = $desconto_periodo;
+			}
 
 			$data = MData::proximoDia($dia_vencimento,$data_contratacao);
+			
+			$itens_fatura = array();
 
 			if( $pagamento == "POS" ) {
 				// $data = MData::proximoDia($dia_vencimento,$data_contratacao);
@@ -139,14 +160,15 @@
         		$composicao = array();
 
         		if( ((float)$tx_instalacao) > 0 ) {
-        			echo "TX!!";
+        			// echo "TX!!";
 					// Gerar fatura 0 com a taxa de instalaçao
-					$composicao["instalacao"] = $tx_instalacao;
-					$faturas[] = array("data"=>$data_contratacao,"valor" => $tx_instalacao,"composicao"=>$composicao);
+					$composicao["instalacao"] = $parcelaInstalacao;
+					$composicao["parcela_instalacao"] = $meses_cobrados + 1 . "/" . $parcelamento_instalacao;
+					$faturas[] = array("data"=>$data_contratacao,"valor" => $parcelaInstalacao,"composicao"=>$composicao);
+					$parcelasInstCobradas++;
 					$meses_cobrados++;
+
 				}
-
-
 
 			} else {
 				// Pagamento pré-pago. Calcula pro-rata.
@@ -164,7 +186,7 @@
 					$composicao["prorata_comodato"] = $prorata_comodato;
 					$composicao["dias_prorata"] = $dias_prorata;
 					$valor_fatura = $prorata_plano + $prorata_comodato;
-
+					
 				} else {
 					// Valores diretos
 					$valor_fatura = $valor + $valor_comodato;
@@ -173,8 +195,10 @@
 				}
 
         		if( ((float)$tx_instalacao) > 0) {
-					$valor_fatura += $tx_instalacao;
-					$composicao["instalacao"] = $tx_instalacao;
+					$valor_fatura += $parcelaInstalacao;
+					$composicao["parcela_instalacao"] = ($parcelasInstCobradas + 1) . "/" . $parcelamento_instalacao;
+					$composicao["instalacao"] = $parcelaInstalacao;
+					$parcelasInstCobradas++;
 				}
 
 				if( $desconto_valor && $desconto_periodo > 0 ) {
@@ -195,16 +219,8 @@
 				$composicao["comodato"] = $valor_comodato;
 				$composicao["instalacao"] = '';
 
-				if( $desconto_valor && $desconto_periodo > 0 ) {
-					$valor_fatura -= $desconto_valor;
-					$descontos_aplicados++;
-					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
-				}
-
 			}
-
-
-
+			
 			for( ; $meses_cobrados < $vigencia ; $meses_cobrados++ ) {
 				$got = false;
 				$composicao = array();
@@ -250,6 +266,15 @@
 					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
 				}
 
+				if( $parcelasInstCobradas < $parcelamento_instalacao ) {
+					// echo "MC: " . $meses_cobrados ."<br>\n";
+					// echo "parcInst: " . $parcelasInstCobradas . "<br>\n";
+					$composicao["parcela_instalacao"] = ($parcelasInstCobradas + 1) . "/" . $parcelamento_instalacao;
+					$composicao["instalacao"] = $parcelaInstalacao;
+					$valor_fatura+=$parcelaInstalacao;
+					$parcelasInstCobradas++;
+				}
+
 				$faturas[] = array("data"=>$data,"valor" => $valor_fatura,"composicao" => $composicao);
 
 
@@ -263,7 +288,7 @@
 		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
                           $carencia, $id_prduto, $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, 
-						  $dados_conta, &$gera_carne = false) {
+						  $dados_conta, &$gera_carne = false, $parcelas_instalacao = 1) {
 			/*echo "<pre>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
 			echo "MODELO_Conbranca::novoContrato()\n";
 			echo "id_cliente\t\t\t=\t".print_r($id_cliente,true)."\n";
@@ -385,9 +410,13 @@
 			if( $id_forma_pagamento ) {
 				$dados["id_forma_pagamento"]=$id_forma_pagamento;
 			}
+			
+			if( !$parcelas_instalacao ) {
+				$parcelas_instalacao = 1;
+			}
+			
 			$this->cbtb_contrato->insere($dados);
-			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao ,$vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento, $pro_rata, $limite_prorata) : array();
-
+			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento,      $pro_rata,   $limite_prorata, $parcelas_instalacao) : array();
 			$id_cobranca = 0;
 			// gera carne
 			if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
