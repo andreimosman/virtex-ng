@@ -290,7 +290,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				if(!$fatura_retorno) {
 					$valor_fatura = floatval($item["valor_produto"]);
 					$valor_fatura += floatval($item["valor_comodato"]);
-					$valor_fatura -= floatval($item["desconto_promo"]);
+					//$valor_fatura -= floatval($item["desconto_promo"]);
 					
 					$data_referencia_fatura = $data_referencia . "-" . $item["vencimento"];
 
