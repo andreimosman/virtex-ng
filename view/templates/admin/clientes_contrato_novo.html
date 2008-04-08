@@ -554,6 +554,7 @@ function contratoAlteraProduto() {
 	desabilita(frm.desconto_promo);
 	desabilita(frm.periodo_desconto);
 	desabilita(frm.tx_instalacao);
+	desabilita(frm.parcelas_instalacao);
 	desabilita(frm.comodato);
 	desabilita(frm.pro_rata);
 	desabilita(frm.valor_comodato);
@@ -607,6 +608,7 @@ function contratoAlteraProduto() {
 			habilita(frm.desconto_promo);
 			habilita(frm.periodo_desconto);
 			habilita(frm.tx_instalacao);
+			habilita(frm.parcelas_instalacao);
 			habilita(frm.comodato);
 			habilita(frm.pro_rata);
 			contratoAlteraComodato();
@@ -1283,8 +1285,16 @@ function validarData(campo){
 					</tr>
 					<tr>
 						<td align="right"><label>Pr&oacute;xima Fatura:</label></td>
-						<td colspan=3 align="left" ><input type="text" size="12" maxlength="10" name="primeiro_vencimento_input" id="primeiro_vencimento_input" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+						<td align="left" ><input type="text" size="12" maxlength="10" name="primeiro_vencimento_input" id="primeiro_vencimento_input" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						<input type="hidden" name="primeiro_vencimento" id="primeiro_vencimento" value="" >
+						<td align="right" ><label>Pro Rata:</label></td>
+						<td align="left" ><select name="pro_rata" id="pro_rata" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+                				{foreach item=d from=$lista_boolean}
+								<option value='{$d.id}' {if $d.id == $pro_rata}SELECTED{/if}>{$d.nome}</option>
+								{/foreach}
+							</select>
+							</td>
+							<input type="hidden" name="limite_prorata" id="limite_prorata" value="{$limite_prorata}" >
      				</tr>
 					<tr>
 						<td align="right"><label>Desconto:</label></td>
@@ -1295,14 +1305,8 @@ function validarData(campo){
 					<tr>
 						<td align="right" width="105"><label>Tx Instalação:</label></td>
 						<td align="left" ><input type="text" size="6" maxlength="6" name="tx_instalacao" id="tx_instalacao" value="{$tx_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
-						<td align="right" ><label>Pro Rata:</label></td>
-						<td align="left" ><select name="pro_rata" id="pro_rata" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-                {foreach item=d from=$lista_boolean}
-								<option value='{$d.id}' {if $d.id == $pro_rata}SELECTED{/if}>{$d.nome}</option>
-								{/foreach}
-							</select>
-							</td>
-							<input type="hidden" name="limite_prorata" id="limite_prorata" value="{$limite_prorata}" >
+						<td align="right" width="105"><label>Parcelas:</label></td>
+						<td align="left" ><input type="text" size="6" maxlength="6" name="parcelas_instalacao" id="parcelas_instalacao" value="{$parcelas_instalacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
 					</tr>
 					<tr>
 						<td align="right"><label>Comodato:</label></td>
@@ -1824,7 +1828,7 @@ contratoAlteraFormaPagamentoDA();
 			<td>{$dia_vencimento}&nbsp;</td>
 
 			<td width="110" align="right"><strong>Vigência:</strong></td>
-			<td>{$vigencia} meses</td>
+			<td>{if $vigencia > 0}{$vigencia} meses{else}<span style="font-family: arial; font-size: 9px;">Tempo Indeterminado</span>{/if}</td>
 
 			<td width="110" align="right"><strong>Carência:</strong></td>
 			<td>{$carencia} dias</td>
@@ -1835,7 +1839,7 @@ contratoAlteraFormaPagamentoDA();
 			<td>{if $pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
 
  			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
-			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}Sistema manual com exportação.{/if}</span></td>
+			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}{if $forma_pagamento=='NA'}Não Atribuida{else}Sistema manual com exportação.{/if}{/if}</span></td>
       <td width="110" align="right"><strong>Pr&oacute;xima Fatura:</strong></td>
 			<td>{$primeiro_vencimento}</td>
   	</tr>
@@ -1965,7 +1969,7 @@ contratoAlteraFormaPagamentoDA();
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>
-				<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
+				<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.parcela_instalacao}: {$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
 			</tr>
 			{/foreach}
 
