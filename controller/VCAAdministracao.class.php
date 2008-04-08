@@ -558,7 +558,7 @@
 						$this->_view->atribui($vr,$vl);
 					}
 				} else {
-					$this->requirePrivGravacao("_COBRANCA_PREFERENCIAS");
+					$this->requirePrivGravacao("_ADMINISTRACAO_PREFERENCIAS");
 
 					if( $acao ) {
 						if( $id_modelo_contrato ) {
