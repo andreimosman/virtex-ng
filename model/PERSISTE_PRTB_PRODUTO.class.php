@@ -10,7 +10,7 @@ class PERSISTE_PRTB_PRODUTO extends VirtexPersiste {
 		parent::__construct($bd);
 		$this->_campos	 	= array("id_produto", "nome", "descricao", "tipo", "valor", "disponivel", "num_emails", "quota_por_conta", "vl_email_adicional",
 										"permitir_outros_dominios", "email_anexado", "numero_contas", "comodato", "valor_comodato", "desconto_promo", 
-										"periodo_desconto", "tx_instalacao", "valor_estatico", "comissao", "comissao_migracao"
+										"periodo_desconto", "tx_instalacao", "valor_estatico", "comissao", "comissao_migracao", "modelo_contrato"
 										);
 										$this->_chave 		= "id_produto";
 										$this->_ordem 		= "nome";
@@ -19,7 +19,7 @@ class PERSISTE_PRTB_PRODUTO extends VirtexPersiste {
 										$this->_filtros		= array("id_produto" => "number", "valor" => "number", "num_emails" => "number", "disponivel" => "bool",
 										"quota_por_conta" => "number", "vl_email_adicional" => "number", "permitir_outros_dominios" => "bool", 
 										"numero_contas" => "custom", "valor_comodato" => "number", "desconto_promo" => "number",
-										"periodo_desconto" => "number", "tx_instalacao" => "number", "valor_estatico" => "bool", "comissao" => "number", "comissao_migracao" => "number");
+										"periodo_desconto" => "number", "tx_instalacao" => "number", "valor_estatico" => "bool", "comissao" => "number", "comissao_migracao" => "number", "modelo_contrato"=>"number");
 	}
 
 	public static function &factoryByType($tipo) {
@@ -39,8 +39,7 @@ class PERSISTE_PRTB_PRODUTO extends VirtexPersiste {
 				break;
 			default:
 				$retorno = $valor;
-					
-					
+				
 		}
 			
 		return($retorno);

@@ -453,6 +453,28 @@ function planoValidacaoForm() {
 						</tr>
 					</table>
 				</div>
+
+				<div id="formEmail" class="formContainer">
+					<table width="100%" border=0 cellpadding=0 cellspacing=0>
+						<tr>
+							<td colspan="2" bgcolor="#d5Efd5"><label>Modelo de Contrato</label></td>
+						</tr>
+						<tr>
+							<td align="right" width="50%"><label>Modelo de Contrato:</label></td>
+
+							<td>
+								<select name="modelo_contrato" id="modelo_contrato" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value=''>-- SELECIONE --</option>
+								{foreach item=r from=$modelos_contrato}
+								{if $r.tipo == $tipo}<option value='{$r.id_modelo_contrato}' {if $r.id_modelo_contrato==$modelo_contrato}SELECTED{/if}>{$r.descricao}</option>{/if}
+								{/foreach}
+								</select>
+							</td>
+
+						</tr>
+					</table>
+				</div>
+
 			</td>
 		</tr>
 		<tr>

@@ -853,6 +853,7 @@
 			switch($tela) {
 				case 'cadastro':
 					$this->_view->atribui("lista_bandas",$this->preferencias->obtemListaBandas());
+					$this->_view->atribui("modelos_contrato", $this->preferencias->obtemListaModelosContrato());					
 
 					if( $id_produto ) {
 
@@ -879,6 +880,9 @@
 						if( $this->_acao ) {
 							// TODO: Tratar $dados
 							$dados = $_REQUEST;
+							
+							if(!$dados["modelo_contrato"]) 
+								$dados["modelo_contrato"] = NULL;
 
 							//Dados de taxa de instalação
 							if(isset($dados["tx_instalacao"]))
