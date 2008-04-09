@@ -912,8 +912,8 @@
    </id_cliente_produto>
    <id_cliente >
     <notnull >1</notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
     <type >integer</type>
@@ -4015,8 +4015,8 @@
   <fields >
    <id_cliente >
     <notnull >1</notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
     <type >integer</type>
@@ -4326,6 +4326,23 @@
   <indexes >
   </indexes>
   <constraints >
+   <cltb_cliente_pkey >
+    <type >p</type>
+    <table_oid >326923</table_oid>
+    <table >cltb_cliente</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cltb_cliente_pkey>
    <cltb_cliente_id_condominio_fkey >
     <type >f</type>
     <table_oid >326923</table_oid>
@@ -4362,23 +4379,6 @@
      <int i="0">id_cidade</int>
     </foreign_fields>
    </cltb_cliente_id_cidade_fkey>
-   <cltb_cliente_pkey >
-    <type >p</type>
-    <table_oid >326923</table_oid>
-    <table >cltb_cliente</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </cltb_cliente_pkey>
   </constraints>
  </cltb_cliente>
  <cntb_conta >
@@ -4422,8 +4422,8 @@
    </senha>
    <id_cliente >
     <notnull ></notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
     <type >integer</type>
@@ -4974,8 +4974,8 @@
    </cep>
    <id_cliente >
     <notnull ></notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
     <type >integer</type>
@@ -5312,8 +5312,8 @@
    </dominio>
    <id_cliente >
     <notnull ></notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
     <type >integer</type>
@@ -5966,6 +5966,24 @@
    </hdix_chamado_ids>
   </indexes>
   <constraints >
+   <hdtb_chamado_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >326997</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >326923</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{14}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </hdtb_chamado_id_cliente_fkey>
    <hdtb_chamado_id_servidor_fkey >
     <type >f</type>
     <table_oid >326997</table_oid>
@@ -6074,24 +6092,6 @@
      <int i="0">id_cliente_produto</int>
     </foreign_fields>
    </hdtb_chamado_id_cliente_produto_fkey>
-   <hdtb_chamado_id_cliente_fkey >
-    <type >f</type>
-    <table_oid >326997</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >326923</foreign_oid>
-    <foreign_table >cltb_cliente</foreign_table>
-    <conkey >{14}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente</int>
-    </foreign_fields>
-   </hdtb_chamado_id_cliente_fkey>
    <hdtb_chamado_id_chamado_pai_fkey >
     <type >f</type>
     <table_oid >326997</table_oid>
@@ -7195,8 +7195,8 @@
    </tipo_conta>
    <id_cliente >
     <notnull >1</notnull>
-    <nativetype >int2</nativetype>
-    <length >2</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
     <type >integer</type>
@@ -7213,6 +7213,24 @@
   <indexes >
   </indexes>
   <constraints >
+   <lgtb_emails_cobranca_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >327053</table_oid>
+    <table >lgtb_emails_cobranca</table>
+    <foreign_oid >326923</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{7}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </lgtb_emails_cobranca_id_cliente_fkey>
    <lgtb_emails_cobranca_id_cliente_produto_fkey >
     <type >f</type>
     <table_oid >327053</table_oid>
@@ -7233,24 +7251,6 @@
      <int i="1">data</int>
     </foreign_fields>
    </lgtb_emails_cobranca_id_cliente_produto_fkey>
-   <lgtb_emails_cobranca_id_cliente_fkey >
-    <type >f</type>
-    <table_oid >327053</table_oid>
-    <table >lgtb_emails_cobranca</table>
-    <foreign_oid >326923</foreign_oid>
-    <foreign_table >cltb_cliente</foreign_table>
-    <conkey >{7}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente</int>
-    </foreign_fields>
-   </lgtb_emails_cobranca_id_cliente_fkey>
    <lgtb_emails_cobranca_pkey >
     <type >p</type>
     <table_oid >327053</table_oid>
@@ -8621,20 +8621,21 @@
   </indexes>
   <constraints >
    <pftb_modelo_contrato_pkey >
-    <type >p</type>
-    <table_oid >327113</table_oid>
-    <table >pftb_modelo_contrato</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
+    <type >f</type>
+    <table_oid >327138</table_oid>
+    <table >prtb_produto</table>
+    <foreign_oid >327113</foreign_oid>
+    <foreign_table >pftb_modelo_contrato</foreign_table>
+    <conkey >{21}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
     <fields >
-     <int i="0">id_modelo_contrato</int>
+     <int i="0">modelo_contrato</int>
     </fields>
     <foreign_fields >
+     <int i="0">id_modelo_contrato</int>
     </foreign_fields>
    </pftb_modelo_contrato_pkey>
   </constraints>
@@ -9444,10 +9445,37 @@
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
    </comissao_migracao>
+   <modelo_contrato >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </modelo_contrato>
   </fields>
   <indexes >
   </indexes>
   <constraints >
+   <pftb_modelo_contrato_pkey >
+    <type >f</type>
+    <table_oid >327138</table_oid>
+    <table >prtb_produto</table>
+    <foreign_oid >327113</foreign_oid>
+    <foreign_table >pftb_modelo_contrato</foreign_table>
+    <conkey >{21}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">modelo_contrato</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_modelo_contrato</int>
+    </foreign_fields>
+   </pftb_modelo_contrato_pkey>
    <prtb_produto_pkey >
     <type >p</type>
     <table_oid >327138</table_oid>
@@ -10162,7 +10190,7 @@
   <increment >1</increment>
  </blsq_nosso_numero_banco>
  <casq_id_bloco >
-  <start >8</start>
+  <start >10</start>
   <increment >1</increment>
  </casq_id_bloco>
  <casq_id_condominio >
@@ -10262,7 +10290,7 @@
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >408</start>
+  <start >417</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
