@@ -20,6 +20,10 @@
 			$controller = strtolower($controller);
 			
 			switch($controller) {
+				case 'js':
+					$retorno = new VCAJs();
+					break;
+			
 				case 'ajax':
 					$retorno = new VCAAjax();
 					break;
