@@ -379,7 +379,7 @@
 				case 'novo_contrato':
 					
 					
-					$cadastro = VirtexModelo::factory("cadastro");
+					$cadastro = VirtexModelo::factory("cadastro");				
 					$condominios = $cadastro->obtemCondominio();
 					$condominios_instalacao = $cadastro->obtemCondominio(NULL, true);
 					$this->_view->atribui("condominios", MJson::encode($condominios));					
@@ -734,12 +734,21 @@
 
 								// $listaContas = $contas->obtemContasPorContrato($id_cliente_produto);
 
-
-								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
+								$id_modelo_contrato = @$info_produto["modelo_contrato"];
+								$tipo_produto = @$_REQUEST["tipo"];
+								
+								//echo "TIPOOOOO: $tipo_produto";
+								
+								if(!$id_modelo_contrato) {
+									$info_modelo = $this->preferencias->obtemModeloContratoPadrao($tipo_produto);
+									$id_modelo_contrato = $info_modelo["id_modelo_contrato"];
+								}
+								
+								
+								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $id_modelo_contrato, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
 																					$_REQUEST["desconto_promo"], $_REQUEST["periodo_desconto"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $carencia,
-																					$_REQUEST["id_produto"], $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);
-								
+																					$_REQUEST["id_produto"], $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne);								
 								
 
 								if( $tela == "migrar" ) {

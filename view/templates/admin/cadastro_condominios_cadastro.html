@@ -183,7 +183,7 @@ label {
 							<label>Cidade/UF:</label>
 						</td>
 						<td colspan="3" >
-							<select name="id_cidade" id="id_cidade" style="width:100%" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							<select name="id_cidade" id="id_cidade" style="width:100%" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" class="fieldWithoutFocus">
 								<option value="">-- SELECIONE --</option>
 								{foreach from=$cidades_disponiveis item=i key=k}
 									<option value="{$i.id_cidade}">{$i.cidade} - {$i.uf}</option>
@@ -220,7 +220,7 @@ label {
 							<label>Situação:</label>
 						</td>
 						<td width="30%">
-							<select name="situacao" id="situacao" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							<select name="situacao" id="situacao" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" class="fieldWithoutFocus">
 								<option value="">-- SELECIONE --</option>
 								{foreach from=$situacoes item=i key=k}
 									<option value="{$k}">{$i}</option>

@@ -46,7 +46,7 @@ var podeGravar={if $podeGravar}true{else}false{/if};
 {literal}
 function voltar() {
 	if( !podeGravar || window.confirm("Deseja abandonar este registro") ) {
-		window.open("admin-configuracoes.php?op=preferencias&tela=modelos","conteudo");
+		window.open("admin-administracao.php?op=preferencias&tela=modelos","conteudo");
 	}
 }
 function habilita(campo) {
@@ -141,7 +141,7 @@ function validaFormModelo() {
 
 
 {if $subtela}
-<form method="post" action="admin-configuracoes.php" name="modelo" onSubmit="return validaFormModelo();" enctype="multipart/form-data">
+<form method="post" action="admin-administracao.php" name="modelo" onSubmit="return validaFormModelo();" enctype="multipart/form-data">
 	<input type="hidden" name="op" value="{$op}">
 	<input type="hidden" name="tela" value="{$tela}">
 	<input type="hidden" name="subtela" value="{$subtela}">
@@ -202,7 +202,7 @@ function validaFormModelo() {
 		</tr>
 	</table>
 	{if $id_modelo_contrato}
-		<br><iframe src="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=exibir_modelo&id_modelo_contrato={$id_modelo_contrato}" width="600" height="200" align="center" frameborder=0 style="border: dotted 1px #000000;"></iframe>
+		<br><iframe src="admin-administracao.php?op=preferencias&tela=modelos&subtela=exibir_modelo&id_modelo_contrato={$id_modelo_contrato}" width="600" height="200" align="center" frameborder=0 style="border: dotted 1px #000000;"></iframe>
 	{/if}
 </form>
 <script language="JavaScript">
@@ -228,12 +228,12 @@ alteracaoModelo();
 		{foreach name=registros item=r from=$registros}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td align='center' width=40 class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.id_modelo_contrato|string_format:"%05d"}</a></td>
-			<td class='{$estilo}' align="left"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$tipos[$r.tipo]}</a></td>
-			<td class='{$estilo}'><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.descricao}</a></td>
-			<td class='{$estilo}' align="center" width="130"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.data_upload|date_format:"%d/%m/%Y %H:%M:%S"}</a></td>
-			<td class='{$estilo}' align="center"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{if $r.disponivel=='t'}SIM{else}NÃO{/if}</a></td>
-			<td class='{$estilo}' align="right" align="50"><a href="admin-configuracoes.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{if $r.padrao == "t"}PADRÃO{else}&nbsp;{/if}</a></td>
+			<td align='center' width=40 class='{$estilo}'><a href="admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.id_modelo_contrato|string_format:"%05d"}</a></td>
+			<td class='{$estilo}' align="left"><a href="admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$tipos[$r.tipo]}</a></td>
+			<td class='{$estilo}'><a href="admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.descricao}</a></td>
+			<td class='{$estilo}' align="center" width="130"><a href="admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{$r.data_upload|date_format:"%d/%m/%Y %H:%M:%S"}</a></td>
+			<td class='{$estilo}' align="center"><a href="admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{if $r.disponivel=='t'}SIM{else}NÃO{/if}</a></td>
+			<td class='{$estilo}' align="right" align="50"><a href="admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro&id_modelo_contrato={$r.id_modelo_contrato}">{if $r.padrao == "t"}PADRÃO{else}&nbsp;{/if}</a></td>
 		</tr>
 		{foreachelse}
 			{if !count($registros)}
