@@ -285,7 +285,7 @@
 		}
 
 
-		function novoContrato($id_cliente, $id_produto, $dominio, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
+		function novoContrato($id_cliente, $id_produto, $dominio, $id_modelo_contrato, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
                           $carencia, $id_prduto, $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, 
 						  $dados_conta, &$gera_carne = false, $parcelas_instalacao = 1) {
@@ -387,6 +387,7 @@
 							"carencia" => $carencia,
 							"data_alt_status" => "",
 							"id_produto" => $id_produto,
+							"id_modelo_contrato" => $id_modelo_contrato,
 							"nome_produto" => $dados_produto["nome"],
 							"descricao_produto" => $dados_produto["descricao"],
 							"disponivel" => $dados_produto["disponivel"],
