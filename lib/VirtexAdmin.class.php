@@ -28,7 +28,7 @@
 			if( $this->_startdb && @$this->_cfg->config["DB"]["dsn"] ) {
 				// TODO: Try/Catch
 				MDatabase::getInstance(@$this->_cfg->config["DB"]["dsn"],@$this->_cfg->config["geral"]["dsn"]);
-				VirtexModelo::init();
+				VirtexPersiste::init();
 			}
 			
 			$this->SO = new SOFreeBSD();
