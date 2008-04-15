@@ -80,13 +80,15 @@
 			/**
 			 * Não é permitido duplicidade do campo cpf_cnpj
 			 */
-			if( $id != 1 ) {		// Não valida CPF_CNPJ p/ id_provedor
-				if( $this->verificaCPF_CNPJ($dados["cpf_cnpj"],$id) ) {
-					throw new ExcecaoModelo(255,"Já existe outro cliente cadastrado com este CPF/CNPJ");
-				}
+			
 
-				
-			}
+			//if( $id != 1 ) {		// Não valida CPF_CNPJ p/ id_provedor
+			//	if( $this->verificaCPF_CNPJ($dados["cpf_cnpj"],$id) ) {
+			//		throw new ExcecaoModelo(255,"Já existe outro cliente cadastrado com este CPF/CNPJ");
+			//	}
+			//}
+
+			
 			if( @$dados["cpf_cnpj"] ) {
 				$dados["cpf_cnpj"] = $this->_stripCPF_CNPJ($dados["cpf_cnpj"]);
 			}

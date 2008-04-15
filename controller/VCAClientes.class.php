@@ -78,13 +78,14 @@
 
 			$cadastro = VirtexModelo::factory("cadastro");
 			$condominios = $cadastro->obtemCondominio();
+			$clientes_cpf=NULL;
 			
 			$this->_view->atribui("condominios", MJson::encode($condominios));
 
 			if( $this->id_cliente ) {
 				if( $this->extra_op ) {
 					// Tela de ficha
-					$this->requirePrivLeitura("_CLIENTES");
+					$this->requirePrivLeitura("_CLIENTES");	
 				} else {
 					// Tela de alteração
 					$this->requirePrivGravacao("_CLIENTES");
@@ -98,7 +99,17 @@
 				// Tem o id do cliente e não tem ação, pegar do banco
 
 				$dados = $this->clientes->obtemPeloId($this->id_cliente);
-
+								
+				$clientes_cpf = $this->clientes->obtemPelosDocumentos($dados["cpf_cnpj"]);
+				
+				for($i=0; $i<count($clientes_cpf); $i++) {
+					if($clientes_cpf[$i]["id_cliente"] == $dados["id_cliente"]) {
+						unset($clientes_cpf[$i]);
+					}
+				}
+				
+				$this->_view->atribui("clientes_cpf",$clientes_cpf);
+				
 				foreach( $dados as $vr => $vl ) {
 					$this->_view->atribui($vr,$vl);
 				}
@@ -141,7 +152,6 @@
 					 * 1) Logar exception.
 					 * 2) Jogar pra página amigável de erro.
 					 */
-
 
 					$this->_view->atribuiErro($e->obtemCodigo(),$e->obtemMensagem());
 

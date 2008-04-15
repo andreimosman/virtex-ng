@@ -2,9 +2,16 @@
 <html>
 <head>
 <title>::.. Virtex Admin - Área de Gerenciamento ..::</title>
+{*
 <script type="text/javascript" src="view/templates/jslib/form/cpf_cnpj.js"></script>
 <script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
 <script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
+*}
+
+<script type="text/javascript" src="admin-js.php?tp=form&js=validacao.js"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=condominio"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=ajax"></script>
+
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
@@ -122,7 +129,13 @@ function checkForm() {
 
 	return true;
 }
+
+function miniOpenLinkFicha(id_cliente) {
+	self.location = "admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente=" + id_cliente;
+}
+
 {/literal}
+
 </script>
 
 
@@ -483,6 +496,27 @@ function checkForm() {
 			</td>
 		</tr>
 	</table>
+
+	{if $extra_op=='ficha'}
+		{if $clientes_cpf}
+			<br />
+			<table width=500 border=0 cellspacing=0 cellpadding=0 align=center class='lista'>
+				<tr>
+					<th colspan=2>CLIENTES CADASTRADOS COM O MESMO CPF</th>
+				</tr>
+
+				{foreach name=registros item=c from=$clientes_cpf}
+					{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+					<tr>
+						<td align='right' width="50" class='{$estilo}'><a href="javascript:miniOpenLinkFicha('{$c.id_cliente}')">{$c.id_cliente|string_format:"%08d"}</a></td>
+						<td class='{$estilo}' width="450"><a href="javascript:miniOpenLinkFicha('{$c.id_cliente}')">{$c.nome_razao|upper}</a></td>
+					</tr>
+				{/foreach}
+			</table>
+
+		{/if}
+	{/if}
+
 </form>
 </body>
 <script language="javascript">
