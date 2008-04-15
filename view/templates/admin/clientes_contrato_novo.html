@@ -162,7 +162,7 @@ function contratoObtemPlano(tipo,id_produto) {
 		lista = planosH;
 	}
 
-	if( lista != null ) {
+	if( lista != null && lista != undefined) {
 		for(i=0;i<lista.length;i++) {
 
 			if( lista[i].id_produto == id_produto ) {
@@ -332,44 +332,47 @@ function contratoPopulaProdutos(tipo) {
 			lista = planosH;
 		}
 
-		for(i=0;i<lista.length;i++) {
+		if( lista != null && lista != undefined ) {
+			for(i=0;i<lista.length;i++) {
 
-			//o = document.createElement("OPTION");
-			//o.value = lista[i].id_produto;
-			vl = lista[i].valor;
-			if( vl == 0 ) {
-				vl = "cortesia";
-			} else {
-				vl = " R$ " + vl;
-			}
-			//o.innerText = lista[i].nome + " / " + vl;
-			//frm.id_produto.appendChild(o);
-			option_index++;
-
-			var opcao = lista[i].nome + "|" + vl;
-			//window.alert(lista[i].tipo);
-			if( lista[i].tipo == 'BL' ) {
-				var up = lista[i].banda_upload_kbps;
-				var dn = lista[i].banda_download_kbps
-				//window.alert("UP: " + up);
-				//window.alert("DN: " + dn);
-
-				if( up == '0' || up == '') {
-					up = 'Ilim.';
+				//o = document.createElement("OPTION");
+				//o.value = lista[i].id_produto;
+				vl = lista[i].valor;
+				if( vl == 0 ) {
+					vl = "cortesia";
 				} else {
-					// up += ' kbps';
+					vl = " R$ " + vl;
+				}
+				//o.innerText = lista[i].nome + " / " + vl;
+				//frm.id_produto.appendChild(o);
+				option_index++;
+
+				var opcao = lista[i].nome + "|" + vl;
+				//window.alert(lista[i].tipo);
+				if( lista[i].tipo == 'BL' ) {
+					var up = lista[i].banda_upload_kbps;
+					var dn = lista[i].banda_download_kbps
+					//window.alert("UP: " + up);
+					//window.alert("DN: " + dn);
+
+					if( up == '0' || up == '') {
+						up = 'Ilim.';
+					} else {
+						// up += ' kbps';
+					}
+
+					if( dn == '0' || dn == '') {
+						dn = 'Ilim.';
+					} else {
+						// dn += ' kbps';
+					}
+
+					opcao += '|U/D: ' + up + "/" + dn;
 				}
 
-				if( dn == '0' || dn == '') {
-					dn = 'Ilim.';
-				} else {
-					// dn += ' kbps';
-				}
-
-				opcao += '|U/D: ' + up + "/" + dn;
+				e.options[option_index] = new Option(opcao,lista[i].id_produto);
 			}
 
-			e.options[option_index] = new Option(opcao,lista[i].id_produto);
 		}
 	}
 }
@@ -1808,8 +1811,8 @@ contratoAlteraFormaPagamentoDA();
 			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
 			<td>{$tx_instalacao|string_format:"%.2f"}</td>
 
-			<td width="110" align="right"><strong></strong></td>
-			<td></td>
+			<td width="110" align="right"><strong>Parcelas Inst.:</strong></td>
+			<td>{$parcelas_instalacao} ({$tx_instalacao/$parcelas_instalacao|string_format:"%.2f"})</td>
 
 		</tr>
 		<tr>
