@@ -12,7 +12,7 @@
 		
 		protected function selfConfig() {
 			$this->_startdb 	= true;
-			$this->_shortopts 	= "DGC";
+			$this->_shortopts 	= "DGCS";
 			$this->_longopts	= array("database");
 		}
 		
@@ -60,8 +60,41 @@
 				// echo "---------------------------------------------------------------------------------------------\n\n";
 				// echo "OK!!!\n\n";
 				
+			} elseif ( $this->obtemOpcao("S") ) {
+				// Gerar script de criação do banco (para instalações iniciais).
+				$this->gerarScriptSQL();
 			}
 			
+		}
+		
+		
+		
+		
+		/**
+		 * Gera um script SQL de criação do banco
+		 */
+		protected function gerarScriptSQL() {
+			$bd = MDatabase::getInstance();
+			$bd->preparaReverso();
+			$xml = new MXMLUtils();
+
+
+			$fd = @fopen($this->arquivoEstrutura,"r");
+			if( !$fd ) {
+				// ERRO
+				return(-1);
+			} else {
+				 $texto = fread($fd,filesize($this->arquivoEstrutura));
+				 fclose($fd);
+			}
+
+			$file_info  = $xml->x2a($texto,"database");
+			unset($texto);
+
+			$script = $bd->scriptModificacao(array(),$file_info);
+			echo $bd->script2text($script);
+			
+		
 		}
 		
 		protected function gerarEstruturaXML() {
@@ -101,6 +134,7 @@
 			$bd->preparaReverso();
 
 			$local_info = $bd->obtemEstrutura();
+			//print_r($local_info);
 			
 			$script = $bd->scriptModificacao($local_info,$file_info);
 			echo $bd->script2text($script);
