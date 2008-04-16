@@ -99,7 +99,8 @@
 				// Tem o id do cliente e não tem ação, pegar do banco
 
 				$dados = $this->clientes->obtemPeloId($this->id_cliente);
-								
+				
+				
 				$clientes_cpf = $this->clientes->obtemPelosDocumentos($dados["cpf_cnpj"]);
 				
 				for($i=0; $i<count($clientes_cpf); $i++) {
@@ -152,6 +153,7 @@
 					 * 1) Logar exception.
 					 * 2) Jogar pra página amigável de erro.
 					 */
+
 
 					$this->_view->atribuiErro($e->obtemCodigo(),$e->obtemMensagem());
 
