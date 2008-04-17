@@ -52,7 +52,7 @@
 				}
 
 				if($this->licenca->expirou()) {
-					$this->_view->atribui("congelamento", 1);
+					if( $this->_view ) $this->_view->atribui("congelamento", 1);
 				}
 			}
 
