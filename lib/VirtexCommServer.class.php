@@ -153,8 +153,11 @@
 							case 'VATL':
 								// Primeiro envia um "VATI" (iniciando um TABLE INIT)
 								@socket_write($client,$this->talk("VATI","",$this->sessions[$idx]["challenge"]));
-								$nomeTabela=$proc["parametros"];
+								$nomeTabela=trim($proc["parametros"]);
 								$tabela=SOFreeBSD::listaEnderecosTabela($nomeTabela);
+								//echo "TABELA!!!\n";
+								//echo "NT: $nomeTabela\n";
+								//print_r($tabela);
 								@socket_write($client,base64_encode($this->criptografa(implode(",",$tabela),$this->sessions[$idx]["challenge"])));
 								@socket_write($client,"\n.\n");
 								unset($nomeTabela);

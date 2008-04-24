@@ -168,8 +168,9 @@
 		 * Obtem a tabela (do pf)
 		 */
 		public function getTableList($tabela) {
-			$dados = $this->getData("VATL",$tabela);
-			return(explode(",",$dados));
+			$dados = trim($this->getData("VATL",$tabela));
+			$retorno = $dados ? explode(",",$dados) : array();
+			return($retorno);
 		}
 		
 		/**
