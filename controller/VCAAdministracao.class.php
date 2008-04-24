@@ -588,9 +588,11 @@
 
 								$tmp = explode("/",$_SERVER["SCRIPT_NAME"]);
 								array_pop($tmp);
-								$scriptAlvo = "http://" . $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . implode("/",$tmp) . "/smarty-test.php?tmp=" . base64_encode($arq);
+								$scriptAlvo = "http://" . "127.0.0.1" . ":" . implode("/",$tmp) . "/smarty-test.php?tmp=" . base64_encode($arq);
 
-								$fd = fopen($scriptAlvo,"r");
+								
+
+								$fd = fopen($scriptAlvo,"r"); 
 								$resposta="";
 								while(!feof($fd)) {
 									$resposta .= fgets($fd,1024);
