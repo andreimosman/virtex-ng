@@ -84,6 +84,8 @@
 							// INICIANDO O FPING SEND
 						case 'VASI':
 							// STATS INIT
+						case 'VATI':
+							// TABLE INIT
 
 							$recebendo = true;
 							break;
@@ -160,6 +162,28 @@
 			}
 			
 			return($arp);
+		}
+		
+		/**
+		 * Obtem a tabela (do pf)
+		 */
+		public function getTableList($tabela) {
+			$dados = $this->getData("VATL",$tabela);
+			return(explode(",",$dados));
+		}
+		
+		/**
+		 * Adiciona endereco na tabela
+		 */
+		public function addTableAddr($tabela,$addr) {
+			@fputs($this->conn,$this->talk("VATA","$tabela:$addr",$this->chave));
+		}
+
+		/**
+		 * Remove endereco na tabela
+		 */
+		public function delTableAddr($tabela,$addr) {
+			@fputs($this->conn,$this->talk("VATR","$tabela:$addr",$this->chave));
 		}
 
 		/**

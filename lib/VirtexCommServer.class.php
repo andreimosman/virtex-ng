@@ -144,8 +144,56 @@
 								@socket_write($client,"\n.\n");
 
 								unset($estatisticas);
+								
+								break;
+							
+							/**
+							 * Envia um tablelist para o cliente
+							 */
+							case 'VATL':
+								// Primeiro envia um "VATI" (iniciando um TABLE INIT)
+								@socket_write($client,$this->talk("VATI","",$this->sessions[$idx]["challenge"]));
+								$nomeTabela=$proc["parametros"];
+								$tabela=SOFreeBSD::listaEnderecosTabela($nomeTabela);
+								@socket_write($client,base64_encode($this->criptografa(implode(",",$tabela),$this->sessions[$idx]["challenge"])));
+								@socket_write($client,"\n.\n");
+								unset($nomeTabela);
+								unset($tabela);
+								
+								break;
+								
+							/**
+							 * Adiciona um endereco na tabela
+							 */
+							case 'VATA':
+								// @socket_write($client,$this->talk("VAFS","",$this->sessions[$idx]["challenge"]));
+								list($tabela,$ip) = explode(":",trim($proc["parametros"]));
+								
+								SOFreeBSD::adicionaEnderecoTabela($tabela,$ip);
+								
+								unset($tabela);
+								unset($ip);
+								
+								@socket_write($client,$this->talk("VAOK","Endereco Adicionado",$this->sessions[$idx]["challenge"]));
+								
+								break;
 
-							break;
+							/**
+							 * Remove um endereco na tabela
+							 */
+							case 'VATR':
+								// @socket_write($client,$this->talk("VAFS","",$this->sessions[$idx]["challenge"]));
+								list($tabela,$ip) = explode(":",trim($proc["parametros"]));
+								
+								SOFreeBSD::removeEnderecoTabela($tabela,$ip);
+								
+								unset($tabela);
+								unset($ip);
+								
+								@socket_write($client,$this->talk("VAOK","Endereco Adicionado",$this->sessions[$idx]["challenge"]));
+								
+								break;
+
 
 						}
 					} else {
