@@ -259,6 +259,11 @@
 			return($this->_obtemPops($parentId,0,$filtro));
 		}
 		
+		public function obtemListaPOPParaConta() {
+			$registros = $this->cftb_pop->obtemListaPOPParaConta();
+			return $registros;
+		}		
+		
 		public function obtemPop($id_pop) {
 			return($this->cftb_pop->obtemUnico(array("id_pop" => $id_pop)));
 		}

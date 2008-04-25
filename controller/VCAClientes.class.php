@@ -494,7 +494,7 @@
 						$listaNAS = $equipamentos->obtemListaNAS();
 						$this->_view->atribui("listaNAS",$listaNAS);
 						// $listaPOP = $equipamentos->obtemListaPOPs('A');
-						$listaPOP = $equipamentos->obtemListaPOPs();
+						$listaPOP = $equipamentos->obtemListaPOPParaConta();
 						$this->_view->atribui("listaPOP",$listaPOP);
 
 						// Valores Padrão
@@ -1308,7 +1308,8 @@
 					$listaNAS = $equipamentos->obtemListaNAS();
 					$this->_view->atribui("listaNAS",$listaNAS);
 					// $listaPOP = $equipamentos->obtemListaPOPs('A');
-					$listaPOP = $equipamentos->obtemListaPOPs();
+					$listaPOP = $equipamentos->obtemListaPOPParaConta();
+					
 					$this->_view->atribui("listaPOP",$listaPOP);
 					$tiposNas = $equipamentos->obtemTiposNAS();
 					$this->_view->atribui("tiposNAS",$tiposNas);
