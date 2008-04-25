@@ -63,7 +63,7 @@
 		}
 		
 		public static function obtemClassificacoes() {
-			return(array(self::$CLASSIFICACAO_INT => "Interno", self::$CLASSIFICACAO_EXT => "Externo"));
+			return(array(self::$CLASSIFICACAO_INT => "Interno", self::$CLASSIFICACAO_EXT => "Visível para o cliente"));
 		}
 		
 		public static function obtemStatus() {
