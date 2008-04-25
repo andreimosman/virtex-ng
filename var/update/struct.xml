@@ -8821,21 +8821,20 @@
   </indexes>
   <constraints >
    <pftb_modelo_contrato_pkey >
-    <type >f</type>
-    <table_oid >2837575</table_oid>
-    <table >prtb_produto</table>
-    <foreign_oid >2837553</foreign_oid>
-    <foreign_table >pftb_modelo_contrato</foreign_table>
-    <conkey >{22}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
+    <type >p</type>
+    <table_oid >2837553</table_oid>
+    <table >pftb_modelo_contrato</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
     <fields >
-     <int i="0">modelo_contrato</int>
+     <int i="0">id_modelo_contrato</int>
     </fields>
     <foreign_fields >
-     <int i="0">id_modelo_contrato</int>
     </foreign_fields>
    </pftb_modelo_contrato_pkey>
   </constraints>
@@ -9658,7 +9657,7 @@
   <indexes >
   </indexes>
   <constraints >
-   <pftb_modelo_contrato_pkey >
+   <pftb_produto_id_modelo_contrato_fkey >
     <type >f</type>
     <table_oid >2837575</table_oid>
     <table >prtb_produto</table>
@@ -9675,7 +9674,7 @@
     <foreign_fields >
      <int i="0">id_modelo_contrato</int>
     </foreign_fields>
-   </pftb_modelo_contrato_pkey>
+   </pftb_produto_id_modelo_contrato_fkey>
    <prtb_produto_pkey >
     <type >p</type>
     <table_oid >2837575</table_oid>
