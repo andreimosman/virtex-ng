@@ -453,6 +453,14 @@
 			$filtro = array("status" => "in:OK::F", "tipo" => "OS", "id_chamado_pai" => $id_chamado); 
 			return($this->hdtb_chamado->obtem($filtro));
 		}
+		
+		
+		/**
+		 * Lista de chamados pro periodo
+		 */
+		public function obtemOcorrenciasPorPeriodo($data_inicial, $data_final) {
+			return($this->hdtb_chamado->obtemOcorrenciasPorPeriodo($data_inicial, $data_final));
+		}
 
 		
 		/****************
