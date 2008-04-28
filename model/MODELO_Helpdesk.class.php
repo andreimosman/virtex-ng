@@ -75,6 +75,12 @@
 		}
 		
 		
+		//Faz a listagem de grupo junto com o campo de numeração de usuarios
+		public function obtemListaGruposComPopulacao() {
+			return($this->hdtb_grupo->obtemListaGruposComPopulacao());
+		}
+		
+		
 		//Faz a pesquisa de um determinadod grupo por ID
 		public function obtemGrupoPeloId($id_grupo) {
 			$filtro = array("id_grupo" => $id_grupo);

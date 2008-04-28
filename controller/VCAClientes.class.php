@@ -1621,7 +1621,7 @@
 						$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
 						$status_chamado = $this->helpdesk->obtemStatusChamado();
 
-						$grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
+						$grupos = $this->helpdesk->obtemListaGruposComPopulacao(true);
 						$responsaveis = $this->helpdesk->obtemListaAdminGrupo();
 						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
 						$prioridades = $this->helpdesk->obtemPrioridades();

@@ -12,6 +12,24 @@
 			$this->_filtros		= array("ativo" => "boolean");
 		}
 		
+		
+		public function obtemListaGruposComPopulacao($somente_ativos=false) {
+			$sql  = "SELECT grp.nome, grp.id_grupo, grp.descricao, grp.ativo, grp.id_grupo_pai, grc.usuarios ";
+			$sql .= "FROM ";
+			$sql .= "	hdtb_grupo grp LEFT OUTER JOIN ";
+			$sql .= "	(SELECT id_grupo, count(*) as usuarios FROM hdtb_admin_grupo WHERE ativo=true GROUP BY id_grupo) grc ";
+			$sql .= "	ON grp.id_grupo = grc.id_grupo ";
+			
+			if($somente_ativos) {
+				$sql .= "WHERE grp.ativo = true ";
+			}
+			
+			$sql .= "ORDER by nome ";
+			
+			return($this->bd->obtemRegistros($sql));			
+		}
+
+		
 	}
 		
 ?>

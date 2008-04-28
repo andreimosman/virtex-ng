@@ -94,6 +94,12 @@ var mresponsaveis = eval({$responsaveis});
 			return false;
 		}
 
+		if(responsavel.disabled) {
+			if(!confirm("O grupo escolhido não possui operadores de suporte. Deseja prosseguir?")) {
+				return false;
+			}
+		}
+
 	}
 
 	function formQuit(id_cliente) {
@@ -125,6 +131,8 @@ var mresponsaveis = eval({$responsaveis});
 		ReiniciarCampoResponsavel();
 
 		var responsavel = document.getElementById("responsavel");
+		var contador = 0;
+
 
 		for(i=0;i<mresponsaveis.length;i++) {
 
@@ -132,6 +140,7 @@ var mresponsaveis = eval({$responsaveis});
 
 			if(item.ativo == "f" || item.id_grupo != id_grupo) continue;
 
+			contador ++;
 			opcao = document.createElement("option");
 			opcao.value = item.id_admin;
 			opcao.text = item.admnome;
@@ -141,6 +150,12 @@ var mresponsaveis = eval({$responsaveis});
 			}catch(e) {
 				responsavel.add(opcao);
 			}
+		}
+
+		if(!contador) {
+			responsavel.disabled=true;
+		} else {
+			responsavel.disabled=false;
 		}
 	}
 
@@ -287,7 +302,7 @@ var mresponsaveis = eval({$responsaveis});
 							<select id="id_grupo" name="id_grupo" style="width:100%" onchange="javascript:AtualizaCampoResponsavel(this.value)";  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 								<option value="">-- SELECIONE --</option>
 								{foreach from=$grupos key=k item=i}
-									<option value="{$i.id_grupo}">{$i.nome}</option>
+									<option value="{$i.id_grupo}">{$i.nome} ({if $i.usuarios}{$i.usuarios}{else}0{/if})</option>
 								{/foreach}
 
 							</select>
