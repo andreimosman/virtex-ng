@@ -63,10 +63,10 @@
 		public function cadastra($dados) {
 			/**
 			 * Não é permitido duplicidade do campo cpf_cnpj
-			 */			
-			if( $this->verificaCPF_CNPJ($dados["cpf_cnpj"]) ) {
-				throw new ExcecaoModelo(255,"Já existe outro cliente cadastrado com este CPF/CNPJ");
-			}
+			 */
+			//if( $this->verificaCPF_CNPJ($dados["cpf_cnpj"]) ) {
+			//	throw new ExcecaoModelo(255,"Já existe outro cliente cadastrado com este CPF/CNPJ");
+			//}
 			
 			$dados["cpf_cnpj"] = $this->_stripCPF_CNPJ($dados["cpf_cnpj"]);
 

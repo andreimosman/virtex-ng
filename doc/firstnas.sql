@@ -1,10 +1,13 @@
+-- CRIANDO O SERVIDOR INICIAL
+INSERT INTO cftb_servidor(id_servidor,hostname,ip,porta,chave,usuario,senha,disponivel) VALUES (1,'local','127.0.0.1','11000','chaveinicial','virtex','senhainicial','t');
+
 -- CRIANDO OS NAS
-INSERT INTO cftb_nas (id_nas, nome, ip, secret, tipo_nas) VALUES (1, 'TCP/IP', '127.0.0.1', NULL, 'I');
-INSERT INTO cftb_nas (id_nas, nome, ip, secret, tipo_nas) VALUES (2, 'PPPoE', '127.0.0.1', 'v1010adm', 'P');
+INSERT INTO cftb_nas (id_nas, nome, ip, secret, tipo_nas, id_servidor) VALUES (1, 'TCP/IP', '127.0.0.1', NULL, 'I', 1);
+INSERT INTO cftb_nas (id_nas, nome, ip, secret, tipo_nas, id_servidor) VALUES (2, 'PPPoE', '127.0.0.1', 'v1010adm', 'P', 1);
 
 -- CRIANDO OS POPs
-INSERT INTO cftb_pop (id_pop, nome, info, tipo, id_pop_ap, status) VALUES (1, 'POP Wireless', 'POP GERADO PELO SISTEMA', 'AP', NULL, 'A');
-INSERT INTO cftb_pop (id_pop, nome, info, tipo, id_pop_ap, status) VALUES (2, 'POP Cabo', 'POP GERADO PELO SISTEMA', 'AP', NULL, 'A');
+INSERT INTO cftb_pop (id_pop, nome, info, tipo, id_pop_ap, status, id_servidor) VALUES (1, 'POP Wireless', 'POP GERADO PELO SISTEMA', 'AP', NULL, 'A', 1);
+INSERT INTO cftb_pop (id_pop, nome, info, tipo, id_pop_ap, status, id_servidor) VALUES (2, 'POP Cabo', 'POP GERADO PELO SISTEMA', 'AP', NULL, 'A', 1);
 
 -- POPULANDO IPS EM CFTB_IP
 INSERT INTO cftb_ip (ipaddr) VALUES ('172.16.16.1');
@@ -6160,6 +6163,7 @@ INSERT INTO cftb_nas_rede (rede, id_nas) VALUES ('172.16.15.252/30', 1);
 SELECT setval('cfsq_id_nas',(select max(id_nas) from cftb_nas));
 SELECT setval('cfsq_id_rede',(select max(id_rede) from cftb_rede));
 SELECT setval('cfsq_id_pop',(select max(id_pop) from cftb_pop));
+SELECT setval('cfsq_servidor_id_servidor',(select max(id_servidor) from cftb_servidor));
 
 
 

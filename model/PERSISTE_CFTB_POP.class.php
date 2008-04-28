@@ -59,11 +59,6 @@
 			return($_LS_STATUS_POP);
 		}
 		
-		public function obtemListaPOPParaConta() {
-			$sql = "SELECT * FROM cftb_pop ORDER BY NOME";
-			return ($this->bd->obtemRegistros($sql));			
-		}
-		
 	}
 
 ?>

@@ -18,6 +18,7 @@
 		protected $primeiroLogin;
 		protected $_changePasswordScript;
 		protected $_uri;
+		protected $_setupScript;
 
 		protected $_registroScript;
 
@@ -96,9 +97,17 @@
 			$this->_uri = $tmp[ count($tmp) -1 ];
 
 			unset($tmp);
-
+			
 			if( $this->_loginScript && $this->_script ) {
-				if( $this->_script != $this->_loginScript ) {
+			
+				// if(  || ($this->_setupScript && $this->_script != $this->_setupScript ) {
+				
+				$verificaLogin = true;
+				
+				if( $this->_setupScript && $this->_script == $this->_setupScript ) $verificaLogin = false;
+				
+				
+				if( $verificaLogin && $this->_script != $this->_loginScript ) {
 					if( !$this->verificaLogin() ) {
 						// Sem login. Redirecionar.
 						if( $this->_view ) {
@@ -137,8 +146,7 @@
 				}
 
 			}
-
-
+			
 			$this->_op			= @$_REQUEST["op"];
 			$this->_acao 		= @$_REQUEST["acao"];
 
@@ -147,10 +155,11 @@
 				$this->_view->atribui("acao",$this->_acao);
 				$this->_view->atribui("dadosLogin",$this->_login->obtem("dados"));
 			}
-
+			
 			if( $this->_executar ) {
 				$this->executa();
 			}
+			
 			$this->exibe();
 		}
 

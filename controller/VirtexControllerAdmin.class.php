@@ -11,7 +11,6 @@
 	
 		protected function __construct() {
 			parent::__construct();
-			
 		}
 		
 
@@ -20,6 +19,10 @@
 			$controller = strtolower($controller);
 			
 			switch($controller) {
+				case 'setup':
+					$retorno = new VCASetup();
+					break;
+					
 				case 'js':
 					$retorno = new VCAJs();
 					break;
@@ -91,6 +94,7 @@
 			$this->preferencias = VirtexModelo::factory("preferencias");
 			
 			$this->_loginScript = "admin-login.php";
+			$this->_setupScript = "admin-setup.php";
 			$this->_changePasswordScript = "admin-administracao.php?op=altsenha";
 			
 			$this->_registroScript = "admin-administracao.php?op=preferencias&tela=registro";

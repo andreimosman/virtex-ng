@@ -204,7 +204,7 @@
 			$contas			= VirtexModelo::factory('contas');
 			$equipamentos 	= VirtexModelo::factory('equipamentos');
 			
-			$listaPOPs 		= $equipamentos->obtemListaPOPs();
+			$listaPOPs 		= $equipamentos->obtemListaPOPOrdemAlfabetica();
 			$listaNAS		= $equipamentos->obtemListaNAS();
 			
 			$id_nas			= @$_REQUEST["id_nas"];

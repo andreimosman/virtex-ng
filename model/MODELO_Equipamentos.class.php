@@ -259,8 +259,16 @@
 			return($this->_obtemPops($parentId,0,$filtro));
 		}
 		
-		public function obtemListaPOPParaConta() {
-			$registros = $this->cftb_pop->obtemListaPOPParaConta();
+		public function obtemListaPOPOrdemAlfabetica($somente_disponiveis=true) {
+			$filtro = array();
+			
+			if( $somente_disponiveis ) {
+				$filtro["status"] = "A";
+			}
+			
+			$ordem="nome";
+		
+			$registros = $this->cftb_pop->obtem($filtro,$ordem);
 			return $registros;
 		}		
 		

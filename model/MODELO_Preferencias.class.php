@@ -277,25 +277,27 @@
 			$clientes = VirtexModelo::factory("clientes");			
 			// ID 1 reservado para o provedor.
 			$info_cliente = $clientes->obtemPeloId($id_provedor);
-			unset($clientes);
 
 			if( !count($info_cliente) ) {
 				// Inserir o cliente 1 (provedor)
 				// TODO: criar opção em MPersiste pra forçar a definiçao do id_cliente sem pegar da sequence.
 				//       *** inserindo normalmente e conferindo o ID de retorno do insert pra fazer um update "forçado" para o id_cliente=1
 				//echo "INSERT CLIENTE PROVEDOR!!!<br>\n";
-			} else {
-				// Update do nome do cliente para o novo nome.
-				// echo "UPDATE CLIENTE PROVEDOR!!!!<br>\n";
-				$this->alteraClienteProvedor($nome);
-			
-			}
-			
+				
+				$clientes->cadastra(array("nome"=> "", "data_cadastro" => "=now"));
+				
+			} 
+
+			// Update do nome do cliente para o novo nome.
+			// echo "UPDATE CLIENTE PROVEDOR!!!!<br>\n";
+			$this->alteraClienteProvedor($nome);
 			
 		}
 		
 		protected function alteraClienteProvedor($nome="",$endereco="",$localidade="",$cep="",$cnpj="",$fone="") {
 			$id_provedor = 1;
+			
+			echo "NOME: $nome<br>\n";
 			
 			$clientes = VirtexModelo::factory("clientes");
 			$nome = trim("(PROVEDOR) " . trim(strtoupper($nome)));			
@@ -336,6 +338,10 @@
 		 */
 		public function atualizaPreferenciasGerais($dominio_padrao,$nome,$radius_server,$hosp_server,$hosp_ns1,$hosp_ns2,$hosp_uid,$hosp_gid,$hosp_base,$mail_server,$mail_uid,$mail_gid,$email_base,$pop_host,$smtp_host,$agrupar) {
 			$id_provedor = 1;
+
+
+			// Verifica se o cliente provedor existe, caso não existe cria-o com o nome especificado.
+			//$this->verificaClienteProvedor($nome);
 			
 			$info_dominio = $this->obtemDominio($dominio_padrao);
 			
@@ -354,11 +360,12 @@
 				}
 			}
 
-			// Tira da memória.
-			unset($info_dominio);			
-
 			// Verifica se o cliente provedor existe, caso não existe cria-o com o nome especificado.
 			$this->verificaClienteProvedor($nome);
+
+
+			// Tira da memória.
+			unset($info_dominio);			
 			
 			// Dados.
 			$dados = array("id_provedor" => $id_provedor, "dominio_padrao" => $dominio_padrao, "nome" => $nome,

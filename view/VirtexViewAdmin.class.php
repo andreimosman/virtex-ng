@@ -46,6 +46,10 @@
 			
 			
 			switch($view) {
+				case 'setup':
+					$retorno = new VVASetup();
+					break;
+			
 				case 'login':
 					$retorno = new VVALogin();
 					break;

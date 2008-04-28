@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# $Id: stats,v 1.2 2007/10/15 20:53:25 mosman Exp $
+# $Id: stats,v 1.3 2008/04/28 13:27:31 mosman Exp $
 #
 # mrtg-rrd.cgi: The script for generating graphs for MRTG statistics.
 #
@@ -140,6 +140,17 @@ sub do_html($)
 	print <<'EOF';
 <HTML>
 <HEAD>
+<STYLE>
+h1 {
+   font-family: arial, verdana;
+   font-size: 14pt;
+}
+
+td {
+   font-family: arial, verdana;
+   font-size: 10pt;
+}
+</STYLE>
 <TITLE>
 EOF
 	print $tgt->{title} if defined $tgt->{title};
@@ -159,9 +170,9 @@ EOF
 	unless (defined $tgt->{options}{noinfo}) {
 		my @st = stat $tgt->{rrd};
 
-		print "<HR>\nThe statistics were last updated ",
+		print "<HR size=1>\n<span style='font-family: arial, verdana; font-size: 10pt;'>As estatisticas foram atualizadas em ",
 			strftime("<B>%A, %d %B, %H:%M:%S %Z</B>\n",
-				localtime($st[9]));
+				localtime($st[9])) . "</span>";
 	}
 
 	my $dayavg = $tgt->{config}->{interval};
@@ -181,7 +192,7 @@ EOF
 
 	unless (defined $tgt->{options}{nolegend}) {
 		print <<EOF;
-<HR>
+<HR size=1>
 <table WIDTH=500 BORDER=0 CELLPADDING=4 CELLSPACING=0>
 EOF
 		print <<EOF unless ($tgt->{options}{noi});
@@ -291,7 +302,7 @@ sub html_graph($$$$$)
 	}
 	@values = @nv;
 
-	print "<HR>\n<B>Grafico $freq (Media de $period)</B><BR>\n";
+	print "<HR size=1>\n<span style='font-family: arial, verdana; font-size: 12px;'><B>Grafico $freq (Media de $period)</B><BR></span>\n";
 
 	print '<IMG SRC="', $tgt->{url}, '-', $ext, '.' . $imagetype .
 		'" WIDTH=', $x, ' HEIGHT=', $y, ' ALT="', $freq,
@@ -299,37 +310,37 @@ sub html_graph($$$$$)
 	print '<TABLE CELLPADDING=0 CELLSPACING=0>';
 	print <<EOF if $tgt->{legendi} ne '' && !$tgt->{options}{noi};
     <TR>
-	<TD ALIGN=RIGHT><SMALL>Max <FONT COLOR="$tgt->{col1}">$tgt->{legendi}</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Maximo <FONT COLOR="$tgt->{col1}">$tgt->{legendi}</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$values[1]$tgt->{shortlegend}$percent[1]</SMALL></TD>
 	<TD WIDTH=5></TD>
-	<TD ALIGN=RIGHT><SMALL>Average <FONT COLOR="$tgt->{col1}">$tgt->{legendi}</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Média <FONT COLOR="$tgt->{col1}">$tgt->{legendi}</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$values[3]$tgt->{shortlegend}$percent[3]</SMALL></TD>
 	<TD WIDTH=5></TD>
-	<TD ALIGN=RIGHT><SMALL>Current <FONT COLOR="$tgt->{col1}">$tgt->{legendi}</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Atual <FONT COLOR="$tgt->{col1}">$tgt->{legendi}</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$values[5]$tgt->{shortlegend}$percent[5]</SMALL></TD>
     </TR>
 EOF
 	print <<EOF if $tgt->{legendo} ne '' && !$tgt->{options}{noo};
     <TR>
-	<TD ALIGN=RIGHT><SMALL>Max <FONT COLOR="$tgt->{col2}">$tgt->{legendo}</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Maximo <FONT COLOR="$tgt->{col2}">$tgt->{legendo}</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$values[0]$tgt->{shortlegend}$percent[0]</SMALL></TD>
 	<TD WIDTH=5></TD>
-	<TD ALIGN=RIGHT><SMALL>Average <FONT COLOR="$tgt->{col2}">$tgt->{legendo}</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Média <FONT COLOR="$tgt->{col2}">$tgt->{legendo}</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$values[2]$tgt->{shortlegend}$percent[2]</SMALL></TD>
 	<TD WIDTH=5></TD>
-	<TD ALIGN=RIGHT><SMALL>Current <FONT COLOR="$tgt->{col2}">$tgt->{legendo}</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Atual <FONT COLOR="$tgt->{col2}">$tgt->{legendo}</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$values[4]$tgt->{shortlegend}$percent[4]</SMALL></TD>
 EOF
 	if (defined $tgt->{options}{dorelpercent}) {
 		print <<"EOF";
     </TR><TR>
-	<TD ALIGN=RIGHT><SMALL>Max <FONT COLOR="$tgt->{col5}">&nbsp;Percentage:</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Maximo <FONT COLOR="$tgt->{col5}">&nbsp;Percentage:</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$relpercent[0]</SMALL></TD>
 	<TD WIDTH=5></TD>
-	<TD ALIGN=RIGHT><SMALL>Average <FONT COLOR="$tgt->{col5}">&nbsp;Percentage:</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Média <FONT COLOR="$tgt->{col5}">&nbsp;Percentage:</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$relpercent[1]</SMALL></TD>
 	<TD WIDTH=5></TD>
-	<TD ALIGN=RIGHT><SMALL>Current <FONT COLOR="$tgt->{col5}">&nbsp;Percentage:</FONT></SMALL></TD>
+	<TD ALIGN=RIGHT><SMALL>Atual <FONT COLOR="$tgt->{col5}">&nbsp;Percentage:</FONT></SMALL></TD>
 	<TD ALIGN=RIGHT><SMALL>&nbsp;$relpercent[2]</SMALL></TD>
 EOF
 	}
@@ -613,9 +624,9 @@ sub common_args($$$)
 		$scale *= 8;
 		$target->{ylegend} = 'Bits por segundo'
 			unless defined $target->{ylegend};
-		$target->{legend1} = 'Incoming Traffic in Bits per Second'
+		$target->{legend1} = 'Download em Bits por Segundo'
 			unless defined $target->{legend1};
-		$target->{legend2} = 'Outgoing Traffic in Bits per Second'
+		$target->{legend2} = 'Upload em Bits por Segundo'
 			unless defined $target->{legend2};
 		$target->{legend3} = 'Peak Incoming Traffic in Bits per Second'
 			unless defined $target->{legend3};
@@ -728,8 +739,8 @@ sub try_read_config($)
 		kilo => 1000,
 		bodytag => "<BODY BGCOLOR=#ffffff>\n",
 		colours => 'GREEN#00cc00,BLUE#0000ff,DARK GREEN#006600,MAGENTA#ff00ff,AMBER#ef9f4f',
-		legendi => '&nbsp;In:',
-		legendo => '&nbsp;Out:',
+		legendi => '&nbsp;Down:',
+		legendo => '&nbsp;Up:',
 		unscaled => '',
 		withpeak => '',
 		directory => '',
@@ -939,7 +950,7 @@ EOF
 		print "</UL>\n";
 	}
 	if (defined @{$directories{$dir}{target}}) {
-		print "<HR>\n" if defined $subdirs_printed;
+		print "<HR size=1>\n" if defined $subdirs_printed;
 		print <<EOF;
 <H1>MRTG graphs in the directory $dir1</H1>
 
@@ -972,7 +983,7 @@ sub print_banner($) {
 
 	print <<EOF;
 
-<HR>
+<HR size=1>
 <table BORDER=0 CELLSPACING=0 CELLPADDING=0>
 <tr>
 <td WIDTH=63><a ALT="MRTG"
@@ -1011,7 +1022,7 @@ and&nbsp;<a HREF="http://www.bungi.com">Dave&nbsp;Rand</a>&nbsp;<a HREF="mailto:
 </tr>
 </table>
 EOF
-	print '<!--$Id: stats,v 1.2 2007/10/15 20:53:25 mosman Exp $-->', "\n";
+	print '<!--$Id: stats,v 1.3 2008/04/28 13:27:31 mosman Exp $-->', "\n";
 }
 
 sub dump_targets() {
