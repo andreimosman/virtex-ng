@@ -110,6 +110,7 @@
 			if($desenvolvimento) $menuCadastro->addSeparator();
 			if($desenvolvimento) $menuCadastro->addItem("Centros de Custo", "admin-cadastro.php?op=centrodecustos&tela=listagem", $target);
 			if($desenvolvimento) $menuCadastro->addItem("Plano de Contas", "admin-cadastro.php?op=planodecontas&tela=listagem", $target);
+
 			
 			$menuCadastro->addSeparator();
 			$menuCadastroRelatorios	= new MMenu();
@@ -117,10 +118,18 @@
 			$menuCadastroRelatoriosEquipamentos->addItem("Carga por AP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=ap", $target);
 			$menuCadastroRelatoriosEquipamentos->addItem("Carga por POP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=pop", $target);
 			$menuCadastroRelatoriosEquipamentos->addItem("Carga por NAS", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=nas", $target);			
-			$menuCadastroRelatorios->addSubmenu("Equipamentos",$menuCadastroRelatoriosEquipamentos);
+			$menuCadastroRelatorios->addSubmenu("Equipamentos",$menuCadastroRelatoriosEquipamentos);			
+			
+			
+			$menuCadastroRelatoriosCondominio = new MMenu();
+			$menuCadastroRelatoriosCondominioInstalado = new MMenu();
+			$menuCadastroRelatoriosCondominioInstalado->addItem("Lista de condomínios instalados", "admin-cadastro.php?op=relatorios&relatorio=condominios&tipo=instalado", $target);			
+			$menuCadastroRelatoriosCondominio->addSubMenu("Instalados", $menuCadastroRelatoriosCondominioInstalado);			
+			$menuCadastroRelatorios->addSubMenu("Condominios", $menuCadastroRelatoriosCondominio);
+			
+			
 			$menuCadastro->addSubmenu("Relatórios", $menuCadastroRelatorios);
-
-
+			
 			$menu->addSubmenu("Cadastro", $menuCadastro);
 
 			//

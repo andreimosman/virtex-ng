@@ -68,6 +68,14 @@
 		public function obtemCondominio($id_condominio=NULL, $ativo=false) {
 			return($this->catb_condominio->obtemCondominio($id_condominio, $ativo));
 		}
+
+
+		//Relatórios
+		public function obtemCondominiosInstalados() { 
+			$filtro = array("situacao" => "in:I::P");
+			$retorno = $this->catb_condominio->obtem($filtro);
+			return $retorno;
+		}
 		
 		
 		/**

@@ -667,7 +667,18 @@
 				case 'clientes_ap':
 				
 					break;
-			
+					
+				case 'condominios':
+					
+					switch($tipo) {
+						case 'instalado':
+						default:						
+							$condominios = $this->cadastro->obtemCondominiosInstalados();
+							$this->_view->atribui("condominios", $condominios);
+						break;
+					}
+					
+					break;
 			}
 
 		}

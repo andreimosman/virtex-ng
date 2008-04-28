@@ -302,6 +302,20 @@
 					
 					$this->atribui("titulo",$titulo);
 					break;
+					
+				case 'condominios':
+				
+					$titulo = "Condomínios";
+				
+					switch($this->obtem("tipo")) {
+						case 'instalado':
+						default:
+							$this->_file = "cadastro_relatorios_condominios_instalados.html";
+							$titulo .= " :: Instalados";
+						break;
+					}
+					$this->atribui("titulo",$titulo);
+					break;
 			}
 		}
 
