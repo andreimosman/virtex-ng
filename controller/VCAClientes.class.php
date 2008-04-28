@@ -613,7 +613,7 @@
 
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
-												
+						
 						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],@$_REQUEST["pro_rata"],@$_REQUEST["limite_prorata"],$parcelas_instalacao);
 						$this->_view->atribui("faturas",$faturas);
 
@@ -756,10 +756,9 @@
 									$id_modelo_contrato = $info_modelo["id_modelo_contrato"];
 								}
 								
-								
 								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $id_modelo_contrato, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
-																					$_REQUEST["desconto_promo"], $_REQUEST["periodo_desconto"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["prorata"], $_REQUEST["limite_prorata"], $carencia,
+																					$_REQUEST["desconto_promo"], $_REQUEST["periodo_desconto"], $dia_vencimento, $_REQUEST["primeiro_vencimento"], $_REQUEST["pro_rata"], $_REQUEST["limite_prorata"], $carencia,
 																					$_REQUEST["id_produto"], $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_e, $dados_produto, $endereco_cobranca, $endereco_instalacao, $dados_conta, $gera_carne, $parcelas_instalacao);
 								
 

@@ -289,8 +289,11 @@
                           $id_cobranca, $status, $tx_instalacao, $valor_comodato, $desconto_promo, $desconto_periodo, $dia_vencimento, $primeira_fatura, $prorata, $limite_prorata,
                           $carencia, $id_prduto, $id_forma_pagamento, $pro_dados, $da_dados, $bl_dados, $cria_email, $dados_produto, $endereco_cobranca, $endereco_instalacao, 
 						  $dados_conta, &$gera_carne = false, $parcelas_instalacao = 1) {
-			/*echo "<pre>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+			/**
+			echo "<pre>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
 			echo "MODELO_Conbranca::novoContrato()\n";
+			echo "primeiro_vencimento:\t\t=\t$primeiro_vencimento\n";
+			echo "pro_rata:\t\t\t=\t$pro_rata\n";
 			echo "id_cliente\t\t\t=\t".print_r($id_cliente,true)."\n";
 			echo "id_produto\t\t\t=\t".print_r($id_produto,true)."\n";
 			echo "dominio\t\t\t\t=\t".print_r($dominio,true)."\n";
@@ -324,7 +327,8 @@
 			echo "dados_conta\t\t\t=\t".print_r($dados_conta,true)."\n";
 			echo "gera_carne\t\t\t=\t".print_r($gera_carne,true)."\n";
 			echo "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</pre>";
-			/*exit;*/
+			*/
+			
 			$formaPagto = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
 			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
 
@@ -415,9 +419,9 @@
 			if( !$parcelas_instalacao ) {
 				$parcelas_instalacao = 1;
 			}
-			
+						
 			$this->cbtb_contrato->insere($dados);
-			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeiro_vencimento,      $pro_rata,   $limite_prorata, $parcelas_instalacao) : array();
+			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeira_fatura,      $prorata,   $limite_prorata, $parcelas_instalacao) : array();
 			$id_cobranca = 0;
 			// gera carne
 			if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
@@ -750,9 +754,6 @@
 				$cnt = $contas->obtemContasPorContrato($retorno[$i]["id_cliente_produto"]);
 				$retorno[$i]["contas"] = $cnt;
 			}
-			//echo "<PRE>";
-			//print_r($retorno);
-			//echo "</PRE>";
 			return $retorno;
 
 		}
@@ -767,9 +768,6 @@
 
 		public function obtemFaturamentoPorProduto($ano_select){
 			return $this->cbtb_fatura->obtemFaturamentoPorProduto($ano_select);
-			//echo "<PRE>";
-			//	print_r($ano_select);
-			//echo "</PRE>";
 		}
 		public function obtemFaturamentoComparativo($ano){
 			return $this->cbtb_fatura->obtemFaturamentoComparativo($ano);		
@@ -810,11 +808,6 @@
 		
 		public function obtemReagendamento() {
 			$retorno = $this->lgtb_reagendamento->obtemReagendamento();
-			
-			//echo "<PRE>";
-			//print_r($retorno);
-			//echo "</PRE>";
-			
 			return $retorno;
 			
 		}
