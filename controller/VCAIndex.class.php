@@ -75,6 +75,13 @@
 			$menuSuporteRelatorios = new MMenu();
 			$menuSuporteRelatorios->addItem("Clientes por Banda","admin-suporte.php?op=relatorios&relatorio=banda", $target);
 			$menuSuporteRelatorios->addItem("Clientes sem MAC","admin-suporte.php?op=relatorios&relatorio=cliente_sem_mac", $target);
+			$menuSuporteRelatorios->addSeparator();
+			
+			$menuSuporteRelatoriosHelpdesk = new MMenu();
+			$menuSuporteRelatoriosHelpdesk->addItem("Ocorrências", "admin-suporte.php?op=relatorios&relatorio=helpdesk&tipo=ocorrencias", $target);
+			
+			$menuSuporteRelatorios->addSubMenu("Helpdesk", $menuSuporteRelatoriosHelpdesk);
+			
 			$menuSuporte->addSubmenu("Relatórios", $menuSuporteRelatorios);
 
 			$menu->addSubmenu("Suporte",$menuSuporte);

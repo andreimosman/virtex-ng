@@ -1,0 +1,118 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="suporte_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+label a {
+	color: #000000;
+	text-decoration: none;
+}
+label a:hover {
+	text-decoration: underline;
+}
+{/literal}
+</style>
+
+<script language="javascript">
+{literal}
+	function AlterarChamado(id_chamado, id_cliente) {
+		self.location = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado + "&id_cliente=" + id_cliente;
+	}
+{/literal}
+</script>
+
+
+<br>
+
+<form name="condominio" id="condominio" method="post" action="admin-suporte.php" onSubmit="return condominiosValidacaoForm()">
+	<input type="hidden" name="op" value="relatorios">
+	<input type="hidden" name="relatorio" value="helpdesk">
+	<input type="hidden" name="tipo" value="ocorrencias">
+
+	<table width="300" align="center" border=0 cellpadding=0 cellspacing=0>
+		<tr>
+			<!-- LADO ESQUERDO DO FORMULÁRIO -->
+			<td width="100%" valign="top" style="border-bottom: dotted 1px #cccccc">
+				<table border=0 cellspacing=0 cellpadding=1 width="100%" class="lista">
+					<tr>
+						<th colspan="4"><label>Dados da Pesquisa</label></td>
+					</tr>
+
+					<tr>
+						<td align="right">
+							<label>De:</label>
+						</td>
+						<td >
+							<input type="text" name="de" id="de" maxlength="10" value="{$de}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+					<tr>
+
+						<td align="right">
+							<label>Até:</label>
+						</td>
+						<td >
+							<input type="text" name="ate" id="ate" maxlength="10" value="{$ate}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="center" colspan="4" width="100%">
+								<input type="submit" class="botao" name="Pesquisar" value="Pesquisar">
+						</td>
+					</tr>
+
+
+				</table>
+			</td>
+		</tr>
+
+	</table>
+</form>
+
+
+<br>
+<table width="600" cellpadding=1 cellspacing=1 align="centeR">
+</table>
+<table width="600" class="lista" cellpadding=0 cellspacing=0 align="center">
+{if $ocorrencias}
+	<tr>
+
+		<th align="center">ID</th>
+		<th align="center">DATA</th>
+		<th align="left">ASSUNTO</th>
+		<th align="center">GRUPO</th>
+		<th align="center">RESPONSAVEL</th>
+	</tr>
+	{foreach name=registros item=c from=$ocorrencias}
+	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr>
+		<td class='{$estilo}' width=50>&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.id_chamado|string_format:"%07s"}</a></td>
+		<td class='{$estilo}' width=150>&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
+		<td class='{$estilo}' width=200>&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.assunto}</a></td>
+		<td class='{$estilo}' width=100 align="center">&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.nome}</a></td>
+		<td class='{$estilo}' width=100 align="center">&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.admin}</a></td>
+	</tr>
+	{/foreach}
+
+
+{else}
+	<tr>
+		<td class='{$estilo}' width="450" height="100" align="center"><b>N&atilde;o h&aacute; ocorr&ecirc;ncias neste per&iacute;odo.</b></td>
+	</tr>
+{/if}
+</table>
+
+
+
+</body>
+</html>

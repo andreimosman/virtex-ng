@@ -241,8 +241,10 @@
 		protected function executaRelatorios() {
 			$this->requirePrivLeitura("_SUPORTE_RELATORIOS");
 			$relatorio = @$_REQUEST["relatorio"];
+			$tipo = @$_REQUEST["tipo"];
 			$this->_view->atribuiVisualizacao("relatorios");
 			$this->_view->atribui("relatorio",$relatorio);
+			$this->_view->atribui("tipo",$tipo);
 			
 			switch($relatorio) {
 				case 'cliente_sem_mac':
@@ -320,6 +322,46 @@
 						$this->_view->atribui("listaContas",$listaContas);
 					}
 										
+					break;
+				
+				case 'helpdesk':
+				
+					switch($tipo) {
+						case 'ocorrencias':
+						default:
+							$de = @$_REQUEST["de"];
+							$ate = @$_REQUEST["ate"];
+							
+							
+							
+							if(!$ate) {
+								$ate = Date("d/m/Y");
+							}
+							
+							if(!$de) {
+								$dt = explode("/", $ate);
+								$tstamp = mktime(0,0,0,$dt[1], $dt[0], $dt[2]);
+								$tstamp -= (60 * 60 * 24 * 30);
+								$de = Date("d/m/Y", $tstamp);						
+							}
+							
+							$dt = explode("/", $de);
+							$data_inicial = $dt[2] . "-" . $dt[1] . "-" . $dt[0];
+							$dt = explode("/", $ate);
+							$data_final = $dt[2] . "-" . $dt[1] . "-" . $dt[0];
+							
+							
+							
+							$retorno = $this->helpdesk->obtemOcorrenciasPorPeriodo($data_inicial, $data_final);
+													
+							$this->_view->atribui("ocorrencias", $retorno);							
+							$this->_view->atribui("de", $de);
+							$this->_view->atribui("ate", $ate);
+							
+							break;
+							
+					}
+				
 					break;
 
 			}

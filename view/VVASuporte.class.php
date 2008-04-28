@@ -87,6 +87,16 @@
 					$titulo .= " :: Clientes por Banda";
 					$this->_file = "suporte_relatorios_banda.html";
 					break;
+				case 'helpdesk':
+					$titulo .= " :: Helpdesk";
+					switch($this->obtem("tipo")) {
+						case "ocorrencias":
+						default:
+							$titulo .= " :: Ocorrências";
+							$this->_file = "suporte_relatorios_helpdesk_ocorrencias.html";
+						break;
+					}
+					break;
 			}
 			
 			$this->atribui("titulo",$titulo);
