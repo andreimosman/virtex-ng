@@ -13,7 +13,7 @@
 		}
 
 
-		public function obtemContratos ($id_cliente,$status="",$tipo="")
+		public function obtemContratos ($id_cliente,$status="",$tipo="",$aceito)
 		{
 			$q = "SELECT to_char (c.data_contratacao,'dd/mm/YYYY') as data_contratacao, 
 				     c.vigencia, 
@@ -37,7 +37,13 @@
 				$q .= " AND p.tipo = '" . $tipo . "' ";
 			}
 			
+			if( $aceito ) {
+				$q .= " AND c.aceito = '$aceito' ";
+			}
+			
 			$q .= " ORDER BY cp.id_cliente_produto DESC";
+			
+			// print_r($q);
    		
 			$res = $this->bd->obtemRegistros ($q);
 			return ($res);

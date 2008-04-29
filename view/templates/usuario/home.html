@@ -42,6 +42,15 @@
 		</td>
 		<td><a href="?op=contratos"><img src="view/templates/imagens/contratos_ver.gif" border="0" style="margin-top:2px;"> ver contratos</a></td>
 	</tr>
+	{if $contratos_sem_aceite}
+		<td><div style="width:300px;" align="center">
+				<font color="#ff0000">Você tem {$contratos_sem_aceite} contratos ativos <b>SEM ACEITE</b>. Seu acesso poderá ser cancelado caso não aceite os termos do contrato.</font>
+			</div>
+		</td>
+		<td><a href="?op=contratos&aceite=f"><img src="view/templates/imagens/contratos_ver.gif" border="0" style="margin-top:2px;"> ver contratos sem aceite</a></td>
+	{/if}
+
+
 </table>
 
 {include file="footer.html"}

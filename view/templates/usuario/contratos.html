@@ -31,12 +31,24 @@
 {/literal}
 <table align="center" width="400">
 	<tr>
-		<td><strong>Contratos</strong></td>
+		<td>
+			<strong>
+				Contratos
+				{if $aceite=='f'} Sem Aceite{/if}
+			</strong><br>
+			{if $aceite=='f'}
+			<span style="font-color: #ff0000;">
+			<font color="#ff0000">Você possui {$numero_contratos} contratos ativos <b>SEM ACEITE</b>. Seu acesso poderá ser cancelado caso não aceite os termos do contrato.</font>
+			</span>
+			{else}
+			Você possui {$numero_contratos} contratos ativos.
+			{/if}
+		</td>
 	</tr>
 	{foreach name=contratos item=r from=$contratos}
 		<tr>
 			<td width="380" style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><strong>#{$r.id_cliente_produto}</strong> | {$r.nome_produto}</a></td>
-			<td style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><img src="view/templates/imagens/icone_contrato.gif" alt="Ver Contrato" title="Ver Contrato" border="0" /></a></td>
+			<td style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><img src="view/templates/imagens/icone_contrato.gif" alt="Ver Contrato" title="Ver Contrato" border="0" /></a><a href="?op=contrato_faturas&id_cliente_produto={$r.id_cliente_produto}">$</a></td>
 		</tr>
 	{/foreach}
 </table>

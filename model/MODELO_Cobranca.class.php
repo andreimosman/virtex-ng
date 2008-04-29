@@ -283,6 +283,11 @@
 			return($faturas);
 
 		}
+		
+		function aceiteContrato($id_cliente_produto) {
+			$dados = array("aceito" => "t", "data_aceite" => "=now");			
+			return($this->cbtb_contrato->altera($dados,array("id_cliente_produto" => $id_cliente_produto)));
+		}
 
 
 		function novoContrato($id_cliente, $id_produto, $dominio, $id_modelo_contrato, $data_contratacao, $vigencia, $pagamento, $data_renovacao, $valor_contrato, $username, $senha,
@@ -564,9 +569,9 @@
 			$this->cbtb_contrato->altera($dados,array("id_cliente_produto" => $id_cliente_produto));
 	    }
 
-		public function obtemContratos ($id_cliente,$status="",$tipo="")
+		public function obtemContratos ($id_cliente,$status="",$tipo="",$aceito="")
 		{
-			$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente,$status,$tipo);
+			$res = $this->cbtb_cliente_produto->obtemContratos ($id_cliente,$status,$tipo,$aceito);
 			return ($res);
 		}
 
@@ -794,7 +799,7 @@
 		}
 		
 		public function alteraNossoNumero($id_cobranca,$nosso_numero) {
-			$dados = array("nosso_numero" => (int)$nosso_numero);
+			$dados = array("nosso_numero" => (int)$nosso_numero, "nosso_numero_banco" => (int)$nosso_numero);
 			$filtro = array("id_cobranca" => (int)$id_cobranca);
 			
 			return($this->cbtb_fatura->altera($dados,$filtro));

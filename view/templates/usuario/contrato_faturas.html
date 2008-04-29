@@ -1,0 +1,74 @@
+{literal}
+	<style>
+
+	*{
+		font-family:tahoma, arial, verdana;
+		font-size:10px;
+	}
+	strong{
+		color:#6E7D9A;
+		font-size:13px;
+	}
+	a:link{
+			color: #6E7D9A;
+			text-decoration:none;
+			font-size:10px;
+			font-family:Tahoma, Verdana ;
+	}
+	a:visited{
+			color: #6E7D9A;
+			text-decoration:none;
+	}
+	a:hover{
+			color: #000000;
+			text-decoration:underline;
+	}
+	a:active{
+			color: #6E7D9A;
+			text-decoration:none;
+	}
+	</style>
+{/literal}
+
+<script language="javascript">
+{literal}
+function abre(url) {
+	window.open(url,'_new');
+}
+{/literal}
+</script>
+
+<table align="center" width="600">
+	<tr>
+		<td colspan=7><strong>Faturas</strong></td>
+	</tr>
+	<tr>
+		<th>Fatura</th>
+		<th>Descrição</th>
+		<th align="right">Valor</th>
+		<th align="right">Desconto</th>
+		<th align="right">Acrescimo</th>
+		<th align="right">Total</th>
+		<th align="right">Valor Pago</th>
+		<th align="right">&nbsp;</th>
+	</tr>
+	{foreach name=fatura item=r from=$faturas}
+		<tr>
+			<td style="border-bottom:1px solid #e3e5ea;" width="200" style="border-bottom:1px solid #e3e5ea;"><a href="?op=contrato_detalhe&id_cliente_produto={$r.id_cliente_produto}"><strong>#{$r.id_cobranca}</strong> | {$r.descricao}</a></td>
+			<td style="border-bottom:1px solid #e3e5ea;" width="120">{$r.strstatus} ({if $r.dias_atrazo}{$r.dias_atrazo} {if $r.dias_atrazo == 1}dia{else}dias{/if}{else}{$r.dias_a_vencer} {if $r.dias_a_vencer == 1}dia{else}dias{/if}{/if})</td>
+			<td style="border-bottom:1px solid #e3e5ea;" width="60" align="right">{$r.valor|string_format:"%.2f"}</td>
+			<td style="border-bottom:1px solid #e3e5ea;" width="60" align="right">{$r.desconto|string_format:"%.2f"}</td>
+			<td style="border-bottom:1px solid #e3e5ea;" width="60" align="right">{$r.acrescimo|string_format:"%.2f"}</td>
+			<td style="border-bottom:1px solid #e3e5ea;" width="60" align="right">{$r.total|string_format:"%.2f"}</td>
+			<td style="border-bottom:1px solid #e3e5ea;" width="80" align="right">{$r.valor_pago|string_format:"%.2f"}</td>
+			<td style="border-bottom:1px solid #e3e5ea;" >
+			{if $r.status == "A" && $r.link}
+			<a href="javascript:abre('{$r.link}')"><img src="view/templates/imagens/icone_contrato.gif" alt="Ver Contrato" title="Imprimir Boleto" border="0" /></a>
+			{else}
+			&nbsp;
+			{/if}
+			</td>
+		</tr>
+	{/foreach}
+</table>
+{include file="footer.html"}

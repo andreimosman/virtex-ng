@@ -13,7 +13,6 @@
 		
 		public function exibe() {
 		
-			// echo "VZ: " . $this->obtemVisualizacao();
 		
 			
 			switch($this->obtemVisualizacao()) {
@@ -32,14 +31,14 @@
 				case 'contrato_detalhe':
 					$this->exibeContratoDetalhe();
 					break;
-					
+				case 'contrato_faturas':
+					$this->exibeContratoFaturas();
+					break;					
 				default:
 					$this->exibeIndex();
 			
 			}
-			
-			
-			
+						
 			parent::exibe();
 		}
 		
@@ -67,6 +66,10 @@
 		
 		protected function exibeContratoDetalhe() {		
 			$this->_file = "contrato_detalhe.html";
+		}
+		
+		protected function exibeContratoFaturas() {
+			$this->_file = "contrato_faturas.html";
 		}
 
 	}

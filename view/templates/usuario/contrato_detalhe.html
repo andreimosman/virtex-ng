@@ -24,6 +24,9 @@
 				color: #6E7D9A;
 				text-decoration:none;
 	}
+
+
+
 </style>
 {/literal}
 <title>Contrato</title>
@@ -34,6 +37,28 @@
 <table align="center">
 	<tr>
 		<td align="left">
+			{if $contrato_detalhado.aceito == 'f' || !$contrato_detalhado.aceito}
+
+			<form method="post" action="index.php">
+			<input type="hidden" name="op" value="{$op}">
+			<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
+			<input type="hidden" name="aceito" value="t">
+
+			<div style="background: #FaDaDa; border: solid 1px #FF0000; color: FF0000; padding: 5px; width: 570px;">
+			<center><b>Atenção</b></center>
+			<p>
+			Para continuar utilizando os serviços do provedor é necessário aceitar o contrato. Se você leu o contrato e concorda com os termos clique no botão abaixo:<br><br>
+			<center><input type="submit" value="Li o contrato e concordo com os termos" class="botao"></center>
+			</p>
+			</div>
+			</form>
+			<br><br>
+			{/if}
+
+
+
+
+
 <div style="width:570px;" align="left">
 <!--<h1 align="CENTER"><img src="template/default/images/LOGO_PROVEDOR.gif" width="200" height="151"></h1>//-->
 <h1 align="CENTER"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">MINUTA

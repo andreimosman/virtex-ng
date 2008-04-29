@@ -2,6 +2,8 @@
 
 
 	class VCUIndex extends VirtexControllerUsuario {
+
+		protected $cacheFormaPagamento;
 		
 		public function __construct() {
 			parent::__construct();
@@ -12,7 +14,7 @@
 		public function init() {
 			parent::init();
 			
-			
+			$this->cacheFormaPagamento = array();
 			
 		}
 		
@@ -42,6 +44,10 @@
 				case 'contrato_detalhe':
 					$this->executaContratoDetalhe();
 					break;
+					
+				case 'contrato_faturas':
+					$this->executaContratoFaturas();
+					break;
 			
 			
 			}
@@ -64,9 +70,12 @@
 			
 			$this->_view->atribui("cliente",$dadosLogin["cliente"]);
 			
-			$contratos = count($cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A"));
+			$contratos = count($cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A","",""));
+			
+			$contratos_sem_aceite = count($cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A","","f"));
 			
 			$this->_view->atribui("contratos",$contratos);
+			$this->_view->atribui("contratos_sem_aceite",$contratos_sem_aceite);
 			
 			$preferencias = VirtexModelo::factory("preferencias");
 			
@@ -109,8 +118,14 @@
 			$dadosLogin = $this->_login->obtem("dados");
 
 			$cobranca = VirtexModelo::factory("cobranca");
-
-			$contratos = $cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A");
+			
+			$aceite = @$_REQUEST["aceite"];
+			$this->_view->atribui("aceite",$aceite);
+			
+			
+			$contratos = $cobranca->obtemContratos($dadosLogin["cliente"]["id_cliente"],"A","",$aceite);
+			$numero_contratos = count($contratos);
+			$this->_view->atribui("numero_contratos",$numero_contratos);
 
 			$this->_view->atribui("contratos",$contratos);
 			
@@ -126,6 +141,8 @@
 		
 		}
 		
+		
+		
 		protected function executaContratoDetalhe() {
 		
 			$dadosLogin = $this->_login->obtem("dados");
@@ -134,10 +151,32 @@
 			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 			
 			
-			
-			//// echo $id_cliente_produto;
-			
+			$aceito = @$_REQUEST["aceito"];
+
+
 			$cobranca = VirtexModelo::factory("cobranca");
+			
+			if( $aceito ) {
+				$this->_view->atribuiVisualizacao("msgredirect");
+
+
+				// Aceito
+				$cobranca->aceiteContrato($id_cliente_produto);
+				
+				$mensagem = "Contrato aceito com sucesso.";
+				$url = "index.php?op=".$_REQUEST["op"]."&id_cliente_produto=".$id_cliente_produto;
+				$target = "_self";
+				
+				$this->_view->atribui("mensagem",$mensagem);
+				$this->_view->atribui("url",$url);
+				$this->_view->atribui("target",$target);
+				
+				return;
+			
+			}
+			
+			
+			
 			$contrato_detalhado = $cobranca->obtemContratoPeloId($id_cliente_produto);
 			
 			$preferencias = VirtexModelo::factory("preferencias");
@@ -152,6 +191,10 @@
 			
 			$dadosLogin["cliente"]["cidade"] = $cidade_uf["cidade"];
 			$dadosLogin["cliente"]["estado"] = $cidade_uf["uf"];
+			
+			
+			$this->_view->atribui("op",@$_REQUEST["op"]);
+			$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 
 			
 			$this->_view->atribui("cli",$dadosLogin["cliente"]);
@@ -167,11 +210,117 @@
 			$this->_view->atribui("dominio_provedor",strtoupper($provedor_geral["dominio_padrao"]));
 			
 
-			/*echo "<pre>";
-			print_r($contrato_detalhado);
-			echo "</pre>";*/
+			//echo "<pre>";
+			//print_r($contrato_detalhado);
+			//echo "</pre>";
 
 		
+		}
+		
+		
+		/**
+		 * 
+		 */
+		protected function obtemFormaPagamento($id_forma_pagamento) {
+			if( !@$this->cacheFormaPagamento[$id_forma_pagamento] ) {
+				$fp = $this->preferencias->obtemFormaPagamento($id_forma_pagamento);
+				
+				if( count($fp) ) {
+					$this->cacheFormaPagamento[$id_forma_pagamento] = $fp;
+				}
+			}
+			
+			return(@$this->cacheFormaPagamento[$id_forma_pagamento]);
+			
+		}
+		
+		/**
+		 * Lista das Faturas do usuário
+		 */
+		protected function executaContratoFaturas() {
+		
+			// echo "CTT FAT<br>\n";
+		
+			$dadosLogin = $this->_login->obtem("dados");
+			$this->_view->atribuiVisualizacao("contrato_faturas");
+			
+			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+			
+			
+			$cobranca = VirtexModelo::factory("cobranca");
+			
+			$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
+			
+			$faturas = $cobranca->obtemFaturasPorContrato($id_cliente_produto);
+			
+			$listaFaturas = array();
+			
+			for( $i=0; $i<count($faturas);$i++ ) {
+			
+				$venc = $faturas[$i]["data"];
+				$data_pagamento = $faturas[$i]["data_pagamento"];
+				
+				if( !$data_pagamento ) {
+					$data_pagamento = date("Y-m-d");
+				}
+				
+				$diffDias = MData::diff($data_pagamento,$venc);
+				
+				$status = $faturas[$i]["status"];
+				$nossoNumeroBanco = $faturas[$i]["nosso_numero_banco"];
+				
+				//$nossoNumeroBanco = 394036092;
+				
+				if( $diffDias < 30 ) {
+					$listaFaturas[] = $faturas[$i];
+
+					$forma = $this->obtemFormaPagamento( $faturas[$i]["id_forma_pagamento"] ) ;
+
+					
+					if( $diffDias < 0 ) {
+						// Atrazado
+					
+						$listaFaturas[ count($listaFaturas) - 1]["dias_atrazo"] = ($diffDias * -1);
+						$listaFaturas[ count($listaFaturas) - 1]["dias_a_vencer"] = 0;
+						
+						if( $nossoNumeroBanco && $status == "A" && $forma["linkAtrazado"]) {
+							$listaFaturas[ count($listaFaturas) - 1]["link"] = $forma["linkAtrazado"] . $nossoNumeroBanco;
+						}
+						
+						
+					} else {
+						// A vencer
+					
+						$listaFaturas[ count($listaFaturas) - 1]["dias_atrazo"] = 0;
+						$listaFaturas[ count($listaFaturas) - 1]["dias_a_vencer"] = $diffDias;
+						
+						if( $nossoNumeroBanco && $status == "A" && $forma["linkEmDia"]) {
+							$listaFaturas[ count($listaFaturas) - 1]["link"] = $forma["linkEmDia"] . $nossoNumeroBanco;
+						}
+						
+					}
+					
+					$listaFaturas[ count($listaFaturas) - 1]["total"] = $faturas[$i]["valor"] + $faturas[$i]["acrescimo"] - $faturas[$i]["desconto"] ;					
+					$listaFaturas[ count($listaFaturas) - 1]["forma"] = $forma;
+					
+					
+
+				}
+			
+			}
+			
+			unset($faturas);
+			
+			$faturas = $listaFaturas;
+			unset($listaFaturas);
+			
+			//echo "<pre>";
+			//print_r($faturas);
+			//echo "</pre>";
+			
+			$this->_view->atribui("faturas",$faturas);
+			
+			
 		}
 		
 		

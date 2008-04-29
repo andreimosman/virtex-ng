@@ -60,6 +60,10 @@
 		}
 		
 		public function exibe() {
+			if( $this->obtemVisualizacao() == "msgredirect" ) {
+				$this->_file = "BASE_msgredirect.html";
+			}
+		
 			if( !$this->_redir && $this->_file ) {
 				$this->_tpl->exibe($this->_file);
 				if( $this->_exibirNomeArquivo ) {
@@ -80,11 +84,13 @@
 			$this->_visualizacao = $visualizacao;
 			
 			if( $this->_visualizacao == "msgredirect" ) {
+			
 				$url = $this->obtem("url");
 				
 				$url .= (strstr($url,"?")?"&":"?")."extra=".md5(microtime());
 				$this->atribui("url",$url);
 				$this->_file = "BASE_msgredirect.html";
+				
 			}
 			
 		}

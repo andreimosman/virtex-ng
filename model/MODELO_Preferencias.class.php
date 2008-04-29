@@ -471,7 +471,35 @@
 		}
 		
 		public function obtemFormaPagamento($id_forma_pagamento) {
-			return($this->pftb_forma_pagamento->obtemUnico(array("id_forma_pagamento"=>$id_forma_pagamento)));
+			$forma = $this->pftb_forma_pagamento->obtemUnico(array("id_forma_pagamento"=>$id_forma_pagamento));
+			
+			
+			// TESTE (dados rogério)
+			/**
+			$forma["banco"] = "341";
+			$forma["agencia"] = "210";
+			$forma["conta"] = "71130";
+			$forma["dv_conta"] = "5";
+			$forma["carteira"] = "112";
+			*/
+			
+
+			// Link para impressão externa			
+			if( $forma["banco"] == "341" && $forma["carteira"] == "112" ) {
+				$ag = MBanco::padZero($forma["agencia"],4);
+				$cc = MBanco::padZero($forma["conta"],5);
+				$dv = MBanco::padZero($forma["dv_conta"],1);
+				$ctr = MBanco::padZero($forma["carteira"],3);				
+				
+				$linkSuf = $ag . $cc . $dv . $ctr;
+				
+				$forma["linkEmDia"] = "https://ww2.itau.com.br/bloqueto/Valida.aspx?tipo=01&CB=".$linkSuf;					
+				$forma["linkAtrazado"] = "https://ww2.itau.com.br/bloqueto/Valida.aspx?tipo=02&CB=".$linkSuf;
+				
+			}
+		
+		
+			return($forma);
 		}
 		
 		public function obtemTiposFormaPagamento() {
