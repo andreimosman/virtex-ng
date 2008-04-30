@@ -1834,7 +1834,6 @@
 								if ($instalacao_temp) $enderecos_instalacao[$valor["id_conta"]] = $instalacao_temp;
 							}
 							
-
 							$tipos = $this->helpdesk->obtemTiposChamado();
 							$origens = $this->helpdesk->obtemOrigensChamado();
 							$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
@@ -1904,6 +1903,14 @@
 							$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 							
 							if($confirma_chamado) {
+								$data_agendamento = null;
+								if($agendamento){ 
+									$data_tmp = explode("/", $agendamento);
+									$data_agendamento = $data_tmp[2] . "-" . $data_tmp[1] . "-" . $data_tmp[0];
+								}
+								
+								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo);							
+							
 								$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado_pai";
 								$mensagem = "Ordem de serviço criada com sucesso";
 							} else {
@@ -1911,11 +1918,12 @@
 								$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado_pai";
 							}
 							
-							if($agendamento && $confirma_chamado) {
-								$data_tmp = explode("/", $agendamento);
-								$data_agendamento = $data_tmp[2] . "-" . $data_tmp[1] . "-" . $data_tmp[0];
-								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo);
-							}
+							
+							//if($agendamento && $confirma_chamado) {
+							//	$data_tmp = explode("/", $agendamento);
+							//	$data_agendamento = $data_tmp[2] . "-" . $data_tmp[1] . "-" . $data_tmp[0];
+							//	$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo);
+							//}
 							
 						
 						
@@ -1972,7 +1980,32 @@
 											$this->helpdesk->finalizaChamado($id_chamado, $resolvido=true, $dadosLogin["id_admin"], $comentario);
 										}
 
-										$mensagem = "Tomada de posse de chamado efetuada com sucesso.";
+										$mensagem = "Status do chamado atualizado com sucesso";
+									
+										if($novostatus = "F" || $novostatus = "OK"){ 
+									
+											$id_chamado = @$_REQUEST["id_chamado"]; 
+
+											$data_execucao = @$_REQUEST["data_execucao"]; 
+
+											if($data_execucao){
+												$temp = explode("/", $data_execucao);
+												$data_execucao = "$temp[2]-$temp[1]-$temp[0]";
+											}
+
+											$horario_chegada = @$_REQUEST["horario_chegada"]; 
+											$horario_saida = @$_REQUEST["horario_saida"]; 
+											$caracterizacao = @$_REQUEST["caracterizacao"]; 
+											$icmp_ip = @$_REQUEST["icmp_ip"]; 
+											$icmp_media = @$_REQUEST["icmp_media"]; 
+											$icmp_minimo = @$_REQUEST["icmp_minimo"]; 
+											$ftp_ip = @$_REQUEST["ftp_ip"]; 
+											$ftp_media = @$_REQUEST["ftp_media"]; 
+											$ftp_minimo = @$_REQUEST["ftp_minimo"];
+
+											$this->helpdesk->registrarVisitaTecnica($id_chamado, $data_execucao, $horario_chegada, $horario_saida, $caracterizacao, $icmp_ip, $icmp_media, $icmp_minimo, $ftp_ip, $ftp_media, $ftp_minimo);
+											//$mensagem = "Dados da visita técnica atualizados com sucesso.";
+										}
 										break;	
 										
 									case 'priorizar':
@@ -1980,7 +2013,7 @@
 										$comentario = @$_REQUEST["prioridade_comentario"];
 										$this->helpdesk->alteraPrioridade($id_chamado, $prioridade, $dadosLogin["id_admin"], $comentario);
 										$mensagem = "Alteraçao de prioridade do chamado efetuada com sucesso.";
-										break;
+										
 										
 									case 'reabrir':
 										$comentario = @$_REQUEST["comentario_reabertura"];
@@ -1988,27 +2021,6 @@
 										$mensagem = "Chamado reaberto com sucesso";
 										break;
 										
-									case 'visita_tecnica':
-									
-										$id_chamado = @$_REQUEST["id_chamado"]; 
-										
-										$data_execucao = @$_REQUEST["data_execucao"]; 
-										$temp = explode("/", $data_execucao);
-										$data_execucao = "$temp[2]-$temp[1]-$temp[0]";
-										
-										$horario_chegada = @$_REQUEST["horario_chegada"]; 
-										$horario_saida = @$_REQUEST["horario_saida"]; 
-										$caracterizacao = @$_REQUEST["caracterizacao"]; 
-										$icmp_ip = @$_REQUEST["icmp_ip"]; 
-										$icmp_media = @$_REQUEST["icmp_media"]; 
-										$icmp_minimo = @$_REQUEST["icmp_minimo"]; 
-										$ftp_ip = @$_REQUEST["ftp_ip"]; 
-										$ftp_media = @$_REQUEST["ftp_media"]; 
-										$ftp_minimo = @$_REQUEST["ftp_minimo"];
-										
-										$this->helpdesk->registrarVisitaTecnica($id_chamado, $data_execucao, $horario_chegada, $horario_saida, $caracterizacao, $icmp_ip, $icmp_media, $icmp_minimo, $ftp_ip, $ftp_media, $ftp_minimo);
-										$mensagem = "Dados da visita técnica atualizados com sucesso.";
-										break;
 								}
 
 							}

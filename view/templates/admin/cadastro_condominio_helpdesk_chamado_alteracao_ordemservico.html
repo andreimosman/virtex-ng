@@ -138,7 +138,7 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 		ReiniciarCampoResponsavel();
 
 		var responsavel = document.getElementById("responsavel");
-		alert("1");
+
 		for(i=0;i<mresponsaveis.length;i++) {
 			var item = mresponsaveis[i];
 
@@ -152,7 +152,7 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 				responsavel.add(opcao,null);
 			}catch(e) {
 				responsavel.add(opcao);
-			}  alert("aaa");
+			}
 		}
 	}
 
@@ -420,7 +420,7 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 							<label>Agendamento:</label>
 						</td>
 						<td>
-							<input type="text" name="agendamento" id="agendamento" maxlength="250" value="{$assunto}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+							<input type="text" name="agendamento" id="agendamento" maxlength="10" value="{$assunto}" style="width:50%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (dd/mm/aaaa)
 						</td>
 					</tr>
 

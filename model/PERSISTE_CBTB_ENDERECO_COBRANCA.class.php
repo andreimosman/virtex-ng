@@ -11,7 +11,7 @@
 			$this->_tabela		= "cbtb_endereco_cobranca";
 			$this->_sequence	= "cbsq_id_endereco_cobranca";
 			
-			$this->_filtros		= array("id_endereco_cobranca" => "numeric", "id_cliente_produto" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric", "id_bloco_cobranca" => "numeric");
+			$this->_filtros		= array("id_endereco_cobranca" => "numeric", "id_cliente_produto" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric");
 		
 		}
 		

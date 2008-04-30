@@ -11,7 +11,7 @@
 			$this->_tabela		= "cntb_endereco_instalacao";
 			$this->_sequence	= "cnsq_id_endereco_instalacao";
 			
-			$this->_filtros		= array("id_endereco_instalacao" => "numeric", "id_conta" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric", "id_bloco_instalacao" => "numeric");
+			$this->_filtros		= array("id_endereco_instalacao" => "numeric", "id_conta" => "numeric", "id_cidade" => "numeric", "id_cliente" => "numeric");
 		
 		}
 		

@@ -95,6 +95,7 @@ label {
 		var atualstatus = document.getElementById("atualstatus");
 		var comentariofim = document.getElementById("comentariofim");
 		var responsavel_chamado = document.getElementById("responsavel_chamado");
+		var valida_vt = true;
 
 		if(estaVazio(novostatus.value)) {
 			alert("É necessário indicar o status de término do chamado");
@@ -123,7 +124,17 @@ label {
 			return false;
 		}
 
-		return true;
+		{/literal}
+
+		{if $chamado.tipo == "OS"}
+		if(novostatus == "OK" || novostatos == "R") {
+			valida_vt = validaFormVisitaTecnica();
+		}
+		{/if}
+
+		{literal}
+
+		return true && valida_vt;
 	}
 
 
@@ -139,6 +150,74 @@ label {
 		}
 
 		return true;
+	}
+
+
+	function desabilitaVT() {
+		var data_execucao = document.getElementById("data_execucao");
+		var horario_chegada = document.getElementById("horario_chegada");
+		var horario_saida = document.getElementById("horario_saida");
+		var caracterizacao = document.getElementById("caracterizacao");
+
+		var icmp_ip = document.getElementById("icmp_ip");
+		var icmp_media = document.getElementById("icmp_media");
+		var icmp_minimo = document.getElementById("icmp_minimo");
+
+		var ftp_ip = document.getElementById("ftp_ip");
+		var ftp_media = document.getElementById("ftp_media");
+		var ftp_minimo = document.getElementById("ftp_minimo");
+
+		data_execucao.disabled = true;
+		horario_chegada.disabled = true;
+		horario_saida.disabled = true;
+		caracterizacao.disabled = true;
+
+		icmp_ip.disabled = true;
+		icmp_media.disabled = true;
+		icmp_minimo.disabled = true;
+
+		ftp_ip.disabled = true;
+		ftp_media.disabled = true;
+		ftp_minimo.disabled = true;
+	}
+
+	function habilitaVT() {
+		var data_execucao = document.getElementById("data_execucao");
+		var horario_chegada = document.getElementById("horario_chegada");
+		var horario_saida = document.getElementById("horario_saida");
+		var caracterizacao = document.getElementById("caracterizacao");
+
+		var icmp_ip = document.getElementById("icmp_ip");
+		var icmp_media = document.getElementById("icmp_media");
+		var icmp_minimo = document.getElementById("icmp_minimo");
+
+		var ftp_ip = document.getElementById("ftp_ip");
+		var ftp_media = document.getElementById("ftp_media");
+		var ftp_minimo = document.getElementById("ftp_minimo");
+
+		data_execucao.disabled = false;
+		horario_chegada.disabled = false;
+		horario_saida.disabled = false;
+		caracterizacao.disabled = false;
+
+		icmp_ip.disabled = false;
+		icmp_media.disabled = false;
+		icmp_minimo.disabled = false;
+
+		ftp_ip.disabled = false;
+		ftp_media.disabled = false;
+		ftp_minimo.disabled = false;
+	}
+
+
+	function modificaStatus() {
+		novostatus = document.getElementById("novostatus");
+
+		if (novostatus.value == "OK" || novostatus.value == "F") {
+			habilitaVT();
+		}else {
+			desabilitaVT();
+		}
 	}
 
 
@@ -194,11 +273,11 @@ label {
 
 
 		//CAMPO CARACTERIZACAO
-		if(caracterizacao.value == "" ) {
-			alert("É necessário escolher um valor no campo Caracterização");
-			caracterizacao.focus();
-			return false;
-		}
+		//if(caracterizacao.value == "" ) {
+		//	alert("É necessário escolher um valor no campo Caracterização");
+		//	caracterizacao.focus();
+		//	return false;
+		//}
 
 
 		//CAMPO ICMP_IP
@@ -286,7 +365,7 @@ label {
 		ApresentarDiv("divFormResolveChamado", false);
 		ApresentarDiv("divFormReabreChamado", false);
 		ApresentarDiv("divFormPriorizaChamado", false);
-		ApresentarDiv("divFormVisitaTecnica", false);
+
 	}
 
 	function ambienteComentario() {
@@ -325,6 +404,10 @@ label {
 	}
 
 {/literal}
+
+{if $chamado.tipo == "OS"}
+	desabilitaVT();
+{/if}
 </script>
 
 
@@ -359,10 +442,6 @@ label {
 		{if $chamado.tipo != 'OS'}
 			{if $admin_grupo || $chamado.criado_por == $dadosLogin.id_admin || $chamado.responsavel == $dadosLogin.id_admin}
 				[<a href="admin-cadastro.php?op=helpdesk&tela=alteracao&subtela=ordemservico&id_chamado={$chamado.id_chamado}&id_condominio={$id_condominio}" {if !$ordem_servico}style="color:blue;font-weight:bold"{/if}>Gerar Ordem de Serviço</a>]
-			{/if}
-		{else}
-			{if $chamado.responsavel && ($chamado.criado_por == $dadosLogin.id_admin || $admin_grupo || $chamado.responsavel == $dadosLogin.id_admin)}
-				[<a href="javascript:void(null);" onclick="javascript:ambienteVisitaTecnica();">Visita Técnica</a>]
 			{/if}
 		{/if}
 
@@ -923,12 +1002,12 @@ label {
 				</tr>
 				<tr>
 					<!-- Lado Esquerdo -->
-					<td width="500">
+					<td width="500" style="padding:0px">
 						<table border=0>
 							<tr>
-								<td align="right" width="110"><strong>Status:</strong></td>
+								<td align="right" width="150"><strong>Status:</strong></td>
 								<td align="left">
-									<select name="novostatus" id="novostatus" style="width:150px" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);">
+									<select name="novostatus" id="novostatus" style="width:150px" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);" onChange="javascript:modificaStatus()";>
 										<option value="">-- SELECIONE --</option>
 										{* Somente o dono do chamado e o administrador doe grupo podem ter acesso a estas opçòes *}
 										{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin }
@@ -948,10 +1027,81 @@ label {
 							</tr>
 
 							<tr>
-								<td align="right" width="110"><strong>Laudo de Resolu&ccedil;&atilde;o/Fechamento:</strong></td>
+								<td align="right" width="150"><strong>Laudo de Resolu&ccedil;&atilde;o/Fechamento:</strong></td>
 								<td align="right"><textarea name="comentariofim" id="comentariofim" rows="4" cols="30"></textarea></td>
 							</tr>
 						</table>
+
+
+
+						{if $chamado.tipo == "OS"}
+						<center>
+							<table width="100%" style="padding:0px;margin:0px; border:none;">
+								<tr><th>Dados da Visita Técnica</th></tr>
+							</table>
+						</center>
+
+						<table border=0>
+							<tr>
+								<td align="right" width="150"><strong>Data Execu&ccedil;&atilde;o:</strong></td>
+								<td align="right"><input type="text" name="data_execucao" id="data_execucao" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.data_execucao|date_format:"%d/%m/%Y"}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>Hor&aacute;rio Chegada:</strong></td>
+								<td align="right"><input type="text" name="horario_chegada" id="horario_chegada" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.horario_chegada|date_format:"%k:%M"}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>Hor&aacute;rio Sa&iacute;da:</strong></td>
+								<td align="right"><input type="text" name="horario_saida" id="horario_saida" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.horario_saida|date_format:"%k:%M"}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right"><strong>Caracteriza&ccedil;&atilde;o:</strong></td>
+								<td>
+									<select id="caracterizacao" name="caracterizacao" style="width:100%"  onchange="javascript:AtualizaFormCampoTipo(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+										<option value="">-- SELECIONE --</option>
+										{foreach from=$caracterizacao key=k item=i}
+											<option value="{$k}" {if $k == $chamado.caracterizacao}SELECTED{/if}>{$i}</option>
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>ICMP IP:</strong></td>
+								<td align="right"><input type="text" name="icmp_ip" id="icmp_ip" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.icmp_ip}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>Média ICMP:</strong></td>
+								<td align="right"><input type="text" name="icmp_media" id="icmp_media" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.icmp_media}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>Mínimo ICMP:</strong></td>
+								<td align="right"><input type="text" name="icmp_minimo" id="icmp_minimo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.icmp_minimo}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>FTP IP:</strong></td>
+								<td align="right"><input type="text" name="ftp_ip" id="ftp_ip" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.ftp_ip}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>Média FTP:</strong></td>
+								<td align="right"><input type="text" name="ftp_media" id="ftp_media" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.ftp_media}" /></td>
+							</tr>
+
+							<tr>
+								<td align="right" width="150"><strong>Mínimo FTP:</strong></td>
+								<td align="right"><input type="text" name="ftp_minimo" id="ftp_minimo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.ftp_minimo}" /></td>
+							</tr>
+
+						</table>
+						{/if}
+
 					</td>
 
 					<!-- Confirmação -->
@@ -985,118 +1135,6 @@ label {
 	</div>
 {/if}
 
-
-
-
-{* ----- FORMULÁRIO DE VISITA TÉCNICA ----- *}
-{if $chamado.tipo == 'OS'}
-	{if $chamado.responsavel && ($chamado.criado_por == $dadosLogin.id_admin || $admin_grupo || $chamado.responsavel == $dadosLogin.id_admin)}
-		<!-- PRIORIZA CHAMADO -->
-		<div id="divFormVisitaTecnica" style="width:700px;position:relative; display:none;">
-			<form name="frmVisitaTecnica" id="frmVisitaTecnica" action="admin-cadastro.php" onsubmit="javascript:return validaFormVisitaTecnica();">
-				<input type="hidden" name="acao" id="acao" value="visita_tecnica" />
-				<input type="hidden" name="op" id="op" value="helpdesk" />
-				<input type="hidden" name="tela" id="tela" value="alteracao" />
-				<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
-				<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
-				<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
-				<input type="hidden" name="prioridade_atual" id="prioridade_atual" value="{$chamado.prioridade}" />
-
-
-
-				<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%" cellpadding=2 cellspacing=0>
-					<tr>
-						<th style="background: #FF0000; color: #ffffff" colspan=2><span id="lblConfirma">Dados da Visita Técnica</span></th>
-					</tr>
-					<tr>
-						<!-- Lado Esquerdo -->
-						<td width="500">
-
-							<table border=0 width=90%>
-
-								<tr>
-									<td align="right" width="110"><strong>Data Execu&ccedil;&atilde;o:</strong></td>
-									<td align="right"><input type="text" name="data_execucao" id="data_execucao" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.data_execucao|date_format:"%d/%m/%Y"}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>Hor&aacute;rio Chegada:</strong></td>
-									<td align="right"><input type="text" name="horario_chegada" id="horario_chegada" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.horario_chegada|date_format:"%k:%M"}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>Hor&aacute;rio Sa&iacute;da:</strong></td>
-									<td align="right"><input type="text" name="horario_saida" id="horario_saida" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.horario_saida|date_format:"%k:%M"}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right"><strong>Caracteriza&ccedil;&atilde;o:</strong></td>
-									<td>
-										<select id="caracterizacao" name="caracterizacao" style="width:100%"  onchange="javascript:AtualizaFormCampoTipo(this.value);" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-											<option value="">-- SELECIONE --</option>
-											{foreach from=$caracterizacao key=k item=i}
-												<option value="{$k}" {if $k == $chamado.caracterizacao}SELECTED{/if}>{$i}</option>
-											{/foreach}
-										</select>
-									</td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>ICMP IP:</strong></td>
-									<td align="right"><input type="text" name="icmp_ip" id="icmp_ip" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.icmp_ip}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>Média ICMP:</strong></td>
-									<td align="right"><input type="text" name="icmp_media" id="icmp_media" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.icmp_media}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>Mínimo ICMP:</strong></td>
-									<td align="right"><input type="text" name="icmp_minimo" id="icmp_minimo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.icmp_minimo}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>FTP IP:</strong></td>
-									<td align="right"><input type="text" name="ftp_ip" id="ftp_ip" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.ftp_ip}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>Média FTP:</strong></td>
-									<td align="right"><input type="text" name="ftp_media" id="ftp_media" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.ftp_media}" /></td>
-								</tr>
-
-								<tr>
-									<td align="right" width="110"><strong>Mínimo FTP:</strong></td>
-									<td align="right"><input type="text" name="ftp_minimo" id="ftp_minimo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" value="{$chamado.ftp_minimo}" /></td>
-								</tr>
-
-							</table>
-
-						</td>
-
-						<!-- Confirmação -->
-						<td width="200" style="border-left:1px solid #000" valign="middle">
-							<table border=0>
-								<tr>
-									<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
-								</tr>
-								<tr>
-									<td align="right">Senha: </td><td><input type="password" name="senha_admin" id="senha_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td><td align="center" colspan=2><input type="submit" name="confirmar" value="Confirmar" class='botao'/></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-
-				</table>
-			</form>
-		</div>
-	{/if}
-{/if}
-{* //----- FORMULÁRIO DE VISITA TÉCNICA ----- *}
 
 
 
@@ -1163,6 +1201,14 @@ label {
 </tr>
 </table>
 <br>
+
+
+{if $chamado.tipo == "OS"}
+<script language="javascript1.2">
+	desabilitaVT();
+</script>
+{/if}
+
 
 </body>
 </html>
