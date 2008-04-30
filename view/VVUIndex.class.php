@@ -46,8 +46,21 @@
 			$this->_file = "index.html";
 		}
 
-
 		protected function exibeMenu() {
+			$imagemHeader = "view/templates/imagens/header_central.jpg";
+			$imagemHeaderPersonalizada = "view/templates/imagens/header_central_personalizado.jpg";
+			
+			/**
+			 * Se existir o arquivo header_central_personalizado.jpg o sistema irá exibí-lo logo acima do menu.
+			 * Tamanho: 603x70
+			 */
+			
+			if( file_exists($imagemHeaderPersonalizada) ) {
+				$imagemHeader = $imagemHeaderPersonalizada;
+			}
+			
+			$this->atribui("imagem_header",$imagemHeader);
+		
 			$this->_file = "menu.html";
 		}
 
