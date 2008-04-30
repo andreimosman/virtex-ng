@@ -12,6 +12,7 @@ function estaVazio(string) {
 	return reVazio.test(string);
 }
 
+
 /**
  * emailValido - Valida uma string de email
  */
@@ -21,9 +22,10 @@ function emailValido(string) {
 	return reEmail.test(string);
 }
  
- /**
-  * ipValido - Valida uma string de endereço IPv4
-  */
+ 
+/**
+ * ipValido - Valida uma string de endereço IPv4
+ */
 function ipValido(string) {
 	var reIP = /^([0-2]?[0-9]?[0-9]\.){3}([0-2]?[0-9]?[0-9])$/;
 
@@ -79,6 +81,18 @@ function validaData(data_entrada) {
 
 
 /**
+ * validaHora - Valida uma data data
+ * retorno:	true - se a adata for válida
+ *		false - se a data for inválida
+ */
+function validaHora(data_entrada) {
+	reData = /^(([0-1]\d)|(2[0-3])):[0-5]?\d$/;
+	return reData.test(data_entrada);
+}
+
+
+
+/**
  * validaUsername - valida uma string de username
  * retorno:	true - se o username for válido
  *		false - se o username for inválido
@@ -88,3 +102,16 @@ function validaUsernameString(username) {
 	reUsername = /^[a-z0-9\._]+$/;
 	return reUsername.test(username);
 }
+
+
+/**
+ * somenteNumero - valida uma string e verifica se possui somente numeros
+ * retorno:	true - se houver somente numeros
+ *		false - se nao conter somente numeros
+ */
+
+function somenteNumeros(string) {
+	reNumeros = /^[0-9]*\.?[0-9]+$/;
+	return reNumeros.test(string);
+}
+ 

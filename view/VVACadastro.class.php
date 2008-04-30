@@ -55,13 +55,29 @@
 		}
 		
 		
-		protected function obtemItensMenuCondominio() {
+		protected function obtemItensMenuCondominio($tela="") {
 			$itensMenu = array();
-
+			
 			$itensMenu[] = array("texto" => "Novo: Condomínio", "url" => "admin-cadastro.php?op=condominios&tela=cadastro");
+			
+			switch($tela) {
+				case 'alteracao':
+					if($this->obtem("modo_visualizacao")) {
+						$itensMenu[] = array("texto" => "Helpdesk", "url" => "admin-cadastro.php?op=helpdesk&tela=listagem&id_condominio=" . $this->obtem("id_condominio") );
+					}
+					break;
+			}
 
 			return($itensMenu);
-		}		
+		}
+		
+		
+		protected function obtemItensMenuHelpdesk($tela="") {
+			$itensMenu = array();
+			
+			$itensMenu[] = array("texto" => "Ficha: Condomínio", "url" => "admin-cadastro.php?op=condominios&tela=cadastro&visualizacao=1&id_condominio=" . $this->obtem("id_condominio"));
+			return($itensMenu);
+		}
 
 	
 		public function exibe() {
@@ -92,6 +108,10 @@
 					
 				case 'condominios':
 					$this->exibeCondominios();					
+					break;
+				
+				case 'helpdesk':
+					$this->exibeHelpdesk();
 					break;
 				
 				default:
@@ -389,13 +409,15 @@
 					if(@$this->obtem("id_condominio")) {						
 						if ($this->obtem("modo_visualizacao")) {
 							$titulo .= " :: Visualização :: " . $this->obtem("nome");
+							$this->configureMenu($this->obtemItensMenuCondominio("alteracao"), false, true);
 						} else {
 							$titulo .= " :: Alteração :: " . $this->obtem("nome");
 						}
 					} else {
 						$titulo .= " :: Cadastro de novo condomínio ";
+						$this->configureMenu($this->obtemItensMenuCondominio(), false, true);
 					}
-					$this->configureMenu($this->obtemItensMenuCondominio(), false, true);
+					
 					$this->_file = "cadastro_condominios_cadastro.html";
 					break;
 				
@@ -414,6 +436,45 @@
 					$titulo .= " :: Listagem ";
 					$this->configureMenu($this->obtemItensMenuCondominio(), true, true);
 					$this->_file = "cadastro_condominios_listagem.html";
+					break;
+			}
+			
+			$this->atribui("titulo", $titulo);
+		}
+		
+		protected function exibeHelpdesk() {
+			$titulo = "Helpdesk";
+			
+			//Nome do condomínio
+			$condominio = $this->obtem("condominio");
+			$subtela = @$this->obtem("subtela");
+			if($condominio) $titulo .= " :: $condominio[nome]";
+			
+			
+			switch($this->obtem("tela")) {
+				case 'cadastro':
+					$titulo .= " :: Novo Chamado/Ocorrência";
+					$this->_file="cadastro_condominio_helpdesk_chamado_novo.html";
+					break;				
+				
+				case 'alteracao':
+					$titulo .= " :: Chamado #";
+					$chamado = @$this->obtem("chamado");
+					$titulo .= $chamado["id_chamado"];
+					
+					$this->_file = "cadastro_condominio_helpdesk_chamado_alteracao.html";
+					
+					if($subtela == "ordemservico") { 
+						$titulo .= " :: Gerar Ordem de Serviço";
+						$this->_file = "cadastro_condominio_helpdesk_chamado_alteracao_ordemservico.html";
+					}
+					
+					break;
+					
+				case 'listagem':
+					$titulo .= " :: Listagem";
+					$this->_file = "cadastro_condominio_helpdesk_chamado.html";
+					$this->configureMenu($this->obtemItensMenuHelpdesk());
 					break;
 			}
 			
