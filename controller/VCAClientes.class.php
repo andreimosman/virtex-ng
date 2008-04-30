@@ -1795,7 +1795,10 @@
 						
 						$periodos = $this->helpdesk->obtemPeriodos();
 						$info_os = $this->helpdesk->obtemOrdemServicoPeloIdChamado($chamado["id_chamado"]);
+
+						$caracterizacao = $this->helpdesk->obtemCaracterizacao();
 						
+						$this->_view->atribui("caracterizacao", $caracterizacao);						
 
 						$this->_view->atribui("periodos", $periodos);
 						$this->_view->atribui("os_pendentes", $os_pendentes);
@@ -1897,7 +1900,7 @@
 							
 							
 							
-							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta,0,0,0,0,$id_chamado_pai);
+							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta,0,0,0,0,0,0,$id_chamado_pai);
 							$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 							
 							if($confirma_chamado) {
@@ -1944,13 +1947,15 @@
 										$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $novoresponsavel);
 										$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
 										$mensagem = "Delegação efetuada com sucesso.";
-										break;	
+										break;
+										
 									case 'pegar':
 										$responsavel = @$_REQUEST["responsavel"];
 										$this->helpdesk->alteraResponsavelChamado($id_chamado,$dadosLogin["id_admin"], $responsavel);
 										$this->helpdesk->alteraStatus($id_chamado, PERSISTE_HDTB_CHAMADO::$STATUS_ABERTO, $dadosLogin["id_admin"]);
 										$mensagem = "Tomada de posse de chamado efetuada com sucesso.";
 										break;	
+										
 									case 'resolver':
 										$novostatus = @$_REQUEST["novostatus"];
 										$comentario = @$_REQUEST["comentariofim"];
@@ -1969,16 +1974,40 @@
 
 										$mensagem = "Tomada de posse de chamado efetuada com sucesso.";
 										break;	
+										
 									case 'priorizar':
 										$prioridade = @$_REQUEST["prioridade"];
 										$comentario = @$_REQUEST["prioridade_comentario"];
 										$this->helpdesk->alteraPrioridade($id_chamado, $prioridade, $dadosLogin["id_admin"], $comentario);
 										$mensagem = "Alteraçao de prioridade do chamado efetuada com sucesso.";
-										break;	
+										break;
+										
 									case 'reabrir':
 										$comentario = @$_REQUEST["comentario_reabertura"];
 										$this->helpdesk->reabreChamado($id_chamado, $dadosLogin["id_admin"], $comentario);
 										$mensagem = "Chamado reaberto com sucesso";
+										break;
+										
+									case 'visita_tecnica':
+									
+										$id_chamado = @$_REQUEST["id_chamado"]; 
+										
+										$data_execucao = @$_REQUEST["data_execucao"]; 
+										$temp = explode("/", $data_execucao);
+										$data_execucao = "$temp[2]-$temp[1]-$temp[0]";
+										
+										$horario_chegada = @$_REQUEST["horario_chegada"]; 
+										$horario_saida = @$_REQUEST["horario_saida"]; 
+										$caracterizacao = @$_REQUEST["caracterizacao"]; 
+										$icmp_ip = @$_REQUEST["icmp_ip"]; 
+										$icmp_media = @$_REQUEST["icmp_media"]; 
+										$icmp_minimo = @$_REQUEST["icmp_minimo"]; 
+										$ftp_ip = @$_REQUEST["ftp_ip"]; 
+										$ftp_media = @$_REQUEST["ftp_media"]; 
+										$ftp_minimo = @$_REQUEST["ftp_minimo"];
+										
+										$this->helpdesk->registrarVisitaTecnica($id_chamado, $data_execucao, $horario_chegada, $horario_saida, $caracterizacao, $icmp_ip, $icmp_media, $icmp_minimo, $ftp_ip, $ftp_media, $ftp_minimo);
+										$mensagem = "Dados da visita técnica atualizados com sucesso.";
 										break;
 								}
 

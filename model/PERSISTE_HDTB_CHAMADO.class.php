@@ -31,6 +31,10 @@
 		public static $PRIORIDADE_MEDIA		= 'M';
 		public static $PRIORIDADE_ALTA		= 'A';
 		public static $PRIORIDADE_URGENTE	= 'U';
+		
+		public static $CARATER_REDE_PROVEDOR 		= 'P';	/** Provedor */
+		public static $CARATER_PROBLEMA_CLIENTE		= 'C';	/** Cliente */
+		public static $CARATER_NAO_IDENTIFIDADO		= 'N';	/** Não encontrado problema */		
 	
 		public function __construct($bd=null) {
 			parent::__construct($bd);
@@ -44,14 +48,18 @@
 										
 										"id_cliente", "id_cliente_produto", "id_conta", "id_cobranca",
 										
-										"id_servidor", "id_nas", "id_pop"
+										"id_servidor", "id_nas", "id_pop", "id_condominio", "id_bloco",
+										
+										 "icmp_ip", "icmp_media", "icmp_minimo", "ftp_ip", "ftp_media", "ftp_minimo",
+										 
+										 "horario_saida", "horario_chegada", "caracterizacao", "data_execucao"
 										
 										);
 			$this->_chave 		= "id_chamado";
 			$this->_ordem 		= "abertura DESC";
 			$this->_tabela		= "hdtb_chamado";
 			$this->_sequence	= "hdsq_id_chamado";	
-			//$this->_filtros		= array("ativo" => "boolean");
+			$this->_filtros		= array("ativo" => "boolean", "icmp_media" => "number", "icmp_minimo" => "number", "ftp_media" => "number", "ftp_minimo" => "number", "data_execucao" => "date");
 		}
 		
 		public static function obtemTipos() {
@@ -94,6 +102,14 @@
 			return($this->bd->obtemRegistros($sql));
 			
 		}
+		
+		public static function obtemCaracterizacao() {
+			return(array(
+					self::$CARATER_REDE_PROVEDOR 	=> 'Rede Provedor',
+					self::$CARATER_PROBLEMA_CLIENTE	=> 'Problema Cliente/Assinante',
+					self::$CARATER_NAO_IDENTIFIDADO	=> 'Não foi identificado nenhum problema'
+				));
+		}		
 	
 	}
 

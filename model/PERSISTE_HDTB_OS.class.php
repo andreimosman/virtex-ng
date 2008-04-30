@@ -6,9 +6,7 @@
 		public static $PERIODO_MANHA = 'M';
 		public static $PERIODO_TARDE = 'T';
 		public static $PERIODO_NOITE = 'N';
-		
-		
-
+				
 		public function __construct($bd=null) {
 			parent::__construct($bd);
 			$this->_campos	 	= array( "id_chamado", "datainicio", "datafim", "endereco_os", "complemento_os", 
@@ -29,6 +27,7 @@
 					self::$PERIODO_NOITE => "Noite"
 				));
 		}
+		
 		
 	
 	}

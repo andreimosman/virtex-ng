@@ -16,7 +16,7 @@
 		protected function executa() {
 		
 			$cfg_geral = $this->_cfg->config["geral"];
-			$desenvolvimento = $cfg_geral["desenvolvimento"];
+			$desenvolvimento = @$cfg_geral["desenvolvimento"];
 
 		
 			$permissao_monitoramento = $this->requirePrivLeitura("_SUPORTE_MONITORAMENTO",false);

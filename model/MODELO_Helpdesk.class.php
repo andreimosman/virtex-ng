@@ -130,7 +130,7 @@
 		/**
 		 * Abertura de chamado ou ocorrência.
 		 */
-		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_servidor=0,$id_nas=0,$id_pop=0,$id_chamado_pai=null) {
+		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_servidor=0,$id_nas=0,$id_pop=0,$id_condominio=0,$id_bloco=0,$id_chamado_pai=null) {
 			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_grupo, "assunto" => $assunto, "descricao" => $descricao, "origem" => $origem, "classificacao" => $classificacao);
 			
 
@@ -141,6 +141,8 @@
 			if( $id_servidor ) $dados["id_servidor"] = $id_servidor;
 			if( $id_nas ) $dados["id_nas"] = $id_nas;
 			if( $id_pop ) $dados["id_pop"] = $id_pop;
+			if( $id_condominio ) $dados["id_condominio"] = $id_condominio;
+			if( $id_bloco ) $dados["id_bloco"] = $id_bloco;
 			if( $prioridade ) $dados["prioridade"] = $prioridade;
 			
 			
@@ -389,6 +391,26 @@
 
 
 		/**
+		 * Lista de chamados pendentes por condominio
+		 */
+		public function obtemChamadosPendentesPorCondominio($id_condominio, $id_bloco=null) {
+			$filtro = array("status" => "!in:OK::F", "tipo" => "!in:OS", "id_condominio" => $id_condominio);
+			if($id_bloco) $filtro["id_bloco"] = $id_bloco;
+			return($this->hdtb_chamado->obtem($filtro));
+		}
+		
+
+		/**
+		 * Lista de chamados finalizados por condominio
+		 */
+		public function obtemChamadosFinalizadosPorCondominio($id_condominio, $id_bloco=null) {
+			$filtro = array("status" => "in:OK::F", "tipo"=>"!in:OS", "id_condominio" => $id_condominio);
+			if($id_bloco) $filtro["id_bloco"] = $id_bloco;
+			return($this->hdtb_chamado->obtem($filtro));
+		}
+
+
+		/**
 		 * Lista de chamados pendentes por equipamento
 		 */
 		public function obtemChamadosPendentesPorEquipamento($id_servidor=null,$id_nas=null,$id_pop=null) {
@@ -493,6 +515,31 @@
 		
 		}
 		
+		/**
+		 * Registra informações da Visita Técnica
+		 */
+		 
+		 public function registrarVisitaTecnica($id_chamado, $data_execucao, $horario_chegada, $horario_saida, $caracterizacao, $icmp_ip, $icmp_media, $icmp_minimo, $ftp_ip, $ftp_media, $ftp_minimo) {
+		 	
+		 	$dados = array(				
+				"data_execucao" 	=> "$data_execucao",
+				"horario_chegada" 	=> "$horario_chegada",
+				"horario_saida" 	=> "$horario_saida",
+				"caracterizacao" 	=> "$caracterizacao",
+				"icmp_ip" 			=> "$icmp_ip",
+				"icmp_media" 		=> "$icmp_media",
+				"icmp_minimo" 		=> "$icmp_minimo",
+				"ftp_ip" 			=> "$ftp_ip",
+				"ftp_media" 		=> "$ftp_media",
+				"ftp_minimo" 		=> "$ftp_minimo"
+		 	);
+		 	
+		 	$filtro = array("id_chamado" => "$id_chamado");
+		 	
+		 	return($this->hdtb_chamado->altera($dados, $filtro));
+		 	
+		 }
+		
 		
 		/**
 		 * Retorna a ordem de Serviço pelo id do chamado
@@ -511,6 +558,9 @@
 			return($this->hdtb_os->obtemPeriodos());			
 		}
 		
+		/**
+		 * Retorna array com as priodidades
+		 */
 		public function obtemPrioridades() {
 			$prioridades = array(
 				PERSISTE_HDTB_CHAMADO::$PRIORIDADE_NENHUMA		=>	"Nenhuma",
@@ -521,6 +571,13 @@
 			);
 			
 			return $prioridades;
+		}
+		
+		/**
+		 * Retorna array com as caracterizações
+		 */		
+		public function obtemCaracterizacao() {
+			return($this->hdtb_chamado->obtemCaracterizacao());
 		}
 	}
 
