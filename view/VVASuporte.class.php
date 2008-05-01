@@ -58,6 +58,17 @@
 			}
 		}
 		
+		
+		protected function obtemItensMenuHelpdesk() {
+			$itensMenu = array();
+
+			$itensMenu[] = array("texto" => "Novo: Chamado", "url" => "admin-suporte.php?op=helpdesk&tela=cadastro");
+			
+			return($itensMenu);
+			
+		}
+		
+		
 		protected function exibeMonitoramento() {
 			$this->_file = "suporte_monitoramento.html";
 			$this->atribui("titulo","Monitoramento");
@@ -106,12 +117,35 @@
 		
 		protected function exibeHelpdesk() {
 			$titulo = "Helpdesk";
+			$subtela = $this->obtem("subtela");
 			
 			switch($this->obtem("tela")) {
+			
+				case 'cadastro':
+					$titulo .= " :: Novo Chamado/Ocorr&ecirc;ncia";
+					$this->_file = "suporte_helpdesk_chamado_novo.html";
+					break;
+
+				case 'alteracao':
+					$titulo .= " :: Chamado #";
+					$chamado = @$this->obtem("chamado");
+					$titulo .= $chamado["id_chamado"];
+					
+					$this->_file = "suporte_helpdesk_chamado_alteracao.html";
+					
+					if( $subtela == "ordemservico") { 
+						$titulo .= " :: Gerar Ordem de Serviço";
+						$this->_file = "suporte_helpdesk_chamado_alteracao_ordemservico.html";
+					}
+					
+					break;			
+			
 				case 'listagem':
 				default:
 					$titulo .= " :: Lista de Chamados";
 					$this->_file = "suporte_helpdesk_chamado.html";
+					$this->configureMenu($this->obtemItensMenuHelpdesk());
+					
 					if($this->obtem("subtela") == "mini") {
 						$this->_file = "suporte_helpdesk_chamado_mini.html";
 						$titulo = "";

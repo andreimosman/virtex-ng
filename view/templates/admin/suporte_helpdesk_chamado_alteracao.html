@@ -31,12 +31,12 @@ label {
 <script language="javascript1.2" >
 {literal}
 
-	function NovoChamado(id_cliente) {
-		self.location = "admin-clientes.php?op=helpdesk&tela=cadastro&id_cliente=" + id_cliente;
+	function NovoChamado(id_condominio) {
+		self.location = "admin-suporte.php?op=helpdesk&tela=cadastro&id_condominio=" + id_condominio;
 	}
 
-	function AlterarChamado(id_chamado, id_cliente) {
-		self.location = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado + "&id_cliente=" + id_cliente;
+	function AlterarChamado(id_chamado, id_condominio) {
+		self.location = "admin-suporte.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado + "&id_condominio=" + id_condominio;
 	}
 
 	function ApresentarDiv(id_div, visivel) {
@@ -95,7 +95,7 @@ label {
 		var atualstatus = document.getElementById("atualstatus");
 		var comentariofim = document.getElementById("comentariofim");
 		var responsavel_chamado = document.getElementById("responsavel_chamado");
-		var valida_vt = true;
+
 
 		if(estaVazio(novostatus.value)) {
 			alert("É necessário indicar o status de término do chamado");
@@ -105,7 +105,7 @@ label {
 		}
 
 		if((novostatus.value == 'A' ||novostatus.value == 'P'||novostatus.value == 'PC') && !responsavel_chamado.value) {
-			alert("Somente é possível alterar o status de um chamado para Aberto, Pendente ou Pendente com o cliente, se este já tiver um responsável");
+			alert("Somente é possível alterar o status de um chamado para Aberto, Pendente ou Pendente com o condominio, se este já tiver um responsável");
 			novostatus.value="";
 			novostatus.focus();
 			return false;
@@ -124,23 +124,7 @@ label {
 			return false;
 		}
 
-		if(novostatus == "OK" || novostatos == "R") {
-			valida_vt = validaFormVisitaTecnica();
-		}
-
-		{/literal}
-
-		{if $chamado.tipo == "OS"}
-		{literal}
-			if(novostatus == "OK" || novostatos == "R") {
-				valida_vt = validaFormVisitaTecnica();
-			}
-		{/literal}
-		{/if}
-
-		{literal}
-
-		return true && valida_vt;
+		return true;
 	}
 
 
@@ -157,6 +141,7 @@ label {
 
 		return true;
 	}
+
 
 	function desabilitaVT() {
 		var data_execucao = document.getElementById("data_execucao");
@@ -213,6 +198,7 @@ label {
 		ftp_media.disabled = false;
 		ftp_minimo.disabled = false;
 	}
+
 
 	function modificaStatus() {
 		novostatus = document.getElementById("novostatus");
@@ -277,11 +263,11 @@ label {
 
 
 		//CAMPO CARACTERIZACAO
-		if(caracterizacao.value == "" ) {
-			alert("É necessário escolher um valor no campo Caracterização");
-			caracterizacao.focus();
-			return false;
-		}
+		//if(caracterizacao.value == "" ) {
+		//	alert("É necessário escolher um valor no campo Caracterização");
+		//	caracterizacao.focus();
+		//	return false;
+		//}
 
 
 		//CAMPO ICMP_IP
@@ -369,6 +355,7 @@ label {
 		ApresentarDiv("divFormResolveChamado", false);
 		ApresentarDiv("divFormReabreChamado", false);
 		ApresentarDiv("divFormPriorizaChamado", false);
+
 	}
 
 	function ambienteComentario() {
@@ -408,6 +395,9 @@ label {
 
 {/literal}
 
+{if $chamado.tipo == "OS"}
+	desabilitaVT();
+{/if}
 </script>
 
 
@@ -420,7 +410,7 @@ label {
 	{* ----- MENU SUPERIOR COM AS OPÇÕES REFERENTES AO CHAMADO ----- *}
 	<td align="left" style="border-bottom: solid 1px;">
 	&nbsp;Opções:
-	[<a href={if $chamado.tipo == 'OS'}"admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente={$id_cliente}&id_chamado={$chamado.id_chamado_pai}"{else}"admin-clientes.php?op=helpdesk&tela=listagem&id_cliente={$id_cliente}"{/if} {if !$usuario_grupo || $chamado.status == "OK" || $chamado.status == "F"}style="color:green;font-weight:bold"{/if}>Voltar</a>]
+	[<a href={if $chamado.tipo == 'OS'}"admin-suporte.php?op=helpdesk&tela=alteracao&id_chamado={$chamado.id_chamado_pai}"{else}"admin-suporte.php?op=helpdesk&tela=listagem&id_condominio={$id_condominio}"{/if} {if !$usuario_grupo || $chamado.status == "OK" || $chamado.status == "F"}style="color:green;font-weight:bold"{/if}>Voltar</a>]
 
 	{if $chamado.status != "OK" && $chamado.status != "F"}
 		{if $usuario_grupo}
@@ -441,7 +431,7 @@ label {
 		{* -- GERACAO DE ORDEM DE SERVICO || VISITA TECNICA --*}
 		{if $chamado.tipo != 'OS'}
 			{if $admin_grupo || $chamado.criado_por == $dadosLogin.id_admin || $chamado.responsavel == $dadosLogin.id_admin}
-				[<a href="admin-clientes.php?op=helpdesk&tela=alteracao&subtela=ordemservico&id_chamado={$chamado.id_chamado}&id_cliente={$id_cliente}" {if !$ordem_servico}style="color:blue;font-weight:bold"{/if}>Gerar Ordem de Serviço</a>]
+				[<a href="admin-suporte.php?op=helpdesk&tela=alteracao&subtela=ordemservico&id_chamado={$chamado.id_chamado}" {if !$ordem_servico}style="color:blue;font-weight:bold"{/if}>Gerar Ordem de Serviço</a>]
 			{/if}
 		{/if}
 
@@ -483,14 +473,6 @@ label {
 		<tr>
 			<th colspan=4>Detalhes do Chamado</th>
 		</tr>
-
-
-		{* -- Insere informações do cliente -- *}
-		<tr>
-			<td width="110" align="right"><strong>Cliente:</strong></td>
-			<td align="left" colspan=3><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$chamado.id_cliente}">{$chamado.cliente_nome}</a></td>
-		</tr>
-		{* //-- Insere informações do cliente -- *}
 
 
 		<tr>
@@ -555,10 +537,10 @@ label {
 		</tr>
 		<tr>
 			<td width="110" align="right"><strong>Conta:</strong></td>
-			<td align="left" width="240"><a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$chamado.conta_tipo}&id_cliente={$chamado.id_cliente}&id_conta={$chamado.id_conta}">{$chamado.id_conta} - {$chamado.conta_username}</a></td>
+			<td align="left" width="240"><a href="admin-suporte.php?op=conta&tela=cadastro&tipo={$chamado.conta_tipo}&id_condominio={$chamado.id_condominio}&id_conta={$chamado.id_conta}">{$chamado.id_conta} - {$chamado.conta_username}</a></td>
 
 			<td width="110" align="right"><strong>Contrato:</strong></td>
-			<td align="left" width="240"><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$chamado.id_cliente}&id_cliente_produto={$chamado.conta_contrato}">{$chamado.conta_contrato} - {$chamado.conta_produto}</a></td>
+			<td align="left" width="240"><a href="admin-suporte.php?op=contrato&tela=contrato&id_condominio={$chamado.id_condominio}&id_condominio_produto={$chamado.conta_contrato}">{$chamado.conta_contrato} - {$chamado.conta_produto}</a></td>
 		</tr>
 
 		<tr>
@@ -606,6 +588,7 @@ label {
 	<br />
 	{* //----- MOTIVO DO CHAMADO ----- *}
 
+{*
 {if count($info_os)}
 
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="700" align="center">
@@ -639,6 +622,7 @@ label {
 	<br />
 
 {/if}
+
 
 
 {if $chamado.tipo == "OS"}
@@ -690,7 +674,7 @@ label {
 	</table>
 	<br />
 {/if}
-
+*}
 {* //----- INFORMAÇÕES SOBRE O CHAMADO ----- *}
 
 
@@ -698,11 +682,11 @@ label {
 {if !$chamado.responsavel}
 	<!-- PEGA CHAMADO -->
 	<div id="divFormPegaChamado" style="width:700px;position:relative; display:none;">
-		<form name="frmPegar" id="frmPegar" action="admin-clientes.php">
+		<form name="frmPegar" id="frmPegar" action="admin-suporte.php">
 			<input type="hidden" name="acao" id="acao" value="pegar" />
 			<input type="hidden" name="tela" id="tela" value="alteracao" />
 			<input type="hidden" name="op" id="op" value="helpdesk" />
-			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
 			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
 			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
 
@@ -750,11 +734,11 @@ label {
 {if $admin_grupo}
 	<!-- DELEGA CHAMADO -->
 	<div id="divFormDelegaChamado" style="width:700px;position:relative; display:none;">
-		<form name="frmDelegar" id="frmDelegar" action="admin-clientes.php" onsubmit="javascript:return validaFormDelegarChamado();">
+		<form name="frmDelegar" id="frmDelegar" action="admin-suporte.php" onsubmit="javascript:return validaFormDelegarChamado();">
 			<input type="hidden" name="acao" id="acao" value="delegar" />
 			<input type="hidden" name="op" id="op" value="helpdesk" />
 			<input type="hidden" name="tela" id="tela" value="alteracao" />
-			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
 			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
 			<input type="hidden" name="atualresponsavel" id="atualresponsavel" value="{$chamado.responsavel}" />
 
@@ -807,11 +791,11 @@ label {
 {* ----- FORMULÁRIO DE COMENTÁRIO DE CHAMADO ----- *}
 	<!-- COMENTA CHAMADO -->
 	<div id="divFormComentaChamado" style="width:700px;position:relative; display:none;">
-		<form name="frmComentar" id="frmComentar" action="admin-clientes.php" onsubmit="javascript:return validaFormComentarChamado();">
+		<form name="frmComentar" id="frmComentar" action="admin-suporte.php" onsubmit="javascript:return validaFormComentarChamado();">
 			<input type="hidden" name="acao" id="acao" value="comentar" />
 			<input type="hidden" name="op" id="op" value="helpdesk" />
 			<input type="hidden" name="tela" id="tela" value="alteracao" />
-			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
 			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
 			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
 
@@ -860,11 +844,11 @@ label {
 {if ($chamado.criado_por == $dadosLogin.id_admin || $admin_grupo) && $pode_reabrir}
 
 	<div id="divFormReabreChamado" style="width:700px;position:relative; display:none;">
-		<form name="frmComentar" id="frmComentar" action="admin-clientes.php" onsubmit="javascript:return validaFormReabrirChamado();">
+		<form name="frmComentar" id="frmComentar" action="admin-suporte.php" onsubmit="javascript:return validaFormReabrirChamado();">
 			<input type="hidden" name="acao" id="acao" value="reabrir" />
 			<input type="hidden" name="op" id="op" value="helpdesk" />
 			<input type="hidden" name="tela" id="tela" value="alteracao" />
-			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
 			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
 			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
 
@@ -916,11 +900,11 @@ label {
 {if $admin_grupo || $chamado.criado_por == $dadosLogin.id_admin}
 	<!-- PRIORIZA CHAMADO -->
 	<div id="divFormPriorizaChamado" style="width:700px;position:relative; display:none;">
-		<form name="frmPriorizar" id="frmPriorizar" action="admin-clientes.php" onsubmit="javascript:return validaFormPriorizarChamado();">
+		<form name="frmPriorizar" id="frmPriorizar" action="admin-suporte.php" onsubmit="javascript:return validaFormPriorizarChamado();">
 			<input type="hidden" name="acao" id="acao" value="priorizar" />
 			<input type="hidden" name="op" id="op" value="helpdesk" />
 			<input type="hidden" name="tela" id="tela" value="alteracao" />
-			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
 			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
 			<input type="hidden" name="responsavel" id="responsavel" value="{$chamado.responsavel}" />
 			<input type="hidden" name="prioridade_atual" id="prioridade_atual" value="{$chamado.prioridade}" />
@@ -980,11 +964,11 @@ label {
 {if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin || $chamado.criado_por == $dadosLogin.id_admin}
 	<!-- RESOLVE/FECHAR CHAMADO -->
 	<div id="divFormResolveChamado" style="width:700px;position:relative; display:none;">
-		<form name="frmResolver" id="frmResolver" action="admin-clientes.php" onsubmit="javascript:return validaFormResolverChamado();">
+		<form name="frmResolver" id="frmResolver" action="admin-suporte.php" onsubmit="javascript:return validaFormResolverChamado();">
 			<input type="hidden" name="acao" id="acao" value="resolver" />
 			<input type="hidden" name="op" id="op" value="helpdesk" />
 			<input type="hidden" name="tela" id="tela" value="alteracao" />
-			<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
+			<input type="hidden" name="id_condominio" id="id_condominio" value="{$id_condominio}" />
 			<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
 			<input type="hidden" name="responsavel_chamado" id="responsavel_chamado" value="{$chamado.responsavel}" />
 			<input type="hidden" name="atualstatus" id="atualstatus" value="{$chamado.status}" />
@@ -1000,7 +984,7 @@ label {
 							<tr>
 								<td align="right" width="150"><strong>Status:</strong></td>
 								<td align="left">
-									<select name="novostatus" id="novostatus" style="width:150px" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);" onchange="javascript:modificaStatus();">
+									<select name="novostatus" id="novostatus" style="width:150px" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);" onChange="javascript:modificaStatus()";>
 										<option value="">-- SELECIONE --</option>
 										{* Somente o dono do chamado e o administrador doe grupo podem ter acesso a estas opçòes *}
 										{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin }
@@ -1025,6 +1009,8 @@ label {
 							</tr>
 						</table>
 
+
+						{*
 						{if $chamado.tipo == "OS"}
 						<center>
 							<table width="100%" style="padding:0px;margin:0px; border:none;">
@@ -1092,7 +1078,10 @@ label {
 
 						</table>
 						{/if}
+						*}
+
 					</td>
+
 					<!-- Confirmação -->
 					<td width="200" style="border-left:1px solid #000" valign="middle">
 						<table border=0>
@@ -1126,6 +1115,8 @@ label {
 
 
 
+
+
 {* Se houverem ordens de serviço então exibe uma listagem com todas as ordens de chamado *}
 {if $ordens_servico_chamado}
 	<table class='lista' border=0 width='700' cellpadding=0 cellspacing=0 align="center">
@@ -1142,12 +1133,12 @@ label {
 		{foreach name=registros item=r from=$ordens_servico_chamado}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td align='right' align="center" width="40" class='{$estilo}'><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.id_chamado|string_format:"%05d"}</a></td>
-			<td class='{$estilo}' align="center" width="140"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
-			<td class='{$estilo}' align="center" width="25"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.prioridade}</a></td>
-			<td class='{$estilo}' align="center" width="25"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.status}</a></td>
-			<td class='{$estilo}' align="center" width="150"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$grupos[$r.id_grupo]} {if $r.responsavel}<br /><b>{$responsaveis[$r.responsavel]}</b>{/if}</a></td>
-			<td class='{$estilo}' width="250"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_cliente}')">{$r.assunto}</a></td>
+			<td align='right' align="center" width="40" class='{$estilo}'><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_condominio}')">{$r.id_chamado|string_format:"%05d"}</a></td>
+			<td class='{$estilo}' align="center" width="140"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_condominio}')">{$r.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
+			<td class='{$estilo}' align="center" width="25"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_condominio}')">{$r.prioridade}</a></td>
+			<td class='{$estilo}' align="center" width="25"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_condominio}')">{$r.status}</a></td>
+			<td class='{$estilo}' align="center" width="150"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_condominio}')">{$grupos[$r.id_grupo]} {if $r.responsavel}<br /><b>{$responsaveis[$r.responsavel]}</b>{/if}</a></td>
+			<td class='{$estilo}' width="250"><a href="javascript:AlterarChamado('{$r.id_chamado}', '{$id_condominio}')">{$r.assunto}</a></td>
 		</tr>
 		{/foreach}
 

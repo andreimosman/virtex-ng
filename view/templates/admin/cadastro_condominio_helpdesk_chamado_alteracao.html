@@ -127,9 +127,11 @@ label {
 		{/literal}
 
 		{if $chamado.tipo == "OS"}
-		if(novostatus == "OK" || novostatos == "R") {
-			valida_vt = validaFormVisitaTecnica();
-		}
+		{literal}
+			if(novostatus == "OK" || novostatos == "R") {
+				valida_vt = validaFormVisitaTecnica();
+			}
+		{/literal}
 		{/if}
 
 		{literal}

@@ -109,9 +109,9 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 
 	}
 
-	function formQuit(id_cliente) {
+	function formQuit(id_chamado) {
 		if(!confirm("Deseja realmente abandonar a edição desta ordem de serviço?")) return;
-		self.location = "admin-clientes.php?op=helpdesk&id_cliente=" + id_cliente;
+		self.location = "admin-suporte.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado;
 	}
 
 
@@ -138,12 +138,16 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 		ReiniciarCampoResponsavel();
 
 		var responsavel = document.getElementById("responsavel");
+		var contador = 0;
+
 
 		for(i=0;i<mresponsaveis.length;i++) {
+
 			var item = mresponsaveis[i];
 
 			if(item.ativo == "f" || item.id_grupo != id_grupo) continue;
 
+			contador ++;
 			opcao = document.createElement("option");
 			opcao.value = item.id_admin;
 			opcao.text = item.admnome;
@@ -153,6 +157,12 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 			}catch(e) {
 				responsavel.add(opcao);
 			}
+		}
+
+		if(!contador) {
+			responsavel.disabled=true;
+		} else {
+			responsavel.disabled=false;
 		}
 	}
 
@@ -296,16 +306,16 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 </script>
 
 
-<form name="formhelpdesk" id="formhelpdesk" method="post" action="admin-clientes.php" onSubmit="return helpdeskValidaCadastro()">
+<form name="formhelpdesk" id="formhelpdesk" method="post" action="admin-suporte.php" onSubmit="return helpdeskValidaCadastro()">
 	<input type="hidden" name="op" value="{$op}" />
 	<input type="hidden" name="tela" value="{$tela}" />
 	<input type="hidden" name="subtela" value="{$subtela}" />
 
-	<input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}" />
 	<input type="hidden" name="criado_por" id="criado_por" value="{$criado_por}" />
+	<input type="hidden" name="classificacao" id="classificacao" value="IN" />
 	<input type="hidden" name="id_chamado_pai" id="id_chamado" value="{if $chamado.id_chamado_pai}{$chamado.id_chamado_pai}{else}{$chamado.id_chamado}{/if}" />
 	<input type="hidden" name="id_chamado" id="id_chamado" value="{$chamado.id_chamado}" />
-	<input type="hidden" name="classificacao" id="classificacao" value="IN" />
+
 	<input type="hidden" name="origem" id="origem" value="OP" />
 	<input type="hidden" name="tipo" id="tipo" value="OS" />
 
@@ -329,24 +339,6 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 						</td>
 						<td>
 							<input type="text" name="assunto" id="assunto" maxlength="250" value="{$assunto}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-						</td>
-					</tr>
-
-
-					<!-- CAMPO ID_CONTA-->
-					<tr>
-						<td align="right">
-							<label>Conta Cliente:</label>
-						</td>
-						<td>
-							<select id="id_conta" name="id_conta" style="width:100%" onchange="javascript:atualizaCamposEndereco();" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="">-- SELECIONE --</option>
-								{foreach from=$contas_cliente key=k item=i}
-									<option value="{$i.id_conta}">
-									{$i.id_conta|string_format:"%05s"} - {$i.tipo_conta} - {$i.username}
-									</option>
-								{/foreach}
-							</select>
 						</td>
 					</tr>
 
@@ -409,100 +401,8 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 		</tr>
 
 		<tr>
-			<Th bgcolor="#d5Efd5">Dados do Atendimento</th>
-		</tr>
-
-		<tr>
-			<td width="100%" valign="top">
-				<table border=0 cellspacing=0 cellpadding=1 width="100%">
-
-					<!-- CAMPO AGENDAMENTO -->
-					<tr>
-						<td align="right" width="120">
-							<label>Agendamento:</label>
-						</td>
-						<td>
-							<input type="text" name="agendamento" id="agendamento" maxlength="10" value="{$assunto}" style="width:50%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"> (dd/mm/aaaa)
-						</td>
-					</tr>
-
-					<!-- CAMPO PERÍODO -->
-					<tr>
-						<td align="right">
-							<label>Per&iacute;odo:</label>
-						</td>
-						<td>
-							<select name="periodo" id="periodo" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="">Qualquer Período</option>
-								{foreach from=$periodos key=k item=p}
-									<option value="{$k}">{$p}</option>
-								{/foreach}
-							</select>
-						</td>
-					</tr>
-
-					<!-- CAMPO COMPLETAR -->
-					<tr>
-						<td align="right">
-							<label>Preencher End.:</label>
-						</td>
-						<td>
-							<select name="pendereco" id="pendereco" onchange="javascript:atualizaCamposEndereco();" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
-								<option value="O" CHECKED >Outros</option>
-								<option value="C">Cobrança</option>
-								<option value="I">Instalação</option>
-							</select>
-						</td>
-					</tr>
-
-					<!-- CAMPO ENDERECO -->
-					<tr>
-						<td align="right">
-							<label>Endere&ccedil;o:</label>
-						</td>
-						<td>
-							<input type="text" name="endereco_os" id="endereco_os" maxlength="200" value="" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-						</td>
-					</tr>
-
-					<!-- CAMPO COMPLEMENTO -->
-					<tr>
-						<td align="right">
-							<label>Complemento:</label>
-						</td>
-						<td>
-							<input type="text" name="complemento_os" id="complemento_os" maxlength="50" value="" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-						</td>
-					</tr>
-
-					<!-- CAMPO BAIRRO -->
-					<tr>
-						<td align="right">
-							<label>Bairro:</label>
-						</td>
-						<td>
-							<input type="text" name="bairro_os" id="bairro_os" maxlength="50" value="" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-						</td>
-					</tr>
-
-					<!-- CAMPO CIDADE -->
-					<tr>
-						<td align="right">
-							<label>Cidade:</label>
-						</td>
-						<td>
-							<input type="text" name="cidade_os" id="cidade_os" maxlength="50" value="{$assunto}" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-						</td>
-					</tr>
-
-
-				</table>
-			</td>
-		</tr>
-
-		<tr>
 			<td align="center" width="100%" height=30 >
-				<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:formQuit({$id_cliente});" />
+				<input type="button" class="botao" name="voltar" value="Voltar" onClick="javascript:formQuit({$id_chamado});" />
 				<input type="submit" name="submit" class="botao" value="Cadastrar" />
 			</td>
 		</tr>
