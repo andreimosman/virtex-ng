@@ -1754,7 +1754,7 @@
 						$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
 						$status_chamado = $this->helpdesk->obtemStatusChamado();
 
-						$array_grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
+						$array_grupos = $this->helpdesk->obtemListaGruposComPopulacao(true);
 						$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();
 						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
 						
@@ -1839,7 +1839,7 @@
 							$classificacoes = $this->helpdesk->obtemClassificacoesChamado();
 							$status_chamado = $this->helpdesk->obtemStatusChamado();
 
-							$grupos = $this->helpdesk->obtemListaGrupos(array("ativo" => "t"));
+							$grupos = $this->helpdesk->obtemListaGruposComPopulacao(true);
 							$contas_cliente = $contas->obtemContasPorCliente($id_cliente);	
 							$responsaveis = $this->helpdesk->obtemListaAdminGrupo();
 							$periodos = $this->helpdesk->obtemPeriodos();
