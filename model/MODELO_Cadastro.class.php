@@ -58,7 +58,7 @@
 		 *	CONDOMÍNIO
 		 */
 		public function cadastrarCondominio($nome, $endereco, $complemento, $bairro, $id_cidade, $cep, $fone, $quantidade_edificios, $situacao, $data_instalacao, $data_ativacao, $sindico_nome, $sindico_fone, $zelador_nome, $zelador_fone, $observacoes) {
-			return($this->catb_condominio->cadastrarCondominio($nome, $endereco, $complemento, $bairro, $id_cidade, $cep, $fone, $quantidade_edificios, $situacao, $data_instalacao, $data_ativacao, $sindico_nome, $sindico_fone, $zelador_nome, $zelador_fone, $observacoes));
+			return($this->catb_condominio->cadastrarCondominio(strtoupper($nome), $endereco, $complemento, $bairro, $id_cidade, $cep, $fone, $quantidade_edificios, $situacao, $data_instalacao, $data_ativacao, $sindico_nome, $sindico_fone, $zelador_nome, $zelador_fone, $observacoes));
 		}
 		
 		public function alterarCondominio ($id_condominio, $nome, $endereco, $complemento, $bairro, $id_cidade, $cep, $fone, $quantidade_edificios, $situacao, $data_instalacao, $data_ativacao, $sindico_nome, $sindico_fone, $zelador_nome, $zelador_fone, $observacoes) {
