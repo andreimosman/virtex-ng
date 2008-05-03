@@ -217,8 +217,6 @@
 		
 		}
 		
-		
-		
 		protected function _obtemPops($parentId="",$nivel=0,$filtro=array()) {
 			$filtro["id_pop_ap"] = ($parentId?$parentId:"null:");
 
@@ -302,7 +300,8 @@
 		}
 		
 		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
-			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status, "mac"=> $mac);
+			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status);
+			$dados["mac"] = $mac ? $mac : null; 
 			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
 			$dados["ipaddr"] = $ipaddr ? $ipaddr : null;
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 						

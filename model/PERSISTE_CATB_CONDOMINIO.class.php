@@ -39,6 +39,7 @@
 				"observacoes" => $observacoes
 			);
 
+
 			$retorno = $this->insere($dados);
 			return $retorno;
 		}

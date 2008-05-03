@@ -28,10 +28,13 @@
 			  "apartamentos_andar" => $apartamentos_andar,
 			  "total_apartamentos" => $total_apartamentos, 
 			  "situacao" => $situacao,
-			  "id_pop" => $id_pop,
 			  "observacoes" => $observacoes,
 	
 			);
+			
+			if($id_pop) {
+				$dados["id_pop"] = $id_pop;
+			}
 
 			$retorno = $this->insere($dados);
 			return $retorno;
