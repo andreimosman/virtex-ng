@@ -24,13 +24,22 @@
 	
 			  "id_condominio" => $id_condominio,
 			  "nome" => $nome,
-			  "numero_andares" => $numero_andares, 
-			  "apartamentos_andar" => $apartamentos_andar,
-			  "total_apartamentos" => $total_apartamentos, 
 			  "situacao" => $situacao,
 			  "observacoes" => $observacoes,
 	
 			);
+			
+			if($numero_andares) {
+				$dados["numero_andares"] = $numero_andares; 
+			}
+			
+			if($apartamentos_andar) {
+				$dados["apartamentos_andar"] = $apartamentos_andar;
+			}
+			
+			if($total_apartamentos) {
+				$dados["total_apartamentos"] = $total_apartamentos; 			
+			}
 			
 			if($id_pop) {
 				$dados["id_pop"] = $id_pop;
