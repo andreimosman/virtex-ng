@@ -10694,7 +10694,7 @@
   <increment >1</increment>
  </cbsq_id_remessa>
  <evsq_id_evento >
-  <start >423</start>
+  <start >424</start>
   <increment >1</increment>
  </evsq_id_evento>
  <casq_id_condominio >
@@ -10714,11 +10714,11 @@
   <increment >1</increment>
  </hdsq_id_grupo>
  <hdsq_id_historico >
-  <start >229</start>
+  <start >257</start>
   <increment >1</increment>
  </hdsq_id_historico>
  <hdsq_id_chamado >
-  <start >69</start>
+  <start >76</start>
   <increment >1</increment>
  </hdsq_id_chamado>
  <cbsq_id_retorno >
@@ -10742,4 +10742,35 @@
   <increment >1</increment>
  </cbsq_id_item_faturas>
 </sequences>
+<languages >
+ <int i="0">plpgsql</int>
+</languages>
+<procedures >
+ <data_contratacao >
+  <name >data_contratacao</name>
+  <language >plpgsql</language>
+  <returns >date</returns>
+  <argcount >1</argcount>
+  <arglist >
+   <int i="0">id_contrato</int>
+  </arglist>
+  <argtypes >
+   <int i="0">int4</int>
+  </argtypes>
+  <src >&#10;&#10;&#10;DECLARE&#10;r record;&#10;id_contrato_original integer;&#10;BEGIN&#10;id_contrato_original := origem_contrato_migrado(id_contrato);&#10;&#10;SELECT data_contratacao INTO r FROM cbtb_contrato WHERE id_cliente_produto = id_contrato_original;&#10;&#10;RETURN r.data_contratacao;&#10;&#10;END&#10;&#10;&#10;</src>
+ </data_contratacao>
+ <origem_contrato_migrado >
+  <name >origem_contrato_migrado</name>
+  <language >plpgsql</language>
+  <returns >int4</returns>
+  <argcount >1</argcount>
+  <arglist >
+   <int i="0">id_contrato</int>
+  </arglist>
+  <argtypes >
+   <int i="0">int4</int>
+  </argtypes>
+  <src >&#10;&#10;DECLARE&#10;r record;&#10;retorno integer;&#10;BEGIN&#10;   SELECT id_cliente_produto INTO r FROM cbtb_contrato WHERE migrado_para = id_contrato;&#10;&#10;   IF r.id_cliente_produto is null  THEN &#10;      RETURN id_contrato;&#10;   END IF;&#10;&#10;   RETURN origem_contrato_migrado(r.id_cliente_produto);&#10;&#10;END;&#10;&#10;</src>
+ </origem_contrato_migrado>
+</procedures>
 </database>
