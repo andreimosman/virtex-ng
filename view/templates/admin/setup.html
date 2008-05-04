@@ -1,0 +1,201 @@
+<HTML>
+<HEAD>
+<TITLE>VirtexAdmin</TITLE>
+<script type="text/javascript" src="view/templates/jslib/form/form.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/validacao.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/formatacao.js"></script>
+<link rel="stylesheet" type="text/css" href="view/templates/css/form/form.css" />
+<link rel="stylesheet" type="text/css" href="view/templates/css/layout/lista.css" />
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.boxAltSenha {
+	font-family: verdana;
+	border: solid 1px #000000;
+}
+
+.boxAltSenha TH {
+	background: #aaccaa;
+	font-size: 12px;
+}
+
+table.mensagemErro {
+	border: dotted 1px #FF0000;
+	margin-bottom: 5px;
+}
+
+table.mensagemErro td {
+	background-color: #FDFDEA;
+	color: #FF0000;
+	font-family: verdana;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+table.statusConfig td {
+	color: #000000;
+	font-weight: bold;
+	font-family: verdana;
+	font-size: 12px;
+}
+
+table.statusConfig th {
+	background: #AAAAFF;
+	color: #ffffff;
+	font-family: verdana;
+	font-size: 12px;
+	font-weight: bold;
+	padding-right: 10px;
+}
+
+
+body{
+	margin:0 auto;
+	padding:0;
+}
+{/literal}
+</style>
+
+</HEAD>
+<BODY topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0>
+
+<table border=0 style="width:100%;height:100%" cellspacing=0 cellpadding=0>
+	<tr>
+		<td height="102">
+			<table border=0 width="100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td valign="top" width="323" height="102" rowspan="2"><img src="view/templates/imagens/logo_virtex_admin_fundo.jpg"></td>
+					<td height="86" background="view/templates/imagens/degrade_bg.jpg">&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="center" colspan=2 valign="top">
+
+			<table width="600" border=0 cellspacing=0 cellpadding=5 style="border: solid 1px #000000;" class="statusConfig">
+				<tr>
+					<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000; font-size: 12pt; color: #000000;">Status das Configurações</th>
+				</tr>
+				<tr>
+					<th align="right" width="210">Cadastro de Cidades: </th>
+					<td>{if $cidadesOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Servidor Local: </th>
+					<td>{if $servidoresOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">NAS: </th>
+					<td>{if $nasOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">POPs: </th>
+					<td>{if $popOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Administrador: </th>
+					<td>{if $adminOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Modelos de Contrato: </th>
+					<td>{if $modelosOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Preferências de Cobrança: </th>
+					<td>{if $prefCobraOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Formas de Pagamento: </th>
+					<td>{if $formaPagtoOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Preferências do Provedor: </th>
+					<td>{if $prefProvOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+				<tr>
+					<th align="right" width="210">Preferências Gerais: </th>
+					<td>{if $prefGeralOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+				</tr>
+			</table>
+
+			{if !$prefProvOK }
+			&nbsp;<br>
+			&nbsp;<br>
+			<table width="600" border=0 cellspacing=0 cellpadding=5 style="border: solid 1px #000000;">
+				<tr>
+					<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000;">Configurações Iniciais VirtexAdmin</th>
+				</tr>
+				<tr>
+					<td>
+
+						<table cellspacing=0 cellpadding=0 border=0 align="center">
+							<tr>
+								<th colspan=4 style="font-family: arial,verdana; font-size: 10pt; background: #dadaff;">Dados do Provedor</th>
+							</tr>
+							<tr>
+								<td width="100" align="right"><label>Razão Social:</label></td>
+								<td colspan=3><input type="text" size="60" maxlength="40" name="nome" value="{$nome}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td width="100" align="right"><label>Domínio:</label></td>
+								<td colspan=3><input type="text" size="45" maxlength="255" name="fone" value="{$dominio}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>(sem o www)</label></td>
+							</tr>
+							<tr>
+								<td width="100" align="right"><label>Endereço:</label></td>
+								<td colspan=3><input type="text" size="60" maxlength="255" name="endereco" value="{$endereco}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td width="100" align="right"><label>Localidade:</label></td>
+								<td colspan=3><input type="text" size="60" maxlength="255" name="localidade" value="{$localidade}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td width="100" align="right"><label>CEP:</label></td>
+								<td><input type="text" size="10" maxlength="10" name="cep" value="{$cep}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+								<td width="52" align="right"><label>CNPJ:</label></td>
+								<td><input type="text" size="35" maxlength="25" name="cnpj" value="{$cnpj}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+							<tr>
+								<td width="100" align="right"><label>Telefone:</label></td>
+								<td colspan=3><input type="text" size="25" maxlength="30" name="fone" value="{$fone}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			{/if}
+
+			{if $faltandoConfiguracao}
+			<form method="post" action="admin-setup.php">
+			<hr size=1>
+			<input type="submit" name="submit" value="Configurar">
+			</form>
+			{/if}
+
+
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 width="100%" height="20" bgcolor="#BCD3C4" align="center" background="view/templates/imagens/bg-geral.jpg" >
+			<font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+				&copy; Mosman Consultoria - Todos os Direitos Reservados
+			</font>
+		</td>
+	</tr>
+
+</form>
+</BODY>
+</HTML>
