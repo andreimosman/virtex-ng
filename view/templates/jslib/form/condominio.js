@@ -2,6 +2,18 @@
  ****            FUNÇÕES ESPECÍFICAS                ****
  *******************************************************/
  
+function LocalizaCondominio(id_condominio, condominio) {
+	retorno = null;
+	for (i=0; i<condominio.length; i++) {
+		if(condominio[i].id_condominio == id_condominio) {
+			return i;
+		}
+	}
+	
+	return -1;
+}
+
+ 
 function AjustarCamposFormulario(formulario, indice, condominio) {
 
 	formref = document.getElementById(formulario);
@@ -15,6 +27,8 @@ function AjustarCamposFormulario(formulario, indice, condominio) {
 			eval (estring);
 		}
 	}
+	
+	indice = LocalizaCondominio(condominio[indice].id_condominio, condominio);
 
 	if(indice == -1) {
 	
@@ -75,6 +89,9 @@ function AjustarCamposFormularioContratoCobranca(formulario, indice, condominio)
 			eval (estring);
 		}
 	}
+	
+	indice = LocalizaCondominio(condominio[indice].id_condominio, condominio);
+
 
 	if(indice == -1) {
 	
@@ -134,7 +151,10 @@ function AjustarCamposFormularioContratoInstalacao(formulario, indice, condomini
 			eval (estring);
 		}
 	}
-
+	
+	indice = LocalizaCondominio(condominio[indice].id_condominio, condominio);
+	alert(indice);
+	
 	if(indice == -1) {
 	
 		endereco_instalacao.disabled = false;
@@ -193,6 +213,8 @@ function AjustarCamposFormularioContaCadastro(formulario, indice, condominio) {
 			eval (estring);
 		}
 	}
+	
+	indice = LocalizaCondominio(condominio[indice].id_condominio, condominio);
 
 	if(indice == -1) {
 	
