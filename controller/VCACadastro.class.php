@@ -1283,7 +1283,7 @@
 					
 						//Seleciona o chamado desejado
 						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
-						
+						$tmp_pref = VirtexModelo::factory("preferencias");
 
 						if($chamado) {
 							if($chamado["tipo"] == PERSISTE_HDTB_CHAMADO::$TIPO_CHAMADO && ($chamado["status"] == PERSISTE_HDTB_CHAMADO::$STATUS_RESOLVIDO || $chamado["status"] == PERSISTE_HDTB_CHAMADO::$STATUS_FECHADO)) {
@@ -1311,13 +1311,44 @@
 							if($chamado["id_condominio"]) {
 								$info_condominio_chamado = $this->cadastro->obtemCondominio($chamado["id_condominio"]);
 								$chamado["condominio_nome"] = @$info_condominio_chamado["nome"];	
+								$chamado["condominio_fone"] = @$info_condominio_chamado["fone"];	
+								$chamado["condominio_endereco"] = @$info_condominio_chamado["endereco"];
+								$chamado["condominio_bairro"] = @$info_condominio_chamado["bairro"];
+								
+								$cidade = $tmp_pref->obtemCidadePeloID($info_condominio_chamado["id_cidade"]);
+								
+								$chamado["cidade"] = $cidade["cidade"] . " - " . $cidade["uf"];
 							}
 							
 							if($chamado["id_bloco"]) {							
 								$info_bloco_chamado = $this->cadastro->obtemCondominioBloco(null, $chamado["id_bloco"]);
 								$chamado["bloco_nome"] = @$info_bloco_chamado["nome"];
+							}							
+
+							$pop_nome = NULL;
+							if($chamado["id_bloco"]) {
+								$bloco_info = $this->cadastro->obtemCondominioBloco(NULL, $chamado["id_bloco"]);
+								$pop_nome = $bloco_info["popnome"];
+								$chamado["condominio_pop"] = $pop_nome;
 							}
-														
+
+							if($subtela == "imprimir_os") {
+								$prefGeral = $this->preferencias->obtemPreferenciasGerais();
+
+								$chamado["dns1"] = $prefGeral["hosp_ns1"];
+								$chamado["dns2"] = $prefGeral["hosp_ns2"];
+							}						
+							
+							$chamado["condominio_pop"] = $pop_nome;
+
+							$pop_nome = null;
+							if(@$info_condominio_chamado["id_pop"]) {
+								$tmp_pop = $equipamentos->obtemPop($info_condominio_chamado["id_pop"]);
+								$pop_nome = $tmp_pop["nome"];
+								$chamado["condominio_pop"] = $pop_nome;
+							}				
+
+							
 						}		
 						
 						$tipos = $this->helpdesk->obtemTiposChamado();
