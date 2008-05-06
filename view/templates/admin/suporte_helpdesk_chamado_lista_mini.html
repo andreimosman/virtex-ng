@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=0 leftmargin=0 bottommargin=0 rightmargin=0 bgcolor="white">
+{include file="clientes_header.html"}
+
+
+	<table border=0 width="100%" class="lista" height="100%">
+		<tr>
+			<td align="right"><label><b>Pend. Usuário:</b></label></td>
+			<td align="left"><label><b>{$quant_chamados}</b></label></td>
+		</tr>
+		<tr>
+			<td align="right"><label><b>Novos(Grupo):</b></label></td>
+			<td align="left"><label><b>{if $quant_chamados_grupo}{$quant_chamados_grupo}{else}0{/if}</b></label></td>
+		</tr>
+		<tr>
+			<td align="right"><label><b>OS Pend.:</b></label></td>
+			<td align="left"><label><b>{$quant_os}</b></label></td>
+		</tr>
+	</table>
+</body>
+</html>

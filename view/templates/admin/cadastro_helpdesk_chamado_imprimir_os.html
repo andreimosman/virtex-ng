@@ -1,0 +1,270 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+<link rel="stylesheet" type="text/css" href="view/templates/css/layout/impressao.css" />
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+p {
+	font-family: verdana;
+	font-size: 14px;
+	font-weight: bold;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+{/literal}
+</style>
+
+<div class="nao_imprimir" style="width:730px">
+	<table border=0 class="lista" style="border:none">
+		<tr>
+			<td style="border:none">
+				[<a href="admin-cadastro.php?op=helpdesk&tela=alteracao&id_condominio={$chamado.id_condominio}&id_chamado={$chamado.id_chamado}">Voltar</a>]
+				[<a href="javascript:print();">Imprimir</a>]
+			</td>
+		</tr>
+	</table>
+</div>
+<br>
+	<!-- IMPRESSÃO DO CHAMADO -->
+<center>
+<div class="container_impressao" style="width:730px">
+	{*-- INFORMACOES DO CLIENTES --*}
+
+	<H1>Visita Técnica</h1>
+	<H3>(Condomínio)</h3>
+	<p align="right">Ordem de Serviço N: {$chamado.id_chamado}</p>
+
+
+	<br />
+	<label>Dados do Condomínio</label>
+	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730">
+
+		<tr>
+			<td width="500" colspan=2>Nome: {$chamado.condominio_nome}</td>
+			<td width="230">POP: {$chamado.condominio_pop}</td>
+		</tr>
+
+		<tr>
+			<td width="500" colspan=2>Endere&ccedil;o: {$chamado.condominio_endereco}</td>
+			<td width="230">Bloco: {$chamado.bloco_nome}</td>
+		</tr>
+
+		<tr>
+			<td width="250">Bairro: {$chamado.condominio_bairro}</td>
+			<td width="250">Cidade: {$chamado.cidade}</td>
+			<td width="230">Fone: {$chamado.condominio_fone}</td>
+		</tr>
+
+	</table>
+	{*//-- INFORMACOES DO CLIENTES --*}
+
+	<br />
+	{*-- DADOS DA CONEXAO --*}
+	<label>Dados da Conexão</label>
+	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730">
+
+		<tr>
+			<td width="120">IP:</td>
+			<td width="235" colspan=2>&nbsp;{$chamado.conta_ip}</td>
+			<td width="150">MAC Address:</td>
+			<td width="215">&nbsp;{$chamado.mac}</td>
+		</tr>
+
+		<tr>
+			<td width="120">Máscara:</td>
+			<td width="235" colspan=2>&nbsp;</td>
+			<td width="150">NAS:</td>
+			<td width="215">&nbsp;{$chamado.conta_nas}</td>
+		</tr>
+
+		<tr>
+			<td width="120">Gateway:</td>
+			<td width="235" colspan=2>&nbsp;{$chamado.conta_gateway}</td>
+			<td width="150">Nome da Conta:</td>
+			<td width="215">&nbsp;{$chamado.conta_username}</td>
+		</tr>
+
+		<tr>
+			<td width="120">DNS1:</td>
+			<td width="235" colspan=2>&nbsp;{$chamado.dns1}</td>
+			<td width="150">Plano:</td>
+			<td width="215">&nbsp;{$chamado.conta_produto}</td>
+		</tr>
+
+		<tr>
+			<td width="120">DNS2:</td>
+			<td width="235" colspan=2>&nbsp;{$chamado.dns2}</td>
+			<td width="150" rowspan=2 colspan=2 valign="top">Observa&ccedil;&otilde;es:</td>
+		</tr>
+
+
+		<tr>
+			<td width="120">Comprimento do cabo(m):</td>
+			<td width="162">&nbsp;</td>
+			<td width="163">&nbsp;</td>
+
+		</tr>
+
+	</table>
+	{*//-- DADOS DA CONEXAO --*}
+
+
+	{*-- ESPECIFICACAO DA OS --*}
+	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730" style="margin-top:5px">
+
+		<tr>
+			<td width="730" >Especifica&ccedil;&atilde;o / Objetivo da OS: {$chamado.assunto}</td>
+		</tr>
+
+	</table>
+	{*//-- ESPECIFICACAO DA OS --*}
+
+	<br />
+	{*-- ESPECIFICACAO DO CLINTE --*}
+	<label>Especifica&ccedil;&atilde;o do Solicitante</label>
+	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730">
+
+		<tr>
+			<td width="730" >&nbsp;{$chamado.descricao|replace:"\n":"<br />"}</td>
+		</tr>
+
+	</table>
+	{*//-- ESPECIFICACAO DO CLINTE --*}
+
+
+	<br />
+	{*-- DADOS VT --*}
+	<label>Dados da V.T.</label>
+	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730">
+
+		<tr>
+			<td width="120">ICMP/IP:</td>
+			<td width="235" >&nbsp;</td>
+			<td width="150">FTP/IP:</td>
+			<td width="215">&nbsp;</td>
+		</tr>
+
+		<tr>
+			<td width="120">Média(ms):</td>
+			<td width="235" >&nbsp;</td>
+			<td width="150">Média(ms):</td>
+			<td width="215">&nbsp;</td>
+		</tr>
+
+		<tr>
+			<td width="120">Mínimo(ms):</td>
+			<td width="235" >&nbsp;</td>
+			<td width="150">Duracao(ms):</td>
+			<td width="215">&nbsp;</td>
+		</tr>
+
+	</table>
+	{*//-- DADOS VT --*}
+
+
+
+	<br />
+	{*-- LAUDO DA VISITA TÉCNICA --*}
+	<label>Laudo da Visita Técnica</label>
+	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730">
+
+		<tr>
+			<td width="730" height="150">&nbsp;</td>
+		</tr>
+
+	</table>
+	{*//-- LAUDO DA VISITA TÉCNICA --*}
+
+
+	<br />
+	<table border=0 cellspacing=0 cellpadding=0 align="center" width="730">
+
+		<tr>
+			<td width="365" align="center">
+
+				<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="360" style="margin-top:10px; border-top:none;">
+					<tr>
+						<td width="120" >Data do Agendamento:</td>
+						<td width="240" >&nbsp;{$info_os.agendamento|date_format:"%d/%m/%Y"}</td>
+					</tr>
+				</table>
+
+				<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="360" style="margin-top:10px">
+					<tr>
+						<td width="120" >Período<br /> Agendado:</td>
+						<td width="240" >&nbsp;{$periodos[$info_os.periodo]}</td>
+					</tr>
+				</table>
+
+				<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="360" style="margin-top:10px">
+					<tr>
+						<td width="120" >Técnico Responsável pela Visita:</td>
+						<td width="240" >&nbsp;{$responsaveis[$chamado.responsavel]}</td>
+					</tr>
+				</table>
+
+				<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="360" style="margin-top:10px">
+					<tr>
+						<td width="120" align="center">Data da<br /> OS:</td>
+						<td width="120" align="center">Horário<br /> de Chegada</td>
+						<td width="120" align="center">Horário<br /> de Saída</td>
+					</tr>
+					<tr>
+						<td width="120" align="center">___/___/____</td>
+						<td width="120" align="center">_____:______</td>
+						<td width="120" align="center">_____:______</td>
+					</tr>
+				</table>
+
+
+			</td>
+
+			<td width="365" align="center">
+				<label>Caracterização do Problema Identificado</label>
+				<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="360">
+					<tr>
+						<td width="360">
+							<input type="checkbox" onclick="javascript:this.checked=false">Rede do Provedor<br />
+							<input type="checkbox" onclick="javascript:this.checked=false">Problema do Cliente / Assinante<br />
+							<input type="checkbox" onclick="javascript:this.checked=false">Não foi encontrado Problema<br />
+						</td>
+
+					</tr>
+				</table>
+
+				<br>
+				<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="340" style="border:none">
+					<tr>
+						<td width="340" style=" border-top:none; border-right:none; border-left:none; border-bottom:1px solid #000;">Nome:</td>
+					</tr>
+					<tr>
+						<td width="340" style=" border-top:none; border-right:none; border-left:none; border-bottom:1px solid #000;">RG:</td>
+					</tr>
+					<tr>
+						<td width="340" style="border:none;">&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="340" align="center" style=" border-top:none; border-right:none; border-left:0px; border-top:1px solid #000; border-bottom:none">Assinatura do responsável pelo acompanhamento da OS</td>
+					</tr>
+				</table>
+			</td>
+
+		</tr>
+
+	</table>
+
+</div>
+</center>
+</body>
+</html>

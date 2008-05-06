@@ -32,6 +32,7 @@ label {
 var mresponsaveis = eval({$responsaveis});
 var enderecos_cobranca = eval({$enderecos_cobranca});
 var enderecos_instalacao = eval({$enderecos_instalacao});
+var endereco_cliente = eval({$endereco_cliente});
 
 
 {literal}
@@ -210,6 +211,27 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 	}
 
 
+	function alimentaCamposEnderecoCliente(indice) {
+		endereco = document.getElementById("endereco_os");
+		complemento = document.getElementById("complemento_os");
+		bairro = document.getElementById("bairro_os");
+		cidade = document.getElementById("cidade_os");
+
+		limparCamposEndereco();
+
+		mtz = endereco_cliente;
+
+		try{
+			endereco.value=mtz.endereco ;
+			complemento.value=mtz.complemento ;
+			bairro.value=mtz.bairro;
+			cidade.value=mtz.cidade;
+		} catch(e) {
+			limparCamposEndereco();
+		}
+	}
+
+
 	function alimentaCamposEnderecoInstalacao(indice) {
 		endereco = document.getElementById("endereco_os");
 		complemento = document.getElementById("complemento_os");
@@ -288,6 +310,7 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 			alimentaCamposEnderecoInstalacao(id_conta.value);
 		} else {
 			desbloquearCamposEndereco();
+			alimentaCamposEnderecoCliente();
 		}
 
 	}
@@ -508,6 +531,10 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 		</tr>
 	</table>
 </form>
+
+<script language="javascript1.2">
+	alimentaCamposEnderecoCliente();
+</script>
 
 </body>
 </html>

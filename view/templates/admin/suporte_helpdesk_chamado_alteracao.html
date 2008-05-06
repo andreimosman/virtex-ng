@@ -105,7 +105,7 @@ label {
 		}
 
 		if((novostatus.value == 'A' ||novostatus.value == 'P'||novostatus.value == 'PC') && !responsavel_chamado.value) {
-			alert("Somente é possível alterar o status de um chamado para Aberto, Pendente ou Pendente com o condominio, se este já tiver um responsável");
+			alert("Somente é possível alterar o status de um chamado para Aberto, Pendente ou Pendente com o solicitante, se este já tiver um responsável");
 			novostatus.value="";
 			novostatus.focus();
 			return false;
@@ -990,7 +990,7 @@ label {
 										{if $admin_grupo || $chamado.id_responsavel == $dadosLogin.id_admin }
 											<option value="A">Aberto</option>
 											<option value="P">Pendente</option>
-											<option value="PC">Pendente com o condominio</option>
+											<option value="PC">Pendente com o solicitante</option>
 										{/if}
 
 										{* Se o chamado não for uma ordem de serviço e não conter OS pendentes, então aparecerão as duas opções de conclusão do chamado *}
@@ -1120,6 +1120,10 @@ label {
 {* Se houverem ordens de serviço então exibe uma listagem com todas as ordens de chamado *}
 {if $ordens_servico_chamado}
 	<table class='lista' border=0 width='700' cellpadding=0 cellspacing=0 align="center">
+
+		<tr>
+			<th colspan=6 align="center" class="cabecalho" >ORDENS DE SERVI&Ccedil;O</th>
+		</tr>
 
 		<tr>
 			<th align="center">COD</th>
