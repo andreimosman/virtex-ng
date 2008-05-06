@@ -494,7 +494,16 @@
 									$this->_view->atribui("pode_reabrir", true);
 								}
 							}
-														
+							
+							//Confere a existência de determinados campos relacionados
+							
+						}
+						
+						if($subtela == "imprimir_os") {
+							$prefGeral = $this->preferencias->obtemPreferenciasGerais();
+
+							$chamado["dns1"] = $prefGeral["hosp_ns1"];
+							$chamado["dns2"] = $prefGeral["hosp_ns2"];
 						}
 						
 
@@ -771,39 +780,59 @@
 				
 				case 'listagem':
 				default:
+				
 					$chamados_pendentes = $this->helpdesk->obtemChamadosPendentesPeloResponsavel($dadosLogin["id_admin"]);
 					
+					if($subtela == "mini") {		
+						$quant_chamados_usuario = $this->helpdesk->obtemChamadosPendentesPeloResponsavel($dadosLogin["id_admin"]);
+						$quant_chamados = 0;
+						$quant_os = 0;
+						
+						for($i=0; $i<count($quant_chamados_usuario); $i++) {
+							if($quant_chamados_usuario[$i]["tipo"] == "CH") 
+								$quant_chamados++;
+							else if($quant_chamados_usuario[$i]["tipo"] == "OS")
+								$quant_os++;
+						}
+						
+						$quant_chamados_grupo = $this->helpdesk->obtemQuantidadeChamadosAbertosGruposUsuario($dadosLogin["id_admin"]);
+						$this->_view->atribui("quant_chamados", $quant_chamados);
+						$this->_view->atribui("quant_os", $quant_os);
+						$this->_view->atribui("quant_chamados_grupo", $quant_chamados_grupo["chamados"]);
+										
+					}
+
 					$chamados_usuario = array();
 					$os_usuario = array();
-					
+
 					foreach($chamados_pendentes as $chave => $valor) {
 						if($valor["tipo"] == "OS")
 							array_push($os_usuario, $valor);
 						else if($valor["tipo"] == "CH")
 							array_push($chamados_usuario, $valor);
 					}
-					
-					
+
+
 					$array_grupos = $this->helpdesk->obtemListaGrupos();
 					$array_responsaveis = $this->helpdesk->obtemListaAdminGrupo();				
-					
-					
+
+
 					//Agrupa todos os chamados dos grupos que o administrador participa
 					$grupos_pertencentes = $this->helpdesk->obtemListaGruposPertencentesAdmin($dadosLogin["id_admin"], 't');					
 					$chamados_por_grupo = array();
-					
+
 					foreach($grupos_pertencentes as $chave => $valor) {
 						$chamados_por_grupo[$valor["id_grupo"]] = array("nome" => $valor["nome"], "chamados" => array());
 						$chamados_grupo = $this->helpdesk->obtemChamadosPendentesPeloGrupo($valor["id_grupo"]);
-						
+
 						foreach($chamados_grupo as $chaveg => $valorg) {
 							if($valorg["responsavel"] != $dadosLogin["id_admin"]) {
 								$chamados_por_grupo[$valorg["id_grupo"]]["chamados"][] = $valorg;
 							}
 						}						
-											
+
 					}				
-					
+
 					//matriz de responsáveis(remake)
 					$responsaveis = array();
 					foreach($array_responsaveis as $chave => $valor) {
@@ -815,7 +844,7 @@
 					foreach($array_grupos as $chave => $valor) {
 						$grupos[$valor["id_grupo"]] = $valor["nome"];
 					}
-					
+
 					$this->_view->atribui("chamados_por_grupo",$chamados_por_grupo);
 					$this->_view->atribui("responsaveis",$responsaveis);
 					$this->_view->atribui("grupos",$grupos);
@@ -825,6 +854,7 @@
 					$this->_view->atribui("chamados_usuario", $chamados_usuario);
 					$this->_view->atribui("os_usuario", $os_usuario);
 					break;
+
 			}
 			
 			

@@ -490,6 +490,20 @@
 			return($this->hdtb_chamado->obtemOcorrenciasPorPeriodo($data_inicial, $data_final));
 		}
 
+
+		/**
+		 * Lista de chamados pendentes de todos os grupos que o usuário pertence
+		 */
+		
+		public function obtemQuantidadeChamadosAbertosGruposUsuario($id_admin){
+		 	return($this->hdtb_chamado->obtemQuantidadeChamadosAbertosGruposUsuario($id_admin));
+		}
+		
+		
+		//public function obtemQuantidadeChamadosAbertosGruposUsuario(){
+		//	return($this->hdtb_chamado->obtemQuantidadeChamadosAbertosGruposUsuario());
+		//}
+		
 		
 		/****************
 		 ****	ORDENS DE SERVIÇO

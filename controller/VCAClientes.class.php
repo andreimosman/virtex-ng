@@ -1693,6 +1693,7 @@
 				
 					if(!$acao) {
 					
+						$equipamentos = VirtexModelo::factory("equipamentos");
 						//Seleciona o chamado desejado
 						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 						
@@ -1730,19 +1731,47 @@
 								$contas = VirtexModelo::factory("contas");
 								$cobranca = VirtexModelo::factory("cobranca");
 								
+								
+								
 								$info_conta_chamado = $contas->obtemContaPeloId($chamado["id_conta"]);
+								$pop_nome = null;
+								$nas_nome = null;
+								if(@$info_conta_chamado["id_pop"]) {
+									$tmp_pop = $equipamentos->obtemPop($info_conta_chamado["id_pop"]);
+									$pop_nome = $tmp_pop["nome"];
+								}
+								
+								if(@$info_conta_chamado["id_nas"]) {
+									$tmp_nas = $equipamentos->obtemNAS($info_conta_chamado["id_nas"]);
+									$nas_nome = $tmp_nas["nome"];
+								}
+								
 								$info_contrato_chamado = $cobranca->obtemContratoPeloId($info_conta_chamado["id_cliente_produto"]);								
 								
 								$chamado["conta_username"] 		= @$info_conta_chamado["username"];
 								$chamado["conta_tipo"] 			= @$info_conta_chamado["tipo_conta"];
 								$chamado["conta_dominio"] 		= @$info_conta_chamado["dominio"];
+								$chamado["conta_pop"]			= $pop_nome;
+								$chamado["conta_nas"]			= $nas_nome;
 								$chamado["conta_contrato"]		= @$info_conta_chamado["id_cliente_produto"];
+								$chamado["conta_ip"]			= @$info_conta_chamado["ipaddr"];
+								$chamado["conta_mac"]			= @$info_conta_chamado["mac"];
+								$chamado["conta_gateway"]		= @$info_conta_chamado["ip_externo"];
 								$chamado["conta_produto"]		= @$info_contrato_chamado["nome_produto"];
+								
 								
 								
 								//$chamado["conta_produto"]		= @$info_conta_chamado["id_cliente_produto"];
 							}							
 						}
+						
+						if($subtela == "imprimir_os") {
+							$prefGeral = $this->preferencias->obtemPreferenciasGerais();
+
+							$chamado["dns1"] = $prefGeral["hosp_ns1"];
+							$chamado["dns2"] = $prefGeral["hosp_ns2"];
+						}
+
 						
 
 
@@ -1820,11 +1849,24 @@
 						$this->_view->atribui("responsaveis", $responsaveis); 
 						
 						//Ações extras caso seja ordem de serviços
-						if($subtela == "ordemservico") {
+						if($subtela == "ordemservico" || $subtela == "imprimir_os") {
+							$tmp_pref = VirtexModelo::factory("preferencias");
 						
 							//Cria matriz de ids de contas
 							$enderecos_cobranca = array();
 							$enderecos_instalacao = array();
+							$endereco_cliente = array();
+														
+							$tmp_cliente = $this->clientes->obtemPeloId($id_cliente);
+							
+							$cidade = $tmp_pref->obtemCidadePeloID($tmp_cliente["id_cidade"]);
+							
+							$endereco_cliente["endereco"] = $tmp_cliente["endereco"];
+							$endereco_cliente["complemento"] = $tmp_cliente["complemento"];
+							$endereco_cliente["cidade"] = $cidade["cidade"] . " - " . $cidade["uf"];
+							$endereco_cliente["cep"] = $tmp_cliente["cep"];
+							$endereco_cliente["bairro"] = $tmp_cliente["bairro"];
+							
 							
 							foreach($contas_cliente as $chave => $valor) {	
 								$cobranca_temp = $cobranca->obtemEnderecoCobrancaReferenciado($valor["id_cliente_produto"]);
@@ -1848,12 +1890,14 @@
 							else $this->_view->atribui("acao","alterar");														
 							
 							$this->_view->atribui("periodos", $periodos);
+							$this->_view->atribui("endereco_cliente", MJson::encode($endereco_cliente));
 							$this->_view->atribui("enderecos_cobranca", MJson::encode($enderecos_cobranca));
 							$this->_view->atribui("enderecos_instalacao", MJson::encode($enderecos_instalacao));
 							$this->_view->atribui("grupos", $grupos);
 							$this->_view->atribui("contas_cliente", $contas_cliente);
 							$this->_view->atribui("responsaveis", MJson::encode($responsaveis));
-						}						
+							
+						} 
 						
 					} else {
 					
@@ -2033,6 +2077,7 @@
 						
 					} 
 					break; 
+					
 				
 				case 'listagem':
 				default:

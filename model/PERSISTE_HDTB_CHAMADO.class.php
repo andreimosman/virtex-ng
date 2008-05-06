@@ -109,7 +109,18 @@
 					self::$CARATER_PROBLEMA_CLIENTE	=> 'Problema Cliente/Assinante',
 					self::$CARATER_NAO_IDENTIFIDADO	=> 'Não foi identificado nenhum problema'
 				));
-		}		
+		}
+		
+		
+		public function obtemQuantidadeChamadosAbertosGruposUsuario($id_admin=0){
+		
+			$sql  = "SELECT count(cha.*) AS chamados ";
+			$sql .= "FROM hdtb_chamado cha ";
+			$sql .= "	INNER JOIN (SELECT grp.id_grupo FROM hdtb_grupo grp INNER JOIN hdtb_admin_grupo gra ON gra.id_grupo = grp.id_grupo AND gra.id_admin = $id_admin) grps ON grps.id_grupo = cha.id_grupo ";
+			$sql .= "WHERE cha.status NOT IN('F', 'OK') ";
+			
+			return ($this->bd->obtemUnicoRegistro($sql));
+		}
 	
 	}
 
