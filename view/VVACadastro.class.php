@@ -467,6 +467,9 @@
 					if($subtela == "ordemservico") { 
 						$titulo .= " :: Gerar Ordem de Serviço";
 						$this->_file = "cadastro_condominio_helpdesk_chamado_alteracao_ordemservico.html";
+					} else if($subtela == 'imprimir_os') {
+						$this->_file = "cadastro_helpdesk_chamado_imprimir_os.html";
+						$this->atribui("prtopt", 'sem_header');
 					}
 					
 					break;
@@ -478,7 +481,8 @@
 					break;
 			}
 			
-			$this->atribui("titulo", $titulo);
+			if(!($this->obtem("tela") == "alteracao" && $this->obtem("subtela") == "imprimir_os"))
+				$this->atribui("titulo", $titulo);
 		}
 
 

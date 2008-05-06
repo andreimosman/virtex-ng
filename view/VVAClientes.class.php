@@ -287,9 +287,14 @@
 					if($subtela == "ordemservico") { 
 						$titulo .= " :: Gerar Ordem de Serviço";
 						$this->_file = "clientes_helpdesk_chamado_alteracao_ordemservico.html";
+					} else if($subtela == 'imprimir_os') {
+						$this->_file = "clientes_helpdesk_chamado_imprimir_os.html";
+						$this->atribui("prtopt", 'sem_header');
 					}
 					
+					
 					break;
+
 
 				case 'listagem':
 				default:
@@ -298,7 +303,8 @@
 					break;
 			}
 			
-			$this->atribui("titulo", $titulo);
+			if(!($this->obtem("tela") == "alteracao" && $this->obtem("subtela") == "imprimir_os"))
+				$this->atribui("titulo", $titulo);
 		
 		}
 		

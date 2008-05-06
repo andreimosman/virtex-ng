@@ -138,22 +138,26 @@
 						$this->_file = "suporte_helpdesk_chamado_alteracao_ordemservico.html";
 					}
 					
-					break;			
+					break;
 			
 				case 'listagem':
 				default:
-					$titulo .= " :: Lista de Chamados";
-					$this->_file = "suporte_helpdesk_chamado.html";
-					$this->configureMenu($this->obtemItensMenuHelpdesk());
 					
 					if($this->obtem("subtela") == "mini") {
-						$this->_file = "suporte_helpdesk_chamado_mini.html";
+						$this->_file = "suporte_helpdesk_chamado_lista_mini.html";
 						$titulo = "";
+						$this->atribui("prtopt", 'sem_header');
+					} else {
+						$titulo .= " :: Lista de Chamados";
+						$this->_file = "suporte_helpdesk_chamado.html";
+						$this->configureMenu($this->obtemItensMenuHelpdesk());
 					}
 					break;
 			}
 			
+			
 			$this->atribui("titulo",$titulo);
+
 		
 		}
 	
