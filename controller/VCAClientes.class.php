@@ -1255,48 +1255,56 @@
 
 					} else {  //  cadastro
 
+						$conta_existente = $contas->obtemContaPeloUsername($username,$dominio,$tipo);
+						
+						if($conta_existente) {
+							$msg = "Esta conta já foi cadastrada previamente e não poderá ser cadastrada outra vez.";
+						} else {
 
-						if("BL" == $tipo){
-							$contas->cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-															 $observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip);
+							if("BL" == $tipo){
 
-							if($difEnderecoSetup){
-								$endereco_instalacao = array(
-															"endereco" => @$_REQUEST["endereco_instalacao"],
-															"bairro" => @$_REQUEST["bairro_instalacao"],
-															"id_cidade" => @$_REQUEST["id_cidade_instalacao"],
-															"complemento" => @$_REQUEST["complemento_instalacao"],
-															"cep" => @$_REQUEST["cep_instalacao"],
-															"id_condominio_instalacao" => @$_REQUEST["id_condominio_instalacao"], 
-															"id_bloco_instalacao" => @$_REQUEST["id_bloco_instalacao"],
-															"apto_instalacao" => @$_REQUEST["apto_instalacao"]
-														);
-							} else { 
-								$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+								$contas->cadastraContaBandaLarga($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+																 $observacoes,$conta_mestre,$id_pop,$id_nas,$upload,$download,$mac,$endereco_redeip);
+
+								if($difEnderecoSetup){
+									$endereco_instalacao = array(
+																"endereco" => @$_REQUEST["endereco_instalacao"],
+																"bairro" => @$_REQUEST["bairro_instalacao"],
+																"id_cidade" => @$_REQUEST["id_cidade_instalacao"],
+																"complemento" => @$_REQUEST["complemento_instalacao"],
+																"cep" => @$_REQUEST["cep_instalacao"],
+																"id_condominio_instalacao" => @$_REQUEST["id_condominio_instalacao"], 
+																"id_bloco_instalacao" => @$_REQUEST["id_bloco_instalacao"],
+																"apto_instalacao" => @$_REQUEST["apto_instalacao"]
+															);
+								} else { 
+									$info_endereco = $contas->obtemEnderecoInstalacaoPelaConta($id_conta);
+								}
+
+
+
+								$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
+																	$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $endereco_instalacao["apto_instalacao"] ,$this->id_cliente);
+								$msg = "Conta cadastrada com sucesso.";
+							} elseif("E" == $tipo){
+
+								$dominio = isset($_REQUEST["sel_dominio"]) ? $_REQUEST["sel_dominio"] : $dominio;
+								$contas->cadastraContaEmail($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+															$observacoes,$conta_meste, $quota) ;
+								$msg = "Email cadastrado com sucesso.";
+							} elseif( $tipo == "D" ) {
+								$contas->cadastraContaDiscado($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+															$observacoes,$conta_meste, $foneinfo) ;
+								$msg = "Conta cadastrada com sucesso.";
+
+							} elseif( $tipo == "H" ) {
+								$contas->cadastraContaHospedagem($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
+															$observacoes,$conta_meste, $tipo_hospedagem,$dominio_hospedagem) ;
+								$msg = "Conta cadastrada com sucesso.";
 							}
-							
-							
-							
-							$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],
-																$endereco_instalacao["id_cidade"], $endereco_instalacao["cep"], $endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"], $endereco_instalacao["apto_instalacao"] ,$this->id_cliente);
-							$msg = "Conta cadastrada com sucesso.";
-						} elseif("E" == $tipo){
-
-							$dominio = isset($_REQUEST["sel_dominio"]) ? $_REQUEST["sel_dominio"] : $dominio;
-							$contas->cadastraContaEmail($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-														$observacoes,$conta_meste, $quota) ;
-							$msg = "Email cadastrado com sucesso.";
-						} elseif( $tipo == "D" ) {
-							$contas->cadastraContaDiscado($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-														$observacoes,$conta_meste, $foneinfo) ;
-							$msg = "Conta cadastrada com sucesso.";
-
-						} elseif( $tipo == "H" ) {
-							$contas->cadastraContaHospedagem($username,$dominio,$senha,$id_cliente,$id_cliente_produto,$status,
-														$observacoes,$conta_meste, $tipo_hospedagem,$dominio_hospedagem) ;
-							$msg = "Conta cadastrada com sucesso.";
+						
 						}
-
+						
 						$this->_view->atribui("url",$url);
 						$this->_view->atribui("mensagem",$msg);
 						$this->_view->atribuiVisualizacao("msgredirect");
