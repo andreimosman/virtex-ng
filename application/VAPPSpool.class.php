@@ -147,6 +147,8 @@
 		protected function processaSpool() {
 			$spool = VirtexModelo::factory('spool');
 			
+			$preferencias = VirtexModelo::factory("preferencias");
+			
 			foreach( $this->tcpip as $id_nas => $interface ) {
 				// echo " - $id_nas -> $interface\n";
 				
@@ -180,6 +182,114 @@
 					$spool->atualizaStatusInstrucao($filaBL[$i]["id_spool"],$status);
 				}
 				unset($filaBL);
+				
+			}
+			
+			
+			if( $this->ftpEnabled ) {
+				// Cria diretórios de FTP
+				$prefGeral = $preferencias->obtemPreferenciasGerais();
+				$filaH = $spool->obtemInstrucoesSpool("",MODELO_Spool::$HOSPEDAGEM,MODELO_Spool::$ST_AGUARDANDO);
+				
+				$dominios_processados = 0;
+				
+				for($i=0;$i<count($filaH);$i++) {
+				
+					// print_r($filaH[$i]);
+				
+					$tipo_hospedagem = trim($filaH[$i]["parametros"]["tipo_hospedagem"]);
+					$username = @$filaH[$i]["parametros"]["username"];
+					$dominio  = @$filaH[$i]["parametros"]["dominio"];
+					
+					if( !$dominio ) $dominio = $prefGeral["dominio_padrao"];
+					
+					$base_dir = $prefGeral["hosp_base"];
+					
+					// Cria HOMEDIR
+					$home_dir = $this->SO->homeDirMake($tipo_hospedagem,$base_dir,$dominio,$username,$prefGeral["hosp_uid"],$prefGeral["hosp_gid"]);
+					
+					// 
+					$status = MODELO_Spool::$ST_OK;
+					
+					// Configura Apache
+					if( $tipo_hospedagem == "D" ) {
+					
+						$apacheHospConfDir 	= "/mosman/virtex/app/etc/hospedagem";
+						$apacheHospFile		= $apacheHospConfDir . "/httpd." . str_replace(".","-",$dominio) . ".conf";
+						
+						$this->SO->installDir($apacheHospConfDir);
+						
+						$fd = @fopen($apacheHospFile,"w");
+						if( !$fd ) {
+							$status = MODELO_Spool::$ST_ERRO;
+						} else {
+						
+							$dominios_processados++;
+						
+							$header_http  = "<VirtualHost ".$this->ext_ip.">\n";
+							$header_https = "<VirtualHost ".$this->ext_ip.":443>\n";
+
+							$conteudo  = "       DocumentRoot ".$home_dir."/www\n";
+							$conteudo .= "       ServerAdmin webmaster@".$prefGeral["dominio_padrao"]."\n";
+							$conteudo .= "       ServerName ".$dominio."\n";
+							$conteudo .= "       ServerSignature email\n";
+							$conteudo .= "       HostNameLookups off\n";
+							$conteudo .= "       CustomLog ".$home_dir."/log/access_log combined\n";
+							$conteudo .= "       ErrorLog ".$home_dir."/log/error_log\n";
+							$conteudo .= "</VirtualHost>\n";
+							
+							$contArq = $header_http . $conteudo . $header_https . $conteudo;
+							
+							fwrite($fd,$contArq,strlen($contArq));
+							fclose($fd);
+							
+						}
+					
+					}
+					
+					$spool->atualizaStatusInstrucao($filaH[$i]["id_spool"],$status);
+
+				}
+				
+				if( $dominios_processados ) {
+					$this->SO->apachectl("restart");
+				}
+				
+				
+			}
+			
+			
+			
+			/**
+			if( $this->dnsEnabled ) {
+				// Cria entradas de DNS (primário e secundário)
+				
+				//$filaH = $spool->obtemInstrucoesSpool("",MODELO_Spool::$HOSPEDAGEM,MODELO_Spool::$ST_AGUARDANDO);
+				echo "DNS ENABLED\n";
+				//print_r($filaH);
+
+
+			}
+			*/
+
+			if( $this->mailEnabled ) {
+				// Cria estrutura de diretórios de e-mail				
+				$prefGeral = $preferencias->obtemPreferenciasGerais();
+
+				$filaE = $spool->obtemInstrucoesSpool("",MODELO_Spool::$EMAIL,MODELO_Spool::$ST_AGUARDANDO);
+				
+				for($i=0;$i<count($filaE);$i++) {
+					
+					$username = $filaE[$i]["parametros"]["username"];
+					$dominio = $filaE[$i]["parametros"]["dominio"];
+					
+					$target = $prefGeral["email_base"] . "/" . trim($dominio) . "/" . trim($username);
+					$this->SO->mailDirMake($target,$prefGeral["mail_uid"],$prefGeral["mail_gid"]);
+
+					$status = MODELO_Spool::$ST_OK;
+					$spool->atualizaStatusInstrucao($filaE[$i]["id_spool"],$status);
+										
+				}
 				
 			}
 

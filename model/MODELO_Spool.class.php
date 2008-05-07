@@ -229,7 +229,11 @@
 		 */
 		
 		public function obtemInstrucoesSpool($destino,$tipo,$status="",$for_update=false) {
-			$filtro = array("destino" => $destino, "tipo" => $tipo);
+			$filtro = array("tipo" => $tipo);
+			
+			if( $destino ) {
+				$filtro["destino"] = $destino;
+			}
 			if( $status ) {
 				$filtro["status"] = $status;
 			}

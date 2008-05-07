@@ -98,11 +98,12 @@
 
 			$retorno["prorata_plano"] = $valor_plano;
 			$retorno["prorata_comodato"] = $valor_comodato;
-
+			
 			if( $dias_prorata >= 28 && $dias_prorata <= 31 ) {
 				// Não calcula a pro-rata.
 				$retorno["dias_prorata"] = 0;
 			} else {
+			
 				$prorata_plano = round(($valor_plano/30)*$dias_prorata,2);
 				$prorata_comodato = round(($valor_comodato/30)*$dias_prorata,2);
 				$retorno["prorata_plano"] = $prorata_plano;
@@ -174,8 +175,7 @@
 				// Pagamento pré-pago. Calcula pro-rata.
 				$composicao = array();
 				$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
-
-
+				
         		if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
 					// Pró-rata aplicável.
 					$prorata_plano = $prorata["prorata_plano"];

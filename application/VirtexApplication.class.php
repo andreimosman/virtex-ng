@@ -23,6 +23,16 @@
 		// tcpip.ini - Arquivo de configurações de NAS tcpip.
 		protected $nasConfig;
 		protected $netConfig;
+		
+		// dns.ini
+		protected $dnsConfig;
+		
+		// ftp.ini
+		protected $ftpConfig;
+		
+		// mail.ini
+		protected $mailConfig;
+		
 
 		// Cache de informações
 		protected $tcpip;
@@ -33,8 +43,16 @@
 		
 		protected $network;
 		protected $ext_iface;	// Interface externa
+		protected $ext_ip;		// Ip Externo
 		
 		protected $infoNAS;
+		
+		protected $dnsEnabled;
+		protected $dnsType;
+
+		protected $ftpEnabled;
+		
+		protected $mailEnabled;
 		
 		/**
 		 * Construtor.
@@ -57,6 +75,42 @@
 			
 			// Configurações de Rede
 			$this->netConfig = MConfig::getInstance("etc/network.ini");
+			
+			// Configuracoes de FTP
+			if( !file_exists("etc/ftp.ini") ) {
+				$fd = fopen("etc/ftp.ini", "w");
+				$conteudo = "[geral]\nenabled=0";
+				fwrite($fd, $conteudo,strlen($conteudo));
+				fclose($fd);
+				unset($conteudo);
+			}
+			$this->ftpConfig = MConfig::getInstance("etc/ftp.ini");
+			$this->ftpEnabled = (int)$this->ftpConfig->config["geral"]["enabled"];
+
+			// Configuracoes de DNS
+			if( !file_exists("etc/dns.ini") ) {
+				echo "etc/dns.ini não existe";
+				$fd = fopen("etc/dns.ini", "w");
+				$conteudo = "[geral]\ntype=master\nenabled=0";
+				fwrite($fd, $conteudo,strlen($conteudo));
+				fclose($fd);
+				unset($conteudo);
+			}
+			$this->dnsConfig = MConfig::getInstance("etc/dns.ini");			
+			$this->dnsType = $this->dnsConfig->config["geral"]["type"];
+			$this->dnsEnabled = (int)$this->dnsConfig->config["geral"]["enabled"];			
+			
+			// Configuracoes de email
+			if( !file_exists("etc/email.ini") ) {
+				echo "etc/email.ini não existe";
+				$fd = fopen("etc/email.ini", "w");
+				$conteudo = "[geral]\nenabled=0";
+				fwrite($fd, $conteudo,strlen($conteudo));
+				fclose($fd);
+				unset($conteudo);
+			}
+			$this->mailConfig = MConfig::getInstance("etc/email.ini");
+			$this->mailEnabled = (int)$this->mailConfig->config["geral"]["enabled"];
 
 			$equipamentos = null;
 
@@ -74,6 +128,7 @@
 				if( $dados["status"] == "up" ) {
 					if( $dados["type"] == "external" ) {
 						$this->ext_iface = $iface;
+						$this->ext_ip = $dados["ipaddr"];
 					}
 				}
 			}
