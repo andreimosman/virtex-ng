@@ -99,7 +99,7 @@ function validaHora(data_entrada) {
  */
  
 function validaUsernameString(username) {
-	reUsername = /^[a-z0-9\._]+$/;
+	reUsername = /^[a-z][a-z0-9\.\-_]+$/;
 	return reUsername.test(username);
 }
 
