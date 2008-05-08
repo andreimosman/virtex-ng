@@ -221,6 +221,16 @@
 
 			}
 			
+			if( $meses_cobrados == 1 ) {
+				$incrementa = false;
+			} else {
+				$incrementa = true;
+			}
+			
+			if( $pagamento == "POS" && $meses_cobrados == 1) {
+				$vigencia++;
+			}
+			
 			for( ; $meses_cobrados < $vigencia ; $meses_cobrados++ ) {
 				$got = false;
 				$composicao = array();
@@ -256,7 +266,12 @@
 					$d = $dia_vencimento;
 
 					// Incrementa 1 mês
-					$data = MData::adicionaMes("$d/$m/$a",1);
+					
+					if( $pagamento == "PRE" && $meses_cobrados == 1 && @$dias_prorata ) {
+						// echo "MESES 01, n/a<br>\n";
+					} else {
+						$data = MData::adicionaMes("$d/$m/$a",1);
+					}
 				}
 
 				if( $desconto_valor > 0 && $descontos_aplicados < $desconto_periodo ) {

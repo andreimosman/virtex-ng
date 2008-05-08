@@ -1812,7 +1812,7 @@ contratoAlteraFormaPagamentoDA();
 			<td>{$tx_instalacao|string_format:"%.2f"}</td>
 
 			<td width="110" align="right"><strong>Parcelas Inst.:</strong></td>
-			<td>{$parcelas_instalacao} ({$tx_instalacao/$parcelas_instalacao|string_format:"%.2f"})</td>
+			<td>{if $parcelas_instalacao}{$parcelas_instalacao} ({$tx_instalacao/$parcelas_instalacao|string_format:"%.2f"}){else}N/A{/if}</td>
 
 		</tr>
 		<tr>
