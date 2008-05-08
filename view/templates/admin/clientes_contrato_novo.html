@@ -1,6 +1,7 @@
 <script type="text/javascript" src="view/templates/jslib/prototype/prototype.js"></script>
 <script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
 <script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
+<script type="text/javascript" src="view/templates/jslib/form/validacao.js"></script>
 <script language="JavaScript">
 // Lista
 var planosBL=eval('{$listaBL}');
@@ -953,6 +954,18 @@ function validacao(frm ) {
 				frm.senha.focus();
 			}
 			return false;
+		}
+
+		if ( frm.senha.value || frm.confsenha.value ) {
+			username = document.getElementById('username').value;
+			if(estaVazio(username)) {
+				alert("Foi informada uma senha e não informado um username. Deixe todos os campos em branco referentes a username e senha ou preencha todos os campos campos.");
+				document.getElementById('username').value = "";
+				frm.senha.value = "";
+				frm.confsenha.value = "";
+				document.getElementById('username').focus();
+				return false;
+			}
 		}
 	}
 
