@@ -41,15 +41,16 @@
 
 		<tr>
 			<th align="center">DATA FATURA</th>
+			<th aling="center">CLIENTE</th>
 			<th align="center">VALOR</th>
 			<th align="center">STATUS</th>
 		</tr>
 		{foreach from=$resultado item=r}
 		<tr class='{cycle values="impar,par"}'>
 			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$r.id_cliente}&id_cliente_produto={$r.id_cliente_produto}&data={$r.data}&id_cobranca={$r.id_cobranca}">{$r.data|date_format:"%d/%m/%Y"}</a></td>
+			<td class='{$estilo}' aling='left'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$r.id_cliente}&id_cliente_produto={$r.id_cliente_produto}&data={$r.data}&id_cobranca={$r.id_cobranca}">{$r.nome_razao|upper}</a></td>
 			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$r.id_cliente}&id_cliente_produto={$r.id_cliente_produto}&data={$r.data}&id_cobranca={$r.id_cobranca}">{$r.valor}</a></td>
-			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$r.id_cliente}&id_cliente_produto={$r.id_cliente_produto}&data={$r.data}&id_cobranca={$r.id_cobranca}">{if $r.status=="A"}Atrasada{elseif $r.status=="P"}Paga{elseif $r.status=="E"}Estornada{/if}</a></td>
-
+			<td class='{$estilo}' align='center'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$r.id_cliente}&id_cliente_produto={$r.id_cliente_produto}&data={$r.data}&id_cobranca={$r.id_cobranca}">{$r.strstatus}</a></td>
 		</tr>
 		{/foreach}
 	</table>

@@ -47,21 +47,21 @@
 			<tr>
 				<td colspan="3" align='center'>
 					Mês <select name="mes">
-							<option value="01">Janeiro</option>
-							<option value="02">Fevereiro</option>
-							<option value="03">Março</option>
-							<option value="04">Abril</option>
-							<option value="05">Maio</option>
-							<option value="06">Junho</option>
-							<option value="07">Julho</option>
-							<option value="08">Agosto</option>
-							<option value="09">Setembro</option>
-							<option value="10">Outubro</option>
-							<option value="11">Novembro</option>
-							<option value="12">Dezembro</option>
+							<option value="01" {if $mes == 1}SELECTED{/if}>Janeiro</option>
+							<option value="02" {if $mes == 2}SELECTED{/if}>Fevereiro</option>
+							<option value="03" {if $mes == 3}SELECTED{/if}>Março</option>
+							<option value="04" {if $mes == 4}SELECTED{/if}>Abril</option>
+							<option value="05" {if $mes == 5}SELECTED{/if}>Maio</option>
+							<option value="06" {if $mes == 6}SELECTED{/if}>Junho</option>
+							<option value="07" {if $mes == 7}SELECTED{/if}>Julho</option>
+							<option value="08" {if $mes == 8}SELECTED{/if}>Agosto</option>
+							<option value="09" {if $mes == 9}SELECTED{/if}>Setembro</option>
+							<option value="10" {if $mes == 10}SELECTED{/if}>Outubro</option>
+							<option value="11" {if $mes == 11}SELECTED{/if}>Novembro</option>
+							<option value="12" {if $mes == 12}SELECTED{/if}>Dezembro</option>
 						</select> Ano <select name="ano">
 							{foreach from=$periodo_anos item=i key=k}
-							<option value="{$i.ano}">{$i.ano}</option>
+							<option value="{$i.ano}" {if $ano == $i.ano}SELECTED{/if}>{$i.ano}</option>
 							{/foreach}
 						</select>
 				</td>

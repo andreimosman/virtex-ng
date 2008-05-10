@@ -170,6 +170,8 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 				$sql .= " AND data BETWEEN '$data_referencia-1' AND DATE '$data_referencia-1' + INTERVAL '1 MONTH' - INTERVAL '1 DAY' ";
 			}
 			
+			$sql .= " AND status = 'A' " ; // Somente faturas em aberto.
+			
 			//echo $sql;
 
 			return ($this->bd->obtemRegistros($sql));
@@ -223,18 +225,47 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 	}
 
 	public function obtemFaturasPorRemessa($id_remessa) {
-	
 			$sql  = " SELECT ";
-			$sql .="   r.id_remessa, f.id_cobranca, f.status, f.id_cliente_produto,f.observacoes, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra, cp.id_cliente ";
+			$sql .="   r.id_remessa, f.id_cobranca, cl.nome_razao, f.status, f.id_cliente_produto,f.observacoes, f.data, f.id_forma_pagamento, f.valor, f.id_cobranca, f.linha_digitavel, f.cod_barra, cp.id_cliente ";
 			$sql .=" FROM ";
 			$sql .="   cbtb_lote_fatura r INNER JOIN cbtb_faturas f ON (f.id_cobranca = r.id_cobranca) ";
 			$sql .="   INNER JOIN cbtb_cliente_produto cp ON (f.id_cliente_produto = cp.id_cliente_produto) ";
+			$sql .="   INNER JOIN cltb_cliente cl ON (cp.id_cliente = cl.id_cliente) ";
 			$sql .=" WHERE ";
 			$sql .="   r.id_remessa = $id_remessa ";
-	
-			//echo $sql;
+			$retorno = $this->bd->obtemRegistros($sql);
+			$hoje = date("Y-m-d");
 			
-			return ($this->bd->obtemRegistros($sql));
+			for($i=0;$i<count($retorno);$i++) {
+			
+
+				$diff = MData::diff($hoje,$retorno[$i]["data"]);
+				if( $retorno[$i]["status"] == "E" ) {
+					$strstatus = "Estornada";
+				} elseif( $retorno[$i]["status"] == "C" ) {
+					$strstatus = "Cancelada";
+				} elseif( $retorno[$i]["status"] == "P" ) {
+					if( $data_pagamento ) {
+						$diff2 = MData::diff($retorno[$i]["data"],$retorno[$i]["data_pagamento"]);
+						$strstatus = $diff2 > 0 ? "Paga" : "Paga com atrazo";
+					} else {
+						$strstatus == "Paga";
+					}
+				} else {
+					if( $diff < 0 ) {
+						$dias = $diff * -1;
+						$strstatus = "Em atrazo (" . $dias . " " . ($dias == 1?"dia":"dias") . ")";
+					} else {
+						$dias = $diff == 0 ? "hoje" : $diff == "1" ? "amanhã" : $diff . " dias";
+						$strstatus = "A vencer (" . $dias . ") ";
+					}
+				}
+				
+				$retorno[$i]["strstatus"] = $strstatus;
+				
+			}
+			
+			return ($retorno);
 	
 	}
 	

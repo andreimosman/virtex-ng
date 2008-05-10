@@ -987,7 +987,8 @@
 		}	
 		
 		public function obtemRemessaPeloNomeArquivo($arquivo) {
-			return($this->cbtb_remessa->obtemUnico(array("arquivo" => $arquivo)));
+			$arq = "%:%" . $arquivo . ".txt";
+			return($this->cbtb_remessa->obtemUnico(array("arquivo" => $arq)));
 		}
 
 		public function obtemFaturasPorPeriodoSemCodigoBarra($data_referencia, $periodo) {

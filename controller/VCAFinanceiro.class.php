@@ -169,13 +169,10 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	}
 
 	protected function geraListaFaturas(){
-	
+
 		$this->_view->atribuiVisualizacao("cobranca");
-
 		$id_remessa = @$_REQUEST["id_remessa"];
-
 		$resultado = $this->cobranca->obtemFaturasPorRemessa($id_remessa);
-
 		$this->_view->atribui("resultado", $resultado);
 
 
@@ -245,6 +242,12 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$ano = @$_REQUEST["ano"];
 		$mes = @$_REQUEST["mes"];
 		$periodo = @$_REQUEST["periodo"];
+		
+		if( !$mes ) $mes = date("m");
+		if( !$ano ) $ano = date("Y");
+		
+		$this->_view->atribui("mes",$mes);
+		$this->_view->atribui("ano",$ano);
 
 
 		$formas = $this->preferencias->obtemFormasPagamentoGerarCobranca();
@@ -319,9 +322,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					do{
 						$numero_geracao++;
 						$arquivo_temp = $arquivo . "$numero_geracao";
-						$resultado = $this->cobranca->obtemRemessaPeloNomeArquivo($arquivo, $id_remessa);
-					}while($resultado);
-
+						$resultado = $this->cobranca->obtemRemessaPeloNomeArquivo($arquivo_temp);
+					} while($resultado);
+					
 					$arquivo .= "$numero_geracao" . ".txt";	//Nome de geração do arquivo
 					
 					//Ajusta diretório de gravação
