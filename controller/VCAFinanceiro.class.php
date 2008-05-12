@@ -106,7 +106,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 						VirtexView::simpleRedirect($url);
 					}
 
-
 				}catch (ExcecaoModeloValidacao $e ) {
 					$this->_view->atribui ("msg_erro", $e->getMessage());
 					$erro = true;
@@ -115,13 +114,10 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					$erro = true;
 				}
 		}
-
-		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios(30);
+		
+		$prefCobranca = $this->preferencias->obtemPreferenciasCobranca();		
+		$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios((int)$prefCobranca["carencia"]);
 		$this->_view->atribui("atrasados", $atrasados);
-
-		//echo "<pre>";
-		//print_r($atrasados);
-		///echo "</pre>";
 
 		$countBloqueados = count($atrasados);
 		$this->_view->atribui("countBloqueados", $countBloqueados);
@@ -137,7 +133,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$texto_pesquisa = @$_REQUEST["texto_pesquisa"];
 		$tipo_pesquisa  = @$_REQUEST["tipo_pesquisa"];
 
-		if(!$tipo_pesquisa) $tipo_pesquisa = "CODIGOBARRAS";
+		if(!$tipo_pesquisa) $tipo_pesquisa = "NUMERODOCUMENTO";
 
 		$this->_view->atribui("texto_pesquisa", $texto_pesquisa);
 		$this->_view->atribui("tipo_pesquisa",$tipo_pesquisa);
@@ -151,6 +147,12 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					break;
 				case 'CODIGOBARRAS':
 					$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($texto_pesquisa);
+					break;
+				case 'NUMERODOCUMENTO':
+					if( strstr('-',$texto_pesquisa) ) {
+						list($texto_pesquisa,$lixo) = explode("-",$texto_pesquisa);
+					}					
+					$fatura = $this->cobranca->obtemFaturaPorIdCobranca($texto_pesquisa);					
 					break;
 			}
 
@@ -305,6 +307,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			if($formaPagto["carteira_registrada"] == 't' || $formaPagto["impressao_banco"] == 't') {
 			
 				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);
+				
+				//echo "<pre>"; 
+				//print_r($faturas);
+				//echo "</pre>";
+				//
+				//return;
+				
 				
 				if (!$faturas){
 					$msg = "Não foram encontradas faturas para esse período.";				

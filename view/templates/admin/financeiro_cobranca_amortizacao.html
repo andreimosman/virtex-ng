@@ -10,7 +10,7 @@
 {literal}
 
 .form_pesquisa {
-	width: 400px;
+	width: 480px;
 }
 
 .pesquisa_titulo {
@@ -62,6 +62,7 @@ label {
 				{/if}
 				<input type='radio' name='tipo_pesquisa' value='LINHADIGITAVEL' {if $tipo_pesquisa == 'LINHADIGITAVEL'}checked{/if}><label>Linha Digitável</label>
 				<input type='radio' name='tipo_pesquisa' value='CODIGOBARRAS' {if $tipo_pesquisa == 'CODIGOBARRAS'}checked{/if}><label>Código de Barras</label>
+				<input type='radio' name='tipo_pesquisa' value='NUMERODOCUMENTO' {if $tipo_pesquisa == 'NUMERODOCUMENTO'}checked{/if}><label>Número do Documento</label>
 			</td>
 		</tr>
 		<tr>

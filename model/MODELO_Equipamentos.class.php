@@ -287,7 +287,7 @@
 			
 			if( !$mac ) $mac = NULL;
 			
-			$dados = array("nome"=>$nome, "info"=>$info, "status" => $status, "mac" => $mac);
+			$dados = array("nome"=>strtoupper($nome), "info"=>$info, "status" => $status, "mac" => $mac);
 			if( $tipo ) {
 				$dados["tipo"] = $tipo;
 			}
@@ -300,7 +300,7 @@
 		}
 		
 		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
-			$dados = array("nome"=>$nome, "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status);
+			$dados = array("nome"=>strtoupper($nome), "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status);
 			$dados["mac"] = $mac ? $mac : null; 
 			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
 			$dados["ipaddr"] = $ipaddr ? $ipaddr : null;

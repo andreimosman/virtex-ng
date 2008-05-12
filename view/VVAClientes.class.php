@@ -83,7 +83,7 @@
 		
 			$titulo = "";
 			if( $this->obtem("nome_razao") ) {
-				$titulo = $this->obtem("nome_razao") . " :: ";
+				$titulo = ($this->obtem("id_cliente") ? "[" . str_pad($this->obtem("id_cliente"),8,"0",STR_PAD_LEFT) . "] " : "") . $this->obtem("nome_razao") . " :: ";
 			}
 			
 			if( $this->_visualizacao == "cadastro" && $this->obtem("id_cliente") ) {

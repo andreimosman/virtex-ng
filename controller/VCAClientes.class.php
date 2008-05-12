@@ -917,7 +917,7 @@
 							$senha_admin = @$_REQUEST["senha_admin"];
 
 							if( !$senha_admin ) {
-								$erro = "Cancelamento não autorizado: SENHA NÃO FORNECIDA.";
+								$erro = "Operação não autorizada: SENHA NÃO FORNECIDA.";
 							} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
 								$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
 							}
@@ -1106,7 +1106,7 @@
 
 			if( $tela == "ficha"  ) {
 				// Informações específicas da ficha.
-
+				
 				if($info["tipo_conta"] == "BL") {
 					$nas = $equipamentos->obtemNAS($info["id_nas"]);
 					$this->_view->atribui("nas",$nas);
@@ -1130,6 +1130,16 @@
 					}
 					$this->_view->atribui("infoConta",$infoConta);
 				}
+
+				$infoProduto = $cobranca->obtemContratoPeloId($info["id_cliente_produto"]);
+				$tipo = trim($infoProduto["tipo_produto"]);
+				$this->_view->atribui("tipo",$tipo);
+				$this->_view->atribui("infoProduto",$infoProduto);
+				
+				//echo "<pre>"; 
+				//print_r($infoProduto);
+				//echo "</pre>"; 
+
 			} else if( $tela == "cadastro" ) {
 
 				if( $acao ) {
@@ -1631,7 +1641,7 @@
 
 						$grupos = $this->helpdesk->obtemListaGruposComPopulacao(true);
 						$responsaveis = $this->helpdesk->obtemListaAdminGrupo();
-						$contas_cliente = $contas->obtemContasPorCliente($id_cliente);
+						$contas_cliente = $contas->obtemContasPorCliente($id_cliente,"A"); // Somente contas ativas
 						$prioridades = $this->helpdesk->obtemPrioridades();
 
 						$this->_view->atribui("chamados_pendentes", $chamados_pendentes);

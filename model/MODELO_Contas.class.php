@@ -136,8 +136,16 @@
 			if( $status ) {
 				$filtro["status"] = $status;
 			}
+			
+			$cobranca = VirtexModelo::factory("cobranca");
+			
+			$contas = $this->cntb_conta_bandalarga->obtem($filtro);
+			
+			for($i=0;$i<count($contas);$i++) {
+				$contas[$i]["contrato"] = $cobranca->obtemContratoPeloId($contas[$i]["id_cliente_produto"]);
+			}
 
-			return($this->cntb_conta_bandalarga->obtem($filtro));
+			return($contas);
 		}
 
 		public function obtemContasSemMac() {
@@ -525,6 +533,11 @@
 		public function alteraContaBandaLarga($id_conta,$senha,$status,$observacoes="",$conta_mestre="",
 										$id_pop="",$id_nas="",$upload="",$download="",$mac="",$endereco="",$alterar_endereco = false) {
 
+			$infoAtual = $this->obtemContaPeloId($id_conta);
+			$nasAtual = $this->equipamentos->obtemNAS($infoAtual["id_nas"]);
+			$nasNovo = ($infoAtual["id_nas"] != $id_nas ? $this->equipamentos->obtemNAS($id_nas) : $nasAtual);
+
+
 			if( $status != "C" ) {
 				// Pegar os dados atuais p/ comparação
 				$infoAtual = $this->obtemContaPeloId($id_conta);
@@ -574,9 +587,7 @@
 			) {
 				// Enviar instrução p/ spool remover a configuração antiga.
 
-				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];
-
-
+				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];				
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
 			}
 

@@ -131,7 +131,7 @@
 		 * Abertura de chamado ou ocorrência.
 		 */
 		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_servidor=0,$id_nas=0,$id_pop=0,$id_condominio=0,$id_bloco=0,$id_chamado_pai=null) {
-			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "id_grupo" => $id_grupo, "assunto" => $assunto, "descricao" => $descricao, "origem" => $origem, "classificacao" => $classificacao);
+			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "assunto" => $assunto, "descricao" => $descricao, "origem" => $origem, "classificacao" => $classificacao);
 			
 
 			if( $id_cliente ) $dados["id_cliente"] = $id_cliente;
@@ -144,7 +144,7 @@
 			if( $id_condominio ) $dados["id_condominio"] = $id_condominio;
 			if( $id_bloco ) $dados["id_bloco"] = $id_bloco;
 			if( $prioridade ) $dados["prioridade"] = $prioridade;
-			
+			if( $id_grupo ) $dados["id_grupo"] = $id_grupo;			
 			
 			// TODO: Registrar a abertura do chamado filho no chamado pai.
 			if( $id_chamado_pai ) $dados["id_chamado_pai"] = $id_chamado_pai;

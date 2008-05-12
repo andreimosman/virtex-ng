@@ -906,10 +906,10 @@
 			$data["desconto"] = $desconto;
 			$data["acrescimo"] = $acrescimo;
 			$data["data_pagamento"] = $data_pagamento;
+			$data["observacoes"] = $observacoes;
 
 			if($reagendar and $data["status"] != PERSISTE_CBTB_FATURAS::$PAGA){
 				$data["reagendamento"] = $reagendamento;
-				$data["observacoes"] = $observacoes;
 				
 				$dadosLog = array("id_cliente_produto" => $fatura["id_cliente_produto"], 
 									"data" => $fatura["data"], 
@@ -996,7 +996,60 @@
 		}
 		
 		public function obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo) {
-			return ($this->cbtb_fatura->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo));
+			$faturas = $this->cbtb_fatura->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo);
+			
+			$clientes = VirtexModelo::factory("clientes");
+
+			$preferencias = VirtexModelo::factory("preferencias");
+			
+			//echo "<pre>PRF: \n"; 
+			//print_r($preferencias);
+			//echo "</pre>"; 
+
+			
+			for($i=0;$i<count($faturas);$i++) {
+				$cp = $this->obtemClienteProduto($faturas[$i]["id_cliente_produto"]);
+				
+				// Contrato
+				$faturas[$i]["contrato"] = $this->obtemContratoPeloId($faturas[$i]["id_cliente_produto"]);
+				
+				// Cliente
+				$cliente = $clientes->obtemPeloId($cp["id_cliente"]);
+				$faturas[$i]["cliente"] = $cliente;
+				
+				$endereco_cobranca = $this->obtemEnderecoCobranca($faturas[$i]["id_cliente_produto"]);
+				
+				if( !count($endereco_cobranca) ) {
+					$endereco_cobranca = array(
+												"id_endereco_cobranca" => 0,
+												"id_cliente_produto" => $faturas[$i]["id_cliente_produto"],
+												"endereco" => $cliente["endereco"],
+												"complemento" => $cliente["complemento"],
+												"bairro" => $cliente["bairro"],
+												"cep" => $cliente["cep"],
+												"id_cidade" => $cliente["id_cidade"],
+												"id_condominio_cobranca" => $cliente["id_condominio"],
+												"id_bloco_cobranca" => $cliente["id_bloco"],
+												"apto_cobranca" => $cliente["apto"]
+												);
+					
+					//
+				
+				
+				
+				}
+				
+				$cidade = $preferencias->obtemCidadePeloId($endereco_cobranca["id_cidade"]);
+				$endereco_cobranca["cidade"] = $cidade;
+				
+				$faturas[$i]["endereco_cobranca"] = $endereco_cobranca;
+				
+				
+				
+			}
+			
+			
+			return ($faturas);
 		}
 
 		public function obtemFaturasPorPeriodoSemCodigoBarraPorTipoPagamento($data_referencia, $periodo, $id_forma_pagamento) {

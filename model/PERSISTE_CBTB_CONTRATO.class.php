@@ -249,9 +249,20 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 	$sql .= "SELECT  ";
 	$sql .= "	cl.nome_razao, f.id_cliente_produto, p.nome as produto, count(f.id_cobranca) as faturas,  ";
-	$sql .= "	p.tipo, sum(f.valor) - sum(f.desconto) + sum(f.acrescimo) as valor_devido, cnt.num_contas ";
+	$sql .= "	p.tipo, sum(CASE WHEN f.valor is NULL then 0 else f.valor END) - sum(CASE WHEN f.desconto is null THEN 0 ELSE f.desconto END) + sum(CASE WHEN f.acrescimo is null THEN 0 ELSE f.acrescimo END) as valor_devido, cnt.num_contas ";
 	$sql .= "FROM  ";
-	$sql .= "	cbtb_faturas f  ";
+	//$sql .= "	( ";
+	//$sql .= "	 SELECT  ";
+	//$sql .= "	    id_cliente_produto,data,descricao, ";
+	//$sql .= "	    CASE WHEN valor is null THEN 0 ELSE valor END as valor,  ";
+	//$sql .= "	    status, observacoes, reagendamento, pagto_parcial, data_pagamento,  ";
+	//$sql .= "	    CASE WHEN desconto is null THEN 0 ELSE desconto END as desconto,  ";
+	//$sql .= "	    CASE WHEN acrescimo is null THEN 0 ELSE acrescimo END as acrescimo,  ";
+	//$sql .= "	    CASE WHEN valor_pago is null THEN 0 ELSE valor_pago END as valor_pago,  ";
+	//$sql .= "	    id_cobranca, cod_barra, anterior, id_carne, nosso_numero, linha_digitavel, nosso_numero_banco,  ";
+	//$sql .= "	    tipo_retorno, email_aviso, id_forma_pagamento, id_remessa, id_retorno FROM cbtb_faturas f ";
+	//$sql .= "   ) f ";
+	$sql .= "   cbtb_faturas f ";
 	$sql .= "	INNER JOIN cbtb_cliente_produto cp ON f.id_cliente_produto = cp.id_cliente_produto  ";
 	$sql .= "	INNER JOIN cltb_cliente cl ON cp.id_cliente = cl.id_cliente  ";
 	$sql .= "	INNER JOIN prtb_produto p ON cp.id_produto = p.id_produto  ";
@@ -273,7 +284,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	
 	$diasSemReagendamento = $carencia + $tempo_banco;
 	$diasComReagendamento = $tempo_banco;
-	$sql .= "  ((f.reagendamento is null AND f.data < now() + interval '$diasSemReagendamento' ) OR (f.reagendamento is not null AND f.reagendamento < now() + interval '$diasComReagendamento')) AND f.status not in ('P','E','C') ";
+	$sql .= "  ((f.reagendamento is null AND f.data < now() - interval '$diasSemReagendamento days' ) OR (f.reagendamento is not null AND f.reagendamento < now() - interval '$diasComReagendamento days')) AND f.status not in ('P','E','C') ";
 	
 	if( $id_cliente_produto ) {
 		$sql .= " AND f.id_cliente_produto = $id_cliente_produto ";
@@ -282,7 +293,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	$sql .= "GROUP BY  ";
 	$sql .= "	f.id_cliente_produto, cl.nome_razao, p.nome, p.tipo, cnt.num_contas ";
 
-	////echo $sql;
+	// echo $sql;
 
 		/*$sql  = "SELECT ";
 		$sql .= "	cliente.nome_razao  ";

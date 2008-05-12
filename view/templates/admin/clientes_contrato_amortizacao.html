@@ -10,7 +10,14 @@
 	function pagamentoHoje(){
 		var obj = document.getElementById('data_pagamento');
 		var data = new Date();
-		hoje = data.getDate() +"/"+ (data.getMonth() + 1) + "/" + data.getFullYear();
+
+		var mes = (data.getMonth() + 1);
+
+		if( mes < 10 ) {
+			mes = "0" + mes;
+		}
+
+		hoje = data.getDate() +"/"+ mes + "/" + data.getFullYear();
 		obj.value = hoje;
 	}
 
@@ -29,18 +36,24 @@
 		var fpagamento		= document.getElementById('data_pagamento');
 		var fpendente		= document.getElementById('valor_pendente');
 
-		if("" == famortizar.value){
-			alert('Informe o valor recebido!');
-			famortizar.focus();
+		if( reagendar.checked && "" == reagendamento.value ) {
+			alert('Indorme a data para reagendamento ou desmarque a opção de reagendar.');
 			return false;
 		}
 
-		if("" == fpagamento.value){
-			alert('Informe a data do pagamento!');
-			fpagamento.focus();
-			return false;
-		}
+		if( !reagendado ) {
+			if("" == famortizar.value){
+				alert('Informe o valor recebido!');
+				famortizar.focus();
+				return false;
+			}
 
+			if("" == fpagamento.value){
+				alert('Informe a data do pagamento!');
+				fpagamento.focus();
+				return false;
+			}
+		}
 
 		if( (fpendente.value == 0) && (reagendar.checked) ){
 			alert("Não é possivel re-agendar e quitar a fatura ao mesmo tempo!");
@@ -53,11 +66,11 @@
 			return false;
 		}
 
-
+		//window.alert("REAGENDADO: " + reagendado);
+		//window.alert("ORIG: " + reagendamentoOrig);
+		//window.alert("VALOR: " + reagendamento.value);
 
 		calculaValores();
-
-
 
 		if(reagendar.checked){
 			if("" == reagendamento.value){
@@ -151,9 +164,42 @@
 		}
 	}
 
+	var reagendado = false;
+
 	function verificaReagendamento() {
-		freagendar.checked = true;
+		var freagendar = document.getElementById('reagendar');
+		var freagendamento = document.getElementById('reagendamento');
+
+		if( freagendar.checked == true ) {
+			freagendamento.disabled = false;
+		} else {
+			freagendamento.disabled = true;
+			freagendamento.value = '';
+		}
+
+		alteraDataReagendamento();
+
 	}
+
+	{/literal}
+	var reagendamentoOrig = '{$reagendamento|date_format:"%d/%m/%Y"}';
+
+	{literal}
+
+	function alteraDataReagendamento() {
+		var freagendamento = document.getElementById('reagendamento');
+
+		if( freagendamento.value != reagendamentoOrig ) {
+			// Indica que campo foi reagendado.
+			reagendado = true;
+		} else {
+			reagendado = false;
+		}
+
+		// window.alert('ORIG: ' + reagendamentoOrig + "\n" + 'ATUAL: ' + freagendamento);
+		// window.alert("AlteraDataReagend");
+	}
+
 	{/literal}
 //-->
 </script>
@@ -231,8 +277,7 @@
 				<tr>
 					<td class="cellLabel">Data do Pagamento:</td>
 					<td class="cellInfo">
-						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento}" maxlength="10"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
-						{* &gt;&gt;"" *}
+						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento|date_format:"%d/%m/%Y"}" maxlength="10"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
 						<input type="button" name="hoje" value="Hoje" onclick="javascript:pagamentoHoje();"  class="botao"  {if !$editavel}disabled="disabled"{/if} />
 						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" class="botao"  {if !$editavel}disabled="disabled"{/if} />
 					</td>
@@ -246,10 +291,10 @@
 				</tr>
 				<tr>
 					<td class="cellLabel">
-						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" {if !$editavel}disabled="disabled"{/if} /> re-agendar cobrança para dia:
+						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" {if !$editavel}disabled="disabled"{/if} {if $reagendamento}checked{/if} onClick="javascript:verificaReagendamento();"/> re-agendar cobrança para dia:
 					</td>
 					<td class="cellInfo">
-						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
+						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento|date_format:"%d/%m/%Y"}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this);alteraDataReagendamento()" onBlur="formOnBlur(this);alteraDataReagendamento();"{/if} disabled = true onkeypress="formatar(this, '##/##/####'); return Tecla(event);" />
 					</td>
 				</tr>
 				<tr>
@@ -287,5 +332,8 @@
 </table>
 </form>
 </div>
-<script type="text/javascript">calculaValores();</script>
+<script type="text/javascript">
+calculaValores();
+verificaReagendamento();
+</script>
 </center>

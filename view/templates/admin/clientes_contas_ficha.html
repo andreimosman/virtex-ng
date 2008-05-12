@@ -184,7 +184,9 @@ function abreEstatisticas(user,id) {
 	</tr>
 	<tr>
 		<td align="right" width="110"><strong><label>Conta Mestre:</label></strong></td>
-		<td colspan="3"><label>{if $conta_mestre == 't'}SIM{else}NÃO{/if}</label></td>
+		<td><label>{if $conta_mestre == 't'}SIM{else}NÃO{/if}</label></td>
+		<td align="right" width="110"><strong><label>Produto:</label></strong></td>
+		<td width="200"><label>{$infoProduto.nome_produto}</label></td>
 	</tr>
 	<tr>
 		<td colspan="4"><hr size="1"></td>

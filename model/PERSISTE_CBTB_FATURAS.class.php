@@ -171,8 +171,6 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 			}
 			
 			$sql .= " AND status = 'A' " ; // Somente faturas em aberto.
-			
-			//echo $sql;
 
 			return ($this->bd->obtemRegistros($sql));
 

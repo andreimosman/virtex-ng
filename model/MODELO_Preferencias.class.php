@@ -17,6 +17,8 @@
 		protected $pftb_modelo_contrato;
 		protected $pftb_preferencia_helpdesk;
 		
+		protected $cacheCidades;
+		
 		/**
 		 * Construtor do objeto.
 		 * Instancía as dependênias.
@@ -38,6 +40,8 @@
 			$this->pftb_forma_pagamento			= VirtexPersiste::factory("pftb_forma_pagamento");
 			$this->pftb_modelo_contrato			= VirtexPersiste::factory("pftb_modelo_contrato");
 			$this->pftb_preferencia_helpdesk	= VirtexPersiste::factory("pftb_preferencia_helpdesk");
+			
+			$this->cacheCidades 				= array();
 		}
 		
 		/**
@@ -170,7 +174,11 @@
 		 * Obtem uma cidade pelo id.
 		 */
 		public function obtemCidadePeloID($id) {
-			return($this->cftb_cidade->obtemUnico(array("id_cidade" => $id)));
+			if( !@$this->cacheCidades[$id] ) {
+				$this->cacheCidades[$id] = $this->cftb_cidade->obtemUnico(array("id_cidade" => $id));
+			}
+		
+			return(@$this->cacheCidades[$id]);
 		}
 		
 		/**
@@ -297,7 +305,7 @@
 		protected function alteraClienteProvedor($nome="",$endereco="",$localidade="",$cep="",$cnpj="",$fone="") {
 			$id_provedor = 1;
 			
-			echo "NOME: $nome<br>\n";
+			// echo "NOME: $nome<br>\n";
 			
 			$clientes = VirtexModelo::factory("clientes");
 			$nome = trim("(PROVEDOR) " . trim(strtoupper($nome)));			
