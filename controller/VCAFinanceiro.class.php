@@ -52,6 +52,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	}
 
 	protected function executaBloqueios() {
+
+		$podeGravar = $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_BLOQUEIOS",false);
+
+		$this->_view->atribui("podeGravar", $podeGravar );
+
+		$this->requirePrivLeitura("_FINANCEIRO_COBRANCA_BLOQUEIOS");
+		
 	
 		$this->_view->atribuiVisualizacao("cobranca");
 
@@ -61,6 +68,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$url 		 = "admin-financeiro.php?op=bloqueios";
 
 		if( $acao == "bloquear" ) {
+		
+				$this->requirePrivGravacao("_FINANCEIRO_COBRANCA_BLOQUEIOS");
+		
 
 				try {
 					$senha_admin = @$_REQUEST["senha_admin"];
@@ -238,6 +248,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 	protected function executaGerarCobranca() {
 	
+		$podeGravar = $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_GERAR_BOLETOS",false);
+		$this->_view->atribui("podeGravar", $podeGravar );
+
+		$this->requirePrivLeitura("_FINANCEIRO_COBRANCA_GERAR_BOLETOS");
+	
+	
+	
 		$this->_view->atribuiVisualizacao("cobranca");
 
 		$acao = @$_REQUEST["acao"];
@@ -267,6 +284,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		
 		
 		if ($acao == "gerar") {
+			$this->requirePrivGravacao("_FINANCEIRO_COBRANCA_GERAR_BOLETOS");
+
 			$dados = array();
 			
 
@@ -644,6 +663,10 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	}
 
 	protected function executaRelatoriosCobranca() {
+
+		$this->requirePrivLeitura("_FINANCEIRO_COBRANCA_RELATORIOS");
+	
+	
 	
 		$this->_view->atribuiVisualizacao("cobranca");
 
@@ -783,14 +806,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$bloqueados_desbloqueados = $contas->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
 			$this->_view->atribui("bloqueados_desbloqueados", $bloqueados_desbloqueados);
 
-			//echo "<pre>";
-			//print_r($periodoAnoMes);
-			//echo "</pre>";
 		}
 	}
 	
 	
 	protected function executaRelatoriosFaturamento() {
+
+		$this->requirePrivLeitura("_FINANCEIRO_COBRANCA_RELATORIOS");
 
 		$this->_view->atribuiVisualizacao("faturamento");
 

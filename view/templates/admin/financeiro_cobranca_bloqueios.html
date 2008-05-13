@@ -40,7 +40,7 @@
 			{foreach from=$atrasados item=i key=k}
 			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 			<tr class='{cycle values="impar,par"}'>
-				<td><input type="checkbox" style="{$estilo}" name="contrato_id[{$i.id_cliente_produto}]" id="contrato_id[{$i.id_cliente_produto}]" value="{$i.tipo|replace:' ':''}"></td>
+				<td><input type="checkbox" style="{$estilo}" name="contrato_id[{$i.id_cliente_produto}]" id="contrato_id[{$i.id_cliente_produto}]" value="{$i.tipo|replace:' ':''}" {if !$podeGravar}disabled=true{/if}></td>
 				<td align="left" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.nome_razao}</label></td>
 				<td align="left" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">#0{$i.id_cliente_produto} - {$i.produto}</label></td>
 				<td align="center" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.num_contas}</label></td>
@@ -48,6 +48,8 @@
 				<td align="center" style="{$estilo}" ><label for="contrato_id[{$i.id_cliente_produto}]">{$i.valor_devido}</label></td>
 			</tr>
 			{/foreach}
+
+			{if $podeGravar}
 			<tr>
 				<th style="background: #FF0000; color: #ffffff" colspan="6">Confirmação</th>
 			</tr>
@@ -62,6 +64,12 @@
 			<tr>
 				<td align="center" colspan="6"><input type="submit" value="Bloquear" class="botao"/><input type="reset" value="Desmarcar Todas" class="botao" /></td>
 			</tr>
+			{/if}
+
+			<tr>
+				<td colspan=6>&nbsp;</td>
+			</tr>
+
 		</table>
 
 		<input type="hidden" name="op" value="bloqueios" />

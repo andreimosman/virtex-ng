@@ -31,6 +31,7 @@
 <div id="cont" align="center">
 
 	{if $formas}
+	{if $podeGravar}
 	<form action="admin-financeiro.php" >
 		<input type="hidden" name="op" value="gerar_cobranca" />
 		<input type="hidden" name="acao" value="gerar" />
@@ -82,6 +83,9 @@
 			</tr>
 		</table>
 	</form>
+	{/if}
+
+
 	{else}
 		Não existem formas de pagamento passíveis de geração<br><br>
 	{/if}

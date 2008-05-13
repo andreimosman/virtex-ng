@@ -228,7 +228,8 @@
 
 			}
 			
-			if( $meses_cobrados == 1 ) {
+			
+			if( $meses_cobrados == 1 && $prorata["dias_prorata"] < 30) {
 				$incrementa = false;
 			} else {
 				$incrementa = true;
@@ -274,7 +275,7 @@
 
 					// Incrementa 1 mês
 					
-					if( $pagamento == "PRE" && $meses_cobrados == 1 && @$dias_prorata ) {
+					if( $pagamento == "PRE" && $meses_cobrados == 1 && !$incrementa) {
 						// echo "MESES 01, n/a<br>\n";
 					} else {
 						$data = MData::adicionaMes("$d/$m/$a",1);
