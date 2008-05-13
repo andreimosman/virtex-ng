@@ -486,8 +486,8 @@
 		/**
 		 * Lista de chamados pro periodo
 		 */
-		public function obtemOcorrenciasPorPeriodo($data_inicial, $data_final) {
-			return($this->hdtb_chamado->obtemOcorrenciasPorPeriodo($data_inicial, $data_final));
+		public function obtemChamadosPorPeriodo($data_inicial, $data_final) {
+			return($this->hdtb_chamado->obtemChamadosPorPeriodo($data_inicial, $data_final));
 		}
 
 

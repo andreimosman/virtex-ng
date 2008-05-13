@@ -78,7 +78,7 @@
 			$menuSuporteRelatorios->addSeparator();
 			
 			$menuSuporteRelatoriosHelpdesk = new MMenu();
-			$menuSuporteRelatoriosHelpdesk->addItem("Ocorrências", "admin-suporte.php?op=relatorios&relatorio=helpdesk&tipo=ocorrencias", $target);
+			$menuSuporteRelatoriosHelpdesk->addItem("Chamados/Ocorrências", "admin-suporte.php?op=relatorios&relatorio=helpdesk&tipo=ocorrencias", $target);
 			
 			$menuSuporteRelatorios->addSubMenu("Helpdesk", $menuSuporteRelatoriosHelpdesk);
 			

@@ -73,11 +73,18 @@
 							"bairro" => $bairro,
 							"id_cidade" => $id_cidade,
 							"cep" => $cep,
-							"id_condominio_cobranca" => $id_condominio_cobranca,
-							"id_bloco_cobranca" => $id_bloco_cobranca,
 							"id_cliente" => $id_cliente,
 							"apto_cobranca" => $apto_cobranca
 							);
+
+			if( $dados["id_condominio_cobranca"] ) {
+				$dados["id_condominio_cobranca"] = $id_condominio_cobranca;
+			}
+			if( $dados["id_bloco_cobranca"] ) {
+				$dados["id_bloco_cobranca"] = $id_bloco_cobranca;
+			}
+
+
 			$this->cbtb_endereco_cobranca->insere($dados);
 		}
 

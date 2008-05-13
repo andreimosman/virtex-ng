@@ -221,6 +221,8 @@
 			$this->_view->atribuiVisualizacao("contrato");
 			$this->_view->atribui("id_cliente",$this->id_cliente);
 			$info = $this->clientes->obtemPeloId($this->id_cliente);
+			$cliente = $info;
+			$this->_view->atribui("cliente",$info);
 			
 
 			$this->_view->atribui("nome_razao",$info["nome_razao"]);
@@ -288,8 +290,8 @@
 					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 
-					$cliente = $this->clientes->obtemPeloId($this->id_cliente);
-					$this->_view->atribui("cliente",$cliente);
+					//$cliente = $this->clientes->obtemPeloId($this->id_cliente);
+					//$this->_view->atribui("cliente",$cliente);
 
 					$cobranca = VirtexModelo::factory('cobranca');
 
@@ -572,6 +574,9 @@
 			            if ( ! count($cidade_cobranca) ) {
 			                 $cidade_cobranca = $this->preferencias->obtemCidadePeloId($info['id_cidade']);
 			            }
+			            
+			            // print_r($cidade_cobranca);
+			            // print_r($cidade_instalacao);
 
 			            if ( ! count($cidade_instalacao) ) {
 			                 $cidade_instalacao = $cidade_cobranca;
@@ -702,7 +707,10 @@
 								$num_conta = @$_REQUEST["conta"] ? $_REQUEST["conta"] : "";
 
 								$pro_dados = array( "codigo_banco" => $codigo_banco, "carteira" => $carteira, "convenio" => $convenio, "agencia" => $agencia, "num_conta" => $num_conta );
-
+								
+								$difEnderecoMail = @$_REQUEST["difEnderecoMail"];
+								$difEnderecoSetup = @$_REQUEST["difEnderecoSetup"];
+								
 								$endereco_cobranca = array( "endereco" => $_REQUEST["endereco_cobranca"], "id_cidade" => $_REQUEST["id_cidade_cobranca"], "cep" => $_REQUEST["cep_cobranca"], "bairro" => $_REQUEST["bairro_cobranca"], "complemento" => $_REQUEST["complemento_cobranca"], "id_condominio_cobranca" => @$_REQUEST["id_condominio_cobranca"], "id_bloco_cobranca" => $_REQUEST["id_bloco_cobranca"], "apto_cobranca" => $_REQUEST["apto_cobranca"] );
 								$endereco_instalacao = array( "endereco" => $_REQUEST["endereco_instalacao"], "id_cidade" => $_REQUEST["id_cidade_instalacao"], "cep" => $_REQUEST["cep_instalacao"], "bairro" => $_REQUEST["bairro_instalacao"], "complemento" => $_REQUEST["complemento_instalacao"], "id_condominio_instalacao" => $_REQUEST["id_condominio_instalacao"], "id_bloco_instalacao" => $_REQUEST["id_bloco_instalacao"], "apto_instalacao" => $_REQUEST["apto_instalacao"] );
 								
@@ -755,6 +763,18 @@
 									$info_modelo = $this->preferencias->obtemModeloContratoPadrao($tipo_produto);
 									$id_modelo_contrato = $info_modelo["id_modelo_contrato"];
 								}
+								
+								//echo "<pre>";
+								//print_r($endereco_cobranca);
+								//print_r($endereco_instalacao);
+								//print_r($_REQUEST);
+								//
+								
+								//echo "</pre>";
+								
+								
+								
+								//return;
 								
 								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $id_modelo_contrato, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],

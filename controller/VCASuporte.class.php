@@ -349,9 +349,9 @@
 							
 							
 							
-							$retorno = $this->helpdesk->obtemOcorrenciasPorPeriodo($data_inicial, $data_final);
+							$retorno = $this->helpdesk->obtemChamadosPorPeriodo($data_inicial, $data_final);
 													
-							$this->_view->atribui("ocorrencias", $retorno);							
+							$this->_view->atribui("chamados", $retorno);							
 							$this->_view->atribui("de", $de);
 							$this->_view->atribui("ate", $ate);
 							

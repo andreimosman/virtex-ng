@@ -86,7 +86,7 @@
 		}
 		
 
-		public function obtemOcorrenciasPorPeriodo($data_inicial, $data_final) {
+		public function obtemChamadosPorPeriodo($data_inicial, $data_final) {
 					
 			$sql  = "SELECT ";
 			$sql .= "	cha.*, grp.*, agr.*, cli.id_cliente ";
@@ -96,7 +96,7 @@
 			$sql .= "	LEFT OUTER JOIN hdtb_admin_grupo agr ON agr.id_admin = cha.responsavel ";
 			$sql .= "	LEFT OUTER JOIN cltb_cliente cli ON cli.id_cliente = cha.id_cliente ";
 			$sql .= "WHERE ";
-			$sql .= "	tipo LIKE '" . self::$TIPO_OCORRENCIA . "' ";
+			$sql .= "	(tipo LIKE '" . self::$TIPO_OCORRENCIA . "' OR tipo = '" .self::$TIPO_CHAMADO. "')";
 			$sql .= "	AND abertura BETWEEN '$data_inicial' AND CAST('$data_final' AS DATE) + INTERVAL '1 DAY' ORDER BY ABERTURA DESC ";
 			
 			return($this->bd->obtemRegistros($sql));

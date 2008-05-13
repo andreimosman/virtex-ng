@@ -396,10 +396,16 @@
 							"id_cidade" => $id_cidade,
 							"cep" => $cep,
 							"id_cliente" => $id_cliente,
-							"id_condominio_instalacao" => $id_condominio_instalacao,
-							"id_bloco_instalacao" => $id_bloco_instalacao,
 							"apto_instalacao" => $apto_instalacao
 							);
+
+			if( $dados["id_condominio_instalacao"] ) {
+				$dados["id_condominio_instalacao"] = $id_condominio_instalacao;
+			}
+			if( $dados["id_bloco_instalacao"] ) {
+				$dados["id_bloco_instalacao"] = $id_bloco_instalacao;
+			}
+
 							
 			if( $id_conta ) {
 				$dados["id_conta"] = $id_conta;

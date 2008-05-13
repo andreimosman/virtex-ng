@@ -103,7 +103,7 @@
 					switch($this->obtem("tipo")) {
 						case "ocorrencias":
 						default:
-							$titulo .= " :: Ocorrências";
+							$titulo .= " :: Chamados/Ocorrências";
 							$this->_file = "suporte_relatorios_helpdesk_ocorrencias.html";
 						break;
 					}

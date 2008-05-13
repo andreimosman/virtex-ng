@@ -24,8 +24,14 @@ label a:hover {
 
 <script language="javascript">
 {literal}
-	function AlterarChamado(id_chamado, id_cliente) {
+	function AlterarChamadoCliente(id_chamado, id_cliente) {
 		self.location = "admin-clientes.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado + "&id_cliente=" + id_cliente;
+	}
+	function AlterarChamadoCondominio(id_chamado, id_condominio) {
+		self.location = "admin-cadastro.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado + "&id_condominio=" + id_condominio;
+	}
+	function AlterarChamadoSuporte(id_chamado) {
+		self.location = "admin-suporte.php?op=helpdesk&tela=alteracao&id_chamado=" + id_chamado;
 	}
 {/literal}
 </script>
@@ -84,23 +90,25 @@ label a:hover {
 <table width="600" cellpadding=1 cellspacing=1 align="centeR">
 </table>
 <table width="600" class="lista" cellpadding=0 cellspacing=0 align="center">
-{if $ocorrencias}
+{if $chamados}
 	<tr>
 
 		<th align="center">ID</th>
 		<th align="center">DATA</th>
+		<th align="center">TIPO</th>
 		<th align="left">ASSUNTO</th>
 		<th align="center">GRUPO</th>
 		<th align="center">RESPONSAVEL</th>
 	</tr>
-	{foreach name=registros item=c from=$ocorrencias}
+	{foreach name=registros item=c from=$chamados}
 	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 	<tr>
-		<td class='{$estilo}' width=50>&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.id_chamado|string_format:"%07s"}</a></td>
-		<td class='{$estilo}' width=150>&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
-		<td class='{$estilo}' width=200>&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.assunto}</a></td>
-		<td class='{$estilo}' width=100 align="center">&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.nome}</a></td>
-		<td class='{$estilo}' width=100 align="center">&nbsp;<a href="javascript:AlterarChamado({$c.id_chamado}, {$c.id_cliente})">{$c.admin}</a></td>
+		<td class='{$estilo}' width=50>&nbsp;<a href="javascript:AlterarChamado{if $c.id_cliente}Cliente{else}{if $c.id_condominio}Condominio{else}Suporte{/if}{/if}({$c.id_chamado}{if $c.id_cliente},{$c.id_cliente}{else}{if $c.id_condominio},{$c.id_condominio}{/if}{/if});">{$c.id_chamado|string_format:"%07s"}</a></td>
+		<td class='{$estilo}' width=150>&nbsp;<a href="javascript:AlterarChamado{if $c.id_cliente}Cliente{else}{if $c.id_condominio}Condominio{else}Suporte{/if}{/if}({$c.id_chamado}{if $c.id_cliente},{$c.id_cliente}{else}{if $c.id_condominio},{$c.id_condominio}{/if}{/if});">{$c.abertura|date_format:"%d-%m-%Y / %H:%M"|upper}</a></td>
+		<td class='{$estilo}' width=20>&nbsp;<a href="javascript:AlterarChamado{if $c.id_cliente}Cliente{else}{if $c.id_condominio}Condominio{else}Suporte{/if}{/if}({$c.id_chamado}{if $c.id_cliente},{$c.id_cliente}{else}{if $c.id_condominio},{$c.id_condominio}{/if}{/if});">{$c.tipo}</a></td>
+		<td class='{$estilo}' width=200>&nbsp;<a href="javascript:AlterarChamado{if $c.id_cliente}Cliente{else}{if $c.id_condominio}Condominio{else}Suporte{/if}{/if}({$c.id_chamado}{if $c.id_cliente},{$c.id_cliente}{else}{if $c.id_condominio},{$c.id_condominio}{/if}{/if});">{$c.assunto}</a></td>
+		<td class='{$estilo}' width=100 align="center">&nbsp;<a href="javascript:AlterarChamado{if $c.id_cliente}Cliente{else}{if $c.id_condominio}Condominio{else}Suporte{/if}{/if}({$c.id_chamado}{if $c.id_cliente},{$c.id_cliente}{else}{if $c.id_condominio},{$c.id_condominio}{/if}{/if});">{$c.nome}</a></td>
+		<td class='{$estilo}' width=100 align="center">&nbsp;<a href="javascript:AlterarChamado{if $c.id_cliente}Cliente{else}{if $c.id_condominio}Condominio{else}Suporte{/if}{/if}({$c.id_chamado}{if $c.id_cliente},{$c.id_cliente}{else}{if $c.id_condominio},{$c.id_condominio}{/if}{/if});">{$c.admin}</a></td>
 	</tr>
 	{/foreach}
 
