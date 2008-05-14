@@ -447,7 +447,8 @@
 							"bl_convenio" => $bl_dados["convenio"],
 							"bl_agencia" => $bl_dados["agencia"],
 							"bl_num_conta" => $bl_dados["num_conta"],
-							"pagamento" => $pagamento);
+							"pagamento" => $pagamento
+							);
 
 			if( $id_forma_pagamento ) {
 				$dados["id_forma_pagamento"]=$id_forma_pagamento;
@@ -456,6 +457,14 @@
 			if( !$parcelas_instalacao ) {
 				$parcelas_instalacao = 1;
 			}
+			
+			$vl_parcelas_instalacao = $tx_instalacao / $parcelas_instalacao;
+
+			$dados["vl_parcelas_instalacao"] = $vl_parcelas_instalacao;
+			$dados["num_parcelas_instalacao"] = $parcelas_instalacao;
+							
+
+
 						
 			$this->cbtb_contrato->insere($dados);
 			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeira_fatura,      $prorata,   $limite_prorata, $parcelas_instalacao) : array();

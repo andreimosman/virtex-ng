@@ -105,9 +105,6 @@
 			$provedor_geral = $preferencias->obtemPreferenciasGerais();
 			$this->_view->atribui("nome_provedor",$provedor_geral["nome"]);
 			
-			/*echo "<pre>";
-			print_r($cidade);
-			echo "</pre>";*/
 					
 		}
 		
@@ -134,10 +131,6 @@
 			$provedor_geral = $preferencias->obtemPreferenciasGerais();
 			$this->_view->atribui("nome_provedor",$provedor_geral["nome"]);
 			
-			/*echo "<pre>";
-			print_r($contratos);
-			echo "</pre>";*/
-		
 		
 		}
 		
@@ -210,10 +203,42 @@
 			$this->_view->atribui("dominio_provedor",strtoupper($provedor_geral["dominio_padrao"]));
 			
 
-			//echo "<pre>";
-			//print_r($contrato_detalhado);
-			//echo "</pre>";
-
+			
+			$contrato_cliente = "";
+			
+			if( $contrato_detalhado["id_modelo_contrato"] ) {
+				// $modelo_contrato = $this->preferencias->obtemModeloContrato($contrato_detalhado["id_modelo_contrato"]);
+				
+				$tplCTT = new MTemplate("var/contrato");
+				
+				$nomeArquivo = str_pad($contrato_detalhado["id_modelo_contrato"],5,"0",STR_PAD_LEFT);
+				
+				if( file_exists("var/contrato/" . $nomeArquivo) && is_readable("var/contrato/" . $nomeArquivo) ) {
+				
+					$tplCTT->atribui("cli",$dadosLogin["cliente"]);
+					$tplCTT->atribui("contrato_detalhado",$contrato_detalhado);
+					$tplCTT->atribui("nome_provedor",$provedor_geral["nome"]);
+					$tplCTT->atribui("cnpj_provedor",$provedor["cnpj"]);
+					$tplCTT->atribui("produto",$contrato_detalhado["nome_produto"]);
+					$tplCTT->atribui("tipo_produto",$contrato_detalhado["tipo_produto"]);
+					$tplCTT->atribui("localidade",$provedor["localidade"]);
+					$tplCTT->atribui("valor_contrato",$contrato_detalhado["valor_produto"]);
+					$tplCTT->atribui("download_kbps", $contrato_detalhado["bl_banda_download_kbps"]);
+					$tplCTT->atribui("forma_pagamento",$forma_pagamento["descricao"]);
+					$tplCTT->atribui("dominio_provedor",strtoupper($provedor_geral["dominio_padrao"]));
+										
+					$contrato_cliente = $tplCTT->obtemPagina($nomeArquivo);
+					
+				
+				
+				}
+				
+				$this->_view->atribui("contrato_cliente",$contrato_cliente);
+				unset($contrato_cliente);
+				
+			
+			}
+			
 		
 		}
 		
@@ -238,8 +263,6 @@
 		 * Lista das Faturas do usuário
 		 */
 		protected function executaContratoFaturas() {
-		
-			// echo "CTT FAT<br>\n";
 		
 			$dadosLogin = $this->_login->obtem("dados");
 			$this->_view->atribuiVisualizacao("contrato_faturas");
@@ -313,10 +336,6 @@
 			
 			$faturas = $listaFaturas;
 			unset($listaFaturas);
-			
-			//echo "<pre>";
-			//print_r($faturas);
-			//echo "</pre>";
 			
 			$this->_view->atribui("faturas",$faturas);
 			

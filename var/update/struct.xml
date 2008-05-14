@@ -1759,6 +1759,23 @@
     <type >timestamp</type>
     <mdb2type >timestamp</mdb2type>
    </data_aceite>
+   <num_parcelas_instalacao >
+    <notnull ></notnull>
+    <nativetype >int2</nativetype>
+    <length >2</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </num_parcelas_instalacao>
+   <vl_parcelas_instalacao >
+    <notnull ></notnull>
+    <nativetype >numeric</nativetype>
+    <length >9,2</length>
+    <default ></default>
+    <type >decimal</type>
+    <mdb2type >decimal</mdb2type>
+   </vl_parcelas_instalacao>
   </fields>
   <indexes >
   </indexes>
@@ -10607,7 +10624,7 @@
   <increment >1</increment>
  </adsq_id_priv>
  <cxsq_autenticacao >
-  <start >167</start>
+  <start >168</start>
   <increment >1</increment>
  </cxsq_autenticacao>
  <blsq_carne_nossonumero >
@@ -10623,7 +10640,7 @@
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >435</start>
+  <start >437</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -10631,15 +10648,15 @@
   <increment >1</increment>
  </cbsq_id_cobranca>
  <cbsq_id_endereco_cobranca >
-  <start >342</start>
+  <start >344</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbtb_faturas_id_cobranca_seq >
-  <start >3999</start>
+  <start >4023</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cxsq_id_fluxo >
-  <start >168</start>
+  <start >169</start>
   <increment >1</increment>
  </cxsq_id_fluxo>
  <cfsq_id_cobranca >
@@ -10679,11 +10696,11 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >1511</start>
+  <start >1513</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >327</start>
+  <start >329</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <id_venda_seq >
@@ -10711,7 +10728,7 @@
   <increment >1</increment>
  </lgtb_contas_excluidas_id_excluida_seq>
  <lgtb_reagendamento_id_reagendamento_seq >
-  <start >12</start>
+  <start >13</start>
   <increment >1</increment>
  </lgtb_reagendamento_id_reagendamento_seq>
  <lgtb_renovacao_id_renovacao_seq >
@@ -10735,7 +10752,7 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >582</start>
+  <start >584</start>
   <increment >1</increment>
  </spsq_id_spool>
  <pfsq_id_forma_pagamento >
@@ -10795,11 +10812,11 @@
   <increment >1</increment>
  </cbsq__d_retorno>
  <hdsq_id_chamado >
-  <start >86</start>
+  <start >92</start>
   <increment >1</increment>
  </hdsq_id_chamado>
  <hdsq_id_historico >
-  <start >280</start>
+  <start >299</start>
   <increment >1</increment>
  </hdsq_id_historico>
  <hdsq_id_grupo >
@@ -10819,7 +10836,7 @@
   <increment >1</increment>
  </casq_id_bloco>
  <evsq_id_evento >
-  <start >434</start>
+  <start >435</start>
   <increment >1</increment>
  </evsq_id_evento>
 </sequences>
@@ -10838,7 +10855,7 @@
   <argtypes >
    <int i="0">int4</int>
   </argtypes>
-  <src >&#10;&#10;&#10;DECLARE&#10;r record;&#10;id_contrato_original integer;&#10;BEGIN&#10;id_contrato_original := origem_contrato_migrado(id_contrato);&#10;&#10;SELECT data_contratacao INTO r FROM cbtb_contrato WHERE id_cliente_produto = id_contrato_original;&#10;&#10;RETURN r.data_contratacao;&#10;&#10;END&#10;&#10;&#10;</src>
+  <src >&#10;&#10;&#10;&#10;DECLARE&#10;r record;&#10;id_contrato_original integer;&#10;BEGIN&#10;id_contrato_original := origem_contrato_migrado(id_contrato);&#10;&#10;SELECT data_contratacao INTO r FROM cbtb_contrato WHERE id_cliente_produto = id_contrato_original;&#10;&#10;RETURN r.data_contratacao;&#10;&#10;END&#10;&#10;&#10;&#10;</src>
  </data_contratacao>
  <origem_contrato_migrado >
   <name >origem_contrato_migrado</name>
@@ -10851,7 +10868,7 @@
   <argtypes >
    <int i="0">int4</int>
   </argtypes>
-  <src >&#10;&#10;DECLARE&#10;r record;&#10;retorno integer;&#10;BEGIN&#10;   SELECT id_cliente_produto INTO r FROM cbtb_contrato WHERE migrado_para = id_contrato;&#10;&#10;   IF r.id_cliente_produto is null  THEN &#10;      RETURN id_contrato;&#10;   END IF;&#10;&#10;   RETURN origem_contrato_migrado(r.id_cliente_produto);&#10;&#10;END;&#10;&#10;</src>
+  <src >&#10;&#10;&#10;DECLARE&#10;r record;&#10;retorno integer;&#10;BEGIN&#10;   SELECT id_cliente_produto INTO r FROM cbtb_contrato WHERE migrado_para = id_contrato;&#10;&#10;   IF r.id_cliente_produto is null  THEN &#10;      RETURN id_contrato;&#10;   END IF;&#10;&#10;   RETURN origem_contrato_migrado(r.id_cliente_produto);&#10;&#10;END;&#10;&#10;&#10;</src>
  </origem_contrato_migrado>
 </procedures>
 </database>
