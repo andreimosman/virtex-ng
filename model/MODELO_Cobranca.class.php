@@ -159,6 +159,8 @@
 
 			$data = MData::proximoDia($dia_vencimento,$data_contratacao);
 			
+			//echo "DATA: $data<br>\n";
+			
 			$itens_fatura = array();
 
 			if( $pagamento == "POS" ) {
@@ -218,7 +220,7 @@
 
 				$faturas[] = array("data"=>$data_contratacao,"valor" => $valor_fatura,"composicao" => $composicao);
 
-				$valor_fatura = $valor+$valor_comodata;
+				$valor_fatura = $valor+$valor_comodato;
 				$composicao["prorata_plano"] = '';
 				$composicao["prorata_comodato"] = '';
 				$composicao["dias_prorata"] = '';
@@ -227,6 +229,8 @@
 				$composicao["instalacao"] = '';
 
 			}
+			
+			//echo "MESES COBRADOS: $meses_cobrados<br>\n";
 			
 			
 			if( $meses_cobrados == 1 && $prorata["dias_prorata"] < 30) {
@@ -238,6 +242,8 @@
 			if( $pagamento == "POS" && $meses_cobrados == 1) {
 				$vigencia++;
 			}
+			
+			// $ultimaData = 
 			
 			for( ; $meses_cobrados < $vigencia ; $meses_cobrados++ ) {
 				$got = false;
@@ -274,6 +280,9 @@
 					$d = $dia_vencimento;
 
 					// Incrementa 1 mês
+					if( $meses_cobrados == 1 && $data == "$d/$m/$a" ) {
+						$incrementa = 1;
+					}
 					
 					if( $pagamento == "PRE" && $meses_cobrados == 1 && !$incrementa) {
 						// echo "MESES 01, n/a<br>\n";
