@@ -32,28 +32,31 @@ label {
 
 	reVazio = /^\s*$/;
 
-	function condominiosValidacaoForm() {
+	function hdUsuarioValidacaoForm() {
 
-		formcondominio = document.getElementById("condominio");
+		var frm = document.hd_usuario_grupo;
 
-		for (i=0; i<formcondominio.length; i++) {
-			idstring = formcondominio[i].id;
-			if(idstring) {
-				estring = idstring;
-				estring += " = document.getElementById('" + idstring + "')";
-				//alert(estring);
-				eval (estring);
-			}
+		if( "" == frm.id_admin.value ) {
+			window.alert("Favor informar o administrador.");
+			frm.id_admin.focus();
+			return(false);
 		}
 
-		if (reVazio.test(id_admin.value)) {
-			alert("Um administrador deve ser selecionado");
-			nome.value="";
-			id_admin.focus();
+		if( "" == frm.admin.value ) {
+			window.alert("Favor indicar se o operador escolhido é o administrador do grupo.");
+			frm.admin.focus();
 			return false;
 		}
 
+		if( "" == frm.ativo.value ) {
+			window.alert("Favor indicar se o administrador está ativo no grupo.");
+			frm.ativo.focus();
+			return false;
+		}
+
+
 		return true;
+
 	}
 
 	function desabilitarForm() {
@@ -92,7 +95,7 @@ label {
 </script>
 
 
-<form name="grupo" id="grupo" method="post" action="admin-administracao.php" onSubmit="return condominiosValidacaoForm()">
+<form name="hd_usuario_grupo" id="grupo" method="post" action="admin-administracao.php" onSubmit="return hdUsuarioValidacaoForm()">
 	<input type="hidden" name="op" value="{$op}">
 	<input type="hidden" name="tela" value="{$tela}">
 	<input type="hidden" name="subtela" value="{$subtela}">
@@ -120,7 +123,6 @@ label {
 							</select>
 							{else}
 							<input READONLY="true" type="text" name="nome_admin" value="{$admnome}" id="nome_admin" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" />
-							<input type="hidden" name="id_admin" value="{$id_admin}" />
 							{/if}
 						</td>
 					</tr>

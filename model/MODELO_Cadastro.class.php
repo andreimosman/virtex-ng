@@ -82,6 +82,7 @@
 		 *	BLOCO/PRÉDIO
 		 */		
 		public function cadastrarCondominioBloco ($id_condominio, $nome, $numero_andares, $apartamentos_andar, $total_apartamentos, $situacao, $id_pop, $observacoes) {
+			// Insere
 			return $this->catb_condominio_bloco->cadastrarCondominioBloco ($id_condominio, $nome, $numero_andares, $apartamentos_andar, $total_apartamentos, $situacao, $id_pop, $observacoes);
 		}
 		

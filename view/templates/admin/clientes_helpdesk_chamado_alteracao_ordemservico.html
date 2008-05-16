@@ -34,13 +34,12 @@ var enderecos_cobranca = eval({$enderecos_cobranca});
 var enderecos_instalacao = eval({$enderecos_instalacao});
 var endereco_cliente = eval({$endereco_cliente});
 
-
 {literal}
 
 	reVazio = /^\s*$/;
 
 	function helpdeskValidaCadastro() {
-		formhelpdesk = document.getElementById("formhelpdesk");
+		var formhelpdesk = document.formhelpdesk;
 
 		for (i=0; i<formhelpdesk.length; i++) {
 			idstring = formhelpdesk[i].id;
@@ -58,7 +57,6 @@ var endereco_cliente = eval({$endereco_cliente});
 			assunto.focus();
 			return false;
 		}
-
 
 		if(estaVazio(descricao.value)) {
 			alert("A descrição do chamado deve ser preenchida");

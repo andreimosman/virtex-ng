@@ -1726,14 +1726,44 @@
 				
 				
 				case 'alteracao': 		//Alteração de chamados existentes
-				
 					$id_chamado = $_REQUEST["id_chamado"];
 				
 					if(!$acao) {
 					
 						$equipamentos = VirtexModelo::factory("equipamentos");
+						$cadastro = VirtexModelo::factory("cadastro");
 						//Seleciona o chamado desejado
 						$chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
+						
+						$info_cliente_chamado = array();
+
+						//CLIENTE
+						if($chamado["id_cliente"]) {
+							$info_cliente_chamado = $this->clientes->obtemPeloId($chamado["id_cliente"]);
+							
+							
+							$condominio = array();
+							
+							if( $info_cliente_chamado["id_condominio"] ) {
+								$condominio = $cadastro->obtemCondominio($info_cliente_chamado["id_condominio"]);
+							}
+							
+							$bloco = array();
+
+							if( $info_cliente_chamado["id_bloco"] ) {
+								$bloco = $cadastro->obtemCondominioBloco(null,$info_cliente_chamado["id_bloco"]);
+							}
+							
+							$info_cliente_chamado["condominio"] = $condominio;
+							$info_cliente_chamado["bloco"] = $bloco;
+							
+							//echo "<pre>"; 
+							//print_r($info_cliente_chamado);
+							//echo "</pre>"; 
+							$chamado["cliente_nome"] = @$info_cliente_chamado["nome_razao"];	
+						}
+						
+						$this->_view->atribui("info_cliente_chamado",$info_cliente_chamado);
 						
 
 						if($chamado) {
@@ -1758,11 +1788,6 @@
 							
 							//Confere a existência de determinados campos relacionados
 							
-							//CLIENTE
-							if($chamado["id_cliente"]) {
-								$info_cliente_chamado = $this->clientes->obtemPeloId($chamado["id_cliente"]);
-								$chamado["cliente_nome"] = @$info_cliente_chamado["nome_razao"];	
-							}
 							
 							//CONTA
 							if ($chamado["id_conta"]) {

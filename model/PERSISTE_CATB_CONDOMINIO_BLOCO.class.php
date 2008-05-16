@@ -44,8 +44,10 @@
 			if($id_pop) {
 				$dados["id_pop"] = $id_pop;
 			}
-
+			
+			// Insere
 			$retorno = $this->insere($dados);
+			
 			return $retorno;
 		}
 		

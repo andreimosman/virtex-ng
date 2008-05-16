@@ -1069,6 +1069,7 @@
 						} else if ($id_condominio) {	// GRAVACAO 
 						
 							$novoid = $this->cadastro->cadastrarCondominioBloco( $dados["id_condominio"], $dados["nome"], $dados["numero_andares"], $dados["apartamentos_andar"], $dados["total_apartamentos"], $dados["situacao"], $dados["id_pop"], $dados["observacoes"] );
+							
 							if($novoid) {
 								$mensagem = "Bloco/Prédio do Condomínio cadastrado com sucesso.";
 								$url = "admin-cadastro.php?op=condominios&tela=cadastro&visualizacao=1&id_condominio=" . $dados["id_condominio"];

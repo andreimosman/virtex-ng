@@ -27,6 +27,14 @@
  	font-size: 10px;
 }
 
+.fieldDisabled {
+	margin-right: 5px;
+ 	font-family: verdana;
+ 	font-size: 10px;
+}
+
+
+
 form input.checkbox {
 	border: 0px;
 }

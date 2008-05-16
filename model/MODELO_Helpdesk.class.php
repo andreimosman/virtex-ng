@@ -96,6 +96,7 @@
 		
 		//faz o cadastro de um novo administrador em um determinado grupo
 		public function cadastraUsuarioGrupo($id_grupo, $id_admin, $admin, $ativo) {
+			// Insere
 			$dados = array("id_grupo" => $id_grupo, "id_admin" => $id_admin, "nome" =>$nome, "admin" => $admin, "ativo" => $ativo);
 			$retorno = $this->hdtb_admin_grupo->insere($dados);
 			return $retorno;
