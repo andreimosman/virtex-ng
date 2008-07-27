@@ -1,0 +1,169 @@
+<html>
+<head>
+	<title></title>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+{/literal}
+</style>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<br />
+
+<form method="post" action="admin-financeiro.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
+<input type="hidden" name="id_cliente" value="{$id_cliente}">
+<input type="hidden" name="acao" value="renovar">
+
+<table border=0 align="center" width="700" cellpadding=0 cellspacing=0>
+{if $erro}
+<tr>
+	<td colspan=2 align="center" style="border-bottom: solid 1px #FF0000; background: #Fa8888;"><span style="font-size: 14px"><strong>{$erro}</strong></span></td>
+</tr>
+{/if}
+
+	<tr>
+		<td width="420" valign="top" align="left">
+
+			<table width="420" class=lista align="center">
+			 <tr>
+				<th colspan="2">Renovar Contrato</th>
+			 </tr>
+			 <tr>
+				<td align="right" width="120"><strong>Contratante:<strong></td>
+				<td>{$cliente.nome_razao}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Contrato #:<strong></td>
+				<td>{$contrato.id_cliente_produto|string_format:"%06d"}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Data da Contratação:<strong></td>
+				<td>{$contrato.data_contratacao|date_format:"%d/%m/%Y"}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Data da Renovação:<strong></td>
+				<td>{$contrato.data_renovacao|date_format:"%d/%m/%Y"}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Renovar Até:<strong></td>
+				<td>{$renovarAte}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Produto:<strong></td>
+				<td>{$produto.nome}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Valor:<strong></td>
+				<td>{$produto.valor|string_format:"%.2f"}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Pagamento:<strong></td>
+				<td>{if $pagamento=="PRE"}?Pré Pago{else}Pós Pago{/if}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Vigência:<strong></td>
+				<td>{$vigencia}</td>
+			 </tr>
+			 <tr>
+				<td align="right" width="130"><strong>Forma de Pagto:<strong></td>
+				<td>{$tipos_cobranca[$forma_pagamento.tipo_cobranca]}</td>
+			 </tr>
+			</table>
+		</td>
+		<td valign="top" style="padding-top: 2px;">
+
+
+			<table width="100%" class="lista" cellpadding=0 cellspacing=0 align="center">
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação</th>
+				</tr>
+				<tr>
+					<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+				</tr>
+				<tr>
+					<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" id="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" class="botao" name="submit" id="submit" value="Renovar">
+					</td>
+				</tr>
+
+			</table>
+			<p style="text-align: justify; margin-top: 5px;"><span style="font-family: arial,verdana; font-size: 9px; color: orange; padding-left: 10px;">
+			Para operações que demandem atualização dos dados cadastrais, dia de vencimento, ou forma de pagamento utilize a migração de contrato.<br><br>
+			Clique <a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}" style="color: blue;">aqui</a> para acessar o contrato do cliente.</a>
+			</span></p>
+
+
+		</td>
+	</tr>
+</table>
+
+<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
+	<tr>
+		<th colspan=2 style="border-right: solid 2px #000000;">faturas</th>
+		<th colspan=5 style="border-right: solid 2px #000000;">composição dos valores</th>
+		<th>obs</th>
+	</tr>
+	<tr>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Data</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 2px #000000; border-bottom: solid 1px #000000;">Valor(=)</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Plano(+)</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Comodato(+)</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pró-Rata (dias)</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Desconto(-)</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-right: solid 2px #000000; border-bottom: solid 1px #000000;">Tx. Instalação(+)</td>
+		<td bgcolor="#f0f0f0" align="center" style="border-bottom: solid 1px #000000;" width="100">&nbsp;</td>
+	</tr>
+{if $produto.valor > 0}
+	<!-- FATURAS QUE SERAO CADASTRADAS -->
+
+
+		{foreach name=registros item=f from=$faturas}
+		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+		<tr>
+			<td class='{$estilo}' aling="center" style="border-right: solid 1px #000000;">{$f.data}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{$f.valor|string_format:"%.2f"}</td>
+			<!-- COMPOSICAO DE VALORES -->
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_plano}{$f.composicao.prorata_plano|string_format:"%.2f"}{else}{if $f.composicao.valor}{$f.composicao.valor|string_format:"%.2f"}{else}-{/if}{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>
+			<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{if $f.composicao.instalacao}{$f.composicao.parcela_instalacao}: {$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
+			<td class='{$estilo}' style="padding-left: 5px;"><strong>{if $f.diff < 0}<span style="color: red;">Em Atrazo</span>{else}<span style="color: blue;">A vencer</span>{/if}</strong></td>
+		</tr>
+		{/foreach}
+
+{else}
+	<tr>
+		<td colspan="7" class='{$estilo}' align="center" style="border-right: solid 2px #000000;"><br /><span style=" color:red; font-weight: bold;">*** Contrato cortesia faturamento não aplicável ***</span><br /><br /> </td>
+		<!-- COMPOSICAO DE VALORES>
+		<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+		<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+		<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+		<td class='{$estilo}' align="center" style="border-right: solid 1px #000000;">*</td>
+		<td class='{$estilo}' align="center">*</td-->
+	</tr>
+{/if}
+</table>
+<p align="center" style="margin-top: 5px; font-family: arial,verdana; font-size: 10px; color: blue"><a href="admin-financeiro.php?op=renovar_contrato" style="color: blue;">voltar</a></p>
+
+<br />
+</form>
+
+
+</body>
+</html>

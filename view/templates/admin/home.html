@@ -31,12 +31,12 @@ a:hover{
 		<tr><td align="right"><b>Telefone</b> </td><td>{$licenca.empresa.telefone}</td></tr>
 		<tr><td align="right"><b>Cidade</b></td><td>{$licenca.empresa.cidade}</td></tr>
 		<tr><td>&nbsp;</td></tr>
-		<tr><td align="right"><b>Licença emitida em</b></td><td>{$licenca.geral.emitida_em}</td></tr>
+		<tr><td align="right"><b>Licença emitida em</b></td><td>{$licenca.geral.emitida_em|date_format:"%d/%m/%Y"}</td></tr>
 
-		<tr><td align="right"><b>Expira em</b> </td><td>{$licenca.geral.expira_em}</td></tr>
+		<tr><td align="right"><b>Expira em</b> </td><td>{$licenca.geral.expira_em|date_format:"%d/%m/%Y"}</td></tr>
 
 		{if $congelamento}
-		<tr><td align="center" colspan=2 style="color:red"><b>Licensa expirada. Data de congelamento: {$licenca.geral.congela_em}</b> </td></tr>
+		<tr><td align="center" colspan=2 style="color:red"><b>Licensa expirada. Data de congelamento: {$licenca.geral.congela_em|date_format:"%d/%m/%Y"}</b> </td></tr>
 		{/if}
 
 	</table>
@@ -44,10 +44,11 @@ a:hover{
 	<table class="lista" width="35%">
 		<tr><th>Cobrança/Contrato</th></tr>
 		<tr><td align="center"><b>No momento existem {$countBloqueados} <a href="admin-financeiro.php?op=bloqueios">clientes passíveis de <span style="color:red;">bloqueio.</b></span></a></td></tr>
-			</td>
-		</tr>
+		{if $exibir_renovacao}
+		<tr><td align="center"><b>{if $countRenovacao}Existe{if $countRenovacao>1}m{/if} {$countRenovacao} contrato{if $countRenovacao>1}s{/if} para <a href="admin-financeiro.php?op=renovar_contrato"><span style="color:blue;">renovação</span></a>.</b></span></a>{else}Não existem contratos a serem renovados{/if}</b></td></tr>
+		{/if}
 	</table>
-	<div align="center" style="margin-top:300px; font-size:10px; font-family:Verdana, Arial, Helvetica, sans-serif;">
+	<div align="center" style="margin-top:70px; font-size:10px; font-family:Verdana, Arial, Helvetica, sans-serif;">
 		<table class="lista" width="35%">
 			<tr><th>Suporte Técnico Mosman Consultoria</th></tr>
 			<tr><td align="center"><a href="http://www.mosman.com.br/">www.mosman.com.br</a></tr></td>

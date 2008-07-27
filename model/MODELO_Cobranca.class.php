@@ -17,6 +17,7 @@
 		protected $preferencias;
 		
 		protected $lgtb_reagendamento;
+		protected $lgtb_renovacao;
 
 		protected $cltb_cliente;
 		protected $prtb_produto;
@@ -30,6 +31,7 @@
 		
 		protected $cbtb_remessa;
 		protected $cbtb_retorno;
+		protected $cbtb_retorno_erro;
 		
 		protected static $moeda = 9;
 
@@ -40,7 +42,7 @@
 			$this->cbtb_contrato = VirtexPersiste::factory("cbtb_contrato");
 			$this->cbtb_endereco_cobranca = VirtexPersiste::factory("cbtb_endereco_cobranca");
 			$this->cbtb_retorno = VirtexPersiste::factory("cbtb_retorno");
-
+			$this->cbtb_retorno_erro = VirtexPersiste::factory("cbtb_retorno_erro");
 
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
 			// $this->cbtb_fatura_itens = VirtexPersiste::factory("cbtb_fatura_itens");
@@ -52,6 +54,7 @@
 			$this->prtb_produto = VirtexPersiste::factory("prtb_produto");
 			
 			$this->lgtb_reagendamento = VirtexPersiste::factory("lgtb_reagendamento");
+			$this->lgtb_renovacao = VirtexPersiste::factory("lgtb_renovacao");
 
 			$this->cbtb_lote_cobranca = VirtexPersiste::factory("cbtb_lote_cobranca");
 			$this->cbtb_lote_fatura = VirtexPersiste::factory("cbtb_lote_fatura");
@@ -121,6 +124,14 @@
 			return($retorno);
 
 		}
+		
+		/**
+		 * Função utilizada para contratos antigos onde o dia do vencimento não está gravado no banco de dados.
+		 */
+		public function obtemDiaVencimento($id_cliente_produto) {
+			return($this->cbtb_fatura->obtemDiaVencimento($id_cliente_produto));
+		}
+		
 
 
 		/**
@@ -135,9 +146,11 @@
 		 */
 		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao) {
 			$faturas = array();
-
+			
  			$descontos_aplicados = 0;
 			$meses_cobrados = 0;
+			
+			if( !$parcelamento_instalacao ) $parcelamento_instalacao = 1;
 			
 			$parcelaInstalacao = $tx_instalacao / $parcelamento_instalacao;
 			$parcelaInstalacao = (float) number_format($parcelaInstalacao,2,".","");
@@ -168,6 +181,8 @@
 				// Pagamento pós pago
 
         		$composicao = array();
+        		
+        		
 
         		if( ((float)$tx_instalacao) > 0 ) {
         			// echo "TX!!";
@@ -202,14 +217,13 @@
 					$composicao["valor"] = $valor;
 					$composicao["comodato"] = $valor_comodato;
 				}
-
         		if( ((float)$tx_instalacao) > 0) {
 					$valor_fatura += $parcelaInstalacao;
 					$composicao["parcela_instalacao"] = ($parcelasInstCobradas + 1) . "/" . $parcelamento_instalacao;
 					$composicao["instalacao"] = $parcelaInstalacao;
 					$parcelasInstCobradas++;
 				}
-
+				
 				if( $desconto_valor && $desconto_periodo > 0 ) {
 					$valor_fatura -= $desconto_valor;
 					$descontos_aplicados++;
@@ -290,15 +304,18 @@
 						$data = MData::adicionaMes("$d/$m/$a",1);
 					}
 				}
-
+				
+				// echo "TESTE";
+				
 				if( $desconto_valor > 0 && $descontos_aplicados < $desconto_periodo ) {
+					// echo "APLICANDO!!!<br>\n ";
 					$valor_fatura -= $desconto_valor;
 					$descontos_aplicados++;
 
 					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
 				}
 
-				if( $parcelasInstCobradas < $parcelamento_instalacao ) {
+				if( $tx_instalacao > 0 && $parcelasInstCobradas < $parcelamento_instalacao ) {
 					// echo "MC: " . $meses_cobrados ."<br>\n";
 					// echo "parcInst: " . $parcelasInstCobradas . "<br>\n";
 					$composicao["parcela_instalacao"] = ($parcelasInstCobradas + 1) . "/" . $parcelamento_instalacao;
@@ -468,6 +485,11 @@
 						
 			$this->cbtb_contrato->insere($dados);
 			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeira_fatura,      $prorata,   $limite_prorata, $parcelas_instalacao) : array();
+			
+			$this->cadastraFaturas($todas_faturas,$formaPagto,$dados_produto,$data_contratacao,$id_cliente_produto,$id_cliente);
+			
+			/**
+			
 			$id_cobranca = 0;
 			// gera carne
 			if ($formaPagto ['carne'] == 't' && count ($todas_faturas) > 0) {
@@ -527,6 +549,8 @@
 				$this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $dados_produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
 
 			}
+			
+			*/
 
 			//$preferencias = VirtexModelo::factory('preferencias');
 
@@ -571,8 +595,6 @@
 
 				$contas->cadastraEnderecoInstalacao($id_conta,$endereco_instalacao["endereco"],$endereco_instalacao["complemento"],$endereco_instalacao["bairro"],$endereco_instalacao["id_cidade"],$endereco_instalacao["cep"],$endereco_instalacao["id_condominio_instalacao"], $endereco_instalacao["id_bloco_instalacao"],$endereco_instalacao["apto_instalacao"], $id_cliente);
 				
-				
-
 			}
 
 			return($id_cliente_produto);
@@ -649,20 +671,25 @@
 
 		public function obtemFaturasPorCarne($id_carne) {
 			$filtro = array("status" => "A", "id_carne" => $id_carne);
-			return($this->cbtb_fatura->obtem($filtro));
+			return($this->cbtb_fatura->obtem($filtro,"data DESC"));
 		}
 
 
 		/**
 		 *
 		 */
-		public function obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas=false) {
+		public function obtemFaturasPorContrato($id_cliente_produto,$exibirEstornadas=false,$exibirCortesias=false) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
 
 			if( !$exibirEstornadas ) {
 				$filtro["status"] = "!=:E";
 			}
-			$faturas = $this->cbtb_fatura->obtem($filtro);
+			
+			if( !$exibirCortesias ) {
+				$filtro["valor"] = ">:0";
+			}
+			
+			$faturas = $this->cbtb_fatura->obtem($filtro, "data DESC");
 
 			$hoje = date("Y-m-d");
 			list($aH,$mH,$dH) = explode("-",$hoje);
@@ -832,7 +859,7 @@
 		}
 
 		public function obtemFaturaPeloCodigoBarras ($codigo) {
-			return ($this->cbtb_fatura->obtemUnico (array ("cod_barra" => $codigo)));
+			return ($this->cbtb_fatura->obtemUnico (array ("cod_barra" => trim($codigo))));
 		}
 		
 		public function obtemFaturaPeloNossoNumero ($nosso_numero) {
@@ -898,7 +925,10 @@
 			if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or
 				$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
 				$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
-				return false;
+				
+				throw new ExcecaoModeloValidacao (1, "Fatura já foi paga/processada.");
+				
+				// return false;
 			}
 
 			$totalDevido = $fatura["valor"] - $desconto + $acrescimo;
@@ -916,7 +946,12 @@
 					$data["status"] = PERSISTE_CBTB_FATURAS::$PARCIAL;
 					$data["pagto_parcial"] = $data["valor_pago"];
 				} elseif($amortizar > $totalDevido){
-					 throw new ExcecaoModeloValidacao (1,"Valor a receber excede o valor pendente!");
+					 if( $id_retorno ) {
+					 	// Joga como acrescimo. (junta com os acrescimos fornecidos). (quando enviado pelo banco).
+					 	$acrescimo += $amortizar - $totalDevido;
+					 } else {
+					 	throw new ExcecaoModeloValidacao (1,"Valor a receber excede o valor pendente!");
+					 }	 
 				}
 
 			} elseif($amortizar == 0) {
@@ -945,7 +980,6 @@
 				
 				$lgtb_reagendamento = VirtexPersiste::factory("lgtb_reagendamento");
 				$lgtb_reagendamento->insere($dadosLog);
-				
 				
 			}
 			
@@ -1173,6 +1207,159 @@
 			$retorno = $this->cbtb_comissao->insere($dados);
 			return $retorno;
 		}
+		
+
+		// TODO LIST
+		public function obtemContratosParaRenovacao() {
+			$retorno = $this->cbtb_contrato->obtemContratosRenovacao();
+			
+			
+			// TODO: LISTAR AS FATURAS PENDENTES.
+			for($i=0;$i<count($retorno);$i++) {
+				$retorno[$i]["faturas_pendentes"] = $this->cbtb_fatura->obtemNumeroFaturasPendentes($retorno[$i]["id_cliente_produto"]);
+
+			}
+	
+			return($retorno);
+		}
+		
+		/**
+		 * Registro de renovação de contrato.
+		 */
+		public function insereLogRenovacao($id_cliente_produto,$data_renovacao,$data_proxima_renovacao,$historico="") {
+			$dados = array("id_cliente_produto" => $id_cliente_produto, "data_renovacao" => $data_renovacao, "data_proxima_renovacao" => $data_proxima_renovacao, "historico" => $historico);
+			return($this->lgtb_renovacao->insere($dados));
+		}
+		
+		/**
+		 * Renovacao de Contrato
+		 *
+		 * Atualiza as informações do contrato para renovacao.
+		 */
+		public function renovaContrato($id_cliente_produto,$data_renovacao,$pagamento,$desconto_promo,$periodo_desconto) {
+		
+			$dados = array("data_renovacao" => $data_renovacao, "pagamento" => $pagamento, "desconto_promo" => $desconto_promo, "periodo_desconto" => $periodo_desconto);
+			$filtro = array("id_cliente_produto" => $id_cliente_produto);
+			
+			$this->cbtb_contrato->altera($dados,$filtro);
+			
+		
+			
+		}
+
+
+
+		/**
+		 * cadastraFaturas
+		 *
+		 * Cadastra as faturas com base na forma de pagamento.
+		 *
+		 */
+		
+		function cadastraFaturas($faturas,$formaPagto,$produto,$data_geracao,$id_cliente_produto,$id_cliente) {
+
+			$id_cobranca = 0;
+			$gera_carne = false;
+			
+			$prefProv = $this->preferencias->obtemPreferenciasProvedor();
+			
+			$id_forma_pagamento = $formaPagto['id_forma_pagamento'];
+			
+			if ($formaPagto ['carne'] == 't' && count ($faturas) > 0) {
+				$gera_carne = true;
+				$soma_fatura = 0;
+				foreach ($faturas as $fatura){
+					$soma_fatura += $fatura ["valor"];
+				}
+
+				$dados = array (
+					'data_geracao' => $data_geracao,
+					'id_cliente_produto' => $id_cliente_produto,
+					'valor' => $soma_fatura,
+					'vigencia' => count ($faturas),
+					'id_cliente' => $id_cliente,
+				);
+
+				$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
+				//echo "CRIAR CARNE!!!\n";
+				//print_r($dados);
+				//$id_cbtb_carne = 9999;
+			}
+
+			for( $i=0;$i<count($faturas);$i++) {
+				$fatura = $faturas[$i];
+				$cod_barra = "";
+				$linha_digitavel = "";
+				$nosso_numero = "";
+				
+				///ECHO  $fatura["valor"];
+
+				if ($gera_carne) {
+					// gera codigo de barras
+					$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_pagamento);
+
+					// ($banco,$agencia,$conta,$carteira,$convenio,$vencimento,$valor,$id,$moeda=9,$cnpj_ag_cedente="",$codigo_cedente="",$operacao_cedente="")
+
+					
+
+					switch ($formaPagto ["tipo_cobranca"]) {
+						case "PC":
+							$cod_barra = MArrecadacao::codigoBarrasPagContas ($fatura ["valor"], $prefProv ['cnpj'], $nosso_numero, $fatura ['data']);
+							$linha_digitavel = MArrecadacao::linhaDigitavel ($cod_barra);
+							break;
+						case "BL":
+							$boleto = MBoleto::factory ($formaPagto["codigo_banco"],$formaPagto["agencia"],$formaPagto["conta"],$formaPagto["carteira"],$formaPagto["convenio"],$fatura['data'],$fatura ['valor'],$nosso_numero,self::$moeda,$formaPagto ['cnpj_ag_cedente'],$formaPagto ['codigo_cedente'],$formaPagto ['operacao_cedente']);
+							$cod_barra = $boleto->obtemCodigoBoleto ();
+							$linha_digitavel = $boleto->obtemLinhaDigitavel();
+							break;
+						case "MO":
+							// Carnê genérico
+							$carne = new MCarne($fatura["valor"],$id_cliente_produto,$nosso_numero,$fatura['data']);
+							$cod_barra = $carne->obtemCodigoBarras();
+							$linha_digitavel = $carne->obtemLinhaDigitavel();
+							break;
+					}
+
+				}
+				
+				//echo "CADASTRA_FATURA\n";
+				//print_r(array($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra));
+
+				$this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
+				
+
+			}
+			
+			// Caso tenha gerado o carnê retorna o número do mesmo, caso contrário retorna vazio.
+			return($gera_carne?$id_cbtb_carne:"");
+			
+		}
+		
+		public function registraErroRetorno($id_retorno,$id_cobranca,$codigo_barra,$mensagem) {
+			$dados = array("id_retorno" => $id_retorno, "codigo_barra" => $codigo_barra, "mensagem" => $mensagem);
+			
+			if( $id_cobranca ) {
+				$dados["id_cobranca"] = $id_cobranca;
+			}
+			
+			return($this->cbtb_retorno_erro->insere($dados));
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 

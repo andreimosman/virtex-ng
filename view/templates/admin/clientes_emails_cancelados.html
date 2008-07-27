@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+<br>
+
+
+<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border='0' >
+	<tr>
+		<th>Email</th>
+		<th align="left">Contrato</th>
+		<th>Quota</th>
+	</tr>
+	{foreach item=e from=$emails}
+	<tr class='{cycle values="impar,par"}'>
+		<td><a href="admin-clientes.php?op=emails_cancelados&tela=recuperar&id_cliente={$id_cliente}&id_conta={$e.id_conta}">{$e.username}@{$e.dominio}</a></td>
+		<td align="left"><a href="admin-clientes.php?op=emails_cancelados&tela=recuperar&id_cliente={$id_cliente}&id_conta={$e.id_conta}">{$e.id_cliente_produto|string_format:"%06d"}</a></td>
+		<td align="right"><a href="admin-clientes.php?op=emails_cancelados&tela=recuperar&id_cliente={$id_cliente}&id_conta={$e.id_conta}">{$e.quota}</a></td>
+	</tr>
+	{/foreach}
+
+
+</table>
+
+
+
+
+</body>
+</html>

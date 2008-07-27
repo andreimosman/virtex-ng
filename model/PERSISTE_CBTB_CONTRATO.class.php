@@ -290,6 +290,8 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql .= " AND f.id_cliente_produto = $id_cliente_produto ";
 	}
 	
+	$sql .= " AND f.valor > 0 "; // Desconsidera faturas cortesia
+	
 	$sql .= "GROUP BY  ";
 	$sql .= "	f.id_cliente_produto, cl.nome_razao, p.nome, p.tipo, cnt.num_contas ";
 
@@ -340,6 +342,27 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		//echo "$sql";
 		return $this->bd->obtemUnicoRegistro($sql);
 	}
+	
+	public function obtemContratosRenovacao() {
+		
+		$sql  = "SELECT ";
+		$sql .= "   cl.id_cliente, cl.nome_razao, ";
+		$sql .= "	ctt.data_renovacao, ctt.valor_contrato, ";
+		$sql .= "	p.nome, cp.id_cliente_produto, ctt.status ";
+		$sql .= "FROM ";
+		$sql .= "	cbtb_cliente_produto cp INNER JOIN cltb_cliente cl ON (cp.id_cliente = cl.id_cliente) ";
+		$sql .= "   INNER JOIN prtb_produto p ON (cp.id_produto = p.id_produto) ";
+		$sql .= "	INNER JOIN cbtb_contrato ctt ON (cp.id_cliente_produto = ctt.id_cliente_produto) ";
+		$sql .= "WHERE ";
+		$sql .= "	ctt.status = 'A' ";
+		$sql .= "	AND ctt.data_renovacao <= now() + interval '30 day' ";
+		$sql .= "ORDER BY ctt.data_renovacao ASC ";
+		
+				
+		return($this->bd->obtemRegistros($sql));
+	
+	}
+	
 
 }
 

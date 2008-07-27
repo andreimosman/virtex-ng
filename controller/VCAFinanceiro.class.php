@@ -5,6 +5,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 	protected $cobranca;
 	protected $contas;
 	protected $contratos;
+	protected $produtos;
 
 	public function __construct() {
 		parent::__construct();
@@ -15,6 +16,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 		$this->cobranca = VirtexModelo::factory('cobranca');
 		$this->contas = VirtexModelo::factory('contas');
+		$this->produtos = VirtexModelo::factory('produtos');
+		$this->clientes = VirtexModelo::factory('clientes');
 		$this->_view = VirtexViewAdmin::factory('financeiro');
 	}
 
@@ -45,10 +48,267 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			case 'relatorios_faturamento':
 				$this->executaRelatoriosFaturamento();
 				break;
-			case 'download_remessa';
+			case 'download_remessa':
 				$this->executaDownloadRemessa();
 				break;
+			case 'renovar_contrato':
+				$this->executaRenovarContrato();
+				break;
+			
 		}
+	}
+	
+	protected function executaRenovarContrato() {
+	
+		$this->requirePrivLeitura("_FINANCEIRO_COBRANCA_RENOVACAO");
+	
+	
+		$this->_view->atribuiVisualizacao("cobranca");
+		
+		$tela = @$_REQUEST["tela"];
+		if( !$tela ) $tela = "listagem";
+		
+		
+		$id_cliente = @$_REQUEST["id_cliente"];
+		$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+		
+		if( $tela == "listagem" ) {
+			$contratos = $this->cobranca->obtemContratosParaRenovacao();
+			$this->_view->atribui("contratos",$contratos);
+		} else {
+			$this->requirePrivGravacao("_FINANCEIRO_COBRANCA_RENOVACAO");
+			// Valida se o contrato é Renovável.
+			
+			$contrato = $this->cobranca->obtemContratoPeloId($id_cliente_produto);
+			$produto  = $this->produtos->obtemPlanoPeloId($contrato["id_produto"]);
+			$cliente  = $this->clientes->obtemPeloId($id_cliente);
+			
+			$this->_view->atribui("contrato",$contrato);
+			$this->_view->atribui("produto",$produto);
+			$this->_view->atribui("cliente",$cliente);
+			
+			if( !count($produto) || $contrato["valor_produto"] != $produto["valor"] || $produto["disponivel"] != 't' ) {
+				// echo "AS CARACTERÍSTICAS DESSE PRODUTO MUDARAM BLABLA";
+			} else {
+			
+			}
+			
+			$formaPagamento = $this->preferencias->obtemFormaPagamento($contrato["id_forma_pagamento"]);
+			$this->_view->atribui("forma_pagamento",$formaPagamento);
+			
+			$tiposCobranca = $this->preferencias->obtemTiposCobranca();
+			$this->_view->atribui("tipos_cobranca",$tiposCobranca);
+			
+			
+			$prefCobra = $this->preferencias->obtemPreferenciasCobranca();
+			$this->_view->atribui("prefCobra",$prefCobra);
+			
+			// Detalhes da Renovação
+			$dataRenovacao = $contrato["data_renovacao"];
+			$vigencia      = $contrato["vigencia"];
+			$renovarAte    = MData::adicionaMes($dataRenovacao,$vigencia);
+			
+			// Pegar dia do vencimento em contratos antigos.
+			$diaVencimento = $contrato["vencimento"];
+			if( !$diaVencimento ) {
+				$diaVencimento = $this->cobranca->obtemDiaVencimento($contrato["id_cliente_produto"]);
+				if( !$diaVencimento ) {
+					$diaVencimento = $prefCobra["dia_venc"];
+				}
+			}
+			
+			$pagamento = $contrato["pagamento"];
+			if( !$paramento ) {
+				$pagamento = $prefCobra["pagamento"];
+			}
+			
+			// Desconto
+			$periodo_desconto = $contrato["periodo_desconto"];
+			$valor_desconto = $contrato["desconto_promo"];
+			
+			// NÃO PERMITE ACRESCIMOS.
+			if($valor_desconto < 0 ) {
+				$valor_desconto = 0;
+				$periodo_desconto = 0;
+			}
+			
+			if( $periodo_desconto < $vigencia ) {
+				$valor_desconto = 0;
+				$periodo_desconto = 0;
+			} else if($periodo_desconto > $vigencia ) {
+				$periodo_desconto  = $vigencia - $periodo_desconto;
+			}
+
+			// Comodato
+			$comodato = $contrato["comodato"];
+			if( $comodato == 't' ) {
+				$valor_comodato = $contrato["valor_comodato"];
+			}
+			
+			$tx_instalacao = 0; // Não tem tx de instalação na renovação
+
+			// Não tem pro-rata na renovação.
+			$faz_prorata = 0; 
+			$limite_prorata = 0;
+			
+			$parcelamento_instalacao = 0;
+
+			$this->_view->atribui("dataRenovacao",$dataRenovacao);
+			$this->_view->atribui("vigencia",$vigencia);
+			$this->_view->atribui("renovarAte",$renovarAte);
+			$this->_view->atribui("diaVencimento",$diaVencimento);
+			$this->_view->atribui("pagamento",$pagamento);
+			$this->_view->atribui("periodo_desconto",$periodo_desconto);
+			$this->_view->atribui("valor_desconto",$valor_desconto);
+			$this->_view->atribui("comodato",$comodato);
+			$this->_view->atribui("valor_comodato",$valor_comodato);
+			$this->_view->atribui("tx_instalacao",$tx_instalacao);
+			$this->_view->atribui("faz_prorata",$faz_prorata);
+			$this->_view->atribui("limite_prorata",$limite_prorata);
+			$this->_view->atribui("parcelamento_instalacao",$parcelamento_instalacao);
+			
+			// Faturas que serão geradas.
+			$faturas = $this->cobranca->gerarListaFaturas($pagamento,$dataRenovacao,$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao);
+			
+			$hoje = date("d/m/Y");
+			for($i=0;$i<count($faturas);$i++) {
+				$diff = MData::diff($hoje,$faturas[$i]["data"]);
+				$faturas[$i]["diff"] = $diff;
+				
+			}
+			
+			$this->_view->atribui("faturas",$faturas);
+			
+			
+			
+			
+			// VERIFICAR A CONFIRMAÇÃO DA SENHA DO ADMIN!!!!
+			$acao = @$_REQUEST["acao"];
+			$dadosLogin = $this->_login->obtem("dados");
+			$this->_view->atribui("dadosLogin",$dadosLogin);
+			
+			//$acao = "teste";
+			
+			if( $acao ) {
+			
+				$erro = "";
+				
+				$senha_admin = @$_REQUEST["senha_admin"];
+				
+				// $senha_admin = 123;
+
+				if( !$senha_admin ) {
+					$erro = "Operação não autorizada: SENHA NÃO FORNECIDA.";
+				} else {
+					if( md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+						$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
+					}
+
+				}
+
+				$this->_view->atribui("erro",$erro);
+				
+				if( !$erro ) {
+					/**
+					 * FAZ A RENOVACAO!!!
+					 */
+					
+					// Cadastra as novas faturas.
+					$this->cobranca->cadastraFaturas($faturas,$formaPagamento,$produto,$dataRenovacao,$id_cliente_produto,$id_cliente);
+					
+
+					// Atualiza o contrato
+					$this->cobranca->renovaContrato($id_cliente_produto,$renovarAte,$pagamento,$valor_desconto,$periodo_desconto);
+					
+					
+					/**
+					 * LOGGING
+					 */
+					
+					// Registra no log de renovacoes.
+					$this->cobranca->insereLogRenovacao($id_cliente_produto,$dataRenovacao,$renovarAte,"");
+					
+					// Registra no log de eventos.
+					$this->eventos->registraRenovacaoContrato($id_cliente_produto,$this->ipaddr, $id_admin, $dataRenovacao, $renovarAte);
+					
+					/**
+					 * TODO: DESBLOQUEIO
+					 */
+					
+					// Verifica se o registro foi bloqueado.
+					
+					/**
+					 * Renovado com sucesso...
+					 */
+					 
+					$url = "admin-clientes.php?op=contrato&tela=faturas&id_cliente=".$id_cliente."&id_cliente_produto=".$id_cliente_produto."&id_forma_pagamento=" . $formaPagamento["id_forma_pagamento"];					 
+					$this->_view->atribui("url",$url);
+					$this->_view->atribui("mensagem","Contrato renovado com sucesso. Clique em OK para Acessar as Faturas do Contrato.");
+					$this->_view->atribuiVisualizacao("msgredirect");
+								
+				
+				}
+			
+			
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			// $this->_view->atribui("",$);
+			
+			/**
+			echo "<pre>";
+			
+			print_r($faturas);
+			
+			echo "diaVencimento: $diaVencimento\n";
+			echo "dataRenovacao: $dataRenovacao\n";
+			echo "vigencia: $vigencia\n";
+			echo "renovarAte: $renovarAte\n";
+			echo "pagamento: $pagamento\n";
+			
+			//print_r($prefCobra);
+			print_r($contrato);
+			//print_r($produto);
+			//print_r($cliente);
+			//print_r($formaPagamento);
+			//print_r($tiposCobranca);
+			echo "</pre>"; 
+			*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		}
+		
+		$this->_view->atribui("tela",$tela);
+		$this->_view->atribui("id_cliente",$id_cliente);
+		$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
+		
+	
+		//echo "<pre>";
+		
+		//print_r($contratos);
+		
+		//echo "</pre>";
 	}
 
 	protected function executaBloqueios() {
@@ -505,6 +765,11 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			if (empty($msg_error)) {
 				$retorno = MRetorno::factory($formato_retorno,$uploaddir . $nome_arquivo_retorno);
 				$registros = $retorno->obtemRegistros();
+				
+				//echo "<pre>";
+				//print_r($registros);
+				//echo "</pre>";
+
 		
 				$dadosLogin = $this->_login->obtem("dados");
 				$admin['id_admin'] = $dadosLogin["id_admin"];
@@ -516,7 +781,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$numeroRegistrosProcessados = 0;
 				
 				$numeroRegistrosComErro = 0;
-									
+								
 				foreach($registros as $reg) {
 					$observacoes = 'Arquivo de retorno';
 					$numeroTotalRegistros++;
@@ -553,15 +818,14 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							break;
 						
 						case 'PAGCONTAS':
-							//$codigo_barras = $reg['codigo_barras'];
-							//print_r ($reg);
-							//exit;
-	
+							$codigo_barras = $reg['codigo_barras'];
 
-							$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);										
+							$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);	
 							
-							if (empty($fatura))
-								continue;
+							if (empty($fatura)) {
+								$this->cobranca->registraErroRetorno($id_retorno,0,$codigo_barras,"Registro sem correspondência.");
+								continue;								
+							}
 														
 							$id_cobranca = $fatura['id_cobranca'];
 							$reagendar = null;
@@ -584,10 +848,11 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 								$desconto = 0;							
 							}			
 							try {
-								$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno);
+								$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno, $reg["data_credito"]);
 								$numeroRegistrosProcessados++;
 							} catch(Exception $e) {
 								$numeroRegistrosComErro++;
+								$this->cobranca->registraErroRetorno($id_retorno,$id_cobranca,$codigo_barras,$e->getMessage());
 							}
 							
 							break;
@@ -626,7 +891,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				}
 				
 				// echo "TESTE!!!";
-				
 				$data_geracao = $retorno->obtemDataGeracao();
 				
 				// ATUALIZA LOG RETORNO
@@ -639,6 +903,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$msg = $msg_error[0];
 				
 			}
+			
+			// return;
 			
 			
 			$this->_view->atribui("url",$url);

@@ -59,6 +59,10 @@
 				case 'helpdesk':
 					$this->executaHelpdesk();
 					break;
+					
+				case 'emails_cancelados':
+					$this->executaEmailsCancelados();
+					break;
 
 				default:
 					// Do Something
@@ -905,6 +909,9 @@
 					if( $this->requirePrivGravacao("_CLIENTES_FATURAS_DESCONTO",false)) {
 						$this->_view->atribui("podeConcederDesconto", true);
 					}
+					
+					$podeReagendar = $this->requirePrivGravacao("_CLIENTES_FATURAS_REAGENDAMENTO",false);
+					$this->_view->atribui("podeReagendar", $podeReagendar);
 
 					$id_cliente_produto = @$_REQUEST ['id_cliente_produto'];
 					$id_cliente = @$_REQUEST ['id_cliente'];
@@ -974,8 +981,7 @@
 
 
 					$fatura = $cobranca->obtemFaturaPorIdCobranca ($id_cobranca);
-
-
+					
 					foreach($fatura as $k => $v){
 						if("data"  == $k ) {
 							$v = strftime("%d/%m/%Y",strtotime($v));
@@ -988,13 +994,18 @@
 					$this->_view->atribui ("valor_restante", $valor_restante);
 
 
-					if(	!$this->requirePrivGravacao("_CLIENTES_FATURAS",false) ||
-						$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA ||
-						$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA ||
-						$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
-							$this->_view->atribui ("editavel", false);
+					if(	!$this->requirePrivGravacao("_CLIENTES_FATURAS",false) ) {
+						$this->_view->atribui ("editavel", false);
 					} else {
 						$this->_view->atribui ("editavel", true);
+					}
+					
+					
+					if( $fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA ||
+						$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA ||
+						$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
+						$this->_view->atribui ("editavel", false);
+						$this->_view->atribui ("podeReagendar", false);
 					}
 
 					$this->_view->atribui("status_fatura",$cobranca->obtemStatusFatura());
@@ -2177,6 +2188,128 @@
 
 
 		}
+		
+		protected function executaEmailsCancelados() {
+		
+			$this->requirePrivLeitura("_CLIENTES_EMAILS_CANCELADOS");
+		
+
+			$this->_view->atribuiVisualizacao("emails_cancelados");
+			
+			$id_cliente = @$_REQUEST["id_cliente"];
+			$this->_view->atribui("id_cliente",$id_cliente);
+			
+			$tela = @$_REQUEST["tela"];
+			if( !$tela ) $tela = "listagem";
+			$this->_view->atribui("tela",$tela);
+			
+			$id_conta = @$_REQUEST["id_conta"];
+			$this->_view->atribui("id_conta",$id_conta);
+
+			$info = $this->clientes->obtemPeloId($this->id_cliente);
+			$this->_view->atribui("nome_razao",$info["nome_razao"]);
+			
+			$contas = VirtexModelo::factory("contas");
+			$cobranca = VirtexModelo::factory("cobranca");
+			$produtos = VirtexModelo::factory("produtos");
+			
+			if( $tela == "listagem" ) {
+				$emails = $contas->obtemContasEmailCanceladas($this->id_cliente);
+				$this->_view->atribui("emails", $emails);
+			} else if( $tela == "recuperar" && $id_conta ) {
+			
+				$this->requirePrivGravacao("_CLIENTES_EMAILS_CANCELADOS");
+			
+			
+				$conta = $contas->obtemContaPeloId($id_conta);
+				
+				$conta["contrato"] = $cobranca->obtemContratoPeloId($conta["id_cliente_produto"]);
+				$conta["produto"] = $produtos->obtemPlanoPeloId($conta["contrato"]["id_produto"]);
+							
+				$this->_view->atribui("conta",$conta);
+				
+				//echo "ID CLIENTE: $id_cliente<br>\n";
+
+				// Obtem os contratos ativos do cliente (para migração);
+				$contratos_cliente = $cobranca->obtemContratos($id_cliente,"A");
+				
+				for($i=0;$i<count($contratos_cliente);$i++) {
+					$contratos_cliente[$i]["id_cliente"] = $id_cliente;
+				}
+				
+				// Obtem os contratos de hospedagem ativos do provedor para micracao
+				$contratos_provedor = $cobranca->obtemContratos(1,"A","H");
+
+				for($i=0;$i<count($contratos_provedor);$i++) {
+					$contratos_provedor[$i]["id_cliente"] = 1;
+				}
+				
+				$contratos = array_merge($contratos_cliente,$contratos_provedor);
+				$this->_view->atribui("contratos",$contratos);
+				
+				
+				$acao = @$_REQUEST["acao"];
+				
+				$dadosLogin = $this->_login->obtem("dados");
+				$this->_view->atribui("dadosLogin",$dadosLogin);
+				
+				if( $acao ) {
+			
+					$id_cp_destino = @$_REQUEST["id_cp_destino"];
+					$this->_view->atribui("id_cp_destino",$id_cp_destino);
+					
+					$erro = "";
+
+					$senha_admin = @$_REQUEST["senha_admin"];
+					if( !$senha_admin ) {
+						$erro = "Operação não autorizada: SENHA NÃO FORNECIDA.";
+					} else {
+						if( md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+							$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
+						}
+
+					}
+
+					$this->_view->atribui("erro",$erro);
+
+					if( !$erro ) {
+						/**
+						 * FAZ A RECUPERACAO!!!
+						 */
+						
+						$contas->recuperaEmail($id_conta,$id_cp_destino,$dadosLogin);
+						
+
+
+
+
+
+						/**
+						 * Recuperado com sucesso...
+						 */
+						$url = "admin-clientes.php?op=emails_cancelados&tela=listagem&id_cliente=".$id_cliente;
+						$this->_view->atribui("url",$url);
+						$this->_view->atribui("mensagem","E-mail recuperado com sucesso.");
+						$this->_view->atribuiVisualizacao("msgredirect");
+					
+					}
+
+				}
+								
+			
+			}
+
+
+
+
+			//echo "<pre>"; 
+			//print_r($emails);
+			//echo "</pre>"; 
+			
+			
+			
+		}
+		
 		
 
 	}

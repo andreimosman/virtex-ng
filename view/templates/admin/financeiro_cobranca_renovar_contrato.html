@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title></title>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+{/literal}
+</style>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<br /><br />
+
+	<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center" border="0">
+
+		<tr>
+			<th align="left">Cliente</th>
+			<th align="left">Contrato</th>
+			<th align="center">Pend.</th>
+			<th align="center">Venc.</th>
+			<th align="center">Mensalidade</th>
+		</tr>
+		{foreach from=$contratos item=c}
+		<tr class='{cycle values="impar,par"}'>
+			<td><span style='font-size: 9px;'><a href="admin-financeiro.php?op=renovar_contrato&tela=renovar&id_cliente={$c.id_cliente}&id_cliente_produto={$c.id_cliente_produto}">{$c.nome_razao}</a></span></td>
+			<td><span style='font-size: 8px;'>{$c.id_cliente_produto|string_format:"%06s"} - {$c.nome}</span></td>
+			<td align="center"><span style='font-size: 9px;'>{$c.faturas_pendentes|string_format:"%02s"}</span></td>
+			<td><span style='font-size: 9px;'>{$c.data_renovacao|date_format:"%d/%m/%Y"}</td>
+			<td align="right"><span style='font-size: 9px;'>{$c.valor_contrato|string_format:"%.2f"}</span></td>
+		</tr>
+		{/foreach}
+	</table>
+<br /><br />
+
+
+</body>
+</html>

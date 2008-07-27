@@ -41,10 +41,19 @@
 			return false;
 		}
 
+		if( !editavel && podeReagendar ) {
+			// window.alert("NOT Editavel + Reagend");
+			// return false;
+			return true;
+		}
+
 		if( !reagendado ) {
 			if("" == famortizar.value){
 				alert('Informe o valor recebido!');
-				famortizar.focus();
+				try {
+					famortizar.focus();
+				} catch(e) {
+				}
 				return false;
 			}
 
@@ -103,17 +112,23 @@
 		facrescimo.value = facrescimo.value.replace(",",".");
 		famortizar.value = famortizar.value.replace(",",".");
 
-		var vtotal		= new Number( fvalor.value );
-		var vdesconto	= new Number( fdesconto.value );
-		var vparcial	= new Number( fpagto_parcial.value );
-		var vacrescimo	= new Number( facrescimo.value );
-		var calculado = new Number(vtotal - vdesconto - vparcial + vacrescimo);
+		var vtotal		= parseFloat( fvalor.value);
+		var vdesconto	= parseFloat( fdesconto.value );
+		var vparcial	= parseFloat( fpagto_parcial.value );
+		var vacrescimo	= parseFloat( facrescimo.value );
+		var calculado = vtotal + vacrescimo - vdesconto - vparcial;
 		frestante.value =  calculado.toFixed(2);
 
 
 		var vamortizar	= new Number( famortizar.value );
 		var calculado2 = new Number(calculado - vamortizar);
 		fpendente.value =  calculado2.toFixed(2);
+
+		// window.alert("VALOR A RECEBER: " + calculado2);
+
+		// window.alert("VTotal: " + vtotal + "\nVDesconto: " + vdesconto + "\nvparcial: " + vparcial + "\nvacrescimo: " + vacrescimo + "\nVAmortizar: " + vamortizar + "\nCalculado: " + calculado + "\nCalculado2: " + calculado2 + "\n");
+
+
 
 		if(calculado2 < 0){
 			alert('Valor a receber excede o valor pendente! ');
@@ -165,19 +180,40 @@
 	}
 
 	var reagendado = false;
+	{/literal}
+	var podeReagendar='{$podeReagendar}';
+	var editavel='{$editavel}';
+	//window.alert("PODE: " + podeReagendar);
+	{literal}
 
 	function verificaReagendamento() {
 		var freagendar = document.getElementById('reagendar');
 		var freagendamento = document.getElementById('reagendamento');
 
+		if( podeReagendar != '1' ) {
+			freagendamento.disabled = true;
+			freagendamento.className = 'disabled';
+			return;
+		}
+
+
 		if( freagendar.checked == true ) {
 			freagendamento.disabled = false;
+			freagendamento.className="fieldWithoutFocus";
+			try {
+				freagendamento.focus();
+			} catch(x) {window.alert(x)}
 		} else {
 			freagendamento.disabled = true;
 			freagendamento.value = '';
+			freagendamento.className="disabled";
 		}
 
+
+
+
 		alteraDataReagendamento();
+
 
 	}
 
@@ -247,7 +283,7 @@
 				</tr>
 				<tr>
 					<td class="cellLabel">Acrescimo(+):</td>
-					<td class="cellInfo"><input type="text" name="acrescimo"  id="acrescimo" value='{$acrescimo|default:"0.00"}' {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if} /></td>
+					<td class="cellInfo"><input type="text" name="acrescimo"  id="acrescimo" value='{$acrescimo|default:"0.00"}' {if !$editavel}disabled="disabled"  class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if} /></td>
 				</tr>
 				<tr>
 					<td class="cellLabel">Valor a ser pago(=):</td>
@@ -256,7 +292,7 @@
 				<tr>
 					<td class="cellLabel">Amortizar(-):</td>
 					<td class="cellInfo">
-						<input type="text" name="amortizar" id="amortizar" value="{$amortizar}" {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if} />
+						<input type="text" name="amortizar" id="amortizar" value="{$amortizar}" {if !$editavel}disabled="disabled" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);calculaValores();"{/if} />
 						<input type="button" name="hoje" value="Tudo" onclick="javascript:amortizarTudo()" class="botao"  {if !$editavel}disabled="disabled"{/if} />
 					</td>
 				</tr>
@@ -277,7 +313,7 @@
 				<tr>
 					<td class="cellLabel">Data do Pagamento:</td>
 					<td class="cellInfo">
-						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento|date_format:"%d/%m/%Y"}" maxlength="10"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
+						<input name="data_pagamento" id="data_pagamento" type="text" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" value="{$data_pagamento|date_format:"%d/%m/%Y"}" maxlength="10"  {if !$editavel}disabled="disabled" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} />
 						<input type="button" name="hoje" value="Hoje" onclick="javascript:pagamentoHoje();"  class="botao"  {if !$editavel}disabled="disabled"{/if} />
 						<input type="button" name="venc" value="Venc."  onclick="javascript:pagamentoVencimento();" class="botao"  {if !$editavel}disabled="disabled"{/if} />
 					</td>
@@ -291,19 +327,21 @@
 				</tr>
 				<tr>
 					<td class="cellLabel">
-						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" {if !$editavel}disabled="disabled"{/if} {if $reagendamento}checked{/if} onClick="javascript:verificaReagendamento();"/> re-agendar cobrança para dia:
+						<input type="checkbox" name="reagendar" id="reagendar" value="1"  class="checkbox" {if !($podeReagendar || $editavel)}disabled="disabled"{/if} {if $reagendamento}checked{/if} onClick="javascript:verificaReagendamento();"/> re-agendar cobrança para dia:
 					</td>
 					<td class="cellInfo">
-						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento|date_format:"%d/%m/%Y"}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this);alteraDataReagendamento()" onBlur="formOnBlur(this);alteraDataReagendamento();"{/if} disabled = true onkeypress="formatar(this, '##/##/####'); return Tecla(event);" />
+						<input name="reagendamento" id="reagendamento" type="text" value="{$reagendamento|date_format:"%d/%m/%Y"}" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" maxlength="10" id="reagendamento"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this);alteraDataReagendamento()" onBlur="formOnBlur(this);alteraDataReagendamento();"{/if} disabled = true  class="disabled" onkeypress="formatar(this, '##/##/####'); return Tecla(event);" />
 					</td>
 				</tr>
 				<tr>
 					<td class="cellLabel" valign="top">Observações:</td>
 					<td class="cellInfo">
-						<textarea name="observacoes" id="observacoes" rows="7"  cols="30"  {if !$editavel}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} >{$observacoes}</textarea>
+						<textarea name="observacoes" id="observacoes" rows="7"  cols="30"  {if !$editavel && !$podeReagendar}disabled="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this);"{/if} >{$observacoes}</textarea>
 					</td>
 				</tr>
 			</table>
+
+			{if $editavel || $podeReagendar}
 			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%">
 				<tr>
 					<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação</th>
@@ -317,6 +355,9 @@
 				</tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
+			{/if}
+
+
 		</td>
 	</tr>
 
@@ -324,8 +365,8 @@
 	<tr>
 		<td colspan="2" align="center">
 			<input name="botao_cancelar" type="button" class="botao" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
-			{if $editavel}
-			<input name="botao_enviar" type="submit" class="botao" id="submit" value="Amortizar &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
+			{if $editavel || $podeReagendar}
+			<input name="botao_enviar" type="submit" class="botao" id="submit" value="{if !$editavel && $podeReagendar}Reagendar{else}Amortizar{/if} &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
 			{/if}
 		</td>
 	</tr>

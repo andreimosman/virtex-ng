@@ -156,8 +156,8 @@
 		{foreach name=registros item=c from=$listaContas}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td class='{$estilo}' width=200 align="center">&nbsp;<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}"><b>{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</b></a></td>
-			<td class='{$estilo}' width=80>
+			<td class='{$estilo}' width=200 align="left">&nbsp;<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}"><b>{$c.username}{if $c.tipo_conta == 'E'}@{$c.dominio}{/if}</b></a></td>
+			<td class='{$estilo}' width=80 align="left"	>
 			<a href="admin-clientes.php?op=conta&tela=cadastro&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">
 				{if $c.tipo_conta == 'BL'}BANDA LARGA{/if}
 				{if $c.tipo_conta == 'D'}DISCADO{/if}
@@ -220,13 +220,13 @@
 			</td>
 			{/if}
 			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.id_cobranca}</td>
-			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{if $r.reagendamento}{$f.reagendamento}*{else}{$f.data}{/if}</td>
-			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.data_pagamento}&nbsp;</td>
-			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor}</td>
-			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.acrescimo}</td>
-			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.desconto}</td>
-			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor_pago}</td>
-			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor_restante}</td>
+			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{if $r.reagendamento}{$f.reagendamento|date_format:"%d/%m/%Y"}*{else}{$f.data|date_format:"%d/%m/%Y"}{/if}</td>
+			<td align="center" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.data_pagamento|date_format:"%d/%m/%Y"}&nbsp;</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor|string_format:"%.2f"}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.acrescimo|string_format:"%.2f"}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.desconto|string_format:"%.2f"}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor_pago|string_format:"%.2f"}</td>
+			<td align="right" class="{$estilo}" style="border-right: solid 1px #000000;">{$f.valor_restante|string_format:"%.2f"}</td>
 			<td align="center" class="{$estilo}">{$f.strstatus}</td>
 		</tr>
 		{/foreach}

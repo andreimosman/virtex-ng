@@ -18,6 +18,8 @@
 			$cfg_geral = $this->_cfg->config["geral"];
 			$desenvolvimento = @$cfg_geral["desenvolvimento"];
 
+			$dadosLogin = $this->_login->obtem("dados");
+			$this->_view->atribui("dadosLogin",$dadosLogin);
 		
 			$permissao_monitoramento = $this->requirePrivLeitura("_SUPORTE_MONITORAMENTO",false);
 			$this->_view->atribui("permissao_monitoramento", $permissao_monitoramento);
@@ -159,6 +161,10 @@
 			//$menuFinanceiroCobranca->addSeparator();
 			$menuFinanceiroCobranca->addItem("Gerar Cobrança/Boletos", "admin-financeiro.php?op=gerar_cobranca", $target);
 			$menuFinanceiroCobranca->addItem("Troca de Arquivos", "admin-financeiro.php?op=arquivos",$target);
+			
+			$menuFinanceiroCobranca->addSeparator();
+			$menuFinanceiroCobranca->addItem("Renovação de Contratos", "admin-financeiro.php?op=renovar_contrato", $target);
+			
 
 			// $menuFinanceiroCobranca->addSeparator();
 			$menuFinanceiroRelatoriosCobranca = new MMenu();

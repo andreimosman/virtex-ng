@@ -108,6 +108,7 @@
 				
 				
 				if( $verificaLogin && $this->_script != $this->_loginScript ) {
+
 					if( !$this->verificaLogin() ) {
 						// Sem login. Redirecionar.
 						if( $this->_view ) {
@@ -117,20 +118,28 @@
 						}
 						return;
 					}
-
-					if($this->primeiroLogin && $this->_changePasswordScript ) {
-						if( $this->_uri != $this->_changePasswordScript ) {
-							if( $this->_view ) {
-								$this->_view->redirect($this->_changePasswordScript);
-							} else {
-								VirtexView::simpleRedirect($this->_changePasswordScript);
+					
+					// echo "PL: " . $this->primeiroLogin . "<br>\n";
+					
+					if( !$this->verificaRegistro() ) {
+						// $this->primeiroLogin = 't';
+						$this->primeiroLogin = 0;
+						
+					} else {
+										
+						if($this->primeiroLogin && $this->_changePasswordScript ) {
+							if( $this->_uri != $this->_changePasswordScript ) {
+								if( $this->_view ) {
+									$this->_view->redirect($this->_changePasswordScript);
+								} else {
+									VirtexView::simpleRedirect($this->_changePasswordScript);
+								}
+								return;
 							}
-							return;
+
 						}
-
 					}
-
-
+										
 					if( $this->_registroScript && $this->_script ) {
 						$acao = @$_REQUEST["acao"];
 						if( $acao != "upload" && $this->_uri != $this->_registroScript ) {
@@ -143,6 +152,10 @@
 							}
 						}
 					}
+
+
+
+
 				}
 
 			}

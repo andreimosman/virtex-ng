@@ -464,6 +464,10 @@
 			
 		}
 		
+		public function obtemTiposCobranca() {
+			return($this->pftb_forma_pagamento->obtemTiposCobranca());
+		}
+		
 		public function obtemFormasPagamento($disponivel='') {
 			$filtro=array();
 			if( $disponivel ) {

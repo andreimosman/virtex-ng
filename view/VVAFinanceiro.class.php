@@ -48,6 +48,10 @@
 							$this->exibeListaFaturas();
 							break;
 
+						case 'renovar_contrato':
+							$this->exibeRenovarContrato();
+							break;
+							
 						default:
 
 					} 
@@ -70,6 +74,18 @@
 			//echo "</pre>";
 			parent::exibe();
 
+		}
+		
+		function exibeRenovarContrato() {
+			$this->titulo .= "Renovação de Contratos";
+			if( $this->obtem("tela") == "listagem" ) {
+				$this->_file = "financeiro_cobranca_renovar_contrato.html";
+			} else {
+				$this->titulo .= "::" . $this->obtem("id_cliente_produto");
+				$this->_file = "financeiro_cobranca_renovar_contrato_renovacao.html";
+			}
+			$this->atribui("titulo",$this->titulo);
+			
 		}
 
 		protected function exibeListaBoletos() {

@@ -102,7 +102,7 @@
 		}
 		
 		protected function executa() {
-			// echo "EXEC<br>\n";
+
 		}
 		
 		
@@ -153,7 +153,7 @@
 		}
 
 		
-		protected function requirePrivLeitura($privilegio,$stop=true) {
+		protected function requirePrivLeitura($privilegio,$stop=true) {		
 			if( !$this->_login->podeLer($privilegio) ) {
 				if( $stop ) {
 					$this->acessoNegado();

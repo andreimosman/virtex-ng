@@ -13,7 +13,8 @@
 										"alteracao" => "Alteração",
 										"ficha" => "Ficha do Cliente",
 										"pesquisa" => "Pesquisa",
-										"eliminar" => "Eliminar"
+										"eliminar" => "Eliminar",
+										"emails_cancelados" => "Emails Cancelados"
 									);
 			//
 			$this->configureMenu(array(),false,false);	// Configura um menu vazio
@@ -37,6 +38,7 @@
 			$itensMenu[] = array("texto" => "Hospedagem", "url" => "admin-clientes.php?op=conta&tipo=H&id_cliente=".$this->obtem("id_cliente"));
 			$itensMenu[] = array("texto" => "Contrato/Faturas", "url" => "admin-clientes.php?op=contrato&id_cliente=".$this->obtem("id_cliente"));
 			$itensMenu[] = array("texto" => "Helpdesk", "url" => "admin-clientes.php?op=helpdesk&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
+			$itensMenu[] = array("texto" => "Emails Cancelados", "url" => "admin-clientes.php?op=emails_cancelados&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
 			
 			return($itensMenu);
 			
@@ -71,6 +73,10 @@
 					$this->exibeHelpdesk();
 					break;
 					
+				case 'emails_cancelados':
+					$this->exibeEmailsCancelados();
+					break;
+					
 				default:
 					// Do something
 			
@@ -93,6 +99,22 @@
 			}
 
 			$this->atribui("titulo",$titulo);
+		}
+		
+		protected function exibeEmailsCancelados() {
+			$tela = $this->obtem("tela");
+
+			if( $tela == "recuperar" ) {
+				$this->_file = "clientes_emails_cancelados_recuperar.html";
+			} else {
+				$this->_file = "clientes_emails_cancelados.html";
+			}
+		
+			
+			$this->atribuiTitulo();
+			$this->configureMenu($this->obtemItensMenu());
+			
+			
 		}
 		
 		protected function exibeCadastro() {

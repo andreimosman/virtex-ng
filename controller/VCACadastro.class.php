@@ -285,6 +285,8 @@
 					$this->_view->atribui("id_nas", $id_nas);
 
 					$acao = @$_REQUEST["acao"];
+					
+					$this->_view->atribui("podeGravar",$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false));
 															
 					if( $id_nas ) {
 						if( !$acao ) {

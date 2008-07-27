@@ -130,6 +130,20 @@
 			$dados = array("id_cliente_produto" => $id_cliente_produto);
 			$this->cntb_conta->altera($dados,$filtro);
 		}
+		
+		public function obtemContasEmail($id_cliente,$status="") {
+			$filtro = array("id_cliente" => $id_cliente);
+			if( $status ) {
+				$filtro["status"] = $status;
+			}
+			
+			return($this->cntb_conta_email->obtem($filtro));
+		}
+		
+		public function obtemContasEmailCanceladas($id_cliente) {
+			return($this->obtemContasEmail($id_cliente,"C"));
+		}
+		
 
 		public function obtemContasBandaLarga($id_nas,$status="") {
 			$filtro = array("id_nas" => $id_nas);
@@ -866,9 +880,29 @@
 			//$this->eventos->registraEliminacaoConta($id_conta, $info["id_cliente_produto"],$ipaddr, $id_admin, $username="", $endereco="");
 
 		} */
+		
+		public function registraLogRecuperacao($id_conta,$id_cliente,$id_cliente_produto,$conta_mestre,$id_admin) {
+			$lgtb_recuperacao_email = VirtexPersiste::factory('lgtb_recuperacao_email');
+			$dados = array("id_conta" => $id_conta, "id_cliente" => $id_cliente, "id_cliente_produto" => $id_cliente_produto, "conta_mestre" => $conta_mestre, "id_admin" => $id_admin);
+			return($lgtb_recuperacao_email->insere($dados));
+		}
+	
+		
+		public function recuperaEmail($id_conta,$id_cliente_produto,$dadosLogin) {
+			$conta = $this->obtemContaPeloId($id_conta);
+			
+			$this->registraLogRecuperacao($id_conta,$conta["id_cliente"],$conta["id_cliente_produto"],$conta["conta_mestre"],$dadosLogin["id_admin"]);			
 
-
-
+			$cobranca = VirtexModelo::factory('cobranca');			
+			$cliente_produto = $cobranca->obtemClienteProduto($id_cliente_produto);
+			
+			$dados = array("id_cliente" => $cliente_produto["id_cliente"], "id_cliente_produto" => $id_cliente_produto, "conta_mestre" => 'f', "status" => "A");
+			$filtro = array("id_conta" => $id_conta);
+			
+			$this->cntb_conta->altera($dados,$filtro);
+			
+		
+		}
 
 	}
 

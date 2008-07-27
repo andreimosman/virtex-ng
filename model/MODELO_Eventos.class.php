@@ -15,6 +15,7 @@
 		public static $NATUREZA_ALT_CONTA		= 'ALTERACAO CONTA';
 		public static $NATUREZA_PAG_FATURA  	= 'PAGAMENTO FATURA';
 		public static $NATUREZA_ELI_CONTA		= 'ELIMINACAO CONTA';
+		public static $NATUREZA_RENOVACAO		= 'RENOVACAO CONTRATO';
 		
 		public static $DESCRICAO_ERRO			= 'ERRO';
 		public static $DESCRICAO_LOGIN_PRIMEIRO = 'PRIMEIRO LOGIN';
@@ -29,6 +30,7 @@
 		public static $DESCRICAO_CONTA_ALT_STAT = 'ALTERACAO DE STATUS';
 		public static $DESCRICAO_CONTA_ALT_UP	= 'ALTERACAO DE BANDA(UPLOAD)';
 		public static $DESCRICAO_CONTA_ALT_DOWN	= 'ALTERACAO DE BANDA(DOWNLOAD)';
+		public static $DESCRICAO_RENOVACAO		= 'RENOVAÇÃO DE CONTRATO';
 		
 		public function __construct() {
 			parent::__construct();
@@ -55,6 +57,7 @@
 				$retorno[self::$NATUREZA_LOGIN] = "Login";
 				$retorno[self::$NATUREZA_ALT_CONTA] = "Alteração de Conta";
 				$retorno[self::$NATUREZA_PAG_FATURA] = "Pagamento de Faturas";
+				$retorno[self::$NATUREZA_RENOVACAO] = "Renovação de Contrato";
 
 			return($retorno);
 		
@@ -180,13 +183,28 @@
 								"id_admin" => $id_admin,
 								"ipaddr" => $ipaddr,
 								"tipo" => self::$TIPO_INFO,
-								"natureza" => self::NATUREZA_ELI_CONTA,
+								"natureza" => self::$NATUREZA_ELI_CONTA,
 								"descricao" => $descricao
 							);
 			
 			return ($this->evtb_evento->insere($dados));
 		
 		}
+		
+		public function registraRenovacaoContrato($id_cliente_produto,$ipaddr, $id_admin, $data_renovacao, $data_proxima_renovacao) {
+			$descricao = "Data Base: " . MData::ISO_to_ptBR($data_renovacao) . "\nPróxima: " . MData::ISO_to_ptBR($data_proxima_renovacao);
+			$dados = array (
+								"id_cliente_produto" => $id_cliente_produto,
+								"id_admin" => $id_admin,
+								"ipaddr" => $ipaddr,
+								"tipo" => self::$TIPO_INFO,
+								"natureza" => self::$NATUREZA_RENOVACAO,
+								"descricao" => $descricao
+							);
+			return($this->evtb_evento->insere($dados));
+			
+		}
+		
 		
 		/**
 		 * Obtem os eventos

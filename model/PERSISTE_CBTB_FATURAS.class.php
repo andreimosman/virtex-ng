@@ -22,10 +22,12 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 
 	public function obtemFaturas ($id_cliente = "", $id_cliente_produto = "", $id_carne = "")
 	{
+	
 		if (func_num_args () == 0 )
 		return;
 
 		$q = "SELECT f.descricao, f.valor, f.status,
+					 f.data as dt_ordem, 
 				     to_char (f.data,'dd/mm/YYYY') as data,
 				     data as data_orig,
 				     to_char (f.data_pagamento,'dd/mm/YYYY') as data_pagamento,
@@ -50,8 +52,13 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		$where [] = 'f.id_carne = ' . $this->bd->escape ($id_carne);
 		
 		$where [] = "f.status <> 'E' ";
+		$where [] = "f.valor > 0 ";
 
 		$q .= " WHERE " . implode (" AND ", $where);
+		
+		$q .= " ORDER BY dt_ordem DESC ";
+		
+		// echo "Q: $q<br>\n";
 		return ($this->bd->obtemRegistros ($q));
 	}
 
@@ -396,6 +403,18 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 		//echo $sql;
 		return ($this->bd->obtemRegistros($sql));
 
+	}
+	
+	public function obtemNumeroFaturasPendentes($id_cliente_produto) {
+		$sql .= "SELECT count(*) as num_faturas FROM cbtb_faturas WHERE id_cliente_produto = $id_cliente_produto AND status not in ('P','E','C') AND valor > 0";
+		$retorno = $this->bd->obtemUnicoRegistro($sql);
+		return($retorno["num_faturas"]);
+	}
+	
+	public function obtemDiaVencimento($id_cliente_produto) {
+		$sql = "select avg(extract('day' from data)) as dia from cbtb_faturas where id_cliente_produto = $id_cliente_produto";
+		$retorno = $this->bd->obtemUnicoRegistro($sql);
+		return((int)@$retorno["dia"]);
 	}
 	
 	

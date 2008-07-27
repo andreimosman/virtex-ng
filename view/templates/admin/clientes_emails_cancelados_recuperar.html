@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+{/literal}
+</style>
+<script language="javascript">
+{literal}
+function cancelarRecuperacao() {
+	// window.alert("cancelar");
+	{/literal}
+	window.location = 'admin-clientes.php?op=emails_cancelados&tela=listagem&id_cliente={$id_cliente}';
+	{literal}
+
+}
+
+function validaRecuperacao() {
+	var frm = document.formRecupera;
+
+	if( frm.id_cp_destino.value == '' ) {
+		window.alert("É necessário escolher um contrato do cliente ou do provedor.");
+		return(false);
+	}
+
+	if( frm.senha_admin.value == '' ) {
+		window.alert("É necessário entrar com a senha para confirmar a operação.");
+		return(false);
+	}
+
+
+	return(true);
+
+
+}
+
+{/literal}
+</script>
+
+
+
+<br>
+
+<form action="admin-clientes.php" method="post" name="formRecupera" onSubmit="return validaRecuperacao()">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+<input type="hidden" name="id_cliente" value="{$id_cliente}">
+<input type="hidden" name="id_conta" value="{$id_conta}">
+<input type="hidden" name="acao" value="recuperar">
+
+<table class="lista" width="450" align="center">
+	{if $erro}
+	<tr>
+		<td colspan=2 align="center" style="border-bottom: solid 1px #FF0000; background: #Fa8888;"><span style="font-size: 14px"><strong>{$erro}</strong></span></td>
+	</tr>
+	{/if}
+	<tr>
+		<th colspan=2>Recuperar Conta de E-mail</th>
+	</tr>
+	<tr>
+		<td align="right"><span><strong>Conta:</strong></span></td>
+		<td><span>{$conta.username}@{$conta.dominio}</span></td>
+	</tr>
+	<tr>
+		<td align="right"><span><strong>Conta Mestre:</strong></span></td>
+		<td><span>{if $conta.conta_mestre == 't'}Sim{else}Não{/if}</span></td>
+	</tr>
+	<tr>
+		<td align="right"><span><strong>Quota:</strong></span></td>
+		<td><span>{$conta.quota}</span></td>
+	</tr>
+	<tr>
+		<td align="right"><span><strong>Contrato:</strong></span></td>
+		<td><span>{$conta.contrato.id_cliente_produto|string_format:"%06d"} - {$conta.produto.nome}</span></td>
+	</tr>
+	<tr>
+		<td align="right"><span><strong>Mover para:</strong></span></td>
+		<td>
+			<select name="id_cp_destino" class="fieldWithoutFocus">
+				<option value="">--SELECIONE--</option>
+				{foreach item=c from=$contratos}
+				<option value="{$c.id_cliente_produto}" {if $id_cp_destino == $c.id_cliente_produto}SELECTED{/if}>{if $c.id_cliente == "1"}[provedor]{else}[cliente]{/if}: {$c.id_cliente_produto|string_format:"%06d"} - {$c.nome_produto}</option>
+				{/foreach}
+			</select>
+		</td>
+	</tr>
+
+</table>
+
+<table width="450" class="lista" cellpadding=0 cellspacing=0 align="center">
+	<tr>
+		<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação</th>
+	</tr>
+	<tr>
+		<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+	</tr>
+	<tr>
+		<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" id="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+	</tr>
+	<tr>
+		<td align="right"><input type="button" class="botao" name="Cancelar" id="cancelar" value="Cancelar" onClick="javascript:cancelarRecuperacao();"></td>
+		<td>
+			<input type="submit" class="botao" name="submit" id="submit" value="Recuperar">
+		</td>
+	</tr>
+
+</table>
+
+</form>
+
+
+</body>
+</html>
