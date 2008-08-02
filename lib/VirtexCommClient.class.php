@@ -119,13 +119,21 @@
 		 * Abre uma conexão
 		 */
 		public function open($host,$porta,$chave,$user,$pass) {
-			$this->conn = @fsockopen($host,$porta+$this->incremento,$errno,$errstr,30);
+
+			if( $this->conn ) {
+				@fclose($this->conn);			
+			}
+			
+			// $this->conn = @fsockopen($host,$porta+$this->incremento,$errno,$errstr,30);
+			$this->conn = @fsockopen($host,$porta,$errno,$errstr,30);
 
 			if( !$this->conn ) {
+
 				$this->conectado = false;
 				return(false);
 			} else {
 				$this->conectado = true;
+				
 
 				if( !$this->clientAuth($chave,$user,$pass) ) {
 					$this->conectado = false;

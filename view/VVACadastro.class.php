@@ -322,6 +322,16 @@
 					
 					$this->atribui("titulo",$titulo);
 					break;
+				
+				case 'pop_ip':
+					// echo "POP IP<br>\n"; 					
+					$titulo = "Relatório::IPs dos Equipamentos";
+					$this->atribui("titulo",$titulo);
+					
+					$this->_file = "cadastro_relatorios_ips.html";
+					
+					
+					break;
 					
 				case 'condominios':
 				

@@ -554,7 +554,13 @@
 										$id_pop="",$id_nas="",$upload="",$download="",$mac="",$endereco="",$alterar_endereco = false) {
 
 			$infoAtual = $this->obtemContaPeloId($id_conta);
+			
 			$nasAtual = $this->equipamentos->obtemNAS($infoAtual["id_nas"]);
+			
+			if( $infoAtual["id_nas"] != $id_nas ) {
+				$id_nas = $id_nas ? $id_nas : $infoAtual["id_nas"];
+			}
+			
 			$nasNovo = ($infoAtual["id_nas"] != $id_nas ? $this->equipamentos->obtemNAS($id_nas) : $nasAtual);
 
 
@@ -610,8 +616,7 @@
 				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];				
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
 			}
-
-
+			
 			// CANCELAMENTO
 			if( $status == "C" ) {
 				// Libera os endereços IP e de Rede p/ uso em outro cliente.
@@ -630,9 +635,10 @@
 			 * Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool.
 			 * Somente se a conta tiver ativa, claro!
 			 */
-
+			
 			if( $status == "A" && ($nasNovo["tipo_nas"] == "I" || ($nasNovo["tipo_nas"] == "P" && $nasNovo["padrao"] == "O")) ) {
-				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$infoAtual["username"],$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
+				// echo "ADD SPOOL<br>\n";
+				$this->spool->adicionaContaBandaLarga($nasNovo["id_nas"],$id_conta,$infoAtual["username"],$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
 			}
 
 
@@ -831,14 +837,11 @@
 
 
 		public function obtemContasPeloContrato($id_cliente_produto, $tipo=NULL) {
-			return $this->cntb_conta->obtemContasPeloContrato($id_cliente_produto, $tipo=NULL);
+			return $this->cntb_conta->obtemContasPeloContrato($id_cliente_produto, $tipo);
 		}
 		
 		public function obtemContasBloqueadasPeloContrato($id_cliente_produto, $tipo=NULL) {		
 			$retorno = $this->cntb_conta->obtemContasBloqueadasPeloContrato($id_cliente_produto, $tipo);
-			//echo "<PRE>";
-			//print_r($retorno);
-			//echo "</PRE>";
 			return $retorno;
 		}	
 

@@ -1,8 +1,18 @@
 <script language="JavaScript">
 {literal}
-function abreCarne(id_carne,id_cliente,id_cliente_produto) {
-	url = "admin-clientes.php?op=contrato&tela=imprime_carne&id_cliente="+id_cliente+"&id_cliente_produto="+id_cliente_produto+"&id_carne="+id_carne;
-	window.open(url,"carne_"+id_carne,'scrollbars=yes,width=700,height=500');
+function abreCarne(id_carne,id_cliente,id_cliente_produto,id_cobranca) {
+	url = "admin-clientes.php?op=contrato&tela=imprime_carne&id_cliente="+id_cliente+"&id_cliente_produto="+id_cliente_produto
+
+	var winName = '';
+	if( id_cobranca != undefined && id_cobranca != null ) {
+	   url = url + "&id_cobranca="+id_cobranca;
+	   winName = "cobranca_"+id_cobranca;
+	} else {
+	   url = url + "&id_carne="+id_carne;
+	   winName = "carne_"+id_carne;
+	}
+
+	window.open(url,winName,'scrollbars=yes,width=700,height=500');
 }
 {/literal}
 </script>
@@ -47,7 +57,7 @@ function abreCarne(id_carne,id_cliente,id_cliente_produto) {
 	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
 		{ if $tem_carne }
 		<tr>
-				<th colspan="7">Carn&ecirc; { $smarty.request.id_carne|string_format:"%08d" }</th>
+				<th colspan="8">Carn&ecirc; { $smarty.request.id_carne|string_format:"%08d" }</th>
 		</tr>
 		{ /if }
 		<tr class="lista" style="background: #bFd0aF;">
@@ -58,6 +68,7 @@ function abreCarne(id_carne,id_cliente,id_cliente_produto) {
 			<th>Dt. Pagto</th>
 			<th>Reagend.</th>
 			<th>Status</th>
+			<th>&nbsp;</th>
 		</tr>
 		{foreach from=$faturas item=f}
 		<tr class='{cycle values="impar,par"}'>
@@ -68,6 +79,13 @@ function abreCarne(id_carne,id_cliente,id_cliente_produto) {
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.data_pagamento}</a></td>
 			<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.reagendamento}</a></td>
 			<td align="center"><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data_orig}&id_cobranca={$f.id_cobranca}">{$f.status}</a></td>
+			<td>
+			&nbsp;
+
+			{if $f.status != 'P' && $f.status != 'E' && $f.status != 'C'}
+			[<a href="javascript:abreCarne(0,{$id_cliente},{if $smarty.request.id_cliente_produto}{$smarty.request.id_cliente_produto}{else}{$f.id_cliente_produto}{/if},{$f.id_cobranca})">Imprimir</a>]
+			{/if}
+			</td>
 		</tr>
 		{/foreach}
 	</table>

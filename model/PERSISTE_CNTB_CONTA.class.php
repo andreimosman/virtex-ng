@@ -231,6 +231,7 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 			$sql .= "	AND conta.tipo_conta LIKE '$tipo' ";
 		}
 
+		//echo "SQL: $sql<br>\n";
 		return ($this->bd->obtemRegistros($sql));
 	}
 	

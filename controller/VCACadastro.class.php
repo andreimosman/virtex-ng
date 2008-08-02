@@ -198,11 +198,20 @@
 					break;
 
 				case 'cadastro':
+				
+					$this->_view->setNoCache();
+				
 					if( !$acao ) {
 						$servidores = $equipamentos->obtemListaServidores();
 						$this->_view->atribui("servidores",$servidores);
 						
 						$parent_pops = $equipamentos->obtemListaPOPs();		
+						
+						
+						//echo "<pre>";
+						//print_r($parent_pops);
+						//echo "</pre>";
+						
 						$this->_view->atribui("parent_pops",MJson::encode($parent_pops) );
 											
 						$status_pop = $equipamentos->obtemStatusPop();
@@ -222,6 +231,7 @@
 									$info = $equipamentos->obtemPop($id_pop);
 								}
 								while(list($vr,$vl)=each($info)) {
+									// echo "$vr = $vl<br>\n";
 									$this->_view->atribui($vr,$vl);
 								}
 
@@ -671,8 +681,18 @@
 				
 				
 					break;
+					
 				case 'clientes_ap':
 				
+					break;
+				
+				case 'pop_ip':
+					$equipamentos = VirtexModelo::factory("equipamentos");
+					$lista = $equipamentos->obtemIPsPOPs();
+					
+					$this->_view->atribui("lista",$lista);
+					
+					
 					break;
 					
 				case 'condominios':

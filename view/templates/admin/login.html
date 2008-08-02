@@ -68,7 +68,7 @@ body{
 	<tr>
 		<td align="center" colspan=2>
 
-			<form method="post" action="admin-login.php">
+			<form name="form_login" method="post" action="admin-login.php">
 			<input type="hidden" name="acao" value="login">
 			<table align="center" class="boxAltSenha" width="250" height="100">
 				<tr>
@@ -112,3 +112,9 @@ body{
 </form>
 </BODY>
 </HTML>
+<script>
+
+form_login.username.focus();
+//focus();
+
+</script>

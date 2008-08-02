@@ -1,0 +1,133 @@
+<html>
+<head>
+	<title></title>
+	<style>
+{literal}
+
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 12px;
+	margin-left:350px;
+	padding-left: 5px;
+}
+
+#cont2 {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 12px;
+	margin-left:-20px;
+	padding-left: 5px;
+}
+
+#cabecalho a:link{
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color:blue;
+	text-decoration:none;
+}
+
+#cabecalho a:visited{
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	color:blue;
+}
+
+#cabecalho a:hover{
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-decoration:underline;
+}
+{/literal}
+</style>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<br>
+
+<table class='lista' width='500' cellspacing=0 cellpadding=0 align=center>
+	<tr>
+		<th width='100%' colspan=2>{$retorno.id_retorno|string_format:"%06d"} ({$retorno.arquivo_enviado})</th>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Id: </strong></td>
+		<td aling='left' width='280'>{$retorno.id_retorno|string_format:"%06d"}</td>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Formato: </strong></td>
+		<td>{$retorno.formato}</td>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Registros Processados: </strong></td>
+		<td>{$retorno.numero_registros_processados|string_format:"%03d"}</td>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Registros Com Erros: </strong></td>
+		<td>{$retorno.numero_registros_com_erro|string_format:"%03d"}</td>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Registros Sem Correspondência: </strong></td>
+		<td>{$retorno.numero_registros_processados|string_format:"%03d"}</td>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Total de Registros: </strong></td>
+		<td>{$retorno.numero_total_registros|string_format:"%03d"}</td>
+	</tr>
+	<tr>
+		<td width='220' align='right'><strong>Processado Em: </strong></td>
+		<td>{$retorno.datahora|date_format:"%d/%m/%Y %H:%M:%S"}</td>
+	</tr>
+</table>
+
+<br>
+<table class='lista' width='840' cellspacing=0 cellpadding=0 align=center>
+	<tr>
+		<td colspan=7>[<a href='javascript:history.back()'>voltar</a>]</td>
+	</tr>
+	<tr>
+		<th colspan=7>FATURAS PROCESSADAS COM SUCESSO</th>
+	</tr>
+	<tr>
+		<th width='50'>Fatura</th>
+		<th width='70'>Vencimento</th>
+		<th width='70'>Pagamento</th>
+		<th _width='240'>Cliente</th>
+		<th width='180'>Contrato</th>
+		<th	width='80' align='right'>Valor</th>
+		<th	width='80' align='right'>Recebido</th>
+	</tr>
+
+	{foreach item=f from=$faturas}
+	<tr class='{cycle values="impar,par"}'>
+		<td align='right'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.id_cobranca|string_format:"%06d"}</a></td>
+		<td align='center'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.data|date_format:"%d/%m/%Y"}</a></td>
+		<td align='center'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.data_pagamento}</a></td>
+		<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.nome_razao}</a></td>
+		<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.id_cliente_produto|string_format:"%06d"} - {$f.produto}</a></td>
+		<td align='right'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.valor|string_format:"%.2f"}</a></td>
+		<td align='right'><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$f.id_cliente}&id_cliente_produto={$f.id_cliente_produto}&data={$f.data}&id_cobranca={$f.id_cobranca}">{$f.valor_pago|string_format:"%.2f"}</a></td>
+	</tr>
+	{foreachelse}
+	<tr>
+		<td colspan='7' align="center"><strong>Não existem registros processados com sucesso neste arquivo</strong></td>
+	</tr>
+	{/foreach}
+
+	{if $totais.valor || $totais.valor_pago}
+	<tr>
+		<td colspan=5><strong>TOTAL</td>
+		<td align='right'><strong>{$totais.valor|string_format:"%.2f"}</strong></td>
+		<td align='right'><strong>{$totais.valor_pago|string_format:"%.2f"}</strong></td>
+	</tr>
+	{/if}
+
+
+
+</table>
+<br>
+
+
+</body>
+</html>

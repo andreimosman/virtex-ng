@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="configuracoes_header.html"}
+
+<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+	<tr>
+		<th align="right">#</th>
+		<th>Nome</th>
+		<th>Tipo</th>
+		<th align='right'>IP</th>
+	</tr>
+	{foreach name=registros item=r from=$lista}
+	{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+	<tr>
+		<td class='{$estilo}' align="right">{$r.id_pop|string_format:"%04d"}</td>
+		<td class='{$estilo}'>{$r.nome}</td>
+		<td class='{$estilo}'>{$r.tipo}</td>
+		<td class='{$estilo}' align="right">{$r.ipaddr}</td>
+	</tr>
+	{/foreach}
+</table>
+
+</body>
+</html>

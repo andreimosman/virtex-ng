@@ -77,7 +77,7 @@
 			 </tr>
 			 <tr>
 				<td align="right" width="130"><strong>Forma de Pagto:<strong></td>
-				<td>{$tipos_cobranca[$forma_pagamento.tipo_cobranca]}</td>
+				<td>{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}{if $formaPagamento.tipo_cobranca=='NA'}Não Atribuida{else}Sistema manual com exportação.{/if}{/if}</td>
 			 </tr>
 			</table>
 		</td>

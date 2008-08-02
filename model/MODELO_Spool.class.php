@@ -67,6 +67,7 @@
 		 * Usado somente para contas TCP/IP.
 		 */
 		public function adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao="") {
+			$mac = str_replace("-",":",$mac);
 			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($username,$endereco,$mac,$padrao,$upload,$download));
 			return($this->insereInstrucaoAdicao($id_nas,self::$BANDA_LARGA,$id_conta,$parametros));
 		}

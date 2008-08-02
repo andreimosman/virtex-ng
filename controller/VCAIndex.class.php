@@ -123,10 +123,11 @@
 			
 			$menuCadastro->addSeparator();
 			$menuCadastroRelatorios	= new MMenu();
-			$menuCadastroRelatoriosEquipamentos = new MMenu();			
+			$menuCadastroRelatoriosEquipamentos = new MMenu();
 			$menuCadastroRelatoriosEquipamentos->addItem("Carga por AP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=ap", $target);
 			$menuCadastroRelatoriosEquipamentos->addItem("Carga por POP", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=pop", $target);
 			$menuCadastroRelatoriosEquipamentos->addItem("Carga por NAS", "admin-cadastro.php?op=relatorios&relatorio=carga&tipo=nas", $target);			
+			$menuCadastroRelatoriosEquipamentos->addItem("IPs dos POPs", "admin-cadastro.php?op=relatorios&relatorio=pop_ip", $target);
 			$menuCadastroRelatorios->addSubmenu("Equipamentos",$menuCadastroRelatoriosEquipamentos);			
 			
 			
@@ -182,6 +183,9 @@
 			$menuFinanceiroRelatoriosCobranca->addSeparator();
 			$menuFinanceiroRelatoriosCobranca->addItem("Clientes por Produto", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cliente_produto", $target);
 			$menuFinanceiroRelatoriosCobranca->addItem("Clientes por Tipo Produto", "admin-financeiro.php?op=relatorios_cobranca&relatorio=cliente_tipo_produto", $target);
+			$menuFinanceiroRelatoriosCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca->addItem("Inadimplencia", "admin-financeiro.php?op=relatorios_cobranca&relatorio=inadimplencia", $target);
+			$menuFinanceiroRelatoriosCobranca->addItem("Recebimentos por Periodo", "admin-financeiro.php?op=relatorios_cobranca&relatorio=recebimentos_periodo", $target);
 			// $menuFinanceiroCobranca->addSubmenu("Relatórios",$menuFinanceiroCobrancaRelatorios);
 
 			$menuFinanceiro->addSubmenu("Cobrança",$menuFinanceiroCobranca);
@@ -206,6 +210,7 @@
 			$menuFinanceiroRelatorios->addItem("Fluxo de Caixa", "admin-financeiro.php?op=relatorios&relatorio=faturamento", $target);
 			$menuFinanceiroRelatorios->addSubmenu("Faturamento", $menuFinanceiroRelatoriosFaturamento );
 			$menuFinanceiroRelatorios->addSubmenu("Cobrança", $menuFinanceiroRelatoriosCobranca );
+			
 			
 			
 			

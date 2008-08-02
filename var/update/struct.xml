@@ -34,7 +34,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -82,7 +81,6 @@
    <tipo_admin >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -94,7 +92,7 @@
   <constraints >
    <adtb_admin_pkey >
     <type >p</type>
-    <table_oid >2837281</table_oid>
+    <table_oid >28782</table_oid>
     <table >adtb_admin</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -111,7 +109,7 @@
    </adtb_admin_pkey>
    <adtb_admin_email_key >
     <type >u</type>
-    <table_oid >2837281</table_oid>
+    <table_oid >28782</table_oid>
     <table >adtb_admin</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -128,7 +126,7 @@
    </adtb_admin_email_key>
    <adtb_admin_admin_key >
     <type >u</type>
-    <table_oid >2837281</table_oid>
+    <table_oid >28782</table_oid>
     <table >adtb_admin</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -213,7 +211,7 @@
   <constraints >
    <adtb_privilegio_pkey >
     <type >p</type>
-    <table_oid >2837283</table_oid>
+    <table_oid >28795</table_oid>
     <table >adtb_privilegio</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -230,7 +228,7 @@
    </adtb_privilegio_pkey>
    <adtb_privilegio_cod_priv_key >
     <type >u</type>
-    <table_oid >2837283</table_oid>
+    <table_oid >28795</table_oid>
     <table >adtb_privilegio</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -279,45 +277,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <adtb_usuario_privilegio_id_priv_fkey >
-    <type >f</type>
-    <table_oid >2837285</table_oid>
-    <table >adtb_usuario_privilegio</table>
-    <foreign_oid >2837283</foreign_oid>
-    <foreign_table >adtb_privilegio</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_priv</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_priv</int>
-    </foreign_fields>
-   </adtb_usuario_privilegio_id_priv_fkey>
-   <adtb_usuario_privilegio_id_admin_fkey >
-    <type >f</type>
-    <table_oid >2837285</table_oid>
-    <table >adtb_usuario_privilegio</table>
-    <foreign_oid >2837281</foreign_oid>
-    <foreign_table >adtb_admin</foreign_table>
-    <conkey >{1}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_admin</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_admin</int>
-    </foreign_fields>
-   </adtb_usuario_privilegio_id_admin_fkey>
    <adtb_usuario_privilegio_pkey >
     <type >p</type>
-    <table_oid >2837285</table_oid>
+    <table_oid >28803</table_oid>
     <table >adtb_usuario_privilegio</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -333,6 +295,42 @@
     <foreign_fields >
     </foreign_fields>
    </adtb_usuario_privilegio_pkey>
+   <adtb_usuario_privilegio_id_priv_fkey >
+    <type >f</type>
+    <table_oid >28803</table_oid>
+    <table >adtb_usuario_privilegio</table>
+    <foreign_oid >28795</foreign_oid>
+    <foreign_table >adtb_privilegio</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_priv</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_priv</int>
+    </foreign_fields>
+   </adtb_usuario_privilegio_id_priv_fkey>
+   <adtb_usuario_privilegio_id_admin_fkey >
+    <type >f</type>
+    <table_oid >28803</table_oid>
+    <table >adtb_usuario_privilegio</table>
+    <foreign_oid >28782</foreign_oid>
+    <foreign_table >adtb_admin</foreign_table>
+    <conkey >{1}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_admin</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_admin</int>
+    </foreign_fields>
+   </adtb_usuario_privilegio_id_admin_fkey>
   </constraints>
  </adtb_usuario_privilegio>
  <aged_rdtb_accounting >
@@ -373,7 +371,7 @@
    <tempo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,0</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -417,7 +415,7 @@
    <bytes_in >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,0</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -425,7 +423,7 @@
    <bytes_out >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,0</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -496,7 +494,6 @@
    <cep >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >10</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -523,7 +520,6 @@
    <situacao >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -609,27 +605,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <catb_condominio_id_cidade_fkey >
-    <type >f</type>
-    <table_oid >3149695</table_oid>
-    <table >catb_condominio</table>
-    <foreign_oid >2837352</foreign_oid>
-    <foreign_table >cftb_cidade</foreign_table>
-    <conkey >{6}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cidade</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cidade</int>
-    </foreign_fields>
-   </catb_condominio_id_cidade_fkey>
    <catb_condominio_pkey >
     <type >p</type>
-    <table_oid >3149695</table_oid>
+    <table_oid >28809</table_oid>
     <table >catb_condominio</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -644,6 +622,24 @@
     <foreign_fields >
     </foreign_fields>
    </catb_condominio_pkey>
+   <catb_condominio_id_cidade_fkey >
+    <type >f</type>
+    <table_oid >28809</table_oid>
+    <table >catb_condominio</table>
+    <foreign_oid >28907</foreign_oid>
+    <foreign_table >cftb_cidade</foreign_table>
+    <conkey >{6}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cidade</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cidade</int>
+    </foreign_fields>
+   </catb_condominio_id_cidade_fkey>
   </constraints>
  </catb_condominio>
  <catb_condominio_bloco >
@@ -706,7 +702,6 @@
    <situacao >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -733,11 +728,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <catb_condominio_bloco_pkey >
+    <type >p</type>
+    <table_oid >28816</table_oid>
+    <table >catb_condominio_bloco</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_bloco</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </catb_condominio_bloco_pkey>
    <catb_condominio_bloco_id_pop_fkey >
     <type >f</type>
-    <table_oid >3238989</table_oid>
+    <table_oid >28816</table_oid>
     <table >catb_condominio_bloco</table>
-    <foreign_oid >2837376</foreign_oid>
+    <foreign_oid >28945</foreign_oid>
     <foreign_table >cftb_pop</foreign_table>
     <conkey >{8}</conkey>
     <confkey >{1}</confkey>
@@ -753,9 +765,9 @@
    </catb_condominio_bloco_id_pop_fkey>
    <catb_condominio_bloco_id_condominio_fkey >
     <type >f</type>
-    <table_oid >3238989</table_oid>
+    <table_oid >28816</table_oid>
     <table >catb_condominio_bloco</table>
-    <foreign_oid >3149695</foreign_oid>
+    <foreign_oid >28809</foreign_oid>
     <foreign_table >catb_condominio</foreign_table>
     <conkey >{8}</conkey>
     <confkey >{1}</confkey>
@@ -769,23 +781,6 @@
      <int i="0">id_condominio</int>
     </foreign_fields>
    </catb_condominio_bloco_id_condominio_fkey>
-   <catb_condominio_bloco_pkey >
-    <type >p</type>
-    <table_oid >3238989</table_oid>
-    <table >catb_condominio_bloco</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_bloco</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </catb_condominio_bloco_pkey>
   </constraints>
  </catb_condominio_bloco>
  <cbtb_aceite >
@@ -869,7 +864,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,2</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -898,7 +893,7 @@
   <constraints >
    <cbtb_carne_pkey >
     <type >p</type>
-    <table_oid >2837309</table_oid>
+    <table_oid >28825</table_oid>
     <table >cbtb_carne</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -966,39 +961,24 @@
    <cbix_cliente_produto_idcp_idc_idp >
     <fields >
      <id_cliente_produto >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_cliente_produto>
      <id_cliente >
+      <position >2</position>
       <sorting >ascending</sorting>
      </id_cliente>
      <id_produto >
+      <position >3</position>
       <sorting >ascending</sorting>
      </id_produto>
     </fields>
    </cbix_cliente_produto_idcp_idc_idp>
   </indexes>
   <constraints >
-   <cbtb_cliente_produto_id_cliente_fkey >
-    <type >f</type>
-    <table_oid >2837312</table_oid>
-    <table >cbtb_cliente_produto</table>
-    <foreign_oid >2837407</foreign_oid>
-    <foreign_table >cltb_cliente</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente</int>
-    </foreign_fields>
-   </cbtb_cliente_produto_id_cliente_fkey>
    <cbtb_cliente_produto_pkey >
     <type >p</type>
-    <table_oid >2837312</table_oid>
+    <table_oid >28830</table_oid>
     <table >cbtb_cliente_produto</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -1013,6 +993,24 @@
     <foreign_fields >
     </foreign_fields>
    </cbtb_cliente_produto_pkey>
+   <cbtb_cliente_produto_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >28830</table_oid>
+    <table >cbtb_cliente_produto</table>
+    <foreign_oid >28986</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </cbtb_cliente_produto_id_cliente_fkey>
   </constraints>
  </cbtb_cliente_produto>
  <cbtb_cliente_venda >
@@ -1058,7 +1056,7 @@
   <constraints >
    <cbtb_cliente_venda_pkey >
     <type >p</type>
-    <table_oid >2837315</table_oid>
+    <table_oid >28835</table_oid>
     <table >cbtb_cliente_venda</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -1109,7 +1107,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >9,2</length>
+    <length >0,9</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1117,7 +1115,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -1134,11 +1131,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <cbtb_comissao_pkey >
+    <type >p</type>
+    <table_oid >28839</table_oid>
+    <table >cbtb_comissao</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_comissao</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cbtb_comissao_pkey>
    <hdtb_comissao_id_admin_fkey >
     <type >f</type>
-    <table_oid >3149774</table_oid>
+    <table_oid >28839</table_oid>
     <table >cbtb_comissao</table>
-    <foreign_oid >2837281</foreign_oid>
+    <foreign_oid >28782</foreign_oid>
     <foreign_table >adtb_admin</foreign_table>
     <conkey >{3}</conkey>
     <confkey >{1}</confkey>
@@ -1154,9 +1168,9 @@
    </hdtb_comissao_id_admin_fkey>
    <hdtb_comissao_id_cliente_produto_fkey >
     <type >f</type>
-    <table_oid >3149774</table_oid>
+    <table_oid >28839</table_oid>
     <table >cbtb_comissao</table>
-    <foreign_oid >2837312</foreign_oid>
+    <foreign_oid >28830</foreign_oid>
     <foreign_table >cbtb_cliente_produto</foreign_table>
     <conkey >{2}</conkey>
     <confkey >{1}</confkey>
@@ -1170,23 +1184,6 @@
      <int i="0">id_cliente_produto</int>
     </foreign_fields>
    </hdtb_comissao_id_cliente_produto_fkey>
-   <cbtb_comissao_pkey >
-    <type >p</type>
-    <table_oid >3149774</table_oid>
-    <table >cbtb_comissao</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_comissao</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </cbtb_comissao_pkey>
   </constraints>
  </cbtb_comissao>
  <cbtb_contrato >
@@ -1227,7 +1224,7 @@
    <valor_contrato >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1244,7 +1241,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -1253,7 +1249,6 @@
    <tipo_produto >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -1262,7 +1257,7 @@
    <valor_produto >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1288,7 +1283,7 @@
    <tx_instalacao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1303,7 +1298,7 @@
    <valor_comodato >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1311,7 +1306,7 @@
    <desconto_promo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1344,7 +1339,7 @@
    <hosp_valor_mb_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1368,7 +1363,7 @@
    <disc_valor_hora_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1403,7 +1398,7 @@
    <bl_valor_trafego_adicional_gb >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1474,7 +1469,6 @@
    <cc_operadora >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -1568,7 +1562,7 @@
    <vl_email_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1771,7 +1765,7 @@
    <vl_parcelas_instalacao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >9,2</length>
+    <length >0,9</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1780,11 +1774,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <cbtb_contrato_pkey >
+    <type >p</type>
+    <table_oid >28846</table_oid>
+    <table >cbtb_contrato</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cbtb_contrato_pkey>
    <cbtb_contrato_id_modelo_contrato_fkey >
     <type >f</type>
-    <table_oid >2837317</table_oid>
+    <table_oid >28846</table_oid>
     <table >cbtb_contrato</table>
-    <foreign_oid >2837553</foreign_oid>
+    <foreign_oid >29173</foreign_oid>
     <foreign_table >pftb_modelo_contrato</foreign_table>
     <conkey >{65}</conkey>
     <confkey >{1}</confkey>
@@ -1800,9 +1811,9 @@
    </cbtb_contrato_id_modelo_contrato_fkey>
    <cbtb_contrato_id_forma_pagamento >
     <type >f</type>
-    <table_oid >2837317</table_oid>
+    <table_oid >28846</table_oid>
     <table >cbtb_contrato</table>
-    <foreign_oid >2837548</foreign_oid>
+    <foreign_oid >29164</foreign_oid>
     <foreign_table >pftb_forma_pagamento</foreign_table>
     <conkey >{60}</conkey>
     <confkey >{1}</confkey>
@@ -1818,9 +1829,9 @@
    </cbtb_contrato_id_forma_pagamento>
    <cbtb_contrato_id_cliente_produto_fkey >
     <type >f</type>
-    <table_oid >2837317</table_oid>
+    <table_oid >28846</table_oid>
     <table >cbtb_contrato</table>
-    <foreign_oid >2837312</foreign_oid>
+    <foreign_oid >28830</foreign_oid>
     <foreign_table >cbtb_cliente_produto</foreign_table>
     <conkey >{1}</conkey>
     <confkey >{1}</confkey>
@@ -1834,23 +1845,6 @@
      <int i="0">id_cliente_produto</int>
     </foreign_fields>
    </cbtb_contrato_id_cliente_produto_fkey>
-   <cbtb_contrato_pkey >
-    <type >p</type>
-    <table_oid >2837317</table_oid>
-    <table >cbtb_contrato</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </cbtb_contrato_pkey>
   </constraints>
  </cbtb_contrato>
  <cbtb_endereco_cobranca >
@@ -1913,7 +1907,6 @@
    <cep >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >10</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -1959,11 +1952,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <cbtb_endereco_cobranca_pkey >
+    <type >p</type>
+    <table_oid >28854</table_oid>
+    <table >cbtb_endereco_cobranca</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_endereco_cobranca</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cbtb_endereco_cobranca_pkey>
    <cbtb_endereco_cobranca_id_bloco_instalacao_fkey >
     <type >f</type>
-    <table_oid >2837322</table_oid>
+    <table_oid >28854</table_oid>
     <table >cbtb_endereco_cobranca</table>
-    <foreign_oid >3238989</foreign_oid>
+    <foreign_oid >28816</foreign_oid>
     <foreign_table >catb_condominio_bloco</foreign_table>
     <conkey >{10}</conkey>
     <confkey >{1}</confkey>
@@ -1979,9 +1989,9 @@
    </cbtb_endereco_cobranca_id_bloco_instalacao_fkey>
    <cbtb_condominio_cobranca_fkey >
     <type >f</type>
-    <table_oid >2837322</table_oid>
+    <table_oid >28854</table_oid>
     <table >cbtb_endereco_cobranca</table>
-    <foreign_oid >3149695</foreign_oid>
+    <foreign_oid >28809</foreign_oid>
     <foreign_table >catb_condominio</foreign_table>
     <conkey >{9}</conkey>
     <confkey >{1}</confkey>
@@ -1997,9 +2007,9 @@
    </cbtb_condominio_cobranca_fkey>
    <cntb_endereco_cobranca_id_cidade_fkey >
     <type >f</type>
-    <table_oid >2837322</table_oid>
+    <table_oid >28854</table_oid>
     <table >cbtb_endereco_cobranca</table>
-    <foreign_oid >2837352</foreign_oid>
+    <foreign_oid >28907</foreign_oid>
     <foreign_table >cftb_cidade</foreign_table>
     <conkey >{6}</conkey>
     <confkey >{1}</confkey>
@@ -2013,23 +2023,6 @@
      <int i="0">id_cidade</int>
     </foreign_fields>
    </cntb_endereco_cobranca_id_cidade_fkey>
-   <cbtb_endereco_cobranca_pkey >
-    <type >p</type>
-    <table_oid >2837322</table_oid>
-    <table >cbtb_endereco_cobranca</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_endereco_cobranca</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </cbtb_endereco_cobranca_pkey>
   </constraints>
  </cbtb_endereco_cobranca>
  <cbtb_fatura_itens >
@@ -2065,7 +2058,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >9,2</length>
+    <length >0,9</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2076,7 +2069,7 @@
   <constraints >
    <cbtb_fatura_itens_pkey >
     <type >p</type>
-    <table_oid >3238936</table_oid>
+    <table_oid >28861</table_oid>
     <table >cbtb_fatura_itens</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -2093,9 +2086,9 @@
    </cbtb_fatura_itens_pkey>
    <cbtb_faturas_itens_id_cobranca_fkey >
     <type >f</type>
-    <table_oid >3238936</table_oid>
+    <table_oid >28861</table_oid>
     <table >cbtb_fatura_itens</table>
-    <foreign_oid >2837326</foreign_oid>
+    <foreign_oid >28865</foreign_oid>
     <foreign_table >cbtb_faturas</foreign_table>
     <conkey >{2}</conkey>
     <confkey >{13}</confkey>
@@ -2141,7 +2134,7 @@
    <valor >
     <notnull >1</notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2173,7 +2166,7 @@
    <pagto_parcial >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2188,7 +2181,7 @@
    <desconto >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2196,7 +2189,7 @@
    <acrescimo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2204,19 +2197,19 @@
    <valor_pago >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
    </valor_pago>
    <id_cobranca >
     <notnull >1</notnull>
-    <nativetype >numeric</nativetype>
-    <length >11,0</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
-    <type >decimal</type>
-    <mdb2type >decimal</mdb2type>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
    </id_cobranca>
    <cod_barra >
     <notnull ></notnull>
@@ -2264,7 +2257,7 @@
    <nosso_numero_banco >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >17,0</length>
+    <length >0,17</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2317,57 +2310,24 @@
    <cbix_faturas_id_cp_data_reagend >
     <fields >
      <id_cliente_produto >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_cliente_produto>
      <data >
+      <position >2</position>
       <sorting >ascending</sorting>
      </data>
      <reagendamento >
+      <position >3</position>
       <sorting >ascending</sorting>
      </reagendamento>
     </fields>
    </cbix_faturas_id_cp_data_reagend>
   </indexes>
   <constraints >
-   <cbtb_retorno_id_retorno_fkey >
-    <type >f</type>
-    <table_oid >2837326</table_oid>
-    <table >cbtb_faturas</table>
-    <foreign_oid >3222705</foreign_oid>
-    <foreign_table >cbtb_retorno</foreign_table>
-    <conkey >{24}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_retorno</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_retorno</int>
-    </foreign_fields>
-   </cbtb_retorno_id_retorno_fkey>
-   <cbtb_remessa_id_remessa_fkey >
-    <type >f</type>
-    <table_oid >2837326</table_oid>
-    <table >cbtb_faturas</table>
-    <foreign_oid >3222620</foreign_oid>
-    <foreign_table >cbtb_remessa</foreign_table>
-    <conkey >{23}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_remessa</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_remessa</int>
-    </foreign_fields>
-   </cbtb_remessa_id_remessa_fkey>
    <cbtb_faturas_id_cobranca_unique >
     <type >u</type>
-    <table_oid >2837326</table_oid>
+    <table_oid >28865</table_oid>
     <table >cbtb_faturas</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -2382,63 +2342,9 @@
     <foreign_fields >
     </foreign_fields>
    </cbtb_faturas_id_cobranca_unique>
-   <cbtb_faturas_id_forma_pagamento >
-    <type >f</type>
-    <table_oid >2837326</table_oid>
-    <table >cbtb_faturas</table>
-    <foreign_oid >2837548</foreign_oid>
-    <foreign_table >pftb_forma_pagamento</foreign_table>
-    <conkey >{22}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_forma_pagamento</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_forma_pagamento</int>
-    </foreign_fields>
-   </cbtb_faturas_id_forma_pagamento>
-   <cbtb_faturas_id_cliente_produto_fkey >
-    <type >f</type>
-    <table_oid >2837326</table_oid>
-    <table >cbtb_faturas</table>
-    <foreign_oid >2837317</foreign_oid>
-    <foreign_table >cbtb_contrato</foreign_table>
-    <conkey >{1}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente_produto</int>
-    </foreign_fields>
-   </cbtb_faturas_id_cliente_produto_fkey>
-   <cbtb_faturas_id_carne_fkey >
-    <type >f</type>
-    <table_oid >2837326</table_oid>
-    <table >cbtb_faturas</table>
-    <foreign_oid >2837309</foreign_oid>
-    <foreign_table >cbtb_carne</foreign_table>
-    <conkey >{16}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_carne</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_carne</int>
-    </foreign_fields>
-   </cbtb_faturas_id_carne_fkey>
    <cbtb_faturas_pkey >
     <type >p</type>
-    <table_oid >2837326</table_oid>
+    <table_oid >28865</table_oid>
     <table >cbtb_faturas</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -2456,7 +2362,7 @@
    </cbtb_faturas_pkey>
    <cbtb_faturas_cod_barra_key >
     <type >u</type>
-    <table_oid >2837326</table_oid>
+    <table_oid >28865</table_oid>
     <table >cbtb_faturas</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -2471,6 +2377,96 @@
     <foreign_fields >
     </foreign_fields>
    </cbtb_faturas_cod_barra_key>
+   <cbtb_retorno_id_retorno_fkey >
+    <type >f</type>
+    <table_oid >28865</table_oid>
+    <table >cbtb_faturas</table>
+    <foreign_oid >28893</foreign_oid>
+    <foreign_table >cbtb_retorno</foreign_table>
+    <conkey >{24}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_retorno</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_retorno</int>
+    </foreign_fields>
+   </cbtb_retorno_id_retorno_fkey>
+   <cbtb_remessa_id_remessa_fkey >
+    <type >f</type>
+    <table_oid >28865</table_oid>
+    <table >cbtb_faturas</table>
+    <foreign_oid >28889</foreign_oid>
+    <foreign_table >cbtb_remessa</foreign_table>
+    <conkey >{23}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_remessa</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_remessa</int>
+    </foreign_fields>
+   </cbtb_remessa_id_remessa_fkey>
+   <cbtb_faturas_id_forma_pagamento >
+    <type >f</type>
+    <table_oid >28865</table_oid>
+    <table >cbtb_faturas</table>
+    <foreign_oid >29164</foreign_oid>
+    <foreign_table >pftb_forma_pagamento</foreign_table>
+    <conkey >{22}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_forma_pagamento</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_forma_pagamento</int>
+    </foreign_fields>
+   </cbtb_faturas_id_forma_pagamento>
+   <cbtb_faturas_id_cliente_produto_fkey >
+    <type >f</type>
+    <table_oid >28865</table_oid>
+    <table >cbtb_faturas</table>
+    <foreign_oid >28846</foreign_oid>
+    <foreign_table >cbtb_contrato</foreign_table>
+    <conkey >{1}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+    </foreign_fields>
+   </cbtb_faturas_id_cliente_produto_fkey>
+   <cbtb_faturas_id_carne_fkey >
+    <type >f</type>
+    <table_oid >28865</table_oid>
+    <table >cbtb_faturas</table>
+    <foreign_oid >28825</foreign_oid>
+    <foreign_table >cbtb_carne</foreign_table>
+    <conkey >{16}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_carne</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_carne</int>
+    </foreign_fields>
+   </cbtb_faturas_id_carne_fkey>
   </constraints>
  </cbtb_faturas>
  <cbtb_lote_cobranca >
@@ -2495,7 +2491,6 @@
    <periodo >
     <notnull >1</notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -2530,11 +2525,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <cbtb_lote_cobranca_pkey >
+    <type >p</type>
+    <table_oid >28878</table_oid>
+    <table >cbtb_lote_cobranca</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_remessa</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cbtb_lote_cobranca_pkey>
    <cbtb_lote_cobranca_id_forma_pagamento_fkey >
     <type >f</type>
-    <table_oid >3116054</table_oid>
+    <table_oid >28878</table_oid>
     <table >cbtb_lote_cobranca</table>
-    <foreign_oid >2837548</foreign_oid>
+    <foreign_oid >29164</foreign_oid>
     <foreign_table >pftb_forma_pagamento</foreign_table>
     <conkey >{6}</conkey>
     <confkey >{1}</confkey>
@@ -2550,9 +2562,9 @@
    </cbtb_lote_cobranca_id_forma_pagamento_fkey>
    <cbtb_lote_cobranca_fkey_adtb_admin >
     <type >f</type>
-    <table_oid >3116054</table_oid>
+    <table_oid >28878</table_oid>
     <table >cbtb_lote_cobranca</table>
-    <foreign_oid >2837281</foreign_oid>
+    <foreign_oid >28782</foreign_oid>
     <foreign_table >adtb_admin</foreign_table>
     <conkey >{4}</conkey>
     <confkey >{1}</confkey>
@@ -2566,23 +2578,6 @@
      <int i="0">id_admin</int>
     </foreign_fields>
    </cbtb_lote_cobranca_fkey_adtb_admin>
-   <cbtb_lote_cobranca_pkey >
-    <type >p</type>
-    <table_oid >3116054</table_oid>
-    <table >cbtb_lote_cobranca</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_remessa</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </cbtb_lote_cobranca_pkey>
   </constraints>
  </cbtb_lote_cobranca>
  <cbtb_lote_fatura >
@@ -2611,6 +2606,7 @@
    <fki_cbtb_lote_cobranca_id_remessa_fkey >
     <fields >
      <id_remessa >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_remessa>
     </fields>
@@ -2619,9 +2615,9 @@
   <constraints >
    <cbtb_lote_cobranca_id_remessa_fkey >
     <type >f</type>
-    <table_oid >3116062</table_oid>
+    <table_oid >28885</table_oid>
     <table >cbtb_lote_fatura</table>
-    <foreign_oid >3116054</foreign_oid>
+    <foreign_oid >28878</foreign_oid>
     <foreign_table >cbtb_lote_cobranca</foreign_table>
     <conkey >{1}</conkey>
     <confkey >{1}</confkey>
@@ -2680,9 +2676,9 @@
   <constraints >
    <cbtb_produtos_venda_id_venda_fkey >
     <type >f</type>
-    <table_oid >2837334</table_oid>
+    <table_oid >28887</table_oid>
     <table >cbtb_produtos_venda</table>
-    <foreign_oid >2837336</foreign_oid>
+    <foreign_oid >28897</foreign_oid>
     <foreign_table >cbtb_venda</foreign_table>
     <conkey >{1}</conkey>
     <confkey >{1}</confkey>
@@ -2732,7 +2728,7 @@
   <constraints >
    <cbtb_id_remessa_pkey >
     <type >p</type>
-    <table_oid >3222620</table_oid>
+    <table_oid >28889</table_oid>
     <table >cbtb_remessa</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -2851,27 +2847,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <cbtb_retorno_id_admin_fkey >
-    <type >f</type>
-    <table_oid >3222705</table_oid>
-    <table >cbtb_retorno</table>
-    <foreign_oid >2837281</foreign_oid>
-    <foreign_table >adtb_admin</foreign_table>
-    <conkey >{6}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_admin</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_admin</int>
-    </foreign_fields>
-   </cbtb_retorno_id_admin_fkey>
    <cbtb_retorno_id_retorno_key >
     <type >p</type>
-    <table_oid >3222705</table_oid>
+    <table_oid >28893</table_oid>
     <table >cbtb_retorno</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -2886,8 +2864,132 @@
     <foreign_fields >
     </foreign_fields>
    </cbtb_retorno_id_retorno_key>
+   <cbtb_retorno_id_admin_fkey >
+    <type >f</type>
+    <table_oid >28893</table_oid>
+    <table >cbtb_retorno</table>
+    <foreign_oid >28782</foreign_oid>
+    <foreign_table >adtb_admin</foreign_table>
+    <conkey >{6}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_admin</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_admin</int>
+    </foreign_fields>
+   </cbtb_retorno_id_admin_fkey>
   </constraints>
  </cbtb_retorno>
+ <cbtb_retorno_erro >
+  <inherits ></inherits>
+  <fields >
+   <id_retorno_erro >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_retorno_erro>
+   <id_retorno >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_retorno>
+   <id_cobranca >
+    <notnull ></notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_cobranca>
+   <codigo_barra >
+    <notnull ></notnull>
+    <nativetype >varchar</nativetype>
+    <length >50</length>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </codigo_barra>
+   <mensagem >
+    <notnull ></notnull>
+    <nativetype >text</nativetype>
+    <fixed ></fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </mensagem>
+  </fields>
+  <indexes >
+  </indexes>
+  <constraints >
+   <cbtb_retorno_erro_pkey >
+    <type >p</type>
+    <table_oid >36199</table_oid>
+    <table >cbtb_retorno_erro</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_retorno_erro</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cbtb_retorno_erro_pkey>
+   <cbtb_retorno_erro_id_retorno_fkey >
+    <type >f</type>
+    <table_oid >36199</table_oid>
+    <table >cbtb_retorno_erro</table>
+    <foreign_oid >28893</foreign_oid>
+    <foreign_table >cbtb_retorno</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_retorno</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_retorno</int>
+    </foreign_fields>
+   </cbtb_retorno_erro_id_retorno_fkey>
+   <cbtb_retorno_erro_id_cobranca_fkey >
+    <type >f</type>
+    <table_oid >36199</table_oid>
+    <table >cbtb_retorno_erro</table>
+    <foreign_oid >28865</foreign_oid>
+    <foreign_table >cbtb_faturas</foreign_table>
+    <conkey >{3}</conkey>
+    <confkey >{13}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cobranca</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cobranca</int>
+    </foreign_fields>
+   </cbtb_retorno_erro_id_cobranca_fkey>
+  </constraints>
+ </cbtb_retorno_erro>
  <cbtb_venda >
   <inherits ></inherits>
   <fields >
@@ -2912,7 +3014,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2939,7 +3041,7 @@
   <constraints >
    <cbtb_venda_pkey >
     <type >p</type>
-    <table_oid >2837336</table_oid>
+    <table_oid >28897</table_oid>
     <table >cbtb_venda</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3028,7 +3130,7 @@
   <constraints >
    <cftb_banda_pkey >
     <type >p</type>
-    <table_oid >2837350</table_oid>
+    <table_oid >28903</table_oid>
     <table >cftb_banda</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3060,7 +3162,6 @@
    <uf >
     <notnull >1</notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -3087,33 +3188,16 @@
    <cfix_cidade_uf >
     <fields >
      <uf >
+      <position >1</position>
       <sorting >ascending</sorting>
      </uf>
     </fields>
    </cfix_cidade_uf>
   </indexes>
   <constraints >
-   <cftb_cidade_uf_fkey >
-    <type >f</type>
-    <table_oid >2837352</table_oid>
-    <table >cftb_cidade</table>
-    <foreign_oid >2837399</foreign_oid>
-    <foreign_table >cftb_uf</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">uf</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">uf</int>
-    </foreign_fields>
-   </cftb_cidade_uf_fkey>
    <cftb_cidade_pkey >
     <type >p</type>
-    <table_oid >2837352</table_oid>
+    <table_oid >28907</table_oid>
     <table >cftb_cidade</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3128,6 +3212,24 @@
     <foreign_fields >
     </foreign_fields>
    </cftb_cidade_pkey>
+   <cftb_cidade_uf_fkey >
+    <type >f</type>
+    <table_oid >28907</table_oid>
+    <table >cftb_cidade</table>
+    <foreign_oid >28979</foreign_oid>
+    <foreign_table >cftb_uf</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">uf</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">uf</int>
+    </foreign_fields>
+   </cftb_cidade_uf_fkey>
   </constraints>
  </cftb_cidade>
  <cftb_forma_pagamento >
@@ -3164,7 +3266,7 @@
   <constraints >
    <cftb_forma_pagamento_pkey >
     <type >p</type>
-    <table_oid >2837355</table_oid>
+    <table_oid >28915</table_oid>
     <table >cftb_forma_pagamento</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3197,7 +3299,7 @@
   <constraints >
    <cftb_ip_pkey >
     <type >p</type>
-    <table_oid >2837357</table_oid>
+    <table_oid >28919</table_oid>
     <table >cftb_ip</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3237,27 +3339,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <cftb_ip_externo_id_nas_fkey >
-    <type >f</type>
-    <table_oid >2837359</table_oid>
-    <table >cftb_ip_externo</table>
-    <foreign_oid >2837369</foreign_oid>
-    <foreign_table >cftb_nas</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_nas</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_nas</int>
-    </foreign_fields>
-   </cftb_ip_externo_id_nas_fkey>
    <cftb_ip_externo_pkey >
     <type >p</type>
-    <table_oid >2837359</table_oid>
+    <table_oid >28923</table_oid>
     <table >cftb_ip_externo</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3272,6 +3356,24 @@
     <foreign_fields >
     </foreign_fields>
    </cftb_ip_externo_pkey>
+   <cftb_ip_externo_id_nas_fkey >
+    <type >f</type>
+    <table_oid >28923</table_oid>
+    <table >cftb_ip_externo</table>
+    <foreign_oid >28934</foreign_oid>
+    <foreign_table >cftb_nas</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_nas</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_nas</int>
+    </foreign_fields>
+   </cftb_ip_externo_id_nas_fkey>
   </constraints>
  </cftb_ip_externo>
  <cftb_links >
@@ -3283,7 +3385,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_link>
@@ -3328,7 +3429,7 @@
   <constraints >
    <cftb_links_pkey >
     <type >p</type>
-    <table_oid >2837363</table_oid>
+    <table_oid >28927</table_oid>
     <table >cftb_links</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3385,7 +3486,6 @@
    <tipo_nas >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -3403,7 +3503,6 @@
    <padrao >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -3422,27 +3521,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <cftb_nas_id_servidor_fkey >
-    <type >f</type>
-    <table_oid >2837369</table_oid>
-    <table >cftb_nas</table>
-    <foreign_oid >2837394</foreign_oid>
-    <foreign_table >cftb_servidor</foreign_table>
-    <conkey >{8}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_servidor</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_servidor</int>
-    </foreign_fields>
-   </cftb_nas_id_servidor_fkey>
    <cftb_nas_pkey >
     <type >p</type>
-    <table_oid >2837369</table_oid>
+    <table_oid >28934</table_oid>
     <table >cftb_nas</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3457,6 +3538,24 @@
     <foreign_fields >
     </foreign_fields>
    </cftb_nas_pkey>
+   <cftb_nas_id_servidor_fkey >
+    <type >f</type>
+    <table_oid >28934</table_oid>
+    <table >cftb_nas</table>
+    <foreign_oid >28972</foreign_oid>
+    <foreign_table >cftb_servidor</foreign_table>
+    <conkey >{8}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_servidor</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_servidor</int>
+    </foreign_fields>
+   </cftb_nas_id_servidor_fkey>
   </constraints>
  </cftb_nas>
  <cftb_nas_rede >
@@ -3482,45 +3581,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <cftb_nas_rede_rede_fkey >
-    <type >f</type>
-    <table_oid >2837374</table_oid>
-    <table >cftb_nas_rede</table>
-    <foreign_oid >2837389</foreign_oid>
-    <foreign_table >cftb_rede</foreign_table>
-    <conkey >{1}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">rede</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">rede</int>
-    </foreign_fields>
-   </cftb_nas_rede_rede_fkey>
-   <cftb_nas_rede_id_nas_fkey >
-    <type >f</type>
-    <table_oid >2837374</table_oid>
-    <table >cftb_nas_rede</table>
-    <foreign_oid >2837369</foreign_oid>
-    <foreign_table >cftb_nas</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_nas</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_nas</int>
-    </foreign_fields>
-   </cftb_nas_rede_id_nas_fkey>
    <cftb_nas_rede_pkey >
     <type >p</type>
-    <table_oid >2837374</table_oid>
+    <table_oid >28941</table_oid>
     <table >cftb_nas_rede</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3536,6 +3599,42 @@
     <foreign_fields >
     </foreign_fields>
    </cftb_nas_rede_pkey>
+   <cftb_nas_rede_rede_fkey >
+    <type >f</type>
+    <table_oid >28941</table_oid>
+    <table >cftb_nas_rede</table>
+    <foreign_oid >28965</foreign_oid>
+    <foreign_table >cftb_rede</foreign_table>
+    <conkey >{1}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">rede</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">rede</int>
+    </foreign_fields>
+   </cftb_nas_rede_rede_fkey>
+   <cftb_nas_rede_id_nas_fkey >
+    <type >f</type>
+    <table_oid >28941</table_oid>
+    <table >cftb_nas_rede</table>
+    <foreign_oid >28934</foreign_oid>
+    <foreign_table >cftb_nas</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_nas</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_nas</int>
+    </foreign_fields>
+   </cftb_nas_rede_id_nas_fkey>
   </constraints>
  </cftb_nas_rede>
  <cftb_pop >
@@ -3588,7 +3687,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default >'A'::bpchar</default>
     <type >text</type>
@@ -3702,45 +3800,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <cftb_pop_id_servidor_fkey >
-    <type >f</type>
-    <table_oid >2837376</table_oid>
-    <table >cftb_pop</table>
-    <foreign_oid >2837394</foreign_oid>
-    <foreign_table >cftb_servidor</foreign_table>
-    <conkey >{14}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_servidor</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_servidor</int>
-    </foreign_fields>
-   </cftb_pop_id_servidor_fkey>
-   <cftb_pop_id_pop_ap_fkey >
-    <type >f</type>
-    <table_oid >2837376</table_oid>
-    <table >cftb_pop</table>
-    <foreign_oid >2837376</foreign_oid>
-    <foreign_table >cftb_pop</foreign_table>
-    <conkey >{5}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_pop_ap</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_pop</int>
-    </foreign_fields>
-   </cftb_pop_id_pop_ap_fkey>
    <cftb_pop_pkey >
     <type >p</type>
-    <table_oid >2837376</table_oid>
+    <table_oid >28945</table_oid>
     <table >cftb_pop</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3757,7 +3819,7 @@
    </cftb_pop_pkey>
    <cftb_pop_nome_key >
     <type >u</type>
-    <table_oid >2837376</table_oid>
+    <table_oid >28945</table_oid>
     <table >cftb_pop</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -3772,6 +3834,42 @@
     <foreign_fields >
     </foreign_fields>
    </cftb_pop_nome_key>
+   <cftb_pop_id_servidor_fkey >
+    <type >f</type>
+    <table_oid >28945</table_oid>
+    <table >cftb_pop</table>
+    <foreign_oid >28972</foreign_oid>
+    <foreign_table >cftb_servidor</foreign_table>
+    <conkey >{14}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_servidor</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_servidor</int>
+    </foreign_fields>
+   </cftb_pop_id_servidor_fkey>
+   <cftb_pop_id_pop_ap_fkey >
+    <type >f</type>
+    <table_oid >28945</table_oid>
+    <table >cftb_pop</table>
+    <foreign_oid >28945</foreign_oid>
+    <foreign_table >cftb_pop</foreign_table>
+    <conkey >{5}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_pop_ap</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_pop</int>
+    </foreign_fields>
+   </cftb_pop_id_pop_ap_fkey>
   </constraints>
  </cftb_pop>
  <cftb_preferencias >
@@ -3950,7 +4048,6 @@
    <cnpj >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >25</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4012,7 +4109,6 @@
    <pagamento >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >3</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4024,7 +4120,7 @@
   <constraints >
    <cftb_preferencias_pkey >
     <type >p</type>
-    <table_oid >2837384</table_oid>
+    <table_oid >28958</table_oid>
     <table >cftb_preferencias</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4054,7 +4150,6 @@
    <tipo_rede >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4075,7 +4170,7 @@
   <constraints >
    <cftb_rede_pkey >
     <type >p</type>
-    <table_oid >2837389</table_oid>
+    <table_oid >28965</table_oid>
     <table >cftb_rede</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4169,7 +4264,7 @@
   <constraints >
    <cftb_servidor_pkey >
     <type >p</type>
-    <table_oid >2837394</table_oid>
+    <table_oid >28972</table_oid>
     <table >cftb_servidor</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4192,7 +4287,6 @@
    <uf >
     <notnull >1</notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4213,7 +4307,7 @@
   <constraints >
    <cftb_uf_pkey >
     <type >p</type>
-    <table_oid >2837399</table_oid>
+    <table_oid >28979</table_oid>
     <table >cftb_uf</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4261,7 +4355,6 @@
    <tipo_pessoa >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4342,7 +4435,6 @@
    <estado >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4351,7 +4443,6 @@
    <cep >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >10</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4548,7 +4639,7 @@
   <constraints >
    <cltb_cliente_pkey >
     <type >p</type>
-    <table_oid >2837407</table_oid>
+    <table_oid >28986</table_oid>
     <table >cltb_cliente</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4565,9 +4656,9 @@
    </cltb_cliente_pkey>
    <cltb_cliente_id_bloco_fkey >
     <type >f</type>
-    <table_oid >2837407</table_oid>
+    <table_oid >28986</table_oid>
     <table >cltb_cliente</table>
-    <foreign_oid >3238989</foreign_oid>
+    <foreign_oid >28816</foreign_oid>
     <foreign_table >catb_condominio_bloco</foreign_table>
     <conkey >{31}</conkey>
     <confkey >{1}</confkey>
@@ -4583,9 +4674,9 @@
    </cltb_cliente_id_bloco_fkey>
    <cltb_cliente_id_condominio_fkey >
     <type >f</type>
-    <table_oid >2837407</table_oid>
+    <table_oid >28986</table_oid>
     <table >cltb_cliente</table>
-    <foreign_oid >3149695</foreign_oid>
+    <foreign_oid >28809</foreign_oid>
     <foreign_table >catb_condominio</foreign_table>
     <conkey >{30}</conkey>
     <confkey >{1}</confkey>
@@ -4601,9 +4692,9 @@
    </cltb_cliente_id_condominio_fkey>
    <cltb_cliente_id_cidade_fkey >
     <type >f</type>
-    <table_oid >2837407</table_oid>
+    <table_oid >28986</table_oid>
     <table >cltb_cliente</table>
-    <foreign_oid >2837352</foreign_oid>
+    <foreign_oid >28907</foreign_oid>
     <foreign_table >cftb_cidade</foreign_table>
     <conkey >{11}</conkey>
     <confkey >{1}</confkey>
@@ -4704,7 +4795,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default >'A'::bpchar</default>
     <type >text</type>
@@ -4734,99 +4824,51 @@
    </data_ativacao>
   </fields>
   <indexes >
-   <cnix_conta_id_cliente_produto_status >
-    <fields >
-     <id_cliente_produto >
-      <sorting >ascending</sorting>
-     </id_cliente_produto>
-     <status >
-      <sorting >ascending</sorting>
-     </status>
-    </fields>
-   </cnix_conta_id_cliente_produto_status>
-   <cnix_conta_id_cliente_produto >
-    <fields >
-     <id_cliente_produto >
-      <sorting >ascending</sorting>
-     </id_cliente_produto>
-    </fields>
-   </cnix_conta_id_cliente_produto>
    <cnix_conta_id_cp >
     <fields >
      <id_cliente_produto >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_cliente_produto>
     </fields>
    </cnix_conta_id_cp>
+   <cnix_conta_id_cliente_produto >
+    <fields >
+     <id_cliente_produto >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_cliente_produto>
+    </fields>
+   </cnix_conta_id_cliente_produto>
    <cnix_conta_id_cp_st >
     <fields >
      <id_cliente_produto >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_cliente_produto>
      <status >
+      <position >2</position>
       <sorting >ascending</sorting>
      </status>
     </fields>
    </cnix_conta_id_cp_st>
+   <cnix_conta_id_cliente_produto_status >
+    <fields >
+     <id_cliente_produto >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_cliente_produto>
+     <status >
+      <position >2</position>
+      <sorting >ascending</sorting>
+     </status>
+    </fields>
+   </cnix_conta_id_cliente_produto_status>
   </indexes>
   <constraints >
-   <cntb_conta_id_cliente_produto_fkey1 >
-    <type >f</type>
-    <table_oid >2837419</table_oid>
-    <table >cntb_conta</table>
-    <foreign_oid >2837312</foreign_oid>
-    <foreign_table >cbtb_cliente_produto</foreign_table>
-    <conkey >{6}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente_produto</int>
-    </foreign_fields>
-   </cntb_conta_id_cliente_produto_fkey1>
-   <cntb_conta_id_cliente_produto_fkey >
-    <type >f</type>
-    <table_oid >2837419</table_oid>
-    <table >cntb_conta</table>
-    <foreign_oid >2837312</foreign_oid>
-    <foreign_table >cbtb_cliente_produto</foreign_table>
-    <conkey >{6}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente_produto</int>
-    </foreign_fields>
-   </cntb_conta_id_cliente_produto_fkey>
-   <cntb_conta_dominio_fkey >
-    <type >f</type>
-    <table_oid >2837419</table_oid>
-    <table >cntb_conta</table>
-    <foreign_oid >2837456</foreign_oid>
-    <foreign_table >dominio</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >c</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">dominio</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">dominio</int>
-    </foreign_fields>
-   </cntb_conta_dominio_fkey>
    <cntb_conta_pkey >
     <type >p</type>
-    <table_oid >2837419</table_oid>
+    <table_oid >28996</table_oid>
     <table >cntb_conta</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4845,7 +4887,7 @@
    </cntb_conta_pkey>
    <cntb_conta_id_conta_key >
     <type >u</type>
-    <table_oid >2837419</table_oid>
+    <table_oid >28996</table_oid>
     <table >cntb_conta</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -4860,6 +4902,60 @@
     <foreign_fields >
     </foreign_fields>
    </cntb_conta_id_conta_key>
+   <cntb_conta_id_cliente_produto_fkey1 >
+    <type >f</type>
+    <table_oid >28996</table_oid>
+    <table >cntb_conta</table>
+    <foreign_oid >28830</foreign_oid>
+    <foreign_table >cbtb_cliente_produto</foreign_table>
+    <conkey >{6}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+    </foreign_fields>
+   </cntb_conta_id_cliente_produto_fkey1>
+   <cntb_conta_id_cliente_produto_fkey >
+    <type >f</type>
+    <table_oid >28996</table_oid>
+    <table >cntb_conta</table>
+    <foreign_oid >28830</foreign_oid>
+    <foreign_table >cbtb_cliente_produto</foreign_table>
+    <conkey >{6}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+    </foreign_fields>
+   </cntb_conta_id_cliente_produto_fkey>
+   <cntb_conta_dominio_fkey >
+    <type >f</type>
+    <table_oid >28996</table_oid>
+    <table >cntb_conta</table>
+    <foreign_oid >29021</foreign_oid>
+    <foreign_table >dominio</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >c</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">dominio</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">dominio</int>
+    </foreign_fields>
+   </cntb_conta_dominio_fkey>
   </constraints>
  </cntb_conta>
  <cntb_conta_bandalarga >
@@ -4877,7 +4973,6 @@
    <tipo_bandalarga >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4942,7 +5037,6 @@
    <bl_status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -4950,25 +5044,15 @@
    </bl_status>
   </fields>
   <indexes >
-   <cnix_conta_bl_id_cp_st >
-    <fields >
-     <id_cliente_produto >
-      <sorting >ascending</sorting>
-     </id_cliente_produto>
-     <status >
-      <sorting >ascending</sorting>
-     </status>
-    </fields>
-   </cnix_conta_bl_id_cp_st>
   </indexes>
   <constraints >
    <cntb_conta_bandalarga_rede_fkey >
     <type >f</type>
-    <table_oid >2837426</table_oid>
+    <table_oid >29250</table_oid>
     <table >cntb_conta_bandalarga</table>
-    <foreign_oid >2837389</foreign_oid>
+    <foreign_oid >28965</foreign_oid>
     <foreign_table >cftb_rede</foreign_table>
-    <conkey >{15}</conkey>
+    <conkey >{17}</conkey>
     <confkey >{1}</confkey>
     <update_action >r</update_action>
     <delete_action >r</delete_action>
@@ -4982,11 +5066,11 @@
    </cntb_conta_bandalarga_rede_fkey>
    <cntb_conta_bandalarga_ipaddr_fkey >
     <type >f</type>
-    <table_oid >2837426</table_oid>
+    <table_oid >29250</table_oid>
     <table >cntb_conta_bandalarga</table>
-    <foreign_oid >2837357</foreign_oid>
+    <foreign_oid >28919</foreign_oid>
     <foreign_table >cftb_ip</foreign_table>
-    <conkey >{14}</conkey>
+    <conkey >{16}</conkey>
     <confkey >{1}</confkey>
     <update_action >r</update_action>
     <delete_action >r</delete_action>
@@ -5000,11 +5084,11 @@
    </cntb_conta_bandalarga_ipaddr_fkey>
    <cntb_conta_bandalarga_ip_externo_fkey >
     <type >f</type>
-    <table_oid >2837426</table_oid>
+    <table_oid >29250</table_oid>
     <table >cntb_conta_bandalarga</table>
-    <foreign_oid >2837359</foreign_oid>
+    <foreign_oid >28923</foreign_oid>
     <foreign_table >cftb_ip_externo</foreign_table>
-    <conkey >{20}</conkey>
+    <conkey >{22}</conkey>
     <confkey >{1}</confkey>
     <update_action >r</update_action>
     <delete_action >r</delete_action>
@@ -5018,11 +5102,11 @@
    </cntb_conta_bandalarga_ip_externo_fkey>
    <cntb_conta_bandalarga_id_pop_fkey >
     <type >f</type>
-    <table_oid >2837426</table_oid>
+    <table_oid >29250</table_oid>
     <table >cntb_conta_bandalarga</table>
-    <foreign_oid >2837376</foreign_oid>
+    <foreign_oid >28945</foreign_oid>
     <foreign_table >cftb_pop</foreign_table>
-    <conkey >{12}</conkey>
+    <conkey >{14}</conkey>
     <confkey >{1}</confkey>
     <update_action >r</update_action>
     <delete_action >r</delete_action>
@@ -5036,11 +5120,11 @@
    </cntb_conta_bandalarga_id_pop_fkey>
    <cntb_conta_bandalarga_id_nas_fkey >
     <type >f</type>
-    <table_oid >2837426</table_oid>
+    <table_oid >29250</table_oid>
     <table >cntb_conta_bandalarga</table>
-    <foreign_oid >2837369</foreign_oid>
+    <foreign_oid >28934</foreign_oid>
     <foreign_table >cftb_nas</foreign_table>
-    <conkey >{19}</conkey>
+    <conkey >{21}</conkey>
     <confkey >{1}</confkey>
     <update_action >r</update_action>
     <delete_action >r</delete_action>
@@ -5068,16 +5152,6 @@
    </foneinfo>
   </fields>
   <indexes >
-   <cnix_conta_d_id_cp_st >
-    <fields >
-     <id_cliente_produto >
-      <sorting >ascending</sorting>
-     </id_cliente_produto>
-     <status >
-      <sorting >ascending</sorting>
-     </status>
-    </fields>
-   </cnix_conta_d_id_cp_st>
   </indexes>
   <constraints >
   </constraints>
@@ -5114,16 +5188,6 @@
    </redirecionar_para>
   </fields>
   <indexes >
-   <cnix_conta_e_id_cp_st >
-    <fields >
-     <id_cliente_produto >
-      <sorting >ascending</sorting>
-     </id_cliente_produto>
-     <status >
-      <sorting >ascending</sorting>
-     </status>
-    </fields>
-   </cnix_conta_e_id_cp_st>
   </indexes>
   <constraints >
   </constraints>
@@ -5134,7 +5198,6 @@
    <tipo_hospedagem >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -5187,16 +5250,6 @@
    </dominio_hospedagem>
   </fields>
   <indexes >
-   <cnix_conta_h_id_cp_st >
-    <fields >
-     <id_cliente_produto >
-      <sorting >ascending</sorting>
-     </id_cliente_produto>
-     <status >
-      <sorting >ascending</sorting>
-     </status>
-    </fields>
-   </cnix_conta_h_id_cp_st>
   </indexes>
   <constraints >
   </constraints>
@@ -5261,7 +5314,6 @@
    <cep >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >10</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -5307,11 +5359,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <cntb_endereco_instalacao_pkey >
+    <type >p</type>
+    <table_oid >29007</table_oid>
+    <table >cntb_endereco_instalacao</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_endereco_instalacao</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </cntb_endereco_instalacao_pkey>
    <cntb_endereco_instalacao_id_cliente_fkey >
     <type >f</type>
-    <table_oid >2837454</table_oid>
+    <table_oid >29007</table_oid>
     <table >cntb_endereco_instalacao</table>
-    <foreign_oid >2837407</foreign_oid>
+    <foreign_oid >28986</foreign_oid>
     <foreign_table >cltb_cliente</foreign_table>
     <conkey >{8}</conkey>
     <confkey >{1}</confkey>
@@ -5327,9 +5396,9 @@
    </cntb_endereco_instalacao_id_cliente_fkey>
    <cntb_endereco_instalacao_id_bloco_instalacao_fkey >
     <type >f</type>
-    <table_oid >2837454</table_oid>
+    <table_oid >29007</table_oid>
     <table >cntb_endereco_instalacao</table>
-    <foreign_oid >3238989</foreign_oid>
+    <foreign_oid >28816</foreign_oid>
     <foreign_table >catb_condominio_bloco</foreign_table>
     <conkey >{10}</conkey>
     <confkey >{1}</confkey>
@@ -5345,9 +5414,9 @@
    </cntb_endereco_instalacao_id_bloco_instalacao_fkey>
    <cntb_condominio_instalacao >
     <type >f</type>
-    <table_oid >2837454</table_oid>
+    <table_oid >29007</table_oid>
     <table >cntb_endereco_instalacao</table>
-    <foreign_oid >3149695</foreign_oid>
+    <foreign_oid >28809</foreign_oid>
     <foreign_table >catb_condominio</foreign_table>
     <conkey >{9}</conkey>
     <confkey >{1}</confkey>
@@ -5363,9 +5432,9 @@
    </cntb_condominio_instalacao>
    <cntb_endereco_instalacao_id_cidade_fkey >
     <type >f</type>
-    <table_oid >2837454</table_oid>
+    <table_oid >29007</table_oid>
     <table >cntb_endereco_instalacao</table>
-    <foreign_oid >2837352</foreign_oid>
+    <foreign_oid >28907</foreign_oid>
     <foreign_table >cftb_cidade</foreign_table>
     <conkey >{6}</conkey>
     <confkey >{1}</confkey>
@@ -5379,23 +5448,6 @@
      <int i="0">id_cidade</int>
     </foreign_fields>
    </cntb_endereco_instalacao_id_cidade_fkey>
-   <cntb_endereco_instalacao_pkey >
-    <type >p</type>
-    <table_oid >2837454</table_oid>
-    <table >cntb_endereco_instalacao</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_endereco_instalacao</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </cntb_endereco_instalacao_pkey>
   </constraints>
  </cntb_endereco_instalacao>
  <cxtb_fluxo >
@@ -5413,7 +5465,6 @@
    <tipo_movimentacao >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -5422,7 +5473,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5430,7 +5481,6 @@
    <tipo_origem >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -5462,7 +5512,6 @@
    <especie >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -5480,7 +5529,7 @@
    <cheque_banco >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >3,0</length>
+    <length >0,3</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5488,7 +5537,7 @@
    <cheque_agencia >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >4,0</length>
+    <length >0,4</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5496,7 +5545,7 @@
    <cheque_conta >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >8,0</length>
+    <length >0,8</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5504,7 +5553,7 @@
    <cheque_serie >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >8,0</length>
+    <length >0,8</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5512,7 +5561,7 @@
    <cheque_numero >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >8,0</length>
+    <length >0,8</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5583,9 +5632,11 @@
    <cxix_fluxo_datas >
     <fields >
      <data_registro >
+      <position >1</position>
       <sorting >ascending</sorting>
      </data_registro>
      <data_compensacao >
+      <position >2</position>
       <sorting >ascending</sorting>
      </data_compensacao>
     </fields>
@@ -5594,7 +5645,7 @@
   <constraints >
    <cxtb_fluxo_pkey >
     <type >p</type>
-    <table_oid >2943815</table_oid>
+    <table_oid >29014</table_oid>
     <table >cxtb_fluxo</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -5642,7 +5693,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -5659,27 +5709,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <dominio_id_cliente_fkey >
-    <type >f</type>
-    <table_oid >2837456</table_oid>
-    <table >dominio</table>
-    <foreign_oid >2837407</foreign_oid>
-    <foreign_table >cltb_cliente</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente</int>
-    </foreign_fields>
-   </dominio_id_cliente_fkey>
    <dominio_pkey >
     <type >p</type>
-    <table_oid >2837456</table_oid>
+    <table_oid >29021</table_oid>
     <table >dominio</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -5694,6 +5726,24 @@
     <foreign_fields >
     </foreign_fields>
    </dominio_pkey>
+   <dominio_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >29021</table_oid>
+    <table >dominio</table>
+    <foreign_oid >28986</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </dominio_id_cliente_fkey>
   </constraints>
  </dominio>
  <evtb_evento >
@@ -5793,95 +5843,130 @@
    </id_cliente_produto>
   </fields>
   <indexes >
-   <evix_evento_datahora_natureza_tipo >
-    <fields >
-     <datahora >
-      <sorting >ascending</sorting>
-     </datahora>
-     <natureza >
-      <sorting >ascending</sorting>
-     </natureza>
-     <tipo >
-      <sorting >ascending</sorting>
-     </tipo>
-    </fields>
-   </evix_evento_datahora_natureza_tipo>
    <evix_evento_datahora_natureza >
     <fields >
      <datahora >
+      <position >1</position>
       <sorting >ascending</sorting>
      </datahora>
      <natureza >
+      <position >2</position>
       <sorting >ascending</sorting>
      </natureza>
     </fields>
    </evix_evento_datahora_natureza>
-   <evix_evento_datahora >
+   <evix_evento_datahora_natureza_tipo >
     <fields >
      <datahora >
-      <sorting >ascending</sorting>
-     </datahora>
-    </fields>
-   </evix_evento_datahora>
-   <evix_evento_admin_datahora_natureza_tipo >
-    <fields >
-     <id_admin >
-      <sorting >ascending</sorting>
-     </id_admin>
-     <datahora >
+      <position >1</position>
       <sorting >ascending</sorting>
      </datahora>
      <natureza >
+      <position >2</position>
       <sorting >ascending</sorting>
      </natureza>
      <tipo >
+      <position >3</position>
       <sorting >ascending</sorting>
      </tipo>
     </fields>
-   </evix_evento_admin_datahora_natureza_tipo>
-   <evix_evento_admin_datahora_natureza >
-    <fields >
-     <id_admin >
-      <sorting >ascending</sorting>
-     </id_admin>
-     <datahora >
-      <sorting >ascending</sorting>
-     </datahora>
-     <natureza >
-      <sorting >ascending</sorting>
-     </natureza>
-    </fields>
-   </evix_evento_admin_datahora_natureza>
-   <evix_evento_admin_darahora_tipo >
-    <fields >
-     <id_admin >
-      <sorting >ascending</sorting>
-     </id_admin>
-     <datahora >
-      <sorting >ascending</sorting>
-     </datahora>
-     <tipo >
-      <sorting >ascending</sorting>
-     </tipo>
-    </fields>
-   </evix_evento_admin_darahora_tipo>
+   </evix_evento_datahora_natureza_tipo>
    <evix_evento_admin_darahora >
     <fields >
      <id_admin >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_admin>
      <datahora >
+      <position >2</position>
       <sorting >ascending</sorting>
      </datahora>
     </fields>
    </evix_evento_admin_darahora>
+   <evix_evento_admin_darahora_tipo >
+    <fields >
+     <id_admin >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_admin>
+     <datahora >
+      <position >2</position>
+      <sorting >ascending</sorting>
+     </datahora>
+     <tipo >
+      <position >3</position>
+      <sorting >ascending</sorting>
+     </tipo>
+    </fields>
+   </evix_evento_admin_darahora_tipo>
+   <evix_evento_admin_datahora_natureza >
+    <fields >
+     <id_admin >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_admin>
+     <datahora >
+      <position >2</position>
+      <sorting >ascending</sorting>
+     </datahora>
+     <natureza >
+      <position >3</position>
+      <sorting >ascending</sorting>
+     </natureza>
+    </fields>
+   </evix_evento_admin_datahora_natureza>
+   <evix_evento_admin_datahora_natureza_tipo >
+    <fields >
+     <id_admin >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_admin>
+     <datahora >
+      <position >2</position>
+      <sorting >ascending</sorting>
+     </datahora>
+     <natureza >
+      <position >3</position>
+      <sorting >ascending</sorting>
+     </natureza>
+     <tipo >
+      <position >4</position>
+      <sorting >ascending</sorting>
+     </tipo>
+    </fields>
+   </evix_evento_admin_datahora_natureza_tipo>
+   <evix_evento_datahora >
+    <fields >
+     <datahora >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </datahora>
+    </fields>
+   </evix_evento_datahora>
   </indexes>
   <constraints >
+   <evtb_evento_pkey >
+    <type >p</type>
+    <table_oid >29029</table_oid>
+    <table >evtb_evento</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_evento</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </evtb_evento_pkey>
    <evtb_evento_id_cobranca_fkey >
     <type >f</type>
-    <table_oid >3141769</table_oid>
+    <table_oid >29029</table_oid>
     <table >evtb_evento</table>
-    <foreign_oid >2837326</foreign_oid>
+    <foreign_oid >28865</foreign_oid>
     <foreign_table >cbtb_faturas</foreign_table>
     <conkey >{10}</conkey>
     <confkey >{13}</confkey>
@@ -5897,9 +5982,9 @@
    </evtb_evento_id_cobranca_fkey>
    <evtb_evento_id_cliente_produto_fkey >
     <type >f</type>
-    <table_oid >3141769</table_oid>
+    <table_oid >29029</table_oid>
     <table >evtb_evento</table>
-    <foreign_oid >2837312</foreign_oid>
+    <foreign_oid >28830</foreign_oid>
     <foreign_table >cbtb_cliente_produto</foreign_table>
     <conkey >{11}</conkey>
     <confkey >{1}</confkey>
@@ -5915,9 +6000,9 @@
    </evtb_evento_id_cliente_produto_fkey>
    <evtb_evento_id_admin_fkey >
     <type >f</type>
-    <table_oid >3141769</table_oid>
+    <table_oid >29029</table_oid>
     <table >evtb_evento</table>
-    <foreign_oid >2837281</foreign_oid>
+    <foreign_oid >28782</foreign_oid>
     <foreign_table >adtb_admin</foreign_table>
     <conkey >{4}</conkey>
     <confkey >{1}</confkey>
@@ -5931,23 +6016,6 @@
      <int i="0">id_admin</int>
     </foreign_fields>
    </evtb_evento_id_admin_fkey>
-   <evtb_evento_pkey >
-    <type >p</type>
-    <table_oid >3141769</table_oid>
-    <table >evtb_evento</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_evento</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </evtb_evento_pkey>
   </constraints>
  </evtb_evento>
  <hdtb_admin_grupo >
@@ -5989,45 +6057,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <hdtb_admin_grupo_id_grupo_fkey >
-    <type >f</type>
-    <table_oid >3149756</table_oid>
-    <table >hdtb_admin_grupo</table>
-    <foreign_oid >3149747</foreign_oid>
-    <foreign_table >hdtb_grupo</foreign_table>
-    <conkey >{1}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_grupo</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_grupo</int>
-    </foreign_fields>
-   </hdtb_admin_grupo_id_grupo_fkey>
-   <hdtb_admin_grupo_id_admin_fkey >
-    <type >f</type>
-    <table_oid >3149756</table_oid>
-    <table >hdtb_admin_grupo</table>
-    <foreign_oid >2837281</foreign_oid>
-    <foreign_table >adtb_admin</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_admin</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_admin</int>
-    </foreign_fields>
-   </hdtb_admin_grupo_id_admin_fkey>
    <hdtb_admin_grupo_pkey >
     <type >p</type>
-    <table_oid >3149756</table_oid>
+    <table_oid >29037</table_oid>
     <table >hdtb_admin_grupo</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -6043,6 +6075,42 @@
     <foreign_fields >
     </foreign_fields>
    </hdtb_admin_grupo_pkey>
+   <hdtb_admin_grupo_id_admin_fkey >
+    <type >f</type>
+    <table_oid >29037</table_oid>
+    <table >hdtb_admin_grupo</table>
+    <foreign_oid >28782</foreign_oid>
+    <foreign_table >adtb_admin</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_admin</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_admin</int>
+    </foreign_fields>
+   </hdtb_admin_grupo_id_admin_fkey>
+   <hdtb_admin_grupo_id_grupo_fkey >
+    <type >f</type>
+    <table_oid >29037</table_oid>
+    <table >hdtb_admin_grupo</table>
+    <foreign_oid >29058</foreign_oid>
+    <foreign_table >hdtb_grupo</foreign_table>
+    <conkey >{1}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_grupo</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_grupo</int>
+    </foreign_fields>
+   </hdtb_admin_grupo_id_grupo_fkey>
   </constraints>
  </hdtb_admin_grupo>
  <hdtb_chamado >
@@ -6050,11 +6118,12 @@
   <fields >
    <id_chamado >
     <notnull >1</notnull>
-    <nativetype >numeric</nativetype>
-    <length >11,0</length>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
     <default ></default>
-    <type >decimal</type>
-    <mdb2type >decimal</mdb2type>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
    </id_chamado>
    <abertura >
     <notnull >1</notnull>
@@ -6259,7 +6328,7 @@
    <icmp_media >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6267,7 +6336,7 @@
    <icmp_minimo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6282,7 +6351,7 @@
    <ftp_media >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6290,7 +6359,7 @@
    <ftp_minimo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6330,177 +6399,64 @@
    <hdix_chamado_ids >
     <fields >
      <abertura >
+      <position >1</position>
       <sorting >ascending</sorting>
      </abertura>
      <fechamento >
+      <position >2</position>
       <sorting >ascending</sorting>
      </fechamento>
      <criado_por >
+      <position >3</position>
       <sorting >ascending</sorting>
      </criado_por>
      <id_grupo >
+      <position >4</position>
       <sorting >ascending</sorting>
      </id_grupo>
      <id_chamado_pai >
+      <position >5</position>
       <sorting >ascending</sorting>
      </id_chamado_pai>
      <id_cliente >
+      <position >6</position>
       <sorting >ascending</sorting>
      </id_cliente>
      <id_cliente_produto >
+      <position >7</position>
       <sorting >ascending</sorting>
      </id_cliente_produto>
      <id_conta >
+      <position >8</position>
       <sorting >ascending</sorting>
      </id_conta>
      <id_cobranca >
+      <position >9</position>
       <sorting >ascending</sorting>
      </id_cobranca>
      <id_servidor >
+      <position >10</position>
       <sorting >ascending</sorting>
      </id_servidor>
      <id_nas >
+      <position >11</position>
       <sorting >ascending</sorting>
      </id_nas>
      <id_chamado >
+      <position >12</position>
       <sorting >ascending</sorting>
      </id_chamado>
      <responsavel >
+      <position >13</position>
       <sorting >ascending</sorting>
      </responsavel>
     </fields>
    </hdix_chamado_ids>
   </indexes>
   <constraints >
-   <hdtb_chamado_id_cliente_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >2837407</foreign_oid>
-    <foreign_table >cltb_cliente</foreign_table>
-    <conkey >{14}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente</int>
-    </foreign_fields>
-   </hdtb_chamado_id_cliente_fkey>
-   <hdtb_chamado_id_pop_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >2837376</foreign_oid>
-    <foreign_table >cftb_pop</foreign_table>
-    <conkey >{20}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_pop</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_pop</int>
-    </foreign_fields>
-   </hdtb_chamado_id_pop_fkey>
-   <hdtb_chamado_id_nas_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >2837369</foreign_oid>
-    <foreign_table >cftb_nas</foreign_table>
-    <conkey >{19}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_nas</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_nas</int>
-    </foreign_fields>
-   </hdtb_chamado_id_nas_fkey>
-   <hdtb_chamado_id_servidor_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >2837394</foreign_oid>
-    <foreign_table >cftb_servidor</foreign_table>
-    <conkey >{18}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_servidor</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_servidor</int>
-    </foreign_fields>
-   </hdtb_chamado_id_servidor_fkey>
-   <hdtb_chamado_id_cliente_produto_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >2837312</foreign_oid>
-    <foreign_table >cbtb_cliente_produto</foreign_table>
-    <conkey >{15}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente_produto</int>
-    </foreign_fields>
-   </hdtb_chamado_id_cliente_produto_fkey>
-   <hdtb_chamado_id_cobranca_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >2837326</foreign_oid>
-    <foreign_table >cbtb_faturas</foreign_table>
-    <conkey >{17}</conkey>
-    <confkey >{13}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cobranca</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cobranca</int>
-    </foreign_fields>
-   </hdtb_chamado_id_cobranca_fkey>
-   <hdtb_chamado_id_chamado_pai_fkey >
-    <type >f</type>
-    <table_oid >3206461</table_oid>
-    <table >hdtb_chamado</table>
-    <foreign_oid >3206461</foreign_oid>
-    <foreign_table >hdtb_chamado</foreign_table>
-    <conkey >{13}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_chamado_pai</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_chamado</int>
-    </foreign_fields>
-   </hdtb_chamado_id_chamado_pai_fkey>
    <hdtb_chamado_pkey >
     <type >p</type>
-    <table_oid >3206461</table_oid>
+    <table_oid >29041</table_oid>
     <table >hdtb_chamado</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -6517,9 +6473,9 @@
    </hdtb_chamado_pkey>
    <hdtb_condominio_id_condominio_fkey >
     <type >f</type>
-    <table_oid >3206461</table_oid>
+    <table_oid >29041</table_oid>
     <table >hdtb_chamado</table>
-    <foreign_oid >3149695</foreign_oid>
+    <foreign_oid >28809</foreign_oid>
     <foreign_table >catb_condominio</foreign_table>
     <conkey >{22}</conkey>
     <confkey >{1}</confkey>
@@ -6535,9 +6491,9 @@
    </hdtb_condominio_id_condominio_fkey>
    <hdtb_condominio_id_bloco_fkey >
     <type >f</type>
-    <table_oid >3206461</table_oid>
+    <table_oid >29041</table_oid>
     <table >hdtb_chamado</table>
-    <foreign_oid >3238989</foreign_oid>
+    <foreign_oid >28816</foreign_oid>
     <foreign_table >catb_condominio_bloco</foreign_table>
     <conkey >{23}</conkey>
     <confkey >{1}</confkey>
@@ -6551,11 +6507,119 @@
      <int i="0">id_bloco</int>
     </foreign_fields>
    </hdtb_condominio_id_bloco_fkey>
+   <hdtb_chamado_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >28986</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{14}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </hdtb_chamado_id_cliente_fkey>
+   <hdtb_chamado_id_pop_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >28945</foreign_oid>
+    <foreign_table >cftb_pop</foreign_table>
+    <conkey >{20}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_pop</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_pop</int>
+    </foreign_fields>
+   </hdtb_chamado_id_pop_fkey>
+   <hdtb_chamado_id_nas_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >28934</foreign_oid>
+    <foreign_table >cftb_nas</foreign_table>
+    <conkey >{19}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_nas</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_nas</int>
+    </foreign_fields>
+   </hdtb_chamado_id_nas_fkey>
+   <hdtb_chamado_id_servidor_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >28972</foreign_oid>
+    <foreign_table >cftb_servidor</foreign_table>
+    <conkey >{18}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_servidor</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_servidor</int>
+    </foreign_fields>
+   </hdtb_chamado_id_servidor_fkey>
+   <hdtb_chamado_id_cobranca_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >28865</foreign_oid>
+    <foreign_table >cbtb_faturas</foreign_table>
+    <conkey >{17}</conkey>
+    <confkey >{13}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cobranca</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cobranca</int>
+    </foreign_fields>
+   </hdtb_chamado_id_cobranca_fkey>
+   <hdtb_chamado_id_cliente_produto_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >28830</foreign_oid>
+    <foreign_table >cbtb_cliente_produto</foreign_table>
+    <conkey >{15}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+    </foreign_fields>
+   </hdtb_chamado_id_cliente_produto_fkey>
    <hdtb_chamado_id_grupo_fkey >
     <type >f</type>
-    <table_oid >3206461</table_oid>
+    <table_oid >29041</table_oid>
     <table >hdtb_chamado</table>
-    <foreign_oid >3149747</foreign_oid>
+    <foreign_oid >29058</foreign_oid>
     <foreign_table >hdtb_grupo</foreign_table>
     <conkey >{6}</conkey>
     <confkey >{1}</confkey>
@@ -6571,9 +6635,9 @@
    </hdtb_chamado_id_grupo_fkey>
    <hdtb_chamado_criado_por_fkey >
     <type >f</type>
-    <table_oid >3206461</table_oid>
+    <table_oid >29041</table_oid>
     <table >hdtb_chamado</table>
-    <foreign_oid >2837281</foreign_oid>
+    <foreign_oid >28782</foreign_oid>
     <foreign_table >adtb_admin</foreign_table>
     <conkey >{5}</conkey>
     <confkey >{1}</confkey>
@@ -6587,6 +6651,24 @@
      <int i="0">id_admin</int>
     </foreign_fields>
    </hdtb_chamado_criado_por_fkey>
+   <hdtb_chamado_id_chamado_pai_fkey >
+    <type >f</type>
+    <table_oid >29041</table_oid>
+    <table >hdtb_chamado</table>
+    <foreign_oid >29041</foreign_oid>
+    <foreign_table >hdtb_chamado</foreign_table>
+    <conkey >{13}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_chamado_pai</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_chamado</int>
+    </foreign_fields>
+   </hdtb_chamado_id_chamado_pai_fkey>
   </constraints>
  </hdtb_chamado>
  <hdtb_chamado_historico >
@@ -6648,60 +6730,28 @@
    <hdix_chamado_historico_ids_data >
     <fields >
      <id_historico >
+      <position >1</position>
       <sorting >ascending</sorting>
      </id_historico>
      <id_chamado >
+      <position >2</position>
       <sorting >ascending</sorting>
      </id_chamado>
      <datahora >
+      <position >3</position>
       <sorting >ascending</sorting>
      </datahora>
      <id_admin >
+      <position >4</position>
       <sorting >ascending</sorting>
      </id_admin>
     </fields>
    </hdix_chamado_historico_ids_data>
   </indexes>
   <constraints >
-   <hdtb_chamado_historico_id_chamado_fkey >
-    <type >f</type>
-    <table_oid >3206469</table_oid>
-    <table >hdtb_chamado_historico</table>
-    <foreign_oid >3206461</foreign_oid>
-    <foreign_table >hdtb_chamado</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_chamado</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_chamado</int>
-    </foreign_fields>
-   </hdtb_chamado_historico_id_chamado_fkey>
-   <hdtb_chamado_historico_id_admin_fkey >
-    <type >f</type>
-    <table_oid >3206469</table_oid>
-    <table >hdtb_chamado_historico</table>
-    <foreign_oid >2837281</foreign_oid>
-    <foreign_table >adtb_admin</foreign_table>
-    <conkey >{6}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_admin</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_admin</int>
-    </foreign_fields>
-   </hdtb_chamado_historico_id_admin_fkey>
    <hdtb_chamado_historico_pkey >
     <type >p</type>
-    <table_oid >3206469</table_oid>
+    <table_oid >29050</table_oid>
     <table >hdtb_chamado_historico</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -6716,6 +6766,42 @@
     <foreign_fields >
     </foreign_fields>
    </hdtb_chamado_historico_pkey>
+   <hdtb_chamado_historico_id_admin_fkey >
+    <type >f</type>
+    <table_oid >29050</table_oid>
+    <table >hdtb_chamado_historico</table>
+    <foreign_oid >28782</foreign_oid>
+    <foreign_table >adtb_admin</foreign_table>
+    <conkey >{6}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_admin</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_admin</int>
+    </foreign_fields>
+   </hdtb_chamado_historico_id_admin_fkey>
+   <hdtb_chamado_historico_id_chamado_fkey >
+    <type >f</type>
+    <table_oid >29050</table_oid>
+    <table >hdtb_chamado_historico</table>
+    <foreign_oid >29041</foreign_oid>
+    <foreign_table >hdtb_chamado</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_chamado</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_chamado</int>
+    </foreign_fields>
+   </hdtb_chamado_historico_id_chamado_fkey>
   </constraints>
  </hdtb_chamado_historico>
  <hdtb_grupo >
@@ -6769,7 +6855,7 @@
   <constraints >
    <hdtb_grupo_nome_key >
     <type >u</type>
-    <table_oid >3149747</table_oid>
+    <table_oid >29058</table_oid>
     <table >hdtb_grupo</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -6784,27 +6870,9 @@
     <foreign_fields >
     </foreign_fields>
    </hdtb_grupo_nome_key>
-   <hdtb_admin_grupo_id_grupo_pai_fkey >
-    <type >f</type>
-    <table_oid >3149747</table_oid>
-    <table >hdtb_grupo</table>
-    <foreign_oid >3149747</foreign_oid>
-    <foreign_table >hdtb_grupo</foreign_table>
-    <conkey >{5}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_grupo_pai</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_grupo</int>
-    </foreign_fields>
-   </hdtb_admin_grupo_id_grupo_pai_fkey>
    <hdtb_grupo_pkey >
     <type >p</type>
-    <table_oid >3149747</table_oid>
+    <table_oid >29058</table_oid>
     <table >hdtb_grupo</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -6819,6 +6887,24 @@
     <foreign_fields >
     </foreign_fields>
    </hdtb_grupo_pkey>
+   <hdtb_admin_grupo_id_grupo_pai_fkey >
+    <type >f</type>
+    <table_oid >29058</table_oid>
+    <table >hdtb_grupo</table>
+    <foreign_oid >29058</foreign_oid>
+    <foreign_table >hdtb_grupo</foreign_table>
+    <conkey >{5}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_grupo_pai</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_grupo</int>
+    </foreign_fields>
+   </hdtb_admin_grupo_id_grupo_pai_fkey>
   </constraints>
  </hdtb_grupo>
  <hdtb_os >
@@ -6914,9 +7000,9 @@
   <constraints >
    <hdtb_helpdesk_id_chamado_fkey >
     <type >f</type>
-    <table_oid >3206683</table_oid>
+    <table_oid >29067</table_oid>
     <table >hdtb_os</table>
-    <foreign_oid >3206461</foreign_oid>
+    <foreign_oid >29041</foreign_oid>
     <foreign_table >hdtb_chamado</foreign_table>
     <conkey >{1}</conkey>
     <confkey >{1}</confkey>
@@ -7036,9 +7122,9 @@
   <constraints >
    <lgtb_administradores_id_admin_fkey >
     <type >f</type>
-    <table_oid >2837467</table_oid>
+    <table_oid >29069</table_oid>
     <table >lgtb_administradores</table>
-    <foreign_oid >2837281</foreign_oid>
+    <foreign_oid >28782</foreign_oid>
     <foreign_table >adtb_admin</foreign_table>
     <conkey >{1}</conkey>
     <confkey >{1}</confkey>
@@ -7094,7 +7180,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -7149,7 +7234,7 @@
   <constraints >
    <lgtb_backup_pkey >
     <type >p</type>
-    <table_oid >2837473</table_oid>
+    <table_oid >29075</table_oid>
     <table >lgtb_backup</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -7233,27 +7318,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <lgtb_bloqueio_automatizado_id_cliente_produto_fkey >
-    <type >f</type>
-    <table_oid >2837480</table_oid>
-    <table >lgtb_bloqueio_automatizado</table>
-    <foreign_oid >2837312</foreign_oid>
-    <foreign_table >cbtb_cliente_produto</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente_produto</int>
-    </foreign_fields>
-   </lgtb_bloqueio_automatizado_id_cliente_produto_fkey>
    <lgtb_bloqueio_automatizado_pkey >
     <type >p</type>
-    <table_oid >2837480</table_oid>
+    <table_oid >29082</table_oid>
     <table >lgtb_bloqueio_automatizado</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -7268,6 +7335,24 @@
     <foreign_fields >
     </foreign_fields>
    </lgtb_bloqueio_automatizado_pkey>
+   <lgtb_bloqueio_automatizado_id_cliente_produto_fkey >
+    <type >f</type>
+    <table_oid >29082</table_oid>
+    <table >lgtb_bloqueio_automatizado</table>
+    <foreign_oid >28830</foreign_oid>
+    <foreign_table >cbtb_cliente_produto</foreign_table>
+    <conkey >{2}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+    </foreign_fields>
+   </lgtb_bloqueio_automatizado_id_cliente_produto_fkey>
   </constraints>
  </lgtb_bloqueio_automatizado>
  <lgtb_contas_excluidas >
@@ -7279,7 +7364,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_excluida>
@@ -7394,7 +7478,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -7457,7 +7540,6 @@
    <tipo_hospedagem >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -7565,7 +7647,7 @@
   <constraints >
    <lgtb_contas_excluidas_pkey >
     <type >p</type>
-    <table_oid >2837488</table_oid>
+    <table_oid >29090</table_oid>
     <table >lgtb_contas_excluidas</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -7629,7 +7711,6 @@
    <tipo_conta >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -7655,47 +7736,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <lgtb_emails_cobranca_id_cliente_fkey >
-    <type >f</type>
-    <table_oid >2837495</table_oid>
-    <table >lgtb_emails_cobranca</table>
-    <foreign_oid >2837407</foreign_oid>
-    <foreign_table >cltb_cliente</foreign_table>
-    <conkey >{7}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente</int>
-    </foreign_fields>
-   </lgtb_emails_cobranca_id_cliente_fkey>
-   <lgtb_emails_cobranca_id_cliente_produto_fkey >
-    <type >f</type>
-    <table_oid >2837495</table_oid>
-    <table >lgtb_emails_cobranca</table>
-    <foreign_oid >2837326</foreign_oid>
-    <foreign_table >cbtb_faturas</foreign_table>
-    <conkey >{2,3}</conkey>
-    <confkey >{1,2}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_cliente_produto</int>
-     <int i="1">data</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_cliente_produto</int>
-     <int i="1">data</int>
-    </foreign_fields>
-   </lgtb_emails_cobranca_id_cliente_produto_fkey>
    <lgtb_emails_cobranca_pkey >
     <type >p</type>
-    <table_oid >2837495</table_oid>
+    <table_oid >29098</table_oid>
     <table >lgtb_emails_cobranca</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -7712,6 +7755,44 @@
     <foreign_fields >
     </foreign_fields>
    </lgtb_emails_cobranca_pkey>
+   <lgtb_emails_cobranca_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >29098</table_oid>
+    <table >lgtb_emails_cobranca</table>
+    <foreign_oid >28986</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{7}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </lgtb_emails_cobranca_id_cliente_fkey>
+   <lgtb_emails_cobranca_id_cliente_produto_fkey >
+    <type >f</type>
+    <table_oid >29098</table_oid>
+    <table >lgtb_emails_cobranca</table>
+    <foreign_oid >28865</foreign_oid>
+    <foreign_table >cbtb_faturas</foreign_table>
+    <conkey >{2,3}</conkey>
+    <confkey >{1,2}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+     <int i="1">data</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+     <int i="1">data</int>
+    </foreign_fields>
+   </lgtb_emails_cobranca_id_cliente_produto_fkey>
   </constraints>
  </lgtb_emails_cobranca>
  <lgtb_erros_db >
@@ -7747,7 +7828,7 @@
   <constraints >
    <lgtb_erros_db_pkey >
     <type >p</type>
-    <table_oid >2837497</table_oid>
+    <table_oid >29105</table_oid>
     <table >lgtb_erros_db</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -7824,7 +7905,7 @@
   <constraints >
    <lgtb_exclusao_pkey >
     <type >p</type>
-    <table_oid >2837503</table_oid>
+    <table_oid >29113</table_oid>
     <table >lgtb_exclusao</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -7850,7 +7931,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_reagendamento>
@@ -7897,11 +7977,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <lgtb_reagendamento_pkey >
+    <type >p</type>
+    <table_oid >29120</table_oid>
+    <table >lgtb_reagendamento</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_reagendamento</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </lgtb_reagendamento_pkey>
    <lgtb_reagendamento_id_cliente_produto_fkey >
     <type >f</type>
-    <table_oid >2837510</table_oid>
+    <table_oid >29120</table_oid>
     <table >lgtb_reagendamento</table>
-    <foreign_oid >2837326</foreign_oid>
+    <foreign_oid >28865</foreign_oid>
     <foreign_table >cbtb_faturas</foreign_table>
     <conkey >{2,3}</conkey>
     <confkey >{1,2}</confkey>
@@ -7917,10 +8014,78 @@
      <int i="1">data</int>
     </foreign_fields>
    </lgtb_reagendamento_id_cliente_produto_fkey>
-   <lgtb_reagendamento_pkey >
+  </constraints>
+ </lgtb_reagendamento>
+ <lgtb_recuperacao_email >
+  <inherits ></inherits>
+  <fields >
+   <id_recuperacao_email >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_recuperacao_email>
+   <datahora >
+    <notnull ></notnull>
+    <nativetype >timestamp</nativetype>
+    <default >now()</default>
+    <type >timestamp</type>
+    <mdb2type >timestamp</mdb2type>
+   </datahora>
+   <id_admin >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_admin>
+   <id_cliente >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_cliente>
+   <id_conta >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_conta>
+   <id_cliente_produto >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_cliente_produto>
+   <conta_mestre >
+    <notnull ></notnull>
+    <nativetype >bool</nativetype>
+    <default ></default>
+    <type >boolean</type>
+    <mdb2type >boolean</mdb2type>
+   </conta_mestre>
+  </fields>
+  <indexes >
+  </indexes>
+  <constraints >
+   <lgtb_recuperacao_email_pkey >
     <type >p</type>
-    <table_oid >2837510</table_oid>
-    <table >lgtb_reagendamento</table>
+    <table_oid >36247</table_oid>
+    <table >lgtb_recuperacao_email</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
     <conkey >{1}</conkey>
@@ -7929,13 +8094,67 @@
     <delete_action > </delete_action>
     <match > </match>
     <fields >
-     <int i="0">id_reagendamento</int>
+     <int i="0">id_recuperacao_email</int>
     </fields>
     <foreign_fields >
     </foreign_fields>
-   </lgtb_reagendamento_pkey>
+   </lgtb_recuperacao_email_pkey>
+   <lgtb_recuperacao_email_id_admin_fkey >
+    <type >f</type>
+    <table_oid >36247</table_oid>
+    <table >lgtb_recuperacao_email</table>
+    <foreign_oid >28782</foreign_oid>
+    <foreign_table >adtb_admin</foreign_table>
+    <conkey >{3}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_admin</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_admin</int>
+    </foreign_fields>
+   </lgtb_recuperacao_email_id_admin_fkey>
+   <lgtb_recuperacao_email_id_cliente_fkey >
+    <type >f</type>
+    <table_oid >36247</table_oid>
+    <table >lgtb_recuperacao_email</table>
+    <foreign_oid >28986</foreign_oid>
+    <foreign_table >cltb_cliente</foreign_table>
+    <conkey >{4}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente</int>
+    </foreign_fields>
+   </lgtb_recuperacao_email_id_cliente_fkey>
+   <lgtb_recuperacao_email_id_cliente_produto_fkey >
+    <type >f</type>
+    <table_oid >36247</table_oid>
+    <table >lgtb_recuperacao_email</table>
+    <foreign_oid >28830</foreign_oid>
+    <foreign_table >cbtb_cliente_produto</foreign_table>
+    <conkey >{6}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_cliente_produto</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_cliente_produto</int>
+    </foreign_fields>
+   </lgtb_recuperacao_email_id_cliente_produto_fkey>
   </constraints>
- </lgtb_reagendamento>
+ </lgtb_recuperacao_email>
  <lgtb_remessas >
   <inherits ></inherits>
   <fields >
@@ -7974,7 +8193,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -8052,7 +8271,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_renovacao>
@@ -8062,7 +8280,7 @@
   <constraints >
    <lgtb_renovacao_pkey >
     <type >p</type>
-    <table_oid >2837518</table_oid>
+    <table_oid >29127</table_oid>
     <table >lgtb_renovacao</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -8088,7 +8306,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_restore>
@@ -8132,7 +8349,7 @@
   <constraints >
    <lgtb_restore_pkey >
     <type >p</type>
-    <table_oid >2837526</table_oid>
+    <table_oid >29134</table_oid>
     <table >lgtb_restore</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -8158,7 +8375,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_arquivo>
@@ -8199,7 +8415,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -8208,7 +8423,6 @@
    <nra >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -8217,7 +8431,6 @@
    <nrpr >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -8226,7 +8439,6 @@
    <nrsc >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -8235,7 +8447,6 @@
    <nrpe >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -8328,7 +8539,7 @@
   <constraints >
    <lgtb_retorno_pkey >
     <type >p</type>
-    <table_oid >2837531</table_oid>
+    <table_oid >29138</table_oid>
     <table >lgtb_retorno</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -8374,7 +8585,7 @@
    <valor_recebido >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -8391,7 +8602,7 @@
    <valor_tarifa >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -8399,7 +8610,6 @@
    <status >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -8492,9 +8702,9 @@
   <constraints >
    <lgtb_retorno_faturas_id_arquivo_fkey >
     <type >f</type>
-    <table_oid >2837534</table_oid>
+    <table_oid >29145</table_oid>
     <table >lgtb_retorno_faturas</table>
-    <foreign_oid >2837531</foreign_oid>
+    <foreign_oid >29138</foreign_oid>
     <foreign_table >lgtb_retorno</foreign_table>
     <conkey >{8}</conkey>
     <confkey >{1}</confkey>
@@ -8519,7 +8729,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_processo>
@@ -8604,11 +8813,28 @@
   <indexes >
   </indexes>
   <constraints >
+   <lgtb_status_conta_pkey >
+    <type >p</type>
+    <table_oid >29150</table_oid>
+    <table >lgtb_status_conta</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_processo</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </lgtb_status_conta_pkey>
    <lgtb_status_conta_username_fkey >
     <type >f</type>
-    <table_oid >2837538</table_oid>
+    <table_oid >29150</table_oid>
     <table >lgtb_status_conta</table>
-    <foreign_oid >2837419</foreign_oid>
+    <foreign_oid >28996</foreign_oid>
     <foreign_table >cntb_conta</foreign_table>
     <conkey >{3,4,5}</conkey>
     <confkey >{1,2,3}</confkey>
@@ -8628,9 +8854,9 @@
    </lgtb_status_conta_username_fkey>
    <lgtb_status_conta_id_cliente_produto_fkey >
     <type >f</type>
-    <table_oid >2837538</table_oid>
+    <table_oid >29150</table_oid>
     <table >lgtb_status_conta</table>
-    <foreign_oid >2837312</foreign_oid>
+    <foreign_oid >28830</foreign_oid>
     <foreign_table >cbtb_cliente_produto</foreign_table>
     <conkey >{2}</conkey>
     <confkey >{1}</confkey>
@@ -8644,23 +8870,6 @@
      <int i="0">id_cliente_produto</int>
     </foreign_fields>
    </lgtb_status_conta_id_cliente_produto_fkey>
-   <lgtb_status_conta_pkey >
-    <type >p</type>
-    <table_oid >2837538</table_oid>
-    <table >lgtb_status_conta</table>
-    <foreign_oid >0</foreign_oid>
-    <foreign_table ></foreign_table>
-    <conkey >{1}</conkey>
-    <confkey ></confkey>
-    <update_action > </update_action>
-    <delete_action > </delete_action>
-    <match > </match>
-    <fields >
-     <int i="0">id_processo</int>
-    </fields>
-    <foreign_fields >
-    </foreign_fields>
-   </lgtb_status_conta_pkey>
   </constraints>
  </lgtb_status_conta>
  <nbtb_backup >
@@ -8704,27 +8913,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <nbtb_backup_id_backup_fkey >
-    <type >f</type>
-    <table_oid >3223204</table_oid>
-    <table >nbtb_backup_arquivos</table>
-    <foreign_oid >3223199</foreign_oid>
-    <foreign_table >nbtb_backup</foreign_table>
-    <conkey >{2}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_backup</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_backup</int>
-    </foreign_fields>
-   </nbtb_backup_id_backup_fkey>
    <nbtb_backup_pkey >
     <type >p</type>
-    <table_oid >3223199</table_oid>
+    <table_oid >29157</table_oid>
     <table >nbtb_backup</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -8739,6 +8930,24 @@
     <foreign_fields >
     </foreign_fields>
    </nbtb_backup_pkey>
+   <nbtb_backup_id_backup_fkey >
+    <type >f</type>
+    <table_oid >29157</table_oid>
+    <table >nbtb_backup</table>
+    <foreign_oid >29157</foreign_oid>
+    <foreign_table >nbtb_backup</foreign_table>
+    <conkey >{1}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_backup</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_backup</int>
+    </foreign_fields>
+   </nbtb_backup_id_backup_fkey>
   </constraints>
  </nbtb_backup>
  <nbtb_backup_arquivos >
@@ -8795,11 +9004,11 @@
   <constraints >
    <nbtb_backup_id_backup_fkey >
     <type >f</type>
-    <table_oid >3223204</table_oid>
-    <table >nbtb_backup_arquivos</table>
-    <foreign_oid >3223199</foreign_oid>
+    <table_oid >29157</table_oid>
+    <table >nbtb_backup</table>
+    <foreign_oid >29157</foreign_oid>
     <foreign_table >nbtb_backup</foreign_table>
-    <conkey >{2}</conkey>
+    <conkey >{1}</conkey>
     <confkey >{1}</confkey>
     <update_action >a</update_action>
     <delete_action >a</delete_action>
@@ -8990,7 +9199,7 @@
   <constraints >
    <pftb_forma_pagamento_pkey >
     <type >p</type>
-    <table_oid >2837548</table_oid>
+    <table_oid >29164</table_oid>
     <table >pftb_forma_pagamento</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9064,7 +9273,7 @@
   <constraints >
    <pftb_modelo_contrato_pkey >
     <type >p</type>
-    <table_oid >2837553</table_oid>
+    <table_oid >29173</table_oid>
     <table >pftb_modelo_contrato</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9185,7 +9394,6 @@
    <pagamento >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >3</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -9329,7 +9537,7 @@
   <constraints >
    <pftb_preferencia_cobranca_pkey >
     <type >p</type>
-    <table_oid >2837556</table_oid>
+    <table_oid >29178</table_oid>
     <table >pftb_preferencia_cobranca</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9498,7 +9706,7 @@
   <constraints >
    <pftb_preferencia_geral_pkey >
     <type >p</type>
-    <table_oid >2837561</table_oid>
+    <table_oid >29185</table_oid>
     <table >pftb_preferencia_geral</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9542,7 +9750,7 @@
   <constraints >
    <id_preferencia_pkey >
     <type >p</type>
-    <table_oid >3222698</table_oid>
+    <table_oid >29192</table_oid>
     <table >pftb_preferencia_helpdesk</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9624,7 +9832,7 @@
   <constraints >
    <pftb_preferencia_monitoracao_pkey >
     <type >p</type>
-    <table_oid >2837566</table_oid>
+    <table_oid >29197</table_oid>
     <table >pftb_preferencia_monitoracao</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9683,7 +9891,6 @@
    <cnpj >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >25</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -9704,7 +9911,7 @@
   <constraints >
    <pftb_preferencia_provedor_pkey >
     <type >p</type>
-    <table_oid >2837571</table_oid>
+    <table_oid >29204</table_oid>
     <table >pftb_preferencia_provedor</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9753,7 +9960,6 @@
    <tipo >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >2</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -9762,7 +9968,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9795,7 +10001,7 @@
    <vl_email_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9833,7 +10039,7 @@
    <valor_comodato >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9841,7 +10047,7 @@
    <desconto_promo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9858,7 +10064,7 @@
    <tx_instalacao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9873,7 +10079,7 @@
    <comissao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >5,2</length>
+    <length >0,5</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9881,7 +10087,7 @@
    <comissao_migracao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >5,2</length>
+    <length >0,5</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -9899,27 +10105,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <pftb_produto_id_modelo_contrato_fkey >
-    <type >f</type>
-    <table_oid >2837575</table_oid>
-    <table >prtb_produto</table>
-    <foreign_oid >2837553</foreign_oid>
-    <foreign_table >pftb_modelo_contrato</foreign_table>
-    <conkey >{22}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >a</update_action>
-    <delete_action >a</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">modelo_contrato</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_modelo_contrato</int>
-    </foreign_fields>
-   </pftb_produto_id_modelo_contrato_fkey>
    <prtb_produto_pkey >
     <type >p</type>
-    <table_oid >2837575</table_oid>
+    <table_oid >29211</table_oid>
     <table >prtb_produto</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -9934,6 +10122,24 @@
     <foreign_fields >
     </foreign_fields>
    </prtb_produto_pkey>
+   <pftb_produto_id_modelo_contrato_fkey >
+    <type >f</type>
+    <table_oid >29211</table_oid>
+    <table >prtb_produto</table>
+    <foreign_oid >29173</foreign_oid>
+    <foreign_table >pftb_modelo_contrato</foreign_table>
+    <conkey >{21}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >a</update_action>
+    <delete_action >a</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">modelo_contrato</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_modelo_contrato</int>
+    </foreign_fields>
+   </pftb_produto_id_modelo_contrato_fkey>
   </constraints>
  </prtb_produto>
  <prtb_produto_bandalarga >
@@ -9969,7 +10175,7 @@
    <valor_trafego_adicional_gb >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10002,7 +10208,7 @@
    <valor_hora_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10035,7 +10241,7 @@
    <valor_mb_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >7,2</length>
+    <length >0,7</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10181,7 +10387,7 @@
    <tempo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,0</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10225,7 +10431,7 @@
    <bytes_in >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,0</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10233,7 +10439,7 @@
    <bytes_out >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >30,0</length>
+    <length >0,30</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10243,47 +10449,56 @@
    <rdtb_accounting_id_user_login_logout >
     <fields >
      <session_id >
+      <position >1</position>
       <sorting >ascending</sorting>
      </session_id>
      <username >
+      <position >2</position>
       <sorting >ascending</sorting>
      </username>
      <login >
+      <position >3</position>
       <sorting >ascending</sorting>
      </login>
      <logout >
+      <position >4</position>
       <sorting >ascending</sorting>
      </logout>
     </fields>
    </rdtb_accounting_id_user_login_logout>
-   <rdtb_accounting_id_user_login >
-    <fields >
-     <session_id >
-      <sorting >ascending</sorting>
-     </session_id>
-     <username >
-      <sorting >ascending</sorting>
-     </username>
-     <login >
-      <sorting >ascending</sorting>
-     </login>
-    </fields>
-   </rdtb_accounting_id_user_login>
    <rdtb_accounting_login_logout >
     <fields >
      <login >
+      <position >1</position>
       <sorting >ascending</sorting>
      </login>
      <logout >
+      <position >2</position>
       <sorting >ascending</sorting>
      </logout>
     </fields>
    </rdtb_accounting_login_logout>
+   <rdtb_accounting_id_user_login >
+    <fields >
+     <session_id >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </session_id>
+     <username >
+      <position >2</position>
+      <sorting >ascending</sorting>
+     </username>
+     <login >
+      <position >3</position>
+      <sorting >ascending</sorting>
+     </login>
+    </fields>
+   </rdtb_accounting_id_user_login>
   </indexes>
   <constraints >
    <rdtb_accounting_pkey >
     <type >p</type>
-    <table_oid >2837602</table_oid>
+    <table_oid >29224</table_oid>
     <table >rdtb_accounting</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -10309,7 +10524,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_log>
@@ -10361,7 +10575,7 @@
   <constraints >
    <rdtb_log_pkey >
     <type >p</type>
-    <table_oid >2837607</table_oid>
+    <table_oid >29229</table_oid>
     <table >rdtb_log</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -10387,7 +10601,6 @@
     <length >4</length>
     <unsigned ></unsigned>
     <default ></default>
-    <autoincrement >1</autoincrement>
     <type >integer</type>
     <mdb2type >integer</mdb2type>
    </id_spool>
@@ -10426,7 +10639,6 @@
    <op >
     <notnull ></notnull>
     <nativetype >bpchar</nativetype>
-    <length >1</length>
     <fixed >1</fixed>
     <default ></default>
     <type >text</type>
@@ -10473,7 +10685,7 @@
   <constraints >
    <sptb_spool_pkey >
     <type >p</type>
-    <table_oid >2837620</table_oid>
+    <table_oid >29237</table_oid>
     <table >sptb_spool</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -10576,27 +10788,9 @@
   <indexes >
   </indexes>
   <constraints >
-   <sttb_pop_status_id_pop_fkey >
-    <type >f</type>
-    <table_oid >2837629</table_oid>
-    <table >sttb_pop_status</table>
-    <foreign_oid >2837376</foreign_oid>
-    <foreign_table >cftb_pop</foreign_table>
-    <conkey >{1}</conkey>
-    <confkey >{1}</confkey>
-    <update_action >r</update_action>
-    <delete_action >r</delete_action>
-    <match >u</match>
-    <fields >
-     <int i="0">id_pop</int>
-    </fields>
-    <foreign_fields >
-     <int i="0">id_pop</int>
-    </foreign_fields>
-   </sttb_pop_status_id_pop_fkey>
    <sttb_pop_status_pkey >
     <type >p</type>
-    <table_oid >2837629</table_oid>
+    <table_oid >29245</table_oid>
     <table >sttb_pop_status</table>
     <foreign_oid >0</foreign_oid>
     <foreign_table ></foreign_table>
@@ -10611,24 +10805,42 @@
     <foreign_fields >
     </foreign_fields>
    </sttb_pop_status_pkey>
+   <sttb_pop_status_id_pop_fkey >
+    <type >f</type>
+    <table_oid >29245</table_oid>
+    <table >sttb_pop_status</table>
+    <foreign_oid >28945</foreign_oid>
+    <foreign_table >cftb_pop</foreign_table>
+    <conkey >{1}</conkey>
+    <confkey >{1}</confkey>
+    <update_action >r</update_action>
+    <delete_action >r</delete_action>
+    <match >u</match>
+    <fields >
+     <int i="0">id_pop</int>
+    </fields>
+    <foreign_fields >
+     <int i="0">id_pop</int>
+    </foreign_fields>
+   </sttb_pop_status_id_pop_fkey>
   </constraints>
  </sttb_pop_status>
 </tables>
 <sequences >
  <adsq_id_admin >
-  <start >34</start>
+  <start >5</start>
   <increment >1</increment>
  </adsq_id_admin>
  <adsq_id_priv >
-  <start >32</start>
+  <start >2</start>
   <increment >1</increment>
  </adsq_id_priv>
  <cxsq_autenticacao >
-  <start >168</start>
+  <start >41</start>
   <increment >1</increment>
  </cxsq_autenticacao>
  <blsq_carne_nossonumero >
-  <start >69097</start>
+  <start >2</start>
   <increment >1</increment>
  </blsq_carne_nossonumero>
  <blsq_nosso_numero_banco >
@@ -10636,11 +10848,11 @@
   <increment >1</increment>
  </blsq_nosso_numero_banco>
  <cbsq_id_carne >
-  <start >80</start>
+  <start >5777</start>
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >437</start>
+  <start >3</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -10648,43 +10860,43 @@
   <increment >1</increment>
  </cbsq_id_cobranca>
  <cbsq_id_endereco_cobranca >
-  <start >344</start>
+  <start >3</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbtb_faturas_id_cobranca_seq >
-  <start >4023</start>
+  <start >67645</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cxsq_id_fluxo >
-  <start >169</start>
+  <start >41</start>
   <increment >1</increment>
  </cxsq_id_fluxo>
  <cfsq_id_cobranca >
-  <start >5</start>
+  <start >2</start>
   <increment >1</increment>
  </cfsq_id_cobranca>
  <cfsq_id_nas >
-  <start >49</start>
+  <start >5</start>
   <increment >1</increment>
  </cfsq_id_nas>
  <cfsq_id_pop >
-  <start >94</start>
+  <start >127</start>
   <increment >1</increment>
  </cfsq_id_pop>
  <cfsq_id_rede >
-  <start >2493</start>
+  <start >2931</start>
   <increment >1</increment>
  </cfsq_id_rede>
  <cfsq_servidor_id_servidor >
-  <start >12</start>
+  <start >5</start>
   <increment >1</increment>
  </cfsq_servidor_id_servidor>
  <cftb_links_id_link_seq >
-  <start >9</start>
+  <start >2</start>
   <increment >1</increment>
  </cftb_links_id_link_seq>
  <clsq_id_cliente >
-  <start >8003</start>
+  <start >3477</start>
   <increment >1</increment>
  </clsq_id_cliente>
  <clsq_id_cliente_produto >
@@ -10696,11 +10908,11 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >1513</start>
+  <start >6081</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >329</start>
+  <start >5</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <id_venda_seq >
@@ -10712,7 +10924,7 @@
   <increment >1</increment>
  </lgsq_id_exclusao>
  <lgsq_id_processo >
-  <start >1000</start>
+  <start >2</start>
   <increment >1</increment>
  </lgsq_id_processo>
  <lgsq_id_remessa >
@@ -10724,15 +10936,15 @@
   <increment >1</increment>
  </lgtb_backup_id_backup>
  <lgtb_contas_excluidas_id_excluida_seq >
-  <start >214</start>
+  <start >2</start>
   <increment >1</increment>
  </lgtb_contas_excluidas_id_excluida_seq>
  <lgtb_reagendamento_id_reagendamento_seq >
-  <start >13</start>
+  <start >5</start>
   <increment >1</increment>
  </lgtb_reagendamento_id_reagendamento_seq>
  <lgtb_renovacao_id_renovacao_seq >
-  <start >53</start>
+  <start >14</start>
   <increment >1</increment>
  </lgtb_renovacao_id_renovacao_seq>
  <lgtb_restore_id_restore_seq >
@@ -10744,27 +10956,27 @@
   <increment >1</increment>
  </lgtb_retorno_id_arquivo_seq>
  <lgtb_status_conta_id_processo_seq >
-  <start >1184</start>
+  <start >2</start>
   <increment >1</increment>
  </lgtb_status_conta_id_processo_seq>
  <rdtb_log_id_log >
-  <start >11</start>
+  <start >2</start>
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >584</start>
+  <start >3</start>
   <increment >1</increment>
  </spsq_id_spool>
  <pfsq_id_forma_pagamento >
-  <start >17</start>
+  <start >2</start>
   <increment >1</increment>
  </pfsq_id_forma_pagamento>
  <pfsq_id_modelo_contrato >
-  <start >21</start>
+  <start >4</start>
   <increment >1</increment>
  </pfsq_id_modelo_contrato>
  <sptb_spool_id_spool_seq >
-  <start >22</start>
+  <start >2</start>
   <increment >1</increment>
  </sptb_spool_id_spool_seq>
  <sptb_spool_id_spool >
@@ -10772,21 +10984,9 @@
   <increment >1</increment>
  </sptb_spool_id_spool>
  <prsq_id_produto >
-  <start >71</start>
-  <increment >1</increment>
- </prsq_id_produto>
- <cbsq_id_item_faturas >
   <start >2</start>
   <increment >1</increment>
- </cbsq_id_item_faturas>
- <nbsq_id_backup >
-  <start >22</start>
-  <increment >1</increment>
- </nbsq_id_backup>
- <nbsq_id_arquivo >
-  <start >43</start>
-  <increment >1</increment>
- </nbsq_id_arquivo>
+ </prsq_id_produto>
  <rdsq_id_accounting >
   <start >2</start>
   <increment >1</increment>
@@ -10796,49 +10996,73 @@
   <increment >1</increment>
  </rdtb_accounting_session_id>
  <cbtb_lote_cobranca_id_remessa_seq >
-  <start >44</start>
+  <start >2</start>
   <increment >1</increment>
  </cbtb_lote_cobranca_id_remessa_seq>
+ <cbsq_id_remessa >
+  <start >2</start>
+  <increment >1</increment>
+ </cbsq_id_remessa>
+ <evsq_id_evento >
+  <start >71</start>
+  <increment >1</increment>
+ </evsq_id_evento>
+ <casq_id_condominio >
+  <start >2</start>
+  <increment >1</increment>
+ </casq_id_condominio>
+ <casq_id_bloco >
+  <start >2</start>
+  <increment >1</increment>
+ </casq_id_bloco>
+ <cbsq_id_comissao >
+  <start >2</start>
+  <increment >1</increment>
+ </cbsq_id_comissao>
+ <hdsq_id_grupo >
+  <start >2</start>
+  <increment >1</increment>
+ </hdsq_id_grupo>
+ <hdsq_id_historico >
+  <start >10</start>
+  <increment >1</increment>
+ </hdsq_id_historico>
+ <hdsq_id_chamado >
+  <start >3</start>
+  <increment >1</increment>
+ </hdsq_id_chamado>
  <cbsq_id_retorno >
   <start >2</start>
   <increment >1</increment>
  </cbsq_id_retorno>
- <cbsq_id_remessa >
-  <start >259</start>
-  <increment >1</increment>
- </cbsq_id_remessa>
  <cbsq__d_retorno >
-  <start >58</start>
+  <start >15</start>
   <increment >1</increment>
  </cbsq__d_retorno>
- <hdsq_id_chamado >
-  <start >92</start>
+ <nbsq_id_backup >
+  <start >2</start>
   <increment >1</increment>
- </hdsq_id_chamado>
- <hdsq_id_historico >
-  <start >299</start>
+ </nbsq_id_backup>
+ <nbsq_id_arquivo >
+  <start >2</start>
   <increment >1</increment>
- </hdsq_id_historico>
- <hdsq_id_grupo >
-  <start >14</start>
+ </nbsq_id_arquivo>
+ <cbsq_id_item_faturas >
+  <start >2</start>
   <increment >1</increment>
- </hdsq_id_grupo>
- <cbsq_id_comissao >
-  <start >8</start>
+ </cbsq_id_item_faturas>
+ <cbsq_id_retorno_erro >
+  <start >2</start>
   <increment >1</increment>
- </cbsq_id_comissao>
- <casq_id_condominio >
-  <start >16</start>
+ </cbsq_id_retorno_erro>
+ <cbsq__d_retorno_erro >
+  <start >143</start>
   <increment >1</increment>
- </casq_id_condominio>
- <casq_id_bloco >
-  <start >8</start>
+ </cbsq__d_retorno_erro>
+ <lgsq_id_recuperacao_email >
+  <start >9</start>
   <increment >1</increment>
- </casq_id_bloco>
- <evsq_id_evento >
-  <start >435</start>
-  <increment >1</increment>
- </evsq_id_evento>
+ </lgsq_id_recuperacao_email>
 </sequences>
 <languages >
  <int i="0">plpgsql</int>
@@ -10855,7 +11079,7 @@
   <argtypes >
    <int i="0">int4</int>
   </argtypes>
-  <src >&#10;&#10;&#10;&#10;DECLARE&#10;r record;&#10;id_contrato_original integer;&#10;BEGIN&#10;id_contrato_original := origem_contrato_migrado(id_contrato);&#10;&#10;SELECT data_contratacao INTO r FROM cbtb_contrato WHERE id_cliente_produto = id_contrato_original;&#10;&#10;RETURN r.data_contratacao;&#10;&#10;END&#10;&#10;&#10;&#10;</src>
+  <src >&#10;&#10;&#10;&#10;&#10;DECLARE&#10;r record;&#10;id_contrato_original integer;&#10;BEGIN&#10;id_contrato_original := origem_contrato_migrado(id_contrato);&#10;&#10;SELECT data_contratacao INTO r FROM cbtb_contrato WHERE id_cliente_produto = id_contrato_original;&#10;&#10;RETURN r.data_contratacao;&#10;&#10;END&#10;&#10;&#10;&#10;&#10;</src>
  </data_contratacao>
  <origem_contrato_migrado >
   <name >origem_contrato_migrado</name>
@@ -10868,7 +11092,7 @@
   <argtypes >
    <int i="0">int4</int>
   </argtypes>
-  <src >&#10;&#10;&#10;DECLARE&#10;r record;&#10;retorno integer;&#10;BEGIN&#10;   SELECT id_cliente_produto INTO r FROM cbtb_contrato WHERE migrado_para = id_contrato;&#10;&#10;   IF r.id_cliente_produto is null  THEN &#10;      RETURN id_contrato;&#10;   END IF;&#10;&#10;   RETURN origem_contrato_migrado(r.id_cliente_produto);&#10;&#10;END;&#10;&#10;&#10;</src>
+  <src >&#10;&#10;&#10;&#10;DECLARE&#10;r record;&#10;retorno integer;&#10;BEGIN&#10;   SELECT id_cliente_produto INTO r FROM cbtb_contrato WHERE migrado_para = id_contrato;&#10;&#10;   IF r.id_cliente_produto is null  THEN &#10;      RETURN id_contrato;&#10;   END IF;&#10;&#10;   RETURN origem_contrato_migrado(r.id_cliente_produto);&#10;&#10;END;&#10;&#10;&#10;&#10;</src>
  </origem_contrato_migrado>
 </procedures>
 </database>

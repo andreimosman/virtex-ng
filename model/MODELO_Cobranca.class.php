@@ -655,6 +655,21 @@
 		public function obtemEvolucaoPorPeriodo($periodo) {
 			return($this->cbtb_contrato->obtemEvolucao($periodo));
 		}
+		
+		public function estornaPagamentoFatura($id_cobranca,$estorna_acrescimo=false) {
+			$filtro = array("id_cobranca" => $id_cobranca);
+			$dados = array("status" => 'A', valor_pago => 0, data_pagamento => null );
+			if( $estorna_acrescimo ) {
+				$dados["acrescimo"] = 0;
+			}
+			
+			$fluxo = VirtexModelo::factory('caixa');
+			
+			$fluxo->estornaPagamentoFatura($id_cobranca);
+			
+			
+			return($this->cbtb_fatura->altera($dados,$filtro));
+		}
 
 		public function estornaFatura($id_cobranca) {
 			$filtro = array("id_cobranca" => $id_cobranca);
@@ -673,6 +688,11 @@
 			$filtro = array("status" => "A", "id_carne" => $id_carne);
 			return($this->cbtb_fatura->obtem($filtro,"data DESC"));
 		}
+
+		public function obtemFaturasPorRetorno($id_retorno) {
+			return($this->cbtb_fatura->obtemFaturasPorRetorno($id_retorno));
+		}
+
 
 
 		/**
@@ -838,6 +858,18 @@
 		public function obtemFaturamentoPorPeriodo($periodo){
 			return $this->cbtb_fatura->obtemFaturamentoPorPeriodo($periodo);
 		}
+		
+		public function obtemFaturamentoPorMes($ano,$mes) {
+			return $this->cbtb_fatura->obtemFaturamentoPorMes($ano,$mes);
+		}
+
+		public function obtemFaturamento($tipo="anual",$data='') {
+			return $this->cbtb_fatura->obtemRecebimentos($tipo,$data);
+		}
+		
+		public function obtemRecebimentos($tipo="anual",$data='') {
+			return $this->cbtb_fatura->obtemRecebimentos($tipo,$data);
+		}
 
 		public function obtemFaturamentoPorProduto($ano_select){
 			return $this->cbtb_fatura->obtemFaturamentoPorProduto($ano_select);
@@ -932,7 +964,9 @@
 			}
 
 			$totalDevido = $fatura["valor"] - $desconto + $acrescimo;
-
+			
+			
+			
 			/* Grava codigo retorno */
 			if ($id_retorno > 0)
 				$data['id_retorno'] = $id_retorno;
@@ -949,6 +983,7 @@
 					 if( $id_retorno ) {
 					 	// Joga como acrescimo. (junta com os acrescimos fornecidos). (quando enviado pelo banco).
 					 	$acrescimo += $amortizar - $totalDevido;
+					 	$data["status"] = PERSISTE_CBTB_FATURAS::$PAGA;
 					 } else {
 					 	throw new ExcecaoModeloValidacao (1,"Valor a receber excede o valor pendente!");
 					 }	 
@@ -983,8 +1018,8 @@
 				
 			}
 			
-
 			$seek["id_cobranca"] = $id_cobranca;
+					
 			$this->cbtb_fatura->altera($data,$seek);
 			
 			if( $id_retorno ) {
@@ -995,12 +1030,19 @@
 			
 			//Remanejamento e verificação de contas bloqueadas
 			//$contrato = $this->obtemContrato($fatura["id_cliente_produto"]);
-			$atrasados = $this->obtemContratosFaturasAtrasadasBloqueios($preferenciasCobranca["carencia"],$preferenciasCobranca["tempo_banco"],$fatura["id_cliente_produto"]); 
+			$atrasados = $this->obtemContratosFaturasAtrasadasBloqueios($preferenciasCobranca["carencia"],$preferenciasCobranca["tempo_banco"],$fatura["id_cliente_produto"],false); 
+
+			//echo "<pre>";
+			//echo "PERMITIR: $permitir_desbloqueio\n";
+			//print_r($atrasados);
+			//echo "</pre>"; 
 
 			$permitir_desbloqueio = false;
-			if(!$atrasados) { 
+			if(!count($atrasados)) { 
 				$permitir_desbloqueio = true;
 			}
+			
+			
 			
 			//for ($i=0; $i<count($atrasados); $i++) {
 			//	if($atrasados[$i]["id_cliente_produto"] == $fatura["id_cliente_produto"]) $permitir_desbloqueio = false;
@@ -1012,7 +1054,8 @@
 				foreach( $contas_bloqueadas as $i => $conta ) {
 					switch(trim($conta["tipo_conta"])) {
 						case "BL":
-							$contas->alteraContaBandaLarga($conta["id_conta"], NULL, 'A');
+							$cnt = $contas->obtemContaPeloId($conta["id_conta"]);
+							$contas->alteraContaBandaLarga($conta["id_conta"], NULL, 'A',$cnt["observacoes"],$cnt["conta_mestre"],$cnt["id_pop"],$cnt["id_nas"],$cnt["upload_kbps"],$cnt["download_kbps"],$cnt["mac"]);
 							break; 
 						case "D":
 							$contas->alteraContaDiscado($conta["id_conta"], NULL, 'A');
@@ -1182,10 +1225,10 @@
 			return($this->cbtb_contrato->obtem($filtro));
 		}		
 		
-		public function obtemContratosFaturasAtrasadasBloqueios($carencia="",$tempo_banco=2,$id_cliente_produto="") {	
+		public function obtemContratosFaturasAtrasadasBloqueios($carencia="",$tempo_banco=2,$id_cliente_produto="",$contasAtivas=true,$inadimplentes=false) {	
 			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
 			if(!$carencia) $carencia = $preferenciasCobranca["carencia"];
-			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco,$id_cliente_produto));
+			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco,$id_cliente_produto,$contasAtivas,$inadimplentes));
 		}
 		
 		public function obtemFaturaPorContratoPeriodo($data_referencia, $periodo, $id_contrato) {

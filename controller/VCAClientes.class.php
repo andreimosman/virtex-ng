@@ -257,7 +257,14 @@
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 
 					$cobranca = VirtexModelo::factory('cobranca');
-					$faturas = $cobranca->obtemFaturasPorCarne($id_carne);
+					
+					$id_cobranca = @$_REQUEST["id_cobranca"];
+					
+					if( $id_cobranca ) {
+						$faturas = array( $cobranca->obtemFaturaPorIdCobranca($id_cobranca) );
+					} else {
+						$faturas = $cobranca->obtemFaturasPorCarne($id_carne);
+					}
 
 					$prefGeral 		= $this->preferencias->obtemPreferenciasGerais();
 					$prefProvedor 	= $this->preferencias->obtemPreferenciasProvedor();
@@ -454,6 +461,10 @@
 					}
 					$this->_view->atribui("parcelas_instalacao",$parcelas_instalacao);
 
+					$pro_rata = @$_REQUEST["pro_rata"];
+					if( !$pro_rata ) $pro_rata = 'f';
+					$this->_view->atribui("pro_rata",$pro_rata);
+
 					if( !$acao ) {
 						//Cidades disponiveis
 						$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
@@ -507,6 +518,16 @@
 						$data_contratacao = date("d/m/Y");
 
 						$dia_venc 	= $tela == "migrar" ? $contrato["vencimento"] : $preferenciasCobranca["dia_venc"];
+						
+						if( !$dia_venc ) {
+							$dia_venc = $cobranca->obtemDiaVencimento($contrato["id_cliente_produto"]);
+							if( !$dia_venc ) {
+								$dia_venc = $prefCobra["dia_venc"];
+							}
+						}
+						
+						
+						
 						$pagamento 	= $tela == "migrar" ? $contrato["pagamento"] 	: $preferenciasCobranca["pagamento"];
 						$vigencia 	= $tela == "migrar" ? $contrato["vigencia"] 	: "12";
 						$carencia 	= $tela == "migrar" ? $contrato["carencia"] 	: $preferenciasCobranca["carencia"];
@@ -623,9 +644,9 @@
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
 						
-						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],@$_REQUEST["pro_rata"],@$_REQUEST["limite_prorata"],$parcelas_instalacao);
+						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],$pro_rata,@$_REQUEST["limite_prorata"],$parcelas_instalacao);
 						$this->_view->atribui("faturas",$faturas);
-
+						
 
 						if( $acao == "novo_contrato" ) {
 
@@ -981,6 +1002,40 @@
 
 
 					$fatura = $cobranca->obtemFaturaPorIdCobranca ($id_cobranca);
+					
+					$ret = array();
+					
+					$prefCobra = $this->preferencias->obtemPreferenciasCobranca();
+					//echo "<pre>"; 
+					//print_r($prefCobra);
+					//echo "</pre>"; 
+					
+					$formaPagamento = array();
+					if( $fatura["id_forma_pagamento"] ) {
+						$formaPagamento = $this->preferencias->obtemFormaPagamento($fatura["id_forma_pagamento"]);
+					}
+					
+					$this->_view->atribui("formaPagamento",$formaPagamento);
+					$this->_view->atribui("bancos",$this->preferencias->obtemListaBancos());
+					$this->_view->atribui("tiposFormaPgto",$this->preferencias->obtemTiposFormaPagamento());
+					
+
+					//echo "<pre>"; 
+					//print_r($formaPagamento);
+					//echo "</pre>"; 
+
+					
+					
+					if( $fatura["id_retorno"] ) {
+						$ret = $cobranca->obtemRetornoPeloId($fatura["id_retorno"]);
+						//echo "<pre>";
+						//print_r($ret);
+						//echo "</pre>";
+						
+					}
+					
+					$this->_view->atribui("retorno",$ret);
+					
 					
 					foreach($fatura as $k => $v){
 						if("data"  == $k ) {
@@ -1396,12 +1451,29 @@
 
 					$qtde = $contas->obtemQtdeContasPorContrato($id_cliente_produto, $tipo);
 					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
+					
+					$produtos = VirtexModelo::factory('produtos');
+					$produto = $produtos->obtemPlanoPeloId($contrato["id_produto"]);
+					
+					//echo "<pre>"; 
+					//print_r($produto);
+					//echo "</pre>";
 
 					if( $tipo == "E" ) {
 						if( !$id_conta && $contrato["num_emails"] > 0 ){
 							$qtdeDisponivel = $contrato["num_emails"] - $qtde["num_contas"];
 							if($qtdeDisponivel <= 0 ){
-								die("não existe mais contas disponiveis!");
+								// die("não existe mais contas disponiveis!");
+								$mensagem = "Não é possível criar conta adicional. Este contrato excedeu o limite de e-mails adicionais.";
+								$url = "admin-clientes.php?op=conta&tipo=" . trim($produto["tipo"]) . "&id_cliente=" . $this->id_cliente;
+
+								$this->_view->atribui("mensagem",$mensagem);
+								$this->_view->atribui("url",$url);
+								$this->_view->atribuiVisualizacao("msgredirect");
+
+								return;
+
+
 							}
 						}
 
@@ -1425,7 +1497,16 @@
 					} else {
 						$qtdeDisponivel = $contrato["numero_contas"] - $qtde["num_contas"];
 						if(!$id_conta && $qtdeDisponivel <= 0 ){
-							die("não existe mais contas disponiveis!");
+							// die("não existe mais contas disponiveis!");
+							$mensagem = "Não é possível criar conta adicional. Este contrato excedeu o limite de contas.";
+							$url = "admin-clientes.php?op=conta&tipo=" . trim($produto["tipo"]) . "&id_cliente=" . $this->id_cliente;
+
+							$this->_view->atribui("mensagem",$mensagem);
+							$this->_view->atribui("url",$url);
+							$this->_view->atribuiVisualizacao("msgredirect");
+
+							return;
+
 						}
 					}
 				}

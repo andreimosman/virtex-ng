@@ -1,6 +1,7 @@
 <html>
 <head>
 	<title></title>
+	<HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="configuracoes_header.html"}
@@ -42,6 +43,22 @@ label {
 		var option_index = 1;
 		for(var i=0;i<parent_pops.length;i++){
 			var selected = parent_pops[i].id_pop == id_pop_ap ? true : false;
+
+			//window.alert("I: " + i);
+			//window.alert(pType.value);
+
+			//preencheCombo("id_pop_ap",option_index,parent_pops[i].id_pop,parent_pops[i].nome,selected);
+
+			// window.alert("X: " + parent_pops[i].nivel);
+
+			//preencheCombo("id_pop_ap",option_index,parent_pops[i].id_pop,parent_pops[i].nome,selected);
+
+			// break;
+
+
+
+			// continue;
+
 			switch(pType.value){
 				case 'AP':
 				case 'B':
@@ -63,10 +80,14 @@ label {
 					}
 				break;
 			}
+
+			// break;
+
 		}
 	}
 
 	function preencheCombo(id_combo,option_index, value, text, selected){
+		//window.alert("id_combo: " + id_combo + "\noption_index: " + option_index + "\nvalue: " + value + "\ntext: " + text + "\nselected: " + selected);
 		var e =  document.getElementById(id_combo);
 		e.options[option_index] = new Option(text,value);
 		e.options[option_index].selected = selected;
@@ -79,7 +100,7 @@ label {
 	}
 
 	function valida_ip(ip){
-		if(!ipValido(ip.value)){
+		if(ip.value != '' && !ipValido(ip.value)){
 			alert('o IP '+ip.value+' não é válido.');
 			  ip.value="";
 			  ip.focus();
@@ -196,6 +217,16 @@ label {
 		  <td colspan="4"><textarea name="info" cols="50" rows="6" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >{$info}</textarea></td>
 		</tr>
 		<tr>
+			<td width="100" align="right" nowrap><label>Status:</label></td>
+			<td colspan="4">
+				<select name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+				{foreach key=id item=valor from=$status_pop}
+					<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>
+				{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td width="100" align="right" nowrap><label>Tipo:</label></td>
 			<td width="24%">
 				<select name="tipo" id="tipo" onChange="preenchePopAp(); confereCampoMAC();" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
@@ -213,17 +244,21 @@ label {
 		</tr>
 
 		<tr>
+
+			<td width="100" align="right" nowrap><label>IP:</label></td>
+			<td><input type="text" name="ipaddr" id="ipaddr" value="{$ipaddr}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:valida_ip(this);formOnBlur(this)" /></td>
+
 			<td width="100" align="right" nowrap><label>MAC:</label></td>
 			<td colspan=2><input name="mac" type="text" id="mac" value="{$mac}" size="40" maxlength="17" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this); confereCampoMAC();" />
 
-			<td width="100" align="left" valign="middle" nowrap>&nbsp;
+			<!--td width="100" align="left" valign="middle" nowrap>&nbsp;
 				{* <input name="bloquearmac" type="checkbox" id="bloquearmac" value="t" /><label>Bloquear MAC</label> *}
-			</td>
+			</td-->
 		</tr>
 
 		<tr>
-			<td width="100" align="right"></td>
-			<td colspan=3  nowrap>
+			<td width="100" align="right" colspan=3>&nbsp;</td>
+			<td>
 				<div id="divClienteMacPop" style="position:relative; display:none;">
 					<input name="clientemacpop" type="checkbox" id="clientemacpop" value="t"  />
 					<label>Clientes acessam a internet com o MAC do equipamento</label>
@@ -231,16 +266,6 @@ label {
 			</td>
 		</tr>
 
-		<tr>
-			<td width="100" align="right" nowrap><label>Status:</label></td>
-			<td colspan="4">
-				<select name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-				{foreach key=id item=valor from=$status_pop}
-					<option value="{$id}" {if $id == $status}selected{/if}>{$valor}</option>
-				{/foreach}
-				</select>
-			</td>
-		</tr>
 		{if $qtde_cli_pop}
 		<tr>
 			<td colspan="4">
@@ -267,8 +292,6 @@ label {
 				<td colspan="4">&nbsp;</td>
 			</tr>
 			<tr>
-				<td width="100" align="right" nowrap><label>IP:</label></td>
-				<td><input type="text" name="ipaddr" id="ipaddr" value="{$ipaddr}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:valida_ip(this);formOnBlur(this)" /></td>
 				<td width="100" align="right" nowrap><label>Monitorado por:</label></td>
 				<td>
 					<select name="id_servidor" id="id_servidor" style="width:130px;" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this)" >
@@ -327,3 +350,6 @@ label {
 	{if $usa_mac_ap == 't'}document.getElementById("usa_mac_ap").checked = true;{/if}
 </script>
 </html>
+
+
+

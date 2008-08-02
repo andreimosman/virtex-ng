@@ -28,6 +28,8 @@
 		protected $_redir;
 		
 		protected $_exibirNomeArquivo;
+		
+		protected $noCache;
 
 		protected function __construct() {
 			$this->_tplPath = ".";
@@ -36,6 +38,8 @@
 			$this->_tpl = MTemplate::getInstance($this->_tplPath);
 			$this->_bag = array();
 			$this->_redir = false;
+			
+			$this->noCache = false;
 			
 			$this->atribuiErro();	// Zera o erro
 			
@@ -60,6 +64,11 @@
 		}
 		
 		public function exibe() {
+		
+			if( $this->noCache ) {
+				header("Pragma: no-cache");
+			}
+		
 			if( $this->obtemVisualizacao() == "msgredirect" ) {
 				$this->_file = "BASE_msgredirect.html";
 			}
@@ -106,6 +115,14 @@
 		public function redirect($url) {
 			$this->_redir = true;
 			self::simpleRedirect($url);
+		}
+		
+		public function setNoCache() {
+			$this->noCache = true;
+		}
+		
+		public function unsetNoCache() {
+			$this->noCache = false;
 		}
 		
 		

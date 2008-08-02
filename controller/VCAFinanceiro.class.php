@@ -33,6 +33,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			case 'gerar_cobranca':
 				$this->executaGerarCobranca();
 				break;
+			case 'arquivos_ajuste':
+				$this->executaArquivosAjuste();
+				break;
 			case 'arquivos':
 				$this->executaArquivos();
 				break;
@@ -82,6 +85,17 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$contrato = $this->cobranca->obtemContratoPeloId($id_cliente_produto);
 			$produto  = $this->produtos->obtemPlanoPeloId($contrato["id_produto"]);
 			$cliente  = $this->clientes->obtemPeloId($id_cliente);
+
+			$formaPagamento = array();
+			if( $contrato["id_forma_pagamento"] ) {
+				$formaPagamento = $this->preferencias->obtemFormaPagamento($contrato["id_forma_pagamento"]);
+			}
+
+			$this->_view->atribui("formaPagamento",$formaPagamento);
+			$this->_view->atribui("bancos",$this->preferencias->obtemListaBancos());
+			$this->_view->atribui("tiposFormaPgto",$this->preferencias->obtemTiposFormaPagamento());
+
+
 			
 			$this->_view->atribui("contrato",$contrato);
 			$this->_view->atribui("produto",$produto);
@@ -350,7 +364,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 						foreach($contrato_id as $k => $v) {
 
 							$listacontas = $this->contas->obtemContasPeloContrato($k, $v);
-
+							
+							// Bloqueia as contas
 							foreach($listacontas as $chave => $campo) {
 								if($v == "BL") {
 									$this->contas->alteraContaBandaLarga($campo["id_conta"], NULL, 'S');
@@ -713,15 +728,191 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 
 	}
+	
+	/**
+	 * Executa ajustes na importação do retorno.
+	 */
+	protected function executaArquivosAjuste() {
+		$retornos = $this->cobranca->obtemUltimosRetornos(5000);
+		
+		echo "<pre>"; 
+		
+		$adm = VirtexModelo::factory('administradores');
+		
+		$sql = array();
+		// print_r($admistradores);
+				
+		// return;
+		
+		for($i=count($retornos)-1;$i>=0;--$i) {
+			
+			$id_retorno = $retornos[$i]["id_retorno"];
+			
+			$faturas = $this->cobranca->obtemFaturasPorRetorno($id_retorno);
+			
+			$admin = $adm->obtemAdminPeloId($retornos[$i]["id_admin"]);
+
+			// Se não tiver o que fazer libera o registro.			
+			if( !count($faturas) || $retornos[$i]["formato"] != 'PAGCONTAS' || !file_exists($retornos[$i]["arquivo"])  ){ 
+				continue;
+			}
+			
+			
+			// Estorna as faturas (incluindo acrescimo);
+			for($w=0;$w<count($faturas);$w++) {
+				$this->cobranca->estornaPagamentoFatura($faturas[$w]["id_cobranca"],true);
+			}
+
+			// Processa o retorno novamente.
+			$ret = MRetorno::factory($retornos[$i]["formato"],$retornos[$i]["arquivo"]);
+			
+			$registros = $ret->obtemRegistros();
+			
+			// print_r($registros);
+			
+			for($x=0;$x<count($registros);$x++) {
+				$reg = $registros[$x];
+				$codigo_barras = $reg['codigo_barras'];
+
+				$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);	
+
+				if (empty($fatura)) {
+					continue;
+				}
+				
+				$fatura['valor_pago'] = 0;
+				$fatura['acrescimo'] = 0;
+
+				$id_cobranca = $fatura['id_cobranca'];
+				$reagendar = null;
+				$reagendamento = null;
+				$data_pagamento = $reg['data_pagamento'];
+				$amortizar = (float) $reg['valor_recebido'];
+
+				$valor_receber = $fatura['valor'] - $fatura['valor_pago'];
+
+				if ($amortizar > $valor_receber) {
+					$acrescimo = $amortizar - $valor_receber;
+					$desconto = 0;
+				}
+				elseif ($valor_receber > $amortizar) {
+					$acrescimo = 0;
+					$desconto = $valor_receber - $amortizar;							
+				}
+				else {
+					$acrescimo = 0;
+					$desconto = 0;							
+				}
+				
+				
+				
+				//echo "<pre>"; 
+				echo "ID_FATURA: $id_cobranca\n"; 
+				echo "VALOR_REC: $valor_receber\n"; 
+				echo "AMORTIZAR: $amortizar\n";
+				echo "ACRESCIMO: $acrescimo\n"; 
+				echo "DESCONTO: $desconto\n"; 
+				//print_r($fatura);
+				//print_r($reg);
+				//echo "</pre><hr>";
+				echo "<hr>";
+
+
+				try {
+					$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno, $reg["data_credito"]);
+					$numeroRegistrosProcessados++;
+				} catch(Exception $e) {
+					$numeroRegistrosComErro++;
+					$this->cobranca->registraErroRetorno($id_retorno,$id_cobranca,$codigo_barras,$e->getMessage());
+				}
+
+
+
+
+
+
+
+
+
+			}
+			
+
+			
+			// print_r($ret);
+			// print_r($retornos[$i]);
+			//print_r($faturas);
+			
+			// echo "<hr>";
+			
+			
+			
+		}
+		
+		echo "FOI!!!";
+		
+		
+		
+		
+		
+		
+		echo "</pre>";
+		
+	}
 
 	protected function executaArquivos() {
 		$this->_view->atribuiVisualizacao("cobranca");
+		
+		$id_retorno = @$_REQUEST["id_retorno"];
+		
+		if( $id_retorno ) {
+		
+			
+			$retorno = $this->cobranca->obtemRetornoPeloId($id_retorno);
+			$faturas = $this->cobranca->obtemFaturasPorRetorno($id_retorno);
+			
+			$totais = array("valor"=>0,"valor_pago"=> 0);
+			
+			for($i=0;$i<count($faturas);$i++) {
+				$totais["valor"] += $faturas[$i]["valor"];
+				$totais["valor_pago"] += $faturas[$i]["valor_pago"];
+				
+				//echo "PAGAMENTO: ".$faturas[$i]["data_pagamento"]."<br>\n";
+			}
+			
+			$this->_view->atribui("id_retorno",$id_retorno);
+			$this->_view->atribui("retorno",$retorno);
+			$this->_view->atribui("faturas",$faturas);
+			$this->_view->atribui("totais",$totais);
+			
+		
+			//echo "<pre>"; 
+			//print_r($retorno);
+			//print_r($faturas);
+			//print_r($totais);
+			//echo "</pre>"; 
+		
+			return;
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 			
 		$combo_formato = MRetorno::obtemFormatosRetorno();
 		
 		$msg = "Retorno efetuado com sucesso";
 		$url = "admin-financeiro.php?op=arquivos";
 		$msg_error = array();
+		
 	
 		
 		// processa request
@@ -766,16 +957,12 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$retorno = MRetorno::factory($formato_retorno,$uploaddir . $nome_arquivo_retorno);
 				$registros = $retorno->obtemRegistros();
 				
-				//echo "<pre>";
-				//print_r($registros);
-				//echo "</pre>";
-
-		
 				$dadosLogin = $this->_login->obtem("dados");
 				$admin['id_admin'] = $dadosLogin["id_admin"];
 						
 				// gravar log
 				$id_retorno = $this->cobranca->gravarLogRetorno($clean['formato_retorno'], $_FILES['arquivo_retorno']["name"], $uploaddir . $nome_arquivo_retorno, $admin);
+				// $id_retorno = 200;
 				
 				$numeroTotalRegistros = 0;
 				$numeroRegistrosProcessados = 0;
@@ -831,22 +1018,37 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							$reagendar = null;
 							$reagendamento = null;
 							$data_pagamento = $reg['data_pagamento'];
-							$amortizar = (int) $reg['valor_recebido'];
+							$amortizar = (float) $reg['valor_recebido'];
 							
 							$valor_receber = $fatura['valor'] - $fatura['valor_pago'];
 														
-							if ($valor_receber > $reg['valor_recebido']) {
-								$acrescimo = $valor_receber - $amortizar;
+							if ($amortizar > $valor_receber) {
+								$acrescimo = $amortizar - $valor_receber;
 								$desconto = 0;
 							}
-							elseif ($amortizar < $fatura['valor_recebido']) {
+							elseif ($valor_receber > $amortizar) {
 								$acrescimo = 0;
 								$desconto = $valor_receber - $amortizar;							
 							}
 							else {
 								$acrescimo = 0;
 								$desconto = 0;							
-							}			
+							}
+							
+							/**
+							
+							echo "<pre>"; 
+							echo "VALOR_REC: $valor_receber\n"; 
+							echo "AMORTIZAR: $amortizar\n";
+							echo "ACRESCIMO: $acrescimo\n"; 
+							echo "DESCONTO: $desconto\n"; 
+							print_r($fatura);
+							print_r($reg);
+							echo "</pre><hr>";
+							
+							*/
+							
+							
 							try {
 								$this->cobranca->amortizarFatura($id_cobranca, $desconto, $acrescimo, $amortizar, $data_pagamento, $reagendar, $reagendamento, $observacoes, $admin, $id_retorno, $reg["data_credito"]);
 								$numeroRegistrosProcessados++;
@@ -1072,6 +1274,186 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$bloqueados_desbloqueados = $contas->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
 			$this->_view->atribui("bloqueados_desbloqueados", $bloqueados_desbloqueados);
 
+		}elseif($relatorio == "recebimentos_periodo") {
+			$cobranca = VirtexModelo::factory("cobranca");
+		
+			// $lista = $cobranca->obtemRecebimentos('mensal','01/07/2008');
+			
+			$tipo = @$_REQUEST["tipo"];
+			$data = @$_REQUEST["data"];
+			
+			if( !$tipo ) $tipo = "anual";
+			if( !$data ) $data = date("Y-m-d");
+			
+			//$tipo = "mensal";
+			//$data = "2008-07-01";
+			
+			
+			$this->_view->atribui("tipo",$tipo);
+			$this->_view->atribui("data",$data);
+			
+			
+			$lista = $cobranca->obtemRecebimentos($tipo,$data);
+
+			$dados = array();
+			$totais = array();
+			$totalGeral = array("valor_pago_balcao" => 0, "valor_pago_retorno" => 0, "__TOTAL__" => 0);
+			
+			
+			$idx2 =0;
+			for($i=0;$i<count($lista);$i++) {
+				list($ano,$mes,$dia) = explode("-", $lista[$i]["periodo"] );
+				$cidade = $lista[$i]["cidade"];
+				$id_cliente_produto = $lista[$i]["id_cliente_produto"];
+			
+				if( $tipo == 'diario' ) {
+					$idx = $cidade;
+					// $idx2 = $id_cliente_produto;
+					$idx2++;
+				} else {
+					$idx = $tipo == "anual" ? $ano."-".$mes : $lista[$i]["periodo"];
+					$idx2 = $cidade;
+				}
+				
+				if( !@$totais[$idx] ) {
+					$totais[$idx] = array();
+				}
+				
+				if( !@$totais[$idx]["valor_pago_balcao"] ) {
+					$totais[$idx]["valor_pago_balcao"] = 0;
+				}
+
+				if( !@$totais[$idx]["valor_pago_retorno"] ) {
+					$totais[$idx]["valor_pago_retorno"] = 0;
+				}
+				
+				if( !@$totais[$idx]["__SUBTOTAL__"] ) {
+					$totais[$idx]["__SUBTOTAL__"] = 0;
+				}
+				
+				if( !@$dados[$idx] ) {
+					$dados[$idx] = array();
+				}
+				
+				if( !@$dados[$idx][$idx2] ) {
+					!@$dados[$idx][$idx2] = array();
+				}
+				
+				$valor_balcao = $lista[$i]["valor_pago_balcao"];
+				$valor_retorno = $lista[$i]["valor_pago_retorno"];
+				
+				
+				$dados[$idx][$idx2]["valor_pago_balcao"] = $valor_balcao;
+				$dados[$idx][$idx2]["valor_pago_retorno"] = $valor_retorno;
+				
+				if( $tipo == "diario" ) {
+					$dados[$idx][$idx2]["nome_razao"] = $lista[$i]["nome_razao"];
+					$dados[$idx][$idx2]["produto"] = $lista[$i]["produto"];
+					$dados[$idx][$idx2]["data"] = $lista[$i]["data"];
+					$dados[$idx][$idx2]["id_cobranca"] = $lista[$i]["id_cobranca"];
+					$dados[$idx][$idx2]["id_cliente"] = $lista[$i]["id_cliente"];
+					$dados[$idx][$idx2]["id_cliente_produto"] = $lista[$i]["id_cliente_produto"];
+					$dados[$idx][$idx2]["url"] = "admin-clientes.php?op=contrato&tela=amortizacao&id_cliente=" . $lista[$i]["id_cliente"] . "&id_cliente_produto=" . $lista[$i]["id_cliente_produto"] . "&data=" . $lista[$i]["data"] . "&id_cobranca=" . $lista[$i]["id_cobranca"];
+					
+				}
+				
+				$dados[$idx][$idx2]["__SUBTOTAL__"] = $valor_balcao + $valor_retorno;
+				
+				$totais[$idx]["valor_pago_balcao"] += $valor_balcao;
+				$totais[$idx]["valor_pago_retorno"] += $valor_retorno;
+				$totais[$idx]["__SUBTOTAL__"] += $valor_balcao + $valor_retorno;
+				
+				$totalGeral["valor_pago_balcao"] += $valor_balcao;
+				$totalGeral["valor_pago_retorno"] += $valor_retorno;
+				$totalGeral["__TOTAL__"] += $valor_balcao + $valor_retorno;
+				
+				
+				
+				// $dados[$idx] = $lista[$i];
+			}
+			
+			//echo "<pre>";
+			//print_r($dados);
+			//echo "</pre>";
+			
+			krsort($dados);
+			
+			$this->_view->atribui("lista", $dados);
+			$this->_view->atribui("totais", $totais);
+			$this->_view->atribui("totalGeral", $totalGeral);
+			
+		} elseif($relatorio == "inadimplencia") {
+
+			$prefCobranca = $this->preferencias->obtemPreferenciasCobranca();		
+			$atrasados = $this->cobranca->obtemContratosFaturasAtrasadasBloqueios((int)$prefCobranca["carencia"],null,null,false,true);
+			$this->_view->atribui("atrasados", $atrasados);
+			
+			// $configuracoes = VirtexModelo::factory('configuracoes');
+			
+			$dados  = array();
+			$totais = array();
+			
+			
+			$totalGeral = array("faturas" => 0,"valor_devido" => 0,"num_contas" => 0);
+			
+			
+			for($i=0;$i<count($atrasados);$i++) {
+				//$atrasados[$i]["contrato"] = $this->cobranca->obtemContratoPeloId($atrasados[$i]["id_cliente_produto"]);
+				//$atrasados[$i]["cliente_produto"] = $this->cobranca->obtemClienteProduto($atrasados[$i]["id_cliente_produto"]);
+				// $atrasados[$i]["cliente"] = $this->clientes->obtemPeloId($atrasados[$i]["id_cliente"]);
+				
+				$atrasados[$i]["url"] = "admin-clientes.php?op=contrato&tela=contrato&id_cliente=" . $atrasados[$i]["id_cliente"] . "&id_cliente_produto=" . $atrasados[$i]["id_cliente_produto"];
+				
+				$cidade = $atrasados[$i]["cidade"];
+				
+				$idx = $cidade;
+				
+				if( !@$dados[$idx] ) {
+					$dados[$idx] = array();
+				}
+				
+				if( !@$totais[$idx] ) {
+					$totais[$idx] = array();
+				}
+				
+				if( !@$totais[$idx]["faturas"] ) {
+					$totais[$idx]["faturas"] = 0;
+				}
+
+				if( !@$totais[$idx]["valor_devido"] ) {
+					$totais[$idx]["valor_devido"] = 0;
+				}
+
+				if( !@$totais[$idx]["num_contas"] ) {
+					$totais[$idx]["num_contas"] = 0;
+				}
+				
+				$totais[$idx]["faturas"] += $atrasados[$i]["faturas"];
+				$totais[$idx]["valor_devido"] += $atrasados[$i]["valor_devido"];
+				$totais[$idx]["num_contas"] += $atrasados[$i]["num_contas"];
+				
+				$totalGeral["faturas"] += $atrasados[$i]["faturas"];
+				$totalGeral["valor_devido"] += $atrasados[$i]["valor_devido"];
+				$totalGeral["num_contas"] += $atrasados[$i]["num_contas"];
+				
+				
+				
+				$dados[$idx][] = $atrasados[$i];
+				
+			}
+			
+			
+			$this->_view->atribui("lista",$dados);
+			$this->_view->atribui("totais",$totais);
+			$this->_view->atribui("totalGeral",$totalGeral);
+			
+			$countBloqueados = count($atrasados);
+			$this->_view->atribui("countBloqueados", $countBloqueados);
+			
+			//echo "<pre>";
+			//print_r($dados);
+			//echo "</pre>";
+			
 		}
 	}
 	
@@ -1230,40 +1612,219 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$this->_view->atribui("dados_d", $dados_d);
 
 		}elseif ("por_periodo" == $relatorio){
+		
+			$this->executaRelatorioFaturamentoPorPeriodo();		
+		}
+
+
+	}
+	
+	protected function executaRelatorioFaturamentoPorPeriodo() {
+	
+		/**
+
+		$tipo = @$_REQUEST["tipo"];
+		
+		$ano = @$_REQUEST["ano"];
+		$mes = @$_REQUEST["mes"];
+		$dia = @$_REQUEST["dia"];
+		
+		
+		if( !$tipo ) $tipo = "anual";
+
+		// Modelo de Cobrança
+		$cobranca = VirtexModelo::factory("cobranca");
+		
+		
+		$this->_view->atribui("tipo",$tipo);
+
+
+		
+		if( $tipo == "anual" || $tipo == "mensal") {
 
 			$periodo = 12;
 			$this->_view->atribui("periodo", $periodo);
-			$cobranca = VirtexModelo::factory("cobranca");
 
-			$lista = $cobranca->obtemFaturamentoPorPeriodo($periodo);
+			$lista = $tipo == "anual" ? $cobranca->obtemFaturamentoPorPeriodo($periodo) : $cobranca->obtemFaturamentoPorMes($ano,$mes);
+			
+			
 			$dados = array();
 			$sumario = array("valor_documento" => 0, "valor_acrescimo" => 0, "valor_desconto" => 0, "valor_pago"=>0);
 
 			for($i=0;$i<count($lista);$i++) {
 				if( $lista[$i]["mes"] < 10 ) $lista[$i]["mes"] = "0".$lista[$i]["mes"];
-				$dados[ $lista[$i]["ano"] . "-" . $lista[$i]["mes"] ] = $lista[$i];
+				
+				if( $tipo == "anual" ) {
+					$lista[$i]["periodo"] = $lista[$i]["mes"] . "/" . $lista[$i]["ano"];
+				}
+				
+				$idx = $tipo == "anual" ? $lista[$i]["ano"] . "-" . $lista[$i]["mes"] : $lista[$i]["periodo"];
+				
+				// echo "PERIODO: " . $lista[$i]["periodo"] . "<br>\n";
+
+				$dados[ $idx ] = $lista[$i];
 
 				$sumario["valor_documento"] += $lista[$i]["valor_documento"];
 				$sumario["valor_desconto"] += $lista[$i]["valor_desconto"];
 				$sumario["valor_acrescimo"] += $lista[$i]["valor_acrescimo"];
 				$sumario["valor_pago"] += $lista[$i]["valor_pago"];
+
+
 			}
 
 			$this->_view->atribui("sumario",$sumario);
 			$dt = date("d/m/Y");
+			
+			if( $tipo == "anual" ) {
+				for($i=0;$i<$periodo;$i++) {
+					list($d,$m,$y) = explode("/",$dt);
+					$dt = MData::adicionaMes($dt,-1);
+					if( ! @$dados[ $y."-".$m ] ) {
+						$dados[ $y."-".$m ] = array("ano" => $y, "mes" => $m);
+					}
+					$dados[$y."-".$m]["link"] = "admin-financeiro.php?op=relatorios_faturamento&relatorio=por_periodo&tipo=mensal&mes=" . $m . "&ano=" . $y;
 
-			for($i=0;$i<$periodo;$i++) {
-				list($d,$m,$y) = explode("/",$dt);
-				$dt = MData::adicionaMes($dt,-1);
-				if( ! @$dados[ $y."-".$m ] ) {
-					$dados[ $y."-".$m ] = array("ano" => $y, "mes" => $m);
 				}
+
+				krsort($dados);
+
+			} else {
+				$dias = MData::obtemDiasMes($ano);
+				$diasMes = $dias[(int)$mes];
+								
+				for($i=1;$i<=$diasMes;$i++) {
+					$dia = $i;
+					if( $dia<10 ) $dia = '0'.$dia;
+					
+					if( !@$dados[$ano . "-" . $mes . "-" . $dia] ) {
+						$dados[$ano . "-" . $mes . "-" . $dia] = array();
+					}
+					$dados[$ano . "-" . $mes . "-" . $dia]["periodo"] =  $dia . "/" . $mes . "/" . $ano;
+					
+					
+				}
+			
 			}
-			krsort($dados);
 			$this->_view->atribui("lista", $dados);
 
+
+			// echo "<pre>"; 
+			// print_r($dados);
+			// echo "</pre>";
+
 		}
+		
+		*/
+		
+		
+		$cobranca = VirtexModelo::factory("cobranca");
+
+		// $lista = $cobranca->obtemRecebimentos('mensal','01/07/2008');
+
+		$tipo = @$_REQUEST["tipo"];
+		$data = @$_REQUEST["data"];
+
+		if( !$tipo ) $tipo = "anual";
+		if( !$data ) $data = date("Y-m-d");
+
+		//$tipo = "mensal";
+		//$data = "2008-07-01";
+
+
+		$this->_view->atribui("tipo",$tipo);
+		$this->_view->atribui("data",$data);
+
+
+		$lista = $cobranca->obtemFaturamento($tipo,$data);
+
+		$dados = array();
+		$totais = array();
+		$totalGeral = array("valor_pago_balcao" => 0, "valor_pago_retorno" => 0, "__TOTAL__" => 0);
+
+
+		$idx2 = 0;
+		for($i=0;$i<count($lista);$i++) {
+			list($ano,$mes,$dia) = explode("-", $lista[$i]["periodo"] );
+			$cidade = $lista[$i]["cidade"];
+			$id_cliente_produto = $lista[$i]["id_cliente_produto"];
+
+			if( $tipo == 'diario' ) {
+				$idx = $cidade;
+				// $idx2 = $id_cliente_produto;
+				$idx2++;
+			} else {
+				$idx = $tipo == "anual" ? $ano."-".$mes : $lista[$i]["periodo"];
+				$idx2 = $cidade;
+			}
+
+			if( !@$totais[$idx] ) {
+				$totais[$idx] = array();
+			}
+
+			if( !@$totais[$idx]["valor_pago_balcao"] ) {
+				$totais[$idx]["valor_pago_balcao"] = 0;
+			}
+
+			if( !@$totais[$idx]["valor_pago_retorno"] ) {
+				$totais[$idx]["valor_pago_retorno"] = 0;
+			}
+
+			if( !@$totais[$idx]["__SUBTOTAL__"] ) {
+				$totais[$idx]["__SUBTOTAL__"] = 0;
+			}
+
+			if( !@$dados[$idx] ) {
+				$dados[$idx] = array();
+			}
+
+			if( !@$dados[$idx][$idx2] ) {
+				!@$dados[$idx][$idx2] = array();
+			}
+
+			$valor_balcao = $lista[$i]["valor_pago_balcao"];
+			$valor_retorno = $lista[$i]["valor_pago_retorno"];
+
+
+			$dados[$idx][$idx2]["valor_pago_balcao"] = $valor_balcao;
+			$dados[$idx][$idx2]["valor_pago_retorno"] = $valor_retorno;
+
+			if( $tipo == "diario" ) {
+				$dados[$idx][$idx2]["nome_razao"] = $lista[$i]["nome_razao"];
+				$dados[$idx][$idx2]["produto"] = $lista[$i]["produto"];
+				$dados[$idx][$idx2]["data"] = $lista[$i]["data"];
+				$dados[$idx][$idx2]["id_cobranca"] = $lista[$i]["id_cobranca"];
+				$dados[$idx][$idx2]["id_cliente"] = $lista[$i]["id_cliente"];
+				$dados[$idx][$idx2]["id_cliente_produto"] = $lista[$i]["id_cliente_produto"];
+				$dados[$idx][$idx2]["url"] = "admin-clientes.php?op=contrato&tela=amortizacao&id_cliente=" . $lista[$i]["id_cliente"] . "&id_cliente_produto=" . $lista[$i]["id_cliente_produto"] . "&data=" . $lista[$i]["data"] . "&id_cobranca=" . $lista[$i]["id_cobranca"];
+
+			}
+
+			$dados[$idx][$idx2]["__SUBTOTAL__"] = $valor_balcao + $valor_retorno;
+
+			$totais[$idx]["valor_pago_balcao"] += $valor_balcao;
+			$totais[$idx]["valor_pago_retorno"] += $valor_retorno;
+			$totais[$idx]["__SUBTOTAL__"] += $valor_balcao + $valor_retorno;
+
+			$totalGeral["valor_pago_balcao"] += $valor_balcao;
+			$totalGeral["valor_pago_retorno"] += $valor_retorno;
+			$totalGeral["__TOTAL__"] += $valor_balcao + $valor_retorno;
+
+
+
+			// $dados[$idx] = $lista[$i];
+		}
+
+		krsort($dados);
+
+		$this->_view->atribui("lista", $dados);
+		$this->_view->atribui("totais", $totais);
+		$this->_view->atribui("totalGeral", $totalGeral);
+
+
+	
 	}
+	
+	
 	
 	public function executaDownloadRemessa() {
 		$id_remessa = @$_REQUEST["id_remessa"];

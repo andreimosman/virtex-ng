@@ -81,7 +81,11 @@
 		public function pagamentoViaRetorno($valor,$data_registro,$data_compensacao,$id_cobranca,$arquivo) {
 			return($this->cxtb_fluxo->pagamentoViaRetorno($valor,$data_registro,$data_compensacao,$id_cobranca,$arquivo));
 		}
-	
+
+		public function estornaPagamentoFatura($id_cobranca) {
+			$filtro = array("id_cobranca" => $id_cobranca);
+			return($this->cxtb_fluxo->exclui($filtro));
+		}
 	
 	
 	

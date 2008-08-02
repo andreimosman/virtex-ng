@@ -19,6 +19,10 @@ var LIMITE_PRORATA = {$limite_prorata};
 var condominios = eval({$condominios});
 var condominios_instalacao = eval({$condominios_instalacao});
 
+
+var enviando = false;
+
+
 {literal}
 
 function alteraNas() {
@@ -864,6 +868,17 @@ function showResponse(originalRequest) {
 function validacao(frm ) {
 	var migracao = false;
 
+	if( frm.id_cliente_produto.value != null && frm.id_cliente_produto.value != '' ) {
+	   migracao = true;
+	}
+
+	// window.alert("migracao: " + migracao);
+
+	// if( frm.id_cliente_produt
+
+	// window.alert("validacao");
+	// window.alert(frm.id_cliente_produto.value);
+
 	if( !document.getElementById('tipo').value ) {
 		window.alert("É necessário escolher o tipo de contrato.");
 		return false;
@@ -872,13 +887,18 @@ function validacao(frm ) {
 	if( document.getElementById('tipo').value != '' && document.getElementById('id_produto_original').value != '') {
 		migracao = true;
 		if( document.getElementById('id_produto_original').value == document.getElementById('id_produto').value ) {
-			window.alert("Você deve escolher outro plano para migrar o contrato.");
-			return false;
+			// window.alert("Você deve escolher outro plano para migrar o contrato.");
+
+			if( !window.confirm("Você está tentando migrar para o mesmo plano. Esta opção é útil para alteração de vencimento e alteração de plano.\n\nSe está certo da operação clique em 'OK', caso contrário clique em 'Cancelar'") ) {
+				return false;
+			}
 		}
 	}
 
 	if( !migracao ) {
-			username = document.getElementById('username').value;
+		// window.alert("NOT MIGRACAO");
+
+			username = frm.username.value;
 			criar_email = document.getElementById('criar_email').value;
 			id_produto = document.getElementById('id_produto').value;
 
@@ -887,13 +907,26 @@ function validacao(frm ) {
 				return false;
 			}
 
-			if(document.getElementById('tipo').value == "BL") {
+			if( username == "" ) {
+				alert("É necessário selecinar um username");
+				return false;
+			}
+
+			tipo = document.getElementById('tipo').value;
+
+			// window.alert("USER: [" + username + "]");
+
+			if(tipo == "BL") {
+
+				// window.alert('BL!!!!');
+
 				if(!checkDadosConexao()){
+					// window.alert("!CDC!!!");
 					return false;
 				}
 			}
 
-			if(username != ""){
+			// if(username != ""){
 				if(!validaUsernameString(username.value)) {
 					alert("Não é permitido a inserção de espaços e caracteres maúsculos e caracteres especiais diferentes de \".\" e \"_\" no username.");
 					return false;
@@ -902,7 +935,7 @@ function validacao(frm ) {
 				if(!validaUsername()){
 					return false;
 				}
-			}
+			// }
 
 			if(criar_email.checked){
 				if(!validaEmail()){
@@ -1020,11 +1053,34 @@ function validacao(frm ) {
 }
 
 function checkDadosConexao(){
-		var nas = document.getElementById('id_nas');
-		var mac = document.getElementById('mac');
-		var altera_rede = document.getElementById('altera_rede');
-		var selecao_redeip = document.getElementById('selecao_redeip');
-		var endereco_redeip = document.getElementById('endereco_redeip');
+
+		var frm = document.contratacao;
+
+		//window.alert("FRM: " + frm);
+
+
+		var nas = frm.id_nas;
+		var pop = frm.id_pop;
+		var mac = frm.mac;
+		var id_cliente_produto = frm.id_cliente_produto;
+		var migracao = false;
+		if( id_cliente_produto.value != '' ) {
+			migracao = true;
+		}
+		var altera_rede = frm.altera_rede;
+		var selecao_redeip = frm.selecao_redeip;
+		var endereco_redeip = frm.endereco_redeip;
+
+		if( !nas.value ) {
+			// window.alert('NOT NAS');
+			window.alert("É necessário escolher um NAS.");
+			return false;
+		}
+
+		if( !pop.value ) {
+			window.alert("É necessário escolher um POP.");
+			return false;
+		}
 
 		var nas_text = nas.options[nas.options.selectedIndex].text;
 		var nas_type=nas_text.split(":");
@@ -1050,8 +1106,59 @@ function checkDadosConexao(){
 		return true;
 	}
 
+
+function antiRepost() {
+	var frm=document.contratacao;
+
+	if( enviando ) {
+		return(false);
+	}
+	frm.submit.disabled = true;
+	enviando = true;
+
+}
+
 function checkForm(tag) {
-  return validacao(tag);
+
+	if( enviando ) {
+		return(false);
+	}
+
+
+
+  // var frm=document.contratacao;
+
+
+
+  var fp = getCheckedRadio("forma_pagamento");
+  if( fp != null ) {
+  	valor = fp.value;
+  } else {
+  	valor = null;
+  }
+
+  if( valor == '' || valor == null ) {
+    window.alert("Você deve escolher a forma de pagamento.");
+  	return false;
+  }
+
+
+
+	if( !validacao(tag) ) {
+		return(false);
+	}
+
+	tag.submit.disabled = true;
+	enviando = true;
+
+
+
+  return(true);
+
+
+  // return validacao(tag);
+
+
 }
 
 
@@ -1155,7 +1262,7 @@ function validarData(campo){
 {/literal}
 </style>
 
-<form name="contratacao" id="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{/if} >
+<form name="contratacao" id="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{else}onSubmit="return antiRepost();"{/if} >
 <input type="hidden" name="op" id="op" value="{$op}">
 <input type="hidden" name="tela" id="tela" value="{$tela}">
 <input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}">
@@ -1424,7 +1531,7 @@ function validarData(campo){
 							{/foreach}
 
 							<tr> {if $estilo=='impar'}{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
-								<td class='{$estilo}'><input type="radio" name="forma_pagamento" id="forma_pagamento" value="NA" onClick="javascript:contratoAlteraFormaPagamento()" CHECKED/></td>
+								<td class='{$estilo}'><input type="radio" name="forma_pagamento" id="forma_pagamento" value="NA" onClick="javascript:contratoAlteraFormaPagamento()"/></td>
 								<td class='{$estilo}'>
 									<b>Não atrelar</b>
 								</td>

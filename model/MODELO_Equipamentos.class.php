@@ -376,6 +376,13 @@
 		public function obtemPOPsPeloServidor($id_servidor) {
 			return($this->cftb_pop->obtem(array("id_servidor" => $id_servidor, "status" => "A")));
 		}
+		
+		public function obtemIPsPOPs() {
+			$filtro = array('ipaddr' => "!null:");
+			
+			return($this->cftb_pop->obtem($filtro,"ipaddr"));
+			
+		}
 	
 	}
 

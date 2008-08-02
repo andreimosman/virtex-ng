@@ -19,8 +19,12 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		$this->_filtros		= array("id_cliente_produto"=>"number", "data"=>"date", "valor"=>"number", "reagendamento"=>"date", "pagto_parcial"=>"number", "data_pagamento"=>"date", "desconto"=>"number", "acrescimo"=>"number", "valor_pago"=>"number", "id_cobranca"=>"number", "anterior"=>"bool", "id_carne"=>"number", "nosso_numero_banco"=>"number", "tipo_retorno"=>"number", "email_aviso"=>"bool", "id_forma_pagamento"=>"number", "id_remessa"=>"number");
 
 	}
+	
+	public function obtemFaturasPorRetorno($id_retorno) {
+		return($this->obtemFaturas("","","",$id_retorno));
+	}
 
-	public function obtemFaturas ($id_cliente = "", $id_cliente_produto = "", $id_carne = "")
+	public function obtemFaturas ($id_cliente = "", $id_cliente_produto = "", $id_carne = "", $id_retorno = "")
 	{
 	
 		if (func_num_args () == 0 )
@@ -34,16 +38,20 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 				     to_char (f.reagendamento,'dd/mm/YYYY') as reagendamento,
 				     f.valor_pago,
 				     f.id_cliente_produto,
-				     f.id_cobranca
+				     f.id_cobranca,
+				     cl.id_cliente, cl.nome_razao, cid.id_cidade, cid.cidade, cid.uf, p.nome as produto
 				FROM cbtb_faturas f
-			  INNER JOIN cbtb_cliente_produto p ON f.id_cliente_produto = p.id_cliente_produto
+			  INNER JOIN cbtb_cliente_produto cp ON f.id_cliente_produto = cp.id_cliente_produto
+			  INNER JOIN cltb_cliente cl ON cl.id_cliente = cp.id_cliente
+			  INNER JOIN prtb_produto p ON p.id_produto = cp.id_produto 
+			  INNER JOIN cftb_cidade cid ON cl.id_cidade = cid.id_cidade 
 
 				";
 
 		$where = array ();
 
 		if ($id_cliente)
-		$where [] = 'p.id_cliente = ' . $this->bd->escape ($id_cliente);
+		$where [] = 'cp.id_cliente = ' . $this->bd->escape ($id_cliente);
 
 		if ($id_cliente_produto)
 		$where [] = 'f.id_cliente_produto = ' . $this->bd->escape ($id_cliente_produto);
@@ -53,12 +61,16 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 		
 		$where [] = "f.status <> 'E' ";
 		$where [] = "f.valor > 0 ";
+		
+		if( $id_retorno ) {
+			$where[] = "f.id_retorno = " . $this->bd->escape($id_retorno);
+		}
 
 		$q .= " WHERE " . implode (" AND ", $where);
 		
 		$q .= " ORDER BY dt_ordem DESC ";
 		
-		// echo "Q: $q<br>\n";
+		//echo "Q: $q<br>\n";
 		return ($this->bd->obtemRegistros ($q));
 	}
 
@@ -328,6 +340,189 @@ public function obtemFaturasAtrasadasDetalhes($periodo){
 
 		return ($this->bd->obtemRegistros($sql));
 	}
+
+	public function obtemFaturamentoPorMes($ano,$mes) {
+
+		$data_ini = $ano . "-" . $mes . "-01";
+		$data_fim = MData::ptBR_to_ISO(MData::adicionaMes($data_ini,1));
+
+		$sql = "SELECT ";
+		$sql .=   "data as periodo, ";
+		$sql .=   "sum(valor) as valor_documento, sum(desconto) as valor_desconto, ";
+		$sql .=   "sum(acrescimo) as valor_acrescimo, sum(valor_pago) as valor_pago ";
+		$sql .= "FROM ";
+		$sql .=   "cbtb_faturas f ";
+		$sql .= "WHERE ";
+		$sql .= "  f.status = 'P' AND f.data >= '$data_ini' AND f.data < '$data_fim' ";
+		$sql .= "GROUP BY ";
+		$sql .= "  data ";
+		$sql .= "ORDER BY ";
+		$sql .= "  data ";
+		
+		echo "SQL: $sql<br>\n"; 
+
+		return ($this->bd->obtemRegistros($sql));
+	}
+	
+	
+	protected function sqlFaturasPagas() {
+		$sql  = "SELECT ";
+		$sql .= "  id_cliente_produto, data_pagamento, data, id_cobranca, ";
+		$sql .= "  CASE WHEN id_retorno is null THEN valor_pago ELSE 0 END as vlb, ";
+		$sql .= "  CASE WHEN id_retorno is not null THEN valor_pago ELSE 0 END as vlr ";
+		$sql .= "FROM ";
+		$sql .= "  cbtb_faturas xxx ";
+		$sql .= "WHERE  ";
+		$sql .= "  xxx.status = 'P' ";
+		return($sql);
+	}
+	
+	protected function sqlRecebimentosMes($mes,$ano) {
+		$data_ini = $ano . "-" . $mes . "-01";
+		$data_fim = MData::ptBR_to_ISO(MData::adicionaMes($data_ini,1));
+		$sql = $this->sqlFaturasPagas();
+		$sql .= "  AND data_pagamento >= '$data_ini' AND data_pagamento < '$data_fim' ";
+		return($sql);
+	}
+
+	protected function sqlRecebimentosDia($data) {
+		$sql = $this->sqlFaturasPagas();
+		$sql .= "  AND data_pagamento = '$data'";
+		return($sql);
+	}
+	
+	protected function sqlRecebimentosPeriodo($meses) { 
+		$meses -= 1;
+		$meses *= -1;
+		
+		$dataBase = date("Y-m-01");
+		$data_ini = MData::adicionaMes($dataBase,$meses);
+
+		$sql = $this->sqlFaturasPagas();
+		$sql .= "  AND data_pagamento >= '$data_ini' AND data_pagamento < now() ";
+		
+		
+		$sqlRet  = "     SELECT ";
+		$sqlRet .= "        CAST( extract('year' from data_pagamento) || '-' || extract('month' from data_pagamento) || '-01' as date) as data_pagamento, ";
+		$sqlRet .= "        id_cliente_produto, x.vlb, x.vlr";
+		$sqlRet .= "     FROM ( $sql ) x ";
+		
+
+		return($sqlRet);
+		
+
+		
+	}
+
+	protected function sqlFaturamentoMes($mes,$ano) {
+		$data_ini = $ano . "-" . $mes . "-01";
+		$data_fim = MData::ptBR_to_ISO(MData::adicionaMes($data_ini,1));
+		$sql = $this->sqlFaturasPagas();
+		$sql .= "  AND data >= '$data_ini' AND data < '$data_fim' ";
+		return($sql);
+	}
+
+	protected function sqlFaturamentoDia($data) {
+		$sql = $this->sqlFaturasPagas();
+		$sql .= "  AND data = '$data'";
+		return($sql);
+	}
+	
+	protected function sqlFaturamentoPeriodo($meses) { 
+		$meses -= 1;
+		$meses *= -1;
+		
+		$dataBase = date("Y-m-01");
+		$data_ini = MData::adicionaMes($dataBase,$meses);
+
+		$sql = $this->sqlFaturasPagas();
+		$sql .= "  AND data >= '$data_ini' AND data < now() ";
+		
+		
+		$sqlRet  = "     SELECT ";
+		$sqlRet .= "        CAST( extract('year' from data) || '-' || extract('month' from data) || '-01' as date) as data, ";
+		$sqlRet .= "        id_cliente_produto, x.vlb, x.vlr";
+		$sqlRet .= "     FROM ( $sql ) x ";
+		
+
+		return($sqlRet);
+		
+
+		
+	}
+	
+	/**
+	 * Base para faturamento e recebimentos
+	 */
+	protected function obtemFatRec($tp,$tipo,$data) {
+		if( $tp == 'F' ) {
+			// Faturamento
+			$campo_base = 'data';
+		} else {
+			$campo_base = 'data_pagamento';
+		}
+
+		$sql = "SELECT ";
+		if( $tipo == 'diario' ) {
+			$sql .= "   f." . $campo_base . " as periodo, cid.cidade as cidade, cl.nome_razao, p.nome as produto, f.id_cliente_produto, data, id_cobranca, cl.id_cliente, ";
+			$sql .= "   f.vlb as valor_pago_balcao, ";
+			$sql .= "   f.vlr as valor_pago_retorno ";
+		} else {
+			$sql .= "   f. " . $campo_base ." as periodo, cid.cidade as cidade,   ";
+			$sql .= "   sum(f.vlb) as valor_pago_balcao, ";
+			$sql .= "   sum(f.vlr) as valor_pago_retorno ";
+		}
+		$sql .= "FROM ";
+		$sql .= "   (" ;
+
+		switch($tipo) {
+			case 'mensal':
+				$data = MData::ptBR_to_ISO($data);
+				list($a,$m,$d) = explode("-",$data);
+				$sql .= $tp == 'F' ? $this->sqlFaturamentoMes($m,$a) : $this->sqlRecebimentosMes($m,$a);
+				break;
+
+			case 'anual':
+				$sql .= $tp == 'F' ? $this->sqlFaturamentoPeriodo(12) : $this->sqlRecebimentosPeriodo(12);
+				break;
+
+			case 'diario':
+				$sql .= $tp == 'F' ? $this->sqlFaturamentoDia : $this->sqlRecebimentosDia($data);
+				break;
+
+		}
+
+		$sql .=   ") f ";
+		$sql .=   "   INNER JOIN cbtb_cliente_produto cp ON cp.id_cliente_produto = f.id_cliente_produto  ";
+		$sql .=   "   INNER JOIN cltb_cliente cl ON cl.id_cliente = cp.id_cliente ";
+		$sql .=   "   INNER JOIN cftb_cidade cid ON cl.id_cidade = cid.id_cidade ";
+		$sql .=   "   INNER JOIN prtb_produto p ON cp.id_produto = p.id_produto ";
+		if( $tipo != 'diario' ) {
+			$sql .=   "GROUP BY ";
+			$sql .=   "   f." . $campo_base . ", cid.cidade ";
+		}
+		$sql .=   "ORDER BY ";
+		$sql .=   "   f." . $campo_base . ", cid.cidade ";
+
+		//echo "<pre>SQL: \n$sql\n"; 
+		$retorno =$this->bd->obtemRegistros($sql);
+		
+		return($retorno);
+		
+
+
+	}
+
+	public function obtemFaturamento($tipo="anual",$data='') {
+		return($this->obtemFatRec("F",$tipo,$data));
+	}
+	
+	
+	public function obtemRecebimentos($tipo="anual",$data='') {
+		return($this->obtemFatRec("R",$tipo,$data));
+	}
+
+
 
 	public function obtemFaturamentoPorProduto($ano_select) {
 		if ($ano_select){

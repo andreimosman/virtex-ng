@@ -134,7 +134,17 @@
 			
 			$selected = $this->obtem("tela") == "remessa" ? 2 : 1;
 			
-			$this->titulo .= " :: " . ($this->obtem("tela") == "remessa" ? "Remessa" : "Retorno");
+			$id_retorno = $this->obtem("id_retorno");
+			$retorno = $this->obtem("retorno");
+			
+			
+			if( $id_retorno ) {
+				$this->titulo .= " :: Retorno :: " . sprintf("%04d",$retorno["id_retorno"]) . " (" . $retorno["arquivo_enviado"] . ")";
+				$selected = 0;
+				$this->_file = "financeiro_cobranca_arquivos_retorno.html";
+			} else {
+				$this->titulo .= " :: " . ($this->obtem("tela") == "remessa" ? "Remessa" : "Retorno");
+			}
 
 			$this->configureMenu($menu,true,true, $selected);
 			
@@ -215,7 +225,27 @@
 					$this->titulo .= "Evolução";
 					$this->atribui("titulo", $this->titulo);
 					break;
-
+				case 'recebimentos_periodo':
+					$this->_file = "relatorio_recebimentos_periodo.html";
+					$this->titulo .= "Recebimentos do Período";
+					
+					$tipo = $this->obtem("tipo");
+					
+					if( $tipo == "diario" ) {
+						$this->titulo .= '::' . MData::ISO_to_ptBR($this->obtem("data"));
+					} elseif( $tipo == "mensal" ) {
+						list($ano,$mes,$dia) = explode('-',$this->obtem("data"));					
+						$this->titulo .= '::' . $mes . "/" . $ano;
+					}
+					
+					
+					$this->atribui("titulo",$this->titulo);
+					break;
+				case 'inadimplencia':
+					$this->_file = "relatorio_inadimplencia.html";
+					$this->titulo .= "Inadimplencia";
+					$this->atribui("titulo",$this->titulo);
+					break;
 				default:
 					die("erro");
 			}
@@ -245,8 +275,26 @@
 					break;
 					
 				case "por_periodo":					
-					$this->_file = "financeiro_faturamento_periodo.html";	
-					$this->atribui("titulo", $titulo."Faturamento por Período");	
+					//$this->_file = "financeiro_faturamento_periodo.html";	
+					//$this->atribui("titulo", $titulo."Faturamento por Período");	
+
+
+					$this->_file = "relatorio_faturamento_periodo.html";
+					$this->titulo .= "Faturamento por Período";
+					
+					$tipo = $this->obtem("tipo");
+					
+					if( $tipo == "diario" ) {
+						$this->titulo .= '::' . MData::ISO_to_ptBR($this->obtem("data"));
+					} elseif( $tipo == "mensal" ) {
+						list($ano,$mes,$dia) = explode('-',$this->obtem("data"));					
+						$this->titulo .= '::' . $mes . "/" . $ano;
+					}
+					
+					
+					$this->atribui("titulo",$this->titulo);
+
+
 					break;
 			}
 		}		
