@@ -248,17 +248,49 @@
 			switch($tela) {
 				case 'imprime_carne':
 					$this->requirePrivLeitura("_CLIENTES_FATURAS");
-
+					
 					$id_carne = @$_REQUEST["id_carne"];
 					$id_cliente = @$_REQUEST["id_cliente"];
 					$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
-
-					$this->_view->atribui("id_carne",$id_carne);
-					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
+					$id_cobranca = @$_REQUEST["id_cobranca"];
 
 					$cobranca = VirtexModelo::factory('cobranca');
 					
-					$id_cobranca = @$_REQUEST["id_cobranca"];
+					$endereco_cobranca = $cobranca->obtemEnderecoCobranca($id_cliente_produto);
+					
+					if( empty($endereco_cobranca) ) {
+						$clientes = VirtexModelo::factory('clientes');
+						$cliente = $clientes->obtemPeloId($id_cliente);
+						$endereco_cobranca["endereco"] = $cliente["endereco"];
+						$endereco_cobranca["complemento"] = $cliente["complemento"];
+						$endereco_cobranca["bairro"] = $cliente["bairro"];
+						$endereco_cobranca["cep"] = $cliente["cep"];
+						$endereco_cobranca["id_cidade"] = $cliente["id_cidade"];
+						
+						
+					}
+					
+					
+					$this->_view->atribui("endereco_cobranca",$endereco_cobranca);
+					$cidade_cobranca = array();
+					if( @$endereco_cobranca["id_cidade"] ) {
+						$cidade_cobranca = $this->preferencias->obtemCidadePeloId($endereco_cobranca["id_cidade"]);
+					}
+					$this->_view->atribui("cidade_cobranca",$cidade_cobranca);
+										
+					/**
+					 * CODIGO DE VERIFICACAO DO CARNE
+					 */
+					
+					if( $id_carne && !$id_cobranca ) {
+						// Se não for impressao individual de carnê gera o código. (em hexa).
+						$codigoImpressao = $cobranca->obtemCodigoImpressaoCarne($id_carne);
+						$this->_view->atribui("codigoImpressao",$codigoImpressao);
+					}
+
+					$this->_view->atribui("id_carne",$id_carne);
+					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
+					
 					
 					if( $id_cobranca ) {
 						$faturas = array( $cobranca->obtemFaturaPorIdCobranca($id_cobranca) );
@@ -600,9 +632,6 @@
 			                 $cidade_cobranca = $this->preferencias->obtemCidadePeloId($info['id_cidade']);
 			            }
 			            
-			            // print_r($cidade_cobranca);
-			            // print_r($cidade_instalacao);
-
 			            if ( ! count($cidade_instalacao) ) {
 			                 $cidade_instalacao = $cidade_cobranca;
 			            }
@@ -782,24 +811,10 @@
 								$id_modelo_contrato = @$info_produto["modelo_contrato"];
 								$tipo_produto = @$_REQUEST["tipo"];
 								
-								//echo "TIPOOOOO: $tipo_produto";
-								
 								if(!$id_modelo_contrato) {
 									$info_modelo = $this->preferencias->obtemModeloContratoPadrao($tipo_produto);
 									$id_modelo_contrato = $info_modelo["id_modelo_contrato"];
 								}
-								
-								//echo "<pre>";
-								//print_r($endereco_cobranca);
-								//print_r($endereco_instalacao);
-								//print_r($_REQUEST);
-								//
-								
-								//echo "</pre>";
-								
-								
-								
-								//return;
 								
 								$novo_id_cliente_produto = $cobranca->novoContrato(	$_REQUEST["id_cliente"], $_REQUEST["id_produto"], $dominio, $id_modelo_contrato, $_REQUEST["data_contratacao"], $_REQUEST["vigencia"], $_REQUEST["pagamento"],
 																					$data_renovacao, $valor_contrato, $_REQUEST["username"], $_REQUEST["senha"], $id_cobranca, $status, $_REQUEST["tx_instalacao"], $_REQUEST["valor_comodato"],
@@ -893,16 +908,104 @@
 					$contratos = $cobranca->obtemContratos ($_REQUEST ["id_cliente"]);
 					$this->_view->atribui ('contratos', $contratos);
 					break;
+				
+				case "estorno":
 
+
+					$this->requirePrivGravacao("_CLIENTES_FATURAS_ESTORNO");
+
+				
+					$id_cliente = @$_REQUEST["id_cliente"];
+				
+					$id_cobranca = @$_REQUEST["id_cobranca"];					
+					$this->_view->atribui("id_cobranca",$id_cobranca);
+					
+					$cobranca = VirtexModelo::factory("cobranca");
+					$fatura = $cobranca->obtemFaturaPorIdCobranca($id_cobranca);
+					$this->_view->atribui("fatura",$fatura);
+
+					$this->_view->atribui("status_fatura",$cobranca->obtemStatusFatura());
+
+
+					$prefCobra = $this->preferencias->obtemPreferenciasCobranca();
+					
+					$formaPagamento = array();
+					if( $fatura["id_forma_pagamento"] ) {
+						$formaPagamento = $this->preferencias->obtemFormaPagamento($fatura["id_forma_pagamento"]);
+					}
+					
+					$this->_view->atribui("formaPagamento",$formaPagamento);
+					$this->_view->atribui("bancos",$this->preferencias->obtemListaBancos());
+					$this->_view->atribui("tiposFormaPgto",$this->preferencias->obtemTiposFormaPagamento());
+					
+					$acao = @$_REQUEST["acao"];
+					
+					
+					if( $acao ) {
+
+						$senha_admin = @$_REQUEST["senha_admin"];
+
+						$dadosLogin = $this->_login->obtem("dados");
+						
+						try {
+
+							if( !$senha_admin ) {
+								$erro = "Operação não autorizada: SENHA NÃO FORNECIDA.";
+							} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
+								$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
+							}
+
+							if($erro) throw new Exception($erro);
+							
+							$this->eventos->registraEstornoFatura($this->ipaddr,$dadosLogin["id_admin"],$id_cobranca,$fatura["id_cliente_produto"],$fatura["valor"],$fatura["acrescimo"],$fatura["desconto"],$fatura["valor_pago"],$fatura["data"], $fatura["data_pagamento"], $fatura["reagendamento"]);
+							$cobranca->estornaPagamentoFatura($id_cobranca,true);
+
+							$url = "admin-clientes.php?op=contrato&tela=faturas&id_cliente=$id_cliente";
+
+							$this->_view->atribui("url",$url);
+							$this->_view->atribui("mensagem","Pagamento da fatura estornado com sucesso!");
+							$this->_view->atribuiVisualizacao("msgredirect");
+
+						
+						} catch (ExcecaoModeloValidacao $e ) {
+							$this->_view->atribui ("msg_erro", $e->getMessage());
+							$erro = true;
+						} catch (Exception $e ) {
+							$this->_view->atribui ("msg_erro", $e->getMessage());
+							$erro = true;
+						}
+						
+						
+						
+
+					
+
+					}
+					
+					
+					
+					
+					
+					break;
 
 				case "faturas":
+				
+					//echo "XPTO";
 
 					$this->requirePrivLeitura("_CLIENTES_FATURAS");
+
+					$podeEstornar = $this->requirePrivGravacao("_CLIENTES_FATURAS_ESTORNO", false);
+					$this->_view->atribui("podeEstornar",$podeEstornar);
+					
 
 					$tem_carne = "";
 					$cobranca = VirtexModelo::factory("cobranca");
 					$faturas = $cobranca->obtemFaturas ($_REQUEST ['id_cliente'], $tem_carne, $_REQUEST ['id_cliente_produto'],
 								 $_REQUEST ['id_forma_pagamento'], $_REQUEST ['id_carne']);
+								 
+					//echo "<pre>";
+					//print_r($faturas);
+					//echo "</pre>";
 							
 
 					$this->_view->atribui ('id_cliente_produto', @$_REQUEST['id_cliente_produto']);
@@ -945,19 +1048,18 @@
 
 					$dadosLogin = $this->_login->obtem("dados");
 
-					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO",false))) {
+					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO",false) || $this->requirePrivGravacao("_CLIENTES_FATURAS_REAGENDAMENTO",false))) {
 						$desconto		= @$_REQUEST["desconto"];
 						$acrescimo		= @$_REQUEST["acrescimo"];
 						$amortizar		= @$_REQUEST["amortizar"];
 						$data_pagamento	= @$_REQUEST["data_pagamento"];
+
+
 						$reagendar		= @$_REQUEST["reagendar"];
 						$reagendamento	= @$_REQUEST["reagendamento"];
 						$observacoes	= @$_REQUEST["observacoes"];
 
 						$url = "admin-clientes.php?op=contrato&tela=faturas&id_cliente=$id_cliente";
-
-						// echo "Admin: " . $this->_login->
-
 
 						try {
 
@@ -1006,9 +1108,6 @@
 					$ret = array();
 					
 					$prefCobra = $this->preferencias->obtemPreferenciasCobranca();
-					//echo "<pre>"; 
-					//print_r($prefCobra);
-					//echo "</pre>"; 
 					
 					$formaPagamento = array();
 					if( $fatura["id_forma_pagamento"] ) {
@@ -1019,19 +1118,9 @@
 					$this->_view->atribui("bancos",$this->preferencias->obtemListaBancos());
 					$this->_view->atribui("tiposFormaPgto",$this->preferencias->obtemTiposFormaPagamento());
 					
-
-					//echo "<pre>"; 
-					//print_r($formaPagamento);
-					//echo "</pre>"; 
-
-					
 					
 					if( $fatura["id_retorno"] ) {
 						$ret = $cobranca->obtemRetornoPeloId($fatura["id_retorno"]);
-						//echo "<pre>";
-						//print_r($ret);
-						//echo "</pre>";
-						
 					}
 					
 					$this->_view->atribui("retorno",$ret);
@@ -1222,10 +1311,6 @@
 				$this->_view->atribui("tipo",$tipo);
 				$this->_view->atribui("infoProduto",$infoProduto);
 				
-				//echo "<pre>"; 
-				//print_r($infoProduto);
-				//echo "</pre>"; 
-
 			} else if( $tela == "cadastro" ) {
 
 				if( $acao ) {
@@ -1455,10 +1540,6 @@
 					$produtos = VirtexModelo::factory('produtos');
 					$produto = $produtos->obtemPlanoPeloId($contrato["id_produto"]);
 					
-					//echo "<pre>"; 
-					//print_r($produto);
-					//echo "</pre>";
-
 					if( $tipo == "E" ) {
 						if( !$id_conta && $contrato["num_emails"] > 0 ){
 							$qtdeDisponivel = $contrato["num_emails"] - $qtde["num_contas"];
@@ -1711,7 +1792,7 @@
 
 		protected function executaEliminar() {
 			$this->_view->atribuiVisualizacao("eliminar");
-			echo "EXECUTA ELIMINAR<br>\n";
+			// echo "EXECUTA ELIMINAR<br>\n";
 		}
 		
 
@@ -1849,9 +1930,6 @@
 							$info_cliente_chamado["condominio"] = $condominio;
 							$info_cliente_chamado["bloco"] = $bloco;
 							
-							//echo "<pre>"; 
-							//print_r($info_cliente_chamado);
-							//echo "</pre>"; 
 							$chamado["cliente_nome"] = @$info_cliente_chamado["nome_razao"];	
 						}
 						
@@ -2381,18 +2459,9 @@
 			}
 
 
-
-
-			//echo "<pre>"; 
-			//print_r($emails);
-			//echo "</pre>"; 
-			
-			
 			
 		}
 		
-		
-
 	}
 
 ?>

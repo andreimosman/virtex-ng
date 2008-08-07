@@ -14,6 +14,7 @@
 		public static $NATUREZA_LOGIN	 		= 'LOGIN';
 		public static $NATUREZA_ALT_CONTA		= 'ALTERACAO CONTA';
 		public static $NATUREZA_PAG_FATURA  	= 'PAGAMENTO FATURA';
+		public static $NATUREZA_EST_FATURA  	= 'ESTORNO FATURA';
 		public static $NATUREZA_ELI_CONTA		= 'ELIMINACAO CONTA';
 		public static $NATUREZA_RENOVACAO		= 'RENOVACAO CONTRATO';
 		
@@ -23,6 +24,7 @@
 		public static $DESCRICAO_PAG_FAT_ACRESC	= 'PAGAMENTO COM ACRESCIMO';
 		public static $DESCRICAO_PAG_FAT_PARCIAL= 'PAGAMENTO PARCIAL REALIZADO';
 		public static $DESCRICAO_PAG_FAT_REAG	= 'PAGAMENTO REAGENDADO';
+		public static $DESCRICAO_ESTORNO_FATURA = 'ESTORNO DE FATURA';
 		public static $DESCRICAO_CONTA_ALT_POP	= 'ALTERACAO DE POP';
 		public static $DESCRICAO_CONTA_ALT_MAC  = 'ALTERACAO DE MAC';
 		public static $DESCRICAO_CONTA_ALT_NAS	= 'ALTERACAO DE NAS';
@@ -171,6 +173,28 @@
 			return($this->evtb_evento->insere($dados));
 			
 		}
+
+
+		public function registraEstornoFatura($ipaddr,$id_admin,$id_cobranca,$id_cliente_produto, $valor,$acrescimo,$desconto, $valor_pago, $data, $data_pagamento, $reagendamento) {
+			$dados = array("ipaddr" => $ipaddr, "id_admin" => $id_admin, "id_cobranca" => $id_cobranca, 
+							"natureza" => self::$NATUREZA_EST_FATURA, "id_cliente_produto" => $id_cliente_produto, "tipo" => self::$TIPO_INFO);
+			///echo $id_cliente_produto;
+			
+			$descricao  = "VENCIMENTO...: $data\n";
+			$descricao .= "VALOR FATURA.: $valor\n";
+			$descricao .= "PAGAMENTO....: $data_pagamento\n";
+			$descricao .= "VALOR PAGO...: $valor_pago\n";
+			
+			if( $reagendamento ) {
+				$descricao .= "REAGENDAMENTO: $reagendamento\n";
+			}
+
+			$dados["descricao"] = $descricao;
+			
+			return($this->evtb_evento->insere($dados));
+			
+		}
+
 		
 		public function registraEliminacaoConta($id_conta, $id_cliente_produto,$ipaddr, $id_admin, $username="", $endereco="") {
 		
@@ -210,26 +234,91 @@
 		 * Obtem os eventos
 		 */
 		public function obtem($filtro=array(),$limite=20) {
+		
+			$limite = "";
 			
-			$eventos = $this->evtb_evento->obtem($filtro,"",$limite);
+			// $eventos = $this->evtb_evento->obtem($filtro,"",$limite);
+			$eventos = $this->evtb_evento->obtemEventos($filtro,$limite);
 			
-			$contas = VirtexModelo::factory("contas");
-			$cobranca = VirtexModelo::factory("cobranca");
-			$administradores = VirtexModelo::factory("administradores");
+			//$contas = VirtexModelo::factory("contas");
+			//$cobranca = VirtexModelo::factory("cobranca");
+			//$administradores = VirtexModelo::factory("administradores");
+			//$clientes = VirtexModelo::factory("clientes");
+			
+			echo "<pre>";
 			
 			for($i=0;$i<count($eventos);$i++) {
+
+				$evt = $eventos[$i];
+				
+				// echo "I: $i\n"; 
+			
 				if( $eventos[$i]["id_conta"] ) {
-					$eventos[$i]["conta"] = $contas->obtemContaPeloId($eventos[$i]["id_conta"]);
+				//	$eventos[$i]["conta"] = $contas->obtemContaPeloId($eventos[$i]["id_conta"]);
 				}
 				
 				if( $eventos[$i]["id_cliente_produto"] ) {
-					$eventos[$i]["contrato"] = $cobranca->obtemContratoPeloId($eventos[$i]["id_cliente_produto"]);
+				//	$eventos[$i]["contrato"] = $cobranca->obtemContratoPeloId($eventos[$i]["id_cliente_produto"]);
+				//	$eventos[$i]["cliente"] = $clientes->obtemPeloId($eventos[$i]["contrato"]["id_cliente"]);
+
+					$eventos[$i]["contrato"] = array();
+					$eventos[$i]["cliente"] = array();				
+				
 				}
 				
 				if( $eventos[$i]["id_admin"] ) {
-					$eventos[$i]["admin"] = $administradores->obtemAdminPeloId($eventos[$i]["id_admin"]);
+				//	$eventos[$i]["admin"] = $administradores->obtemAdminPeloId($eventos[$i]["id_admin"]);
+					$eventos[$i]["admin"] = array();
 				}
+				
+				if( $eventos[$i]["id_cobranca"] ) {
+				//	$eventos[$i]["fatura"] = $cobranca->obtemFaturaPorIdCobranca($eventos[$i]["id_cobranca"]);
+					$eventos[$i]["fatura"] = array();
+				}
+				
+				
+				// print_r($evt);
+				
+				while( list($vr,$vl) = each($eventos[$i]) ) {
+					if( !is_array($vl) && $vl ) {
+						// echo "$vr = $vl\n";
+						
+						/**
+						 admin_
+						 contrato_
+						 cliente_
+						 fatura_
+						 */
+						 
+						$pat = "/^(admin|contrato|cliente|fatura)_(.*)$/";
+						 
+						preg_match($pat, $vr, $matches, PREG_OFFSET_CAPTURE);
+						
+						if( @$matches[1][0] && @$matches[2][0] ) {
+							$eventos[$i][ $matches[1][0] ][ @$matches[2][0] ] = $vl;
+							
+							// echo " --- " . $matches[1][0] . "," . $matches[2][0] . " = " .$vl . "\n";
+						}
+						
+						//echo "$vr: \n";
+						//print_r($matches);
+						//echo "------------\n";
+					
+					}
+				}
+				
+				unset($evt);
+				
 			}
+			
+			print_r($eventos);
+
+			echo "</pre>";
+			
+			//echo "<pre>"; 
+			//
+			//echo "</pre>"; 
+			
 			
 			return($eventos);
 		}

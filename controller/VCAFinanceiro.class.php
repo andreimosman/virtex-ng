@@ -33,6 +33,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			case 'gerar_cobranca':
 				$this->executaGerarCobranca();
 				break;
+			case 'impressao':
+				$this->executarImpressao();
+				break;
 			case 'arquivos_ajuste':
 				$this->executaArquivosAjuste();
 				break;
@@ -59,6 +62,50 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				break;
 			
 		}
+	}
+	
+	protected function executarImpressao() {
+
+		$this->_view->atribuiVisualizacao("cobranca");
+		
+		$tela = @$_REQUEST["tela"];
+		if( !$tela ) $tela = "listagem";
+		$this->_view->atribui("tela",$tela);
+		
+		if( $tela == "listagem" ) {
+			$carnes = $this->cobranca->obtemCarnesSemConfirmacao();
+			$this->_view->atribui("carnes",$carnes);
+		} elseif ( $tela == "confirmacao" ) {
+		
+			$codigoConfirmacao = trim(@$_REQUEST["codigoConfirmacao"]);
+			
+			$dadosLogin = $this->_login->obtem("dados");
+			
+			
+			if( $codigoConfirmacao ) {
+				// PROCESSAR.
+				$carne = $this->cobranca->obtemCarnePeloCodigoImpressao($codigoConfirmacao);
+				
+				$url = "admin-financeiro.php?op=impressao&tela=confirmacao";
+				
+				if( empty($carne) ) {
+					// Código inválido.
+					$mensagem = "Código Inválido<br><br>Nenhum carnê corresponde ao código inserido.";
+				} else {
+					$this->cobranca->confirmaImpressaoCarne($carne["id_carne"], $dadosLogin["id_admin"], $codigoConfirmacao );
+					// Inclui a confirmação de pagamento.
+					$mensagem = "Carnê especificado marcado como impresso.";
+				}
+
+				$this->_view->atribui("url",$url);
+				$this->_view->atribui("mensagem",$mensagem);
+				$this->_view->atribuiVisualizacao("msgredirect");
+
+				
+			}
+		
+		}
+	
 	}
 	
 	protected function executaRenovarContrato() {
@@ -266,51 +313,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 			}
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			// $this->_view->atribui("",$);
-			
-			/**
-			echo "<pre>";
-			
-			print_r($faturas);
-			
-			echo "diaVencimento: $diaVencimento\n";
-			echo "dataRenovacao: $dataRenovacao\n";
-			echo "vigencia: $vigencia\n";
-			echo "renovarAte: $renovarAte\n";
-			echo "pagamento: $pagamento\n";
-			
-			//print_r($prefCobra);
-			print_r($contrato);
-			//print_r($produto);
-			//print_r($cliente);
-			//print_r($formaPagamento);
-			//print_r($tiposCobranca);
-			echo "</pre>"; 
-			*/
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		}
 		
 		$this->_view->atribui("tela",$tela);
@@ -318,11 +320,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 		
 	
-		//echo "<pre>";
-		
-		//print_r($contratos);
-		
-		//echo "</pre>";
 	}
 
 	protected function executaBloqueios() {
@@ -423,6 +420,9 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$this->_view->atribui("texto_pesquisa", $texto_pesquisa);
 		$this->_view->atribui("tipo_pesquisa",$tipo_pesquisa);
 
+		$subtela = @$_REQUEST["subtela"];
+		$this->_view->atribui("subtela",$subtela);
+		
 		if( $texto_pesquisa && $tipo_pesquisa ) {
 			// Pesquisar!
 			$fatura = array();
@@ -433,11 +433,14 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				case 'CODIGOBARRAS':
 					$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($texto_pesquisa);
 					break;
+				case 'NOSSONUMERO':
+					$fatura = $this->cobranca->obtemFaturaPeloNossoNumero($texto_pesquisa);
+					break;
 				case 'NUMERODOCUMENTO':
 					if( strstr('-',$texto_pesquisa) ) {
 						list($texto_pesquisa,$lixo) = explode("-",$texto_pesquisa);
 					}					
-					$fatura = $this->cobranca->obtemFaturaPorIdCobranca($texto_pesquisa);					
+					$fatura = $this->cobranca->obtemFaturaPorIdCobranca($texto_pesquisa);
 					break;
 			}
 
@@ -474,17 +477,12 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 		$id_remessa = @$_REQUEST["id_remessa"];
 
-		////echo $id_remessa;
 
 		$resultado = $this->cobranca->obtemFaturasPorRemessaGeraBoleto($id_remessa);
 
 		$cedente = $this->preferencias->obtemPreferenciasGerais();
 
 		$cedente_cobranca = $this->preferencias->obtemPreferenciasProvedor();
-
-		/*echo "<pre>";
-		print_r($resultado);
-		echo "</pre>";*/
 
 		for($i=0; $i<count($resultado); $i++) {
 			$id_forma_pagamento = $resultado[$i]["id_forma_pagamento"];
@@ -510,10 +508,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 		}
 
-		/*echo "<pre>";
-		print_r($resultado);
-		echo "</pre>";
-		*/
 
 		$this->_view->atribui("resultado",$resultado);
 		$this->_view->atribui("cedente",$cedente);
@@ -602,12 +596,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 				$faturas = $this->cobranca->obtemFaturasPorPeriodoParaRemessa($data_referencia, $periodo, $id_forma_pagamento);
 				
-				//echo "<pre>"; 
-				//print_r($faturas);
-				//echo "</pre>";
-				//
-				//return;
-				
 				
 				if (!$faturas){
 					$msg = "Não foram encontradas faturas para esse período.";				
@@ -665,7 +653,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 
 				for($i=0; $i<count($resultado); $i++) {
 					$id_cobranca = $resultado[$i]["id_cobranca"];
-					//echo $id_cobranca;
 
 					$this->cobranca->cadastraLoteFatura($id_remessa, $id_cobranca);
 
@@ -719,10 +706,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		for($i=0;$i<count($ultimas_remessas);$i++){
 			$ultimas_remessas[$i]["forma_pagto"] = $ultimas_remessas[$i]["id_forma_pagamento"] ? $this->preferencias->obtemFormaPagamento($ultimas_remessas[$i]["id_forma_pagamento"]) : array();
 		}
-
-		//echo "<pre>";
-		//print_r($ultimas_remessas);
-		//echo "</pre>";
 
 		$this->_view->atribui("ultimas_remessas", $ultimas_remessas);
 
@@ -838,12 +821,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 
 			
-			// print_r($ret);
-			// print_r($retornos[$i]);
-			//print_r($faturas);
-			
-			// echo "<hr>";
-			
 			
 			
 		}
@@ -876,7 +853,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$totais["valor"] += $faturas[$i]["valor"];
 				$totais["valor_pago"] += $faturas[$i]["valor_pago"];
 				
-				//echo "PAGAMENTO: ".$faturas[$i]["data_pagamento"]."<br>\n";
 			}
 			
 			$this->_view->atribui("id_retorno",$id_retorno);
@@ -884,12 +860,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$this->_view->atribui("faturas",$faturas);
 			$this->_view->atribui("totais",$totais);
 			
-		
-			//echo "<pre>"; 
-			//print_r($retorno);
-			//print_r($faturas);
-			//print_r($totais);
-			//echo "</pre>"; 
 		
 			return;
 		
@@ -943,12 +913,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			else {
 				array_push($msg_error, 'Arquivo não foi enviado');
 			}
-			
-			//echo "<pre>";
-			//print_r($_FILES['arquivo_retorno']);
-			//echo "</pre>";
-			
-			//die;
 			
 			if (!array_key_exists('formato_retorno', $clean))
 				array_push($msg_error, 'Formato Inválido');
@@ -1092,7 +1056,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					}
 				}
 				
-				// echo "TESTE!!!";
 				$data_geracao = $retorno->obtemDataGeracao();
 				
 				// ATUALIZA LOG RETORNO
@@ -1167,10 +1130,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$this->_view->atribui("periodo", $periodo);
 			$adesoes = $this->cobranca->obtemAdesoesPorPeriodo($periodo);
 			$this->_view->atribui("adesoes", $adesoes);
-			//echo "<pre>";
-			//print_r($adesoes);
-			//echo "</pre>";
-
 
 		} elseif("cancelamentos" == $relatorio) {
 			$periodo = isset($_REQUEST["periodo"]) ? $_REQUEST["periodo"] : 12;
@@ -1247,9 +1206,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$evolucao = $cobranca->obtemEvolucaoPorPeriodo($periodo);
 			$this->_view->atribui("evolucao", $evolucao);
 
-			//echo "<pre>";
-			//print_r($evolucao);
-			//echo "</pre>";
 		} elseif("reagendamentos" == $relatorio) {
 			$cobranca = VirtexModelo::factory("cobranca");
 			$lista = $cobranca->obtemReagendamento();
@@ -1372,10 +1328,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				// $dados[$idx] = $lista[$i];
 			}
 			
-			//echo "<pre>";
-			//print_r($dados);
-			//echo "</pre>";
-			
 			krsort($dados);
 			
 			$this->_view->atribui("lista", $dados);
@@ -1450,10 +1402,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$countBloqueados = count($atrasados);
 			$this->_view->atribui("countBloqueados", $countBloqueados);
 			
-			//echo "<pre>";
-			//print_r($dados);
-			//echo "</pre>";
-			
 		}
 	}
 	
@@ -1478,10 +1426,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$lista = $cobranca->obtemPrevisaoFaturamento($ano_select);
 			$anos_fatura = $cobranca->obtemAnosFatura();
 			
-			//echo "<pre>";
-			//print_r($lista);
-			//echo "</pre>";
-			
+		
 			$dados = array();
 			$soma = array();
 
@@ -1548,7 +1493,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 						$tabela[$i][$x] = 0;
 					}
 				}
-				//echo $tabela[$i]["1"] . " - " . $tabela[$i]["2"] . " - ". $tabela[$i]["3"] . "<br>\n";
 			}
 					
 			ksort($tabela);
@@ -1660,7 +1604,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				
 				$idx = $tipo == "anual" ? $lista[$i]["ano"] . "-" . $lista[$i]["mes"] : $lista[$i]["periodo"];
 				
-				// echo "PERIODO: " . $lista[$i]["periodo"] . "<br>\n";
 
 				$dados[ $idx ] = $lista[$i];
 
@@ -1707,10 +1650,6 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			}
 			$this->_view->atribui("lista", $dados);
 
-
-			// echo "<pre>"; 
-			// print_r($dados);
-			// echo "</pre>";
 
 		}
 		

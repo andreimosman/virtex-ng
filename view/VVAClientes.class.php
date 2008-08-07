@@ -179,6 +179,10 @@
 					$titulo .= " :: Faturas";
 					if ($id_cliente_produto) $titulo .= " :: Contrato #$id_cliente_produto";
 					break;
+				
+				case 'estorno':
+					$titulo .= " :: Estorno de Fatura :: #" . $this->obtem("id_cobranca");
+					break;
 			
 				case 'amortizacao':
 					$titulo .= " :: Amortização";

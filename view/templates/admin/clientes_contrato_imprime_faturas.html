@@ -87,6 +87,11 @@
 	visibility: visible;
 }
 
+#codigoImpressao {
+   visibility: hidden;
+
+}
+
 
 {/literal}
 
@@ -103,6 +108,11 @@
 		visibility: hidden;
 		position: absolute;
 	}
+	#codigoImpressao {
+	   visibility: visible;
+
+	}
+
 }
 {/literal}
 </style>
@@ -121,7 +131,6 @@
 </table>
 </div>
 
-
 {foreach name=faturas item=f from=$faturas}
 	{if $f.forma_pagamento.tipo_cobranca=="PC" || $f.forma_pagamento.tipo_cobranca=="MO" }
 		{include file="clientes_contrato_modelo_pagcontas_carne.html"}
@@ -129,6 +138,10 @@
 		{include file="clientes_contrato_modelo_boleto.html"}
 	{/if}
 {/foreach}
+
+{if $codigoImpressao}
+<div id="codigoImpressao"><span style='font-family: arial,verdana; font-size: 11px; '>Código de Confirmação de Impressão: <strong>{$codigoImpressao}</strong></span></div>
+{/if}
 
 
 <!--

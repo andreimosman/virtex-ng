@@ -27,6 +27,10 @@
 						case 'bloqueios':
 							$this->exibeBloqueios();
 							break;
+							
+						case 'impressao':
+							$this->exibeImpressao();
+							break;
 
 						case 'amortizacao':
 							$this->exibeAmortizacao();
@@ -69,11 +73,30 @@
 					break;
 			}
 			
-			//echo "<pre>";
-			//print_r($this);
-			//echo "</pre>";
 			parent::exibe();
 
+		}
+		
+		function exibeImpressao() {
+			$this->titulo .= "Central de Impressão";
+			
+			if( $this->obtem("tela") == "listagem" ) {
+				$this->_file = "financeiro_cobranca_impressao.html";			
+			} else {
+				$this->_file = "financeiro_cobranca_impressao_confirmacao.html";
+				$this->titulo .= "::Confirmação";
+			}
+
+			$menu = array();
+			
+			$menu[] = array("texto" => "Listagem", "url" => "admin-financeiro.php?op=impressao&tela=listagem");
+			$menu[] = array("texto" => "Confirmação", "url" => "admin-financeiro.php?op=impressao&tela=confirmacao");
+			
+			$selected = $this->obtem("tela") == "confirmacao" ? 2 : 1;
+			$this->configureMenu($menu,true,true, $selected);
+
+			$this->atribui("titulo",$this->titulo);
+			
 		}
 		
 		function exibeRenovarContrato() {

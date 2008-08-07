@@ -15,6 +15,14 @@
 
 		protected function executa() {
 		
+		
+		
+			$podeAmortizar = $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO",false);
+			
+			$this->_view->atribui("podeAmortizar",$podeAmortizar);
+
+		
+		
 			$cfg_geral = $this->_cfg->config["geral"];
 			$desenvolvimento = @$cfg_geral["desenvolvimento"];
 
@@ -165,6 +173,7 @@
 			
 			$menuFinanceiroCobranca->addSeparator();
 			$menuFinanceiroCobranca->addItem("Renovação de Contratos", "admin-financeiro.php?op=renovar_contrato", $target);
+			$menuFinanceiroCobranca->addItem("Central de Impressão", "admin-financeiro.php?op=impressao", $target);
 			
 
 			// $menuFinanceiroCobranca->addSeparator();

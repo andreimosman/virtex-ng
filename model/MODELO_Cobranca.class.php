@@ -11,6 +11,7 @@
 		protected $cbtb_cliente_produto;
 		protected $cbtb_contrato;
 		protected $cbtb_carne;
+		protected $cbtb_carne_impressao;
 		protected $pftb_forma_pagamento;
 		protected $cbtb_fatura;
 		// protected $cbtb_fatura_itens;
@@ -47,6 +48,7 @@
 			$this->cbtb_fatura = VirtexPersiste::factory("cbtb_faturas");
 			// $this->cbtb_fatura_itens = VirtexPersiste::factory("cbtb_fatura_itens");
 			$this->cbtb_carne = VirtexPersiste::factory("cbtb_carne");
+			$this->cbtb_carne_impressao = VirtexPersiste::factory("cbtb_carne_impressao");
 
 			$this->pftb_forma_pagamento = VirtexPersiste::factory("pftb_forma_pagamento");
 			$this->preferencias = VirtexModelo::factory("preferencias");
@@ -157,10 +159,6 @@
 			
 			$parcelasInstCobradas = 0;
 			
-			// echo "TX INST: $tx_instalacao<br>\n";
-			// echo "NUM PARC: $parcelamento_instalacao<br>\n";
-			// echo "PARC INST: $parcelaInstalacao<br>\n";
-
 			// Se a vigência do contrato for menor que o parcelamento da instalação gera pelo menos as faturas do parcelamento.
 			if( $tx_instalacao && $vigencia < $parcelamento_instalacao ) {
 				$vigencia = $parcelamento_instalacao;
@@ -172,11 +170,10 @@
 
 			$data = MData::proximoDia($dia_vencimento,$data_contratacao);
 			
-			//echo "DATA: $data<br>\n";
-			
 			$itens_fatura = array();
 
 			if( $pagamento == "POS" ) {
+			
 				// $data = MData::proximoDia($dia_vencimento,$data_contratacao);
 				// Pagamento pós pago
 
@@ -185,8 +182,6 @@
         		
 
         		if( ((float)$tx_instalacao) > 0 ) {
-        			// echo "TX!!";
-					// Gerar fatura 0 com a taxa de instalaçao
 					$composicao["instalacao"] = $parcelaInstalacao;
 					$composicao["parcela_instalacao"] = $meses_cobrados + 1 . "/" . $parcelamento_instalacao;
 					$faturas[] = array("data"=>$data_contratacao,"valor" => $parcelaInstalacao,"composicao"=>$composicao);
@@ -196,6 +191,7 @@
 				}
 
 			} else {
+			
 				// Pagamento pré-pago. Calcula pro-rata.
 				$composicao = array();
 				$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
@@ -244,10 +240,7 @@
 
 			}
 			
-			//echo "MESES COBRADOS: $meses_cobrados<br>\n";
-			
-			
-			if( $meses_cobrados == 1 && $prorata["dias_prorata"] < 30) {
+			if( ($meses_cobrados == 1 && $prorata["dias_prorata"] < 30)  || empty($prorata) ) {
 				$incrementa = false;
 			} else {
 				$incrementa = true;
@@ -280,6 +273,7 @@
 						$valor_fatura = $prorata_plano + $prorata_comodato;
 
 						$got = true;
+						
 					}
 				}
 
@@ -301,11 +295,17 @@
 					if( $pagamento == "PRE" && $meses_cobrados == 1 && !$incrementa) {
 						// echo "MESES 01, n/a<br>\n";
 					} else {
-						$data = MData::adicionaMes("$d/$m/$a",1);
+						// echo "MESES: $meses_cobrados<br>\n"; 
+						
+						$diff_ini=MData::diff($data_primeiro_vencimento,$data);
+						
+						// echo "DATA: $data, $data_primeiro_vencimento: ". $diff_ini ."<br>\n"; 
+						
+						if( $meses_cobrados || $diff_ini < 0) {
+							$data = MData::adicionaMes("$d/$m/$a",1);
+						}
 					}
 				}
-				
-				// echo "TESTE";
 				
 				if( $desconto_valor > 0 && $descontos_aplicados < $desconto_periodo ) {
 					// echo "APLICANDO!!!<br>\n ";
@@ -316,8 +316,6 @@
 				}
 
 				if( $tx_instalacao > 0 && $parcelasInstCobradas < $parcelamento_instalacao ) {
-					// echo "MC: " . $meses_cobrados ."<br>\n";
-					// echo "parcInst: " . $parcelasInstCobradas . "<br>\n";
 					$composicao["parcela_instalacao"] = ($parcelasInstCobradas + 1) . "/" . $parcelamento_instalacao;
 					$composicao["instalacao"] = $parcelaInstalacao;
 					$valor_fatura+=$parcelaInstalacao;
@@ -516,8 +514,6 @@
 				$linha_digitavel = "";
 				$nosso_numero = "";
 				
-				///ECHO  $fatura["valor"];
-
 				if ($gera_carne) {
 					// gera codigo de barras
 					$nosso_numero = $this->pftb_forma_pagamento->obtemProximoNumeroSequencial ($id_forma_pagamento);
@@ -712,8 +708,15 @@
 			$faturas = $this->cbtb_fatura->obtem($filtro, "data DESC");
 
 			$hoje = date("Y-m-d");
+			$base =  MData::ptBR_to_ISO(MData::adicionaMes($hoje,1));
+			
+			list($aB,$mB,$dB) = explode("-",$base);
+			
+			$base = mktime(0,0,0,$mB,$dB,$aB);
+			
 			list($aH,$mH,$dH) = explode("-",$hoje);
 			$hoje = mktime(0,0,0,$mH,$dH,$aH);
+			
 
 			for($i=0;$i<count($faturas);$i++) {
 				$faturas[$i]["valor"] = (float) $faturas[$i]["valor"];
@@ -751,8 +754,9 @@
 					if( $faturas[$i]["status"] == "A" ) {
 						$faturas[$i]["estornavel"] = true;
 					}
-
-					if( $venc < $hoje ) {
+					
+					// if( $venc < $hoje ) {
+					if( $venc < $base ) {
 						$faturas[$i]["strstatus"] = "Em atrazo";
 						$faturas[$i]["estornavel"] = false;
 					} else {
@@ -812,7 +816,7 @@
 		public function obtemFatura ($id_cliente_produto, $data) {
 			return ($this->cbtb_fatura->obtemUnico (array ("id_cliente_produto" => $id_cliente_produto, "data" => $data)));
 		}
-
+		
 		public function migrarContrato($id_cliente_produto,$novo_id_cliente_produto,$admin) {
 			$filtro = array("id_cliente_produto" => $id_cliente_produto);
 			$dados = array(
@@ -895,7 +899,7 @@
 		}
 		
 		public function obtemFaturaPeloNossoNumero ($nosso_numero) {
-			return ($this->cbtb_fatura->obtemUnico (array ("nosso_numero" => $nosso_numero)));
+			return ($this->cbtb_fatura->obtemUnico (array ("nosso_numero" => (int)$nosso_numero)));
 		}
 		
 		public function alteraNossoNumero($id_cobranca,$nosso_numero) {
@@ -1032,11 +1036,6 @@
 			//$contrato = $this->obtemContrato($fatura["id_cliente_produto"]);
 			$atrasados = $this->obtemContratosFaturasAtrasadasBloqueios($preferenciasCobranca["carencia"],$preferenciasCobranca["tempo_banco"],$fatura["id_cliente_produto"],false); 
 
-			//echo "<pre>";
-			//echo "PERMITIR: $permitir_desbloqueio\n";
-			//print_r($atrasados);
-			//echo "</pre>"; 
-
 			$permitir_desbloqueio = false;
 			if(!count($atrasados)) { 
 				$permitir_desbloqueio = true;
@@ -1104,11 +1103,6 @@
 			$clientes = VirtexModelo::factory("clientes");
 
 			$preferencias = VirtexModelo::factory("preferencias");
-			
-			//echo "<pre>PRF: \n"; 
-			//print_r($preferencias);
-			//echo "</pre>"; 
-
 			
 			for($i=0;$i<count($faturas);$i++) {
 				$cp = $this->obtemClienteProduto($faturas[$i]["id_cliente_produto"]);
@@ -1324,9 +1318,6 @@
 				);
 
 				$id_cbtb_carne = $this->cbtb_carne->insere ($dados);
-				//echo "CRIAR CARNE!!!\n";
-				//print_r($dados);
-				//$id_cbtb_carne = 9999;
 			}
 
 			for( $i=0;$i<count($faturas);$i++) {
@@ -1335,7 +1326,6 @@
 				$linha_digitavel = "";
 				$nosso_numero = "";
 				
-				///ECHO  $fatura["valor"];
 
 				if ($gera_carne) {
 					// gera codigo de barras
@@ -1365,9 +1355,6 @@
 
 				}
 				
-				//echo "CADASTRA_FATURA\n";
-				//print_r(array($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra));
-
 				$this->cadastraFatura($id_cliente_produto, $id_cobranca, $fatura["data"], $fatura["valor"], $id_forma_pagamento, $produto["nome"], $id_cbtb_carne, $nosso_numero, $linha_digitavel, $cod_barra);
 				
 
@@ -1387,11 +1374,77 @@
 			
 			return($this->cbtb_retorno_erro->insere($dados));
 		}
+		
+		public function obtemCarnePeloId($id_carne) {
+			return($this->cbtb_carne->obtemUnico(array("id_carne"=>$id_carne)));
+		}
+		
+		/**
+		 * Gera o código de impressão do carne:
+		 *
+		 */
+		public function obtemCodigoImpressaoCarne($id_carne) {
+			$carne = $this->obtemCarnePeloId($id_carne);
+			//
+			
+			if( empty($carne) ) return "";
+			
+			$fatorData = MBanco::fatorData($carne["data_geracao"]);			
+			$idCarne   = sprintf("%06d",$id_carne);
+			$idCliente = sprintf("%06d",$carne["id_cliente"]);
+			$idClienteProduto = sprintf("%06d",$carne["id_cliente_produto"]);
+			
+			//$fatorData = 1234;
+			
+			$dvFator = MBanco::modulo10($fatorData);
+			$dvCarne = MBanco::modulo10($idCarne);
+			
+			// $codigoImpressao = $fatorData . $dvFator . $idCarne . $dvCarne;
+			$codigoImpressao = $dvFator . $idCarne;
+			$dvGeral = MBanco::Modulo11($codigoImpressao);
+			$lixo = '1';
+			$codigoImpressao = $lixo . $codigoImpressao . $dvGeral;
+			$codigoHexa = strtoupper(dechex($codigoImpressao));
+			
+			return($codigoHexa);
+		
+		}
+
+		
+		/**
+		 * Obtem um Carne pelo Codigo de Impressao.
+		 */
+		public function obtemCarnePeloCodigoImpressao($codigoHexa) {
+			$codigoHexa = strtoupper($codigoHexa);
+			$codigoImpressao = hexdec($codigoHexa);
+			$codigoImpressao = trim(str_replace(" ","",str_replace(".","",str_replace("-","",$codigoImpressao))));			
+
+			$lixo      = substr($codigoImpressao,0,1);
+			$dvFator   = substr($codigoImpressao,1,1);
+			$idCarne   = substr($codigoImpressao,2,6);
+			$dvGeral   = substr($codigoImpressao,8,1);
+			
+			$idCarne = (int)$idCarne;
+			$ciCheck = $this->obtemCodigoImpressaoCarne($idCarne);
+			
+			return( $codigoHexa == $ciCheck ? $this->obtemCarnePeloId($idCarne) : array() );
+		
+		}
 
 
+		public function obtemCarnesSemConfirmacao($id_carne="") {
+			return($this->cbtb_carne->obtemCarnesSemConfirmacao($id_carne));
+		}
 
-
-
+		public function confirmaImpressaoCarne($id_carne, $id_admin, $codigo_verificacao ) {
+			$dados = array("id_carne" => $id_carne, "codigo_verificacao" => $codigo_verificacao,"datahora" => "=now");
+			if( (int)$id_admin ) {
+				$dados["id_admin"] = (int)$id_admin;
+			}
+			
+			return($this->cbtb_carne_impressao->insere($dados));
+			
+		}
 
 
 

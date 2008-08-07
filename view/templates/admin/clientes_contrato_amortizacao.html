@@ -37,13 +37,27 @@
 		var fpendente		= document.getElementById('valor_pendente');
 
 		if( reagendar.checked && "" == reagendamento.value ) {
-			alert('Indorme a data para reagendamento ou desmarque a opção de reagendar.');
+			alert('Infdorme a data para reagendamento ou desmarque a opção de reagendar.');
 			return false;
 		}
 
+		if(reagendar.checked){
+			if("" == reagendamento.value){
+				alert("Informar a data de re-agendamento!");
+				reagendamento.focus();
+				return false;
+			}
+
+			if("" == observacoes.value){
+				alert("Informar o motivo do re-agendamento!");
+				observacoes.focus();
+				return false;
+			}
+		}
+
+
 		if( !editavel && podeReagendar ) {
-			// window.alert("NOT Editavel + Reagend");
-			// return false;
+			//window.alert("NOT Editavel + Reagend");
 			return true;
 		}
 
@@ -80,20 +94,6 @@
 		//window.alert("VALOR: " + reagendamento.value);
 
 		calculaValores();
-
-		if(reagendar.checked){
-			if("" == reagendamento.value){
-				alert("Informar a data de re-agendamento!");
-				reagendamento.focus();
-				return false;
-			}
-
-			if("" == observacoes.value){
-				alert("Informar o motivo do re-agendamento!");
-				observacoes.focus();
-				return false;
-			}
-		}
 
 		return true;
 	}

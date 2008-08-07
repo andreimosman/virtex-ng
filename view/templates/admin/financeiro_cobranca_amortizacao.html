@@ -56,13 +56,14 @@ label {
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td nowrap>
 				{if !$tipo_pesquisa}
 				{assign var=tipo_pesquisa value="NOME"}
 				{/if}
 				<input type='radio' name='tipo_pesquisa' value='LINHADIGITAVEL' {if $tipo_pesquisa == 'LINHADIGITAVEL'}checked{/if}><label>Linha Digitável</label>
 				<input type='radio' name='tipo_pesquisa' value='CODIGOBARRAS' {if $tipo_pesquisa == 'CODIGOBARRAS'}checked{/if}><label>Código de Barras</label>
 				<input type='radio' name='tipo_pesquisa' value='NUMERODOCUMENTO' {if $tipo_pesquisa == 'NUMERODOCUMENTO'}checked{/if}><label>Número do Documento</label>
+				<input type='radio' name='tipo_pesquisa' value='NOSSONUMERO' {if $tipo_pesquisa == 'NOSSONUMERO'}checked{/if}><label>Nosso Número</label>
 			</td>
 		</tr>
 		<tr>

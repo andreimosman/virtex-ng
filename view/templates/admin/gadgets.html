@@ -158,8 +158,6 @@ function pesquisaUsuario() {
 </div>
 {/if}
 
-
-
 <div class="gadget" id="divChamados">
 	<fieldset style="height:112; width:130; border:1px solid #FFFFFF"><legend><span class="style1" style="color:white">Chamados</span></legend>
 		<table align="center" border="0" width="123" height="60">
@@ -182,3 +180,52 @@ function pesquisaUsuario() {
 	</fieldset>
 </div>
 
+
+
+<script language="JavaScript">
+{literal}
+
+function amortizar() {
+	var frm = document.form_amortizar;
+	var url = "admin-financeiro.php?op=amortizacao&texto_pesquisa=" + frm.texto_pesquisa.value + "&tipo_pesquisa=" + frm.tipo_pesquisa.value;
+	frm.texto_pesquisa.value = '';
+    frames['conteudo'].location= url;
+    return(false);
+}
+
+
+{/literal}
+</script>
+
+{if $podeAmortizar}
+<div class="gadget" id="divAmortizar">
+	<form name="form_amortizar" id="form_amortizar" onSubmit="return amortizar();">
+	<fieldset style="height:30px; width:130; border:1px solid #FFFFFF"><legend><span class="style1" style="color:white">Código Barras</span></legend>
+		<div name="box_pesquisa" id="box_pesquisa" style="height:30px; width:120;">
+			<table width="120" border="0" cellspacing="0" cellpadding="0" >
+				<tr align="left">
+					<td>
+					<input name="texto_pesquisa" id="codigo_barras" value="" type="text" size="11" class="campos" style="border: solid 1px #000000;" onFocus="this.style.backgroundColor='#E7EFEA'" onBlur="this.style.backgroundColor='#FFFFFF'">
+					<input type="hidden" name="tipo_pesquisa" value="CODIGOBARRAS">
+					</td>
+					<td>
+						<input name="submit" value=" &raquo; " class="botao" type="submit" style="height:20px; font-size:10px">
+					</td>
+				</tr>
+
+			  <tr>
+				<td align="center"></td>
+			  </tr>
+
+			</table>
+
+
+		</div>
+	</fieldset>
+	</form>
+</div>
+<script language="JavaScript">
+document.form_pesquisa.texto_pesquisa.focus();
+</script>
+
+{/if}

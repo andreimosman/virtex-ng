@@ -103,7 +103,10 @@
 			<tr>
 				<td rowspan="2" valign="top" style="border-right: solid 1px #000000">
 					<strong>SACADO:</strong>
-					<p>{$nome_razao}</p>
+					<p><strong>{$nome_razao}</strong><br>
+					<span style="font-size: 8px;">{$endereco_cobranca.endereco}{if $endereco_cobranca.complemento}-{$endereco_cobranca.complemento}{/if} / {$endereco_cobranca.bairro}<br>
+					{$cidade_cobranca.cidade}-{$cidade_cobranca.uf} / CEP: {$endereco_cobranca.cep}</span>
+					</p>
 				</td>
 				<td>
 					(+) Mora/Multa/Juros:
@@ -124,7 +127,8 @@
 			<tr>
 				<td colspan=2 align="right" style="border:none">
 					&nbsp; &nbsp; {$f.linha_digitavel}<br>
-					{$f.html_barcode}
+					{* $f.html_barcode *}
+					<img src='admin-barcode.php?codigo={$f.cod_barra}'>
 				</td>
 			</tr>
 

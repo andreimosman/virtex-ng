@@ -522,12 +522,16 @@
 				if( $senha ) {
 					$senhaCript = MCript::criptSenha($senha);
 					$dados["senha"] = $senha;
-					$dados["senhaCript"] = $senhaCript;
+					$dados["senha_cript"] = $senhaCript;
 				}
 			}
 			if( $status ) {
 				$dados["status"] = $status;
 			}
+			
+			//echo "<pre>"; 
+			//print_r($dados);
+			//echo "</pre>"; 
 
 			$this->cntb_conta->altera($dados,array("id_conta"=>$id_conta));
 

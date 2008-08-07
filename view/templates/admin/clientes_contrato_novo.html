@@ -751,17 +751,25 @@ function checkStatusFields(tag) {
 function calculaDiaProximaFatura() {
 
 	// window.alert("CALCULA!!!");
+   	var frm = document.contratacao;
+
+
 
 
 	// year, mount, date
-	var sD = document.getElementById('data_contratacao').value.split("/");
+	var sD = frm.data_contratacao.value.split("/");
+
+	// window.alert(frm.data_contratacao.value + "\n" + sD);
 
 
-   	var frm = document.contratacao;
 
     var dia_ven = document.getElementById("dia_vencimento").value;
     // var data_base = new Date();
-    var data_base = new Date(sD[2],parseInt(sD[1]) - 1,sD[0]);
+    // var data_base = new Date(sD[2],sD[1] - 1,sD[0]);
+    var data_base = new Date(sD[2],sD[1] - 1,sD[0]);
+
+    // window.alert("DATA BASE: " + data_base);
+
 
     dif =(parseInt(dia_ven)+30)-parseInt(data_base.getDate());
 
@@ -1124,7 +1132,7 @@ function checkForm(tag) {
 		return(false);
 	}
 
-
+	calculaDiaProximaFatura();
 
   // var frm=document.contratacao;
 

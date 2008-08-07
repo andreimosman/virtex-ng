@@ -1,0 +1,71 @@
+<html>
+<head>
+	<title></title>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+{/literal}
+</style>
+
+<script language="JavaScript">
+{literal}
+function abreCarne(id_carne,id_cliente,id_cliente_produto,id_cobranca) {
+	url = "admin-clientes.php?op=contrato&tela=imprime_carne&id_cliente="+id_cliente+"&id_cliente_produto="+id_cliente_produto
+
+	var winName = '';
+	if( id_cobranca != undefined && id_cobranca != null ) {
+	   url = url + "&id_cobranca="+id_cobranca;
+	   winName = "cobranca_"+id_cobranca;
+	} else {
+	   url = url + "&id_carne="+id_carne;
+	   winName = "carne_"+id_carne;
+	}
+
+	window.open(url,winName,'scrollbars=yes,width=700,height=500');
+}
+{/literal}
+</script>
+
+
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<br /><br />
+
+	<table class='lista' width='750' cellpadding=0 cellspacing=0 align="center" border="0">
+		<tr>
+			<th colspan=5>CARNÊS PENDENTES DE IMPRESSÃO</th>
+		</tr>
+		<tr>
+			<th align="left">Geração</th>
+			<th align="left">Cliente</th>
+			<th align="left">Cidade</th>
+			<th align="left">Contrato</th>
+			<th align="right">Faturas</th>
+		</tr>
+		{foreach from=$carnes item=c}
+		<tr class='{cycle values="impar,par"}'>
+			<td><a href="javascript:abreCarne({$c.id_carne},{$c.id_cliente},{$c.id_cliente_produto});">{$c.data_geracao|date_format:"%d/%m/%Y"}</a></td>
+			<td><span style='font-size: 9px;'><a href="javascript:abreCarne({$c.id_carne},{$c.id_cliente},{$c.id_cliente_produto});">{$c.nome_razao}</a></span></td>
+			<td><a href="javascript:abreCarne({$c.id_carne},{$c.id_cliente},{$c.id_cliente_produto});">{$c.cidade} - {$c.uf}</a></td>
+			<td><span style='font-size: 8px;'><a href="javascript:abreCarne({$c.id_carne},{$c.id_cliente},{$c.id_cliente_produto});">{$c.id_cliente_produto|string_format:"%06s"} - {$c.produto}</a></span></td>
+			<td align='right'><a href="javascript:abreCarne({$c.id_carne},{$c.id_cliente},{$c.id_cliente_produto});">{$c.faturas_abertas}</a></td>
+		</tr>
+		{foreachelse}
+		<tr>
+			<td colspan=5>Não existem carnês pendentes de impressão.</td>
+		</tr>
+		{/foreach}
+	</table>
+<br /><br />
+
+
+</body>
+</html>

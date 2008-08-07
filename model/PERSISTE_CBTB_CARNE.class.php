@@ -35,5 +35,52 @@
 			return ($res);
 		}
 		
+		/**
+		 * Carnês sem confirmação de impressao.
+		 */
+		 
+		// INSERT INTO cbtb_carne_impressao VALUES(nextval('cbsq_id_impressao'),5778,1,now(),'');
+		// 5778 5777 5776
+		public function obtemCarnesSemConfirmacao($id_carne="") {
+			$q = "
+SELECT
+   c.id_carne, c.data_geracao, c.status, c.id_cliente_produto, c.valor, c.vigencia, c.id_cliente,
+   cl.nome_razao, cid.cidade, cid.uf, p.nome as produto, f.faturas_abertas 
+FROM
+   cbtb_carne c 
+   LEFT OUTER JOIN cbtb_carne_impressao ci ON c.id_carne = ci.id_carne
+   INNER JOIN cltb_cliente cl ON cl.id_cliente = c.id_cliente
+   INNER JOIN cftb_cidade cid ON cl.id_cidade = cid.id_cidade 
+   INNER JOIN cbtb_contrato ctt ON ctt.id_cliente_produto = c.id_cliente_produto
+   INNER JOIN prtb_produto p ON ctt.id_produto = p.id_produto  
+   INNER JOIN (
+   	SELECT 
+   	   id_carne, count(id_cobranca) as faturas_abertas
+   	FROM
+   	   cbtb_faturas
+   	WHERE
+   	   status = 'A'
+   	   AND id_carne is not null
+   	GROUP BY
+   	   id_carne
+   	   
+   
+   ) f ON f.id_carne = c.id_carne
+   
+WHERE
+   c.status = 'A' AND ctt.status = 'A' AND ci.id_carne is null AND c.valor > 0 
+			";
+			
+			if( $id_carne ) {
+				$q .= " AND id_carne = $id_carne ";
+			}
+			
+			$q .= " ORDER BY c.data_geracao ";
+
+			return($this->bd->obtemRegistros($q));
+			   
+			   
+		}
+		
 	}
 ?>

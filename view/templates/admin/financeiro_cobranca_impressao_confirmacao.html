@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title></title>
+<style>
+{literal}
+#cont {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 18px;
+	margin-left:50px;
+	padding-left: 5px;
+}
+{/literal}
+</style>
+
+
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+
+<br /><br />
+
+<form name="formConf" method="post" action="admin-financeiro.php">
+<input type="hidden" name="op" value="{$op}">
+<input type="hidden" name="tela" value="{$tela}">
+
+<table width="250" class="lista" cellspacing=0 cellpadding=0 align="center">
+	<tr>
+		<th colspan=2>Confirmação de Impressão</th>
+	</tr>
+	<tr>
+		<td align="right">Código: </td>
+		<td><input type="text" name="codigoConfirmacao" class="fieldWithoutFocus" onBlur="javascript:formOnBlur(this)" onFocus="javascript:formOnFocus(this)"></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><input type="submit" name="submit" value="Confirmar" class="botao"></td>
+	</tr>
+
+</table>
+
+
+
+</form>
+
+<br /><br />
+<script>
+document.formConf.codigoConfirmacao.focus();
+</script>
+
+</body>
+</html>

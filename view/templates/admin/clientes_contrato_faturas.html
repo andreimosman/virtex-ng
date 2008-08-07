@@ -85,6 +85,10 @@ function abreCarne(id_carne,id_cliente,id_cliente_produto,id_cobranca) {
 			{if $f.status != 'P' && $f.status != 'E' && $f.status != 'C'}
 			[<a href="javascript:abreCarne(0,{$id_cliente},{if $smarty.request.id_cliente_produto}{$smarty.request.id_cliente_produto}{else}{$f.id_cliente_produto}{/if},{$f.id_cobranca})">Imprimir</a>]
 			{/if}
+			{if $f.status == 'P' && !$f.id_retorno && $podeEstornar}
+			[<a href="admin-clientes.php?op=contrato&tela=estorno&id_cliente={$f.id_cliente}&id_cobranca={$f.id_cobranca}">E</a>]
+			{/if}
+
 			</td>
 		</tr>
 		{/foreach}

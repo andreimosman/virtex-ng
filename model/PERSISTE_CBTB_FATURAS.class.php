@@ -39,6 +39,7 @@ class PERSISTE_CBTB_FATURAS extends VirtexPersiste {
 				     f.valor_pago,
 				     f.id_cliente_produto,
 				     f.id_cobranca,
+				     f.id_retorno,
 				     cl.id_cliente, cl.nome_razao, cid.id_cidade, cid.cidade, cid.uf, p.nome as produto
 				FROM cbtb_faturas f
 			  INNER JOIN cbtb_cliente_produto cp ON f.id_cliente_produto = cp.id_cliente_produto

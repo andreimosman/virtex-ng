@@ -74,6 +74,10 @@
 				case 'financeiro':
 					$retorno = new VCAFinanceiro();
 					break;
+				
+				case 'barcode':
+					$retorno = new VCABarcode();
+					break;
 					
 				default:
 					throw new ExcecaoController(255,"Controller não encontrado");
