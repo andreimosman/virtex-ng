@@ -1,0 +1,120 @@
+<script language=JavaScript>
+{literal}
+
+function cancelar(id){
+	window.open("admin-clientes.php?op=contrato&tela=faturas&id_cliente="+id,"conteudo");
+}
+
+{/literal}
+</script>
+
+
+<center>
+<div id=#conteiner_paga>
+<form name="formulario" method="post" action="admin-clientes.php" onsubmit="return validaForm()">
+	<input type="hidden" name="acao" value="estorno" />
+	<input type="hidden" name="op" value="contrato" />
+	<input type="hidden" name="tela" value="estorno" />
+	<input type="hidden" name="id_cliente" value="{$id_cliente}" />
+	<input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}" />
+	<input type="hidden" name="id_cobranca" value="{$id_cobranca}" />
+<table border="0">
+	{if $msg_erro}
+	<tr>
+		<td colspan='2' class="erro" align="center">{$msg_erro}</td>
+	</tr>
+	{/if}
+	<tr>
+		<td valign="top">
+			<table border="0" class="lista" width="340">
+				<tr>
+					<th colspan="2" ><strong>Fatura</strong></th>
+				</tr>
+				<tr>
+					<td class="cellLabel">Referente à:</td>
+					<td class="cellInfo">{$fatura.descricao}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Vencimento:</td>
+					<td class="cellInfo">{$fatura.data|date_format:"%d/%m/%Y"}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor Total:</td>
+					<td class="cellInfo">{$fatura.valor|string_format:"%.2f"}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor já pago(-):</td>
+					<td class="cellInfo">{$fatura.valor_pago|string_format:"%.2f"}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Desconto(-):</td>
+					<td class="cellInfo">{$fatura.desconto|default:"0.00"|string_format:"%.2f"}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Acrescimo(+):</td>
+					<td class="cellInfo">{$fatura.acrescimo|default:"0.00"|string_format:"%.2f"}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Valor Pago(=):</td>
+					<td class="cellInfo">{$fatura.valor + $fatura.acrescimo - $fatura.desconto |string_format:"%.2f"}</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Status:</td>
+					<td class="cellInfo">
+						{$status_fatura[$fatura.status]}
+					</td>
+				</tr>
+				<tr>
+					<td class="cellLabel">Data do Pagamento:</td>
+					<td class="cellInfo">{$fatura.data_pagamento|date_format:"%d/%m/%Y"}</td>
+				</tr>
+				{if $reagendamento}
+				<tr>
+					<td class="cellLabel">Reagendado Para:</td>
+					<td class="cellInfo">{$fatura.reagendamento|date_format:"%d/%m/%Y"}</td>
+				</tr>
+				{/if}
+
+
+			</table>
+		</td>
+		<td valign="top" width=340>
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%">
+				<tr>
+					<th style="background: #0000FF; color: #ffffff" colspan=2>Informações</th>
+				</tr>
+				<tr>
+					<td align="left">
+					Fatura paga no dia {$data_pagamento|date_format:"%d/%m/%Y"} através de operação manual confirmada com senha.
+					</td>
+				</tr>
+				<tr>
+					<td align='left'>
+						<strong>Pagamento: </strong>{if $formaPagamento.tipo_cobranca == "PC" || $formaPagamento.tipo_cobranca == "DA" || $formaPagamento.tipo_cobranca == "BL"}{$tiposFormaPgto[$formaPagamento.tipo_cobranca]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}{if $formaPagamento.tipo_cobranca=='NA'}Não Atribuida{else}Sistema manual com exportação.{/if}{/if}
+					<td>
+				</tr>
+
+			</table>
+
+			<table border="0" class="lista" dwcopytype="CopyTableRow" width="100%" height="100%">
+				<tr>
+					<th style="background: #FF0000; color: #ffffff" colspan=2>Confirmação</th>
+				</tr>
+				<tr>
+					<td align="right">Administrador: </td><td><label><strong>{$dadosLogin.admin}</strong></label></td>
+				</tr>
+				<tr>
+					<td align="right">Confirme sua senha: </td><td><input type="password" name="senha_admin" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center">
+			<input name="botao_cancelar" type="button" class="botao" value="Cancelar" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;" onclick="cancelar('{$id_cliente}');" />
+			<input name="botao_enviar" type="submit" class="botao" id="submit" value="Estornar &gt;&gt;" style="border: 1px solid #444444; font-size: 10px; background-color: #f3f3f3;"/>
+		</td>
+	</tr>
+</table>
+</form>
+</div>
