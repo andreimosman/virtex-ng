@@ -146,6 +146,8 @@
 			$this->_file = "clientes_contrato.html";
 			$selecionavel = true;	// Se o menu estará habilitado
 			
+			$menu = true;
+			
 			
 			switch($this->obtem("tela")) {
 				case 'imprime_carne':
@@ -187,6 +189,19 @@
 				case 'amortizacao':
 					$titulo .= " :: Amortização";
 					break;
+					
+				case 'imprime':
+					// echo "IMPRIME";
+					$this->_file = "clientes_contrato_imprime.html";
+					$menu = false;
+					
+				
+					//echo "<pre>"; 
+					//print_r($this->_bag);
+					//echo "</pre>";
+				
+				
+					break;
 			
 				default:
 					$selecionavel = true;
@@ -195,8 +210,9 @@
 			}
 			
 			
-
-			$this->configureMenu($this->obtemItensMenu(),$selecionavel,true);
+			if( $menu ) {
+				$this->configureMenu($this->obtemItensMenu(),$selecionavel,true);
+			}
 			$this->atribui("titulo",$titulo);
 		
 		}

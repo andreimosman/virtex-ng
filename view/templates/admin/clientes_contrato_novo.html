@@ -2087,16 +2087,18 @@ contratoAlteraFormaPagamentoDA();
 	</table>
 {/if}
 	<br />
-
 	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
 		<tr>
 			<th colspan=2 style="border-right: solid 2px #000000;">faturas</th>
-			<th colspan=5>composição dos valores</th>
+			<th colspan={if $id_cliente_produto}6{else}5{/if}>composição dos valores</th>
 		</tr>
 		<tr>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Data</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 2px #000000; border-bottom: solid 1px #000000;">Valor(=)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Plano(+)</td>
+			{if $id_cliente_produto}
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Residual</td>
+			{/if}
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Comodato(+)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pró-Rata (dias)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Desconto(-)</td>
@@ -2113,6 +2115,9 @@ contratoAlteraFormaPagamentoDA();
 				<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{$f.valor|string_format:"%.2f"}</td>
 				<!-- COMPOSICAO DE VALORES -->
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_plano}{$f.composicao.prorata_plano|string_format:"%.2f"}{else}{if $f.composicao.valor}{$f.composicao.valor|string_format:"%.2f"}{else}-{/if}{/if}</td>
+				{if $id_cliente_produto}
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.residual.prorata_residual}{$f.composicao.residual.prorata_residual|string_format:"%.2f"}{else}-{/if}</td>
+				{/if}
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>

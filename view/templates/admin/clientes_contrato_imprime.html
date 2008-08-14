@@ -1,0 +1,63 @@
+<html>
+<head>
+	<title>Contrato #{$id_cliente_produto|string_format:"%06d"}</title>
+
+<style>
+{literal}
+#imprimir {
+	position:relative;
+	left:8px;
+	top:8px;
+	font-family:arial,helvetica;
+	text-decoration: none;
+	font-size:12px;
+	font-color: #ffffff;
+	align: center;
+	vertical-align: bottom;
+	background-color:#CACAFF;
+	width:70px;
+	height:10px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	visibility: visible;
+}
+
+
+@media print {
+	#quebraPagina {
+		page-break-after: always;
+	}
+	#imprimir {
+		visibility: hidden;
+		position: absolute;
+	}
+}
+{/literal}
+</style>
+
+
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+
+<div id="imprimir" align="center" width="100%">
+<table align="center" width="665">
+	<tr>
+		<td><a href="javascript:;" onClick="return window.print();"><img alt="IMPRIMIR CONTRATO" src="view/templates/imagens/print.gif" border="0"></a></td>
+		<td>
+			<div align="LEFT"><font face="Arial, Helvetica, sans-serif" size="2" color="#000000"><b>Instruções para Impressão</b><li>Imprima em impressora jato de tinta (ink jet) ou laser em qualidade normal ou alta.<br>
+			<li>Não use modo econêmico.<br>
+			<li>Utilize folha A4 (210 x 297mm) e margens mínimas à esquerda e à direita do formulário.</font><br>
+			</div>
+		</td>
+	</tr>
+</table>
+</div>
+
+{$texto_contrato}
+

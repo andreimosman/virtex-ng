@@ -67,7 +67,6 @@ function desabilita(campo) {
 		<td>[{if $tela == "faturas"}Faturas{else}<a href="admin-clientes.php?op=contrato&tela=faturas&id_cliente={$id_cliente}">Faturas</a>{/if}]</td>
 	</tr>
 </table>
-
 {if !$tela}
 	{include file="clientes_contrato_resumo.html"}
 {elseif $tela == "novo_contrato" || $tela == "migrar"}

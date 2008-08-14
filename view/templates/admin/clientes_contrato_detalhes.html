@@ -1,4 +1,12 @@
-
+<script language="JavaScript">
+{literal}
+function imprimeContrato(id_cliente,id_cliente_produto) {
+	var url = "admin-clientes.php?op=contrato&tela=imprime&id_cliente=" + id_cliente + "&id_cliente_produto=" + id_cliente_produto;
+	var winName = "ctt_"+id_cliente+"_"+id_cliente_produto;
+    window.open(url,winName,'scrollbars=yes,width=700,height=500');
+}
+{/literal}
+</script>
 <br>
 	<!-- #CONFIRMAÇÃO DO CONTRATO# -->
 
@@ -14,6 +22,7 @@
 			{/if}
 			[<a href="admin-clientes.php?op=contrato&tela=migrar&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Migrar Contrato</a>]
 			[<a href="admin-clientes.php?op=contrato&tela=cancelar_contrato&id_cliente={$id_cliente}&id_cliente_produto={$id_cliente_produto}">Cancelar Contrato</a>]
+			[<a href="javascript:imprimeContrato({$id_cliente},{$id_cliente_produto})">Imprimir</a>]
 		{/if}
 	{/if}
 	</td>

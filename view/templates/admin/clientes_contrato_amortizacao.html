@@ -9,6 +9,9 @@
 
 	function pagamentoHoje(){
 		var obj = document.getElementById('data_pagamento');
+
+		/**
+
 		var data = new Date();
 
 		var mes = (data.getMonth() + 1);
@@ -18,6 +21,12 @@
 		}
 
 		hoje = data.getDate() +"/"+ mes + "/" + data.getFullYear();
+
+		*/
+		{/literal}
+		hoje = "{$hoje}";
+		{literal}
+
 		obj.value = hoje;
 	}
 

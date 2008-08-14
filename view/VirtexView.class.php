@@ -43,6 +43,8 @@
 			
 			$this->atribuiErro();	// Zera o erro
 			
+			$this->atribui("hoje",date("d/m/Y"));
+			
 		}
 		
 		protected function exibirNomeArquivo($bl) {

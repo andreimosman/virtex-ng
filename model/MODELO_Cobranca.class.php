@@ -146,7 +146,7 @@
 		 *   -> comodato
 		 *   ->
 		 */
-		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao) {
+		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao,$id_cliente_produto=0) {
 			$faturas = array();
 			
  			$descontos_aplicados = 0;
@@ -171,22 +171,102 @@
 			$data = MData::proximoDia($dia_vencimento,$data_contratacao);
 			
 			$itens_fatura = array();
+			
+			// echo "ID_CLIENTE_PRODUTO: $id_cliente_produto<br>\n"; 
 
+			// Pro-Rata Residual (cobrado somente em caso de migracao para produto de valor diferente).
+			$diasResidual = 0;
+			$valorResidual = 0;
+			$residualCobrado = false;
+
+			
+			if( $id_cliente_produto ) {
+				// 
+				// Migração - será necessário utilizar informações do contrato antigo para cálculos.
+				// 
+			
+				$contrato = $this->obtemContratoPeloId($id_cliente_produto);
+				
+				// Cobrança de pro-rata residual
+				$diaVenc = (int)$contrato["vencimento"];
+								
+				// Condição para evitar problemas em cadastros antigos.
+				// if( $contrato["valor_produto"] != $valor && $diaVenc > 0 && $faz_prorata == 't') {
+					// Se diasResidual for < 0 caracteriza desconto.
+					//$diasResidual = $diaHoje - $diaVenc;
+					$valorResidual = ($contrato["valor_produto"] / 30) * $diasResidual;					
+
+					$diaBase = date($diaVenc."/m/Y");				
+					$hoje = date("d/m/Y");
+
+					$diasResidual = MData::diff($diaBase,$hoje);
+					$valorResidual = ($contrato["valor_produto"] / 30) * $diasResidual;
+
+					if( $diasResidual < 0 ) {
+						// Calcula a diferença entre o plano velho e o plano novo, podendo caracterizar desconto ou acrescimo.
+						// Trata-se do número de dias que o cliente vai utilizar até a fatura deste mês vencer.
+
+						$valorProrataParcial = ($valor / 30) * $diasResidual;
+						$valorProrataParcial *= -1;
+
+						$valorResidual += $valorProrataParcial;
+
+					}
+
+				//}
+				
+				/**
+				echo "<pre>"; 
+				//print_r($contrato);
+				echo "diaHoje: $diaHoje\n"; 
+				echo "diaVenc: $diaVenc\n";
+				echo "diaResi: $diasResidual\n";
+				echo "valResi: $valorResidual\n";
+				
+				echo "</pre>"; 
+				*/
+				
+			
+			}
+			
 			if( $pagamento == "POS" ) {
 			
-				// $data = MData::proximoDia($dia_vencimento,$data_contratacao);
-				// Pagamento pós pago
-
         		$composicao = array();
         		
-        		
 
-        		if( ((float)$tx_instalacao) > 0 ) {
+        		if( ((float)$tx_instalacao) > 0 ) {					
+					//
+					// Fatura da taxa de instalação cobrada imediatamente.
+					//
+        		
+        		
+        			$vlPrimeiroBoleto = 0;
+
 					$composicao["instalacao"] = $parcelaInstalacao;
 					$composicao["parcela_instalacao"] = $meses_cobrados + 1 . "/" . $parcelamento_instalacao;
-					$faturas[] = array("data"=>$data_contratacao,"valor" => $parcelaInstalacao,"composicao"=>$composicao);
+					
+					$vlPrimeiroBoleto = $parcelaInstalacao;
+					
+					if( $valorResidual ) {
+						$vlPrimeiroBoleto += $valorResidual;
+						
+						if( $diasResidual < 0 ) {
+							$diasResidual *= -1;
+							// $valorResidual *= -1;
+						}
+						
+						$composicao["residual"] = array("dias_prorata_residual" => $diasResidual, "prorata_residual" => $valorResidual);
+						
+						$residualCobrado = true;
+						
+						
+					}
+					
+					$faturas[] = array("data"=>$data_contratacao,"valor" => $vlPrimeiroBoleto,"composicao"=>$composicao);
 					$parcelasInstCobradas++;
 					$meses_cobrados++;
+					
+					unset($vlPrimeiroBoleto);
 
 				}
 
@@ -256,7 +336,7 @@
 				$got = false;
 				$composicao = array();
 
-				if( $pagamento == "POS" && $meses_cobrados == 1 ) {
+				if( $pagamento == "POS" && (($tx_instalacao > 0 && $meses_cobrados == 1) || (!$tx_instalacao && !$meses_cobrados) ) ) {
 					// Primeiro vencimento de pós-pago. Calcular pró-rata.
 					$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
 					if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
@@ -264,13 +344,33 @@
 						$prorata_plano = $prorata["prorata_plano"];
 						$prorata_comodato = $prorata["prorata_comodato"];
 						$dias_prorata = $prorata["dias_prorata"];
+						
+						$valor_fatura = 0;
+						
+						
+						if( !$residualCobrado ) {
+							$valor_fatura = $valorResidual;
+
+							if( $diasResidual < 0 ) {
+								$diasResidual *= -1;
+								// $valorResidual *= -1;
+							}
+
+							$composicao["residual"] = array("dias_prorata_residual" => $diasResidual, "prorata_residual" => $valorResidual);
+							
+							// echo "<pre>"; 
+							// print_r($composicao);
+							// echo "</pre>"; 
+
+						}
+
 
 						$data = $data_primeiro_vencimento;
 
 						$composicao["prorata_plano"] = $prorata_plano;
 						$composicao["prorata_comodato"] = $prorata_comodato;
 						$composicao["dias_prorata"] = $dias_prorata;
-						$valor_fatura = $prorata_plano + $prorata_comodato;
+						$valor_fatura += $prorata_plano + $prorata_comodato;
 
 						$got = true;
 						
@@ -708,14 +808,21 @@
 			$faturas = $this->cbtb_fatura->obtem($filtro, "data DESC");
 
 			$hoje = date("Y-m-d");
-			$base =  MData::ptBR_to_ISO(MData::adicionaMes($hoje,1));
+			$base =  MData::ptBR_to_ISO($hoje);
+			
+			//echo "BASE: $base<br>\n";
+			
 			
 			list($aB,$mB,$dB) = explode("-",$base);
 			
 			$base = mktime(0,0,0,$mB,$dB,$aB);
-			
+			//echo "BASE: $base<br>\n"; 
+
+
+			//echo "HOJE: $hoje<br>\n";			
 			list($aH,$mH,$dH) = explode("-",$hoje);
 			$hoje = mktime(0,0,0,$mH,$dH,$aH);
+			//echo "HOJE: $hoje<br>\n";			
 			
 
 			for($i=0;$i<count($faturas);$i++) {
@@ -726,9 +833,12 @@
 
 
 				$faturas[$i]["valor_restante"] = $faturas[$i]["valor"] + $faturas[$i]["acrescimo"] - $faturas[$i]["desconto"] - $faturas[$i]["valor_pago"];
+				
 
 				list($aV,$mV,$dV) = explode("-",$faturas[$i]["data"]);
 				$venc = mktime(0,0,0,$mV,$dV,$aV);
+
+				//echo "VENC: " . $faturas[$i]["data"] . "(" . $venc . ")<br>";
 
 
 				if( $faturas[$i]["data_pagamento"] ) {

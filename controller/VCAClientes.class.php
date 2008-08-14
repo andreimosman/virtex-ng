@@ -327,6 +327,7 @@
 					$this->requirePrivGravacao("_CLIENTES_CONTRATOS_CANCELAMENTO");
 
 				case 'contrato':
+				case 'imprime':
 					$this->requirePrivLeitura("_CLIENTES_CONTRATOS");
 
 					// TELA DE DETALHES DO CONTRATO
@@ -334,7 +335,24 @@
 					$this->_view->atribui("id_cliente_produto",$id_cliente_produto);
 
 					//$cliente = $this->clientes->obtemPeloId($this->id_cliente);
-					//$this->_view->atribui("cliente",$cliente);
+					//
+
+					//echo "<pre>"; 
+					//print_r($cliente);
+
+
+					if( $cliente["id_cidade"] ) {
+						$cidade = $this->preferencias->obtemCidadePeloId($cliente["id_cidade"]);
+						$cliente["cidade"] = $cidade["cidade"];
+						$cliente["uf"] = $cidade["uf"];
+						
+						// print_r($cidade);
+					}
+
+					//echo "</pre>";
+					
+					$this->_view->atribui("cliente",$cliente);
+
 
 					$cobranca = VirtexModelo::factory('cobranca');
 
@@ -353,6 +371,25 @@
 					foreach( $contrato as $vr => $vl ) {
 						$contrato[$vr] = trim($vl);
 					}
+					
+					$contrato["valor_extenso"] = MFormata::valorExtenso($contrato["valor_produto"]);
+					$contrato["data_contratacao_extenso"] = MFormata::escreveData($contrato["data_contratacao"]);
+					
+					//echo "<br><br><br><br><br>";
+					//echo MFormata::valorExtenso(12341.412);
+					// 
+					
+
+					if(!$contrato["nome_produto"]) {
+						$produtos = VirtexModelo::factory("produtos");
+					
+						$produto = $produtos->obtemPlanoPeloId($contrato["id_produto"]);
+						
+						$contrato["nome_produto"] = $produto["nome"];
+						$contrato["descricao_produto"] = $produto["descricao"];
+					
+					}
+
 					$this->_view->atribui("contrato",$contrato);
 
 					$formaPagamento = array();
@@ -360,7 +397,7 @@
 						$formaPagamento = $this->preferencias->obtemFormaPagamento($contrato["id_forma_pagamento"]);
 					}
 					$this->_view->atribui("formaPagamento",$formaPagamento);
-
+					
 					$tiposFormaPgto = $this->preferencias->obtemTiposFormaPagamento();
 					$this->_view->atribui("tiposFormaPgto",$tiposFormaPgto);
 
@@ -383,6 +420,56 @@
 					$dadosLogin = $this->_login->obtem("dados");
 
 					$this->_view->atribui("dadosLogin",$dadosLogin);
+					
+					
+					if( $tela == "imprime" ) {
+					
+						// 
+						
+						//echo "IMP!!!!";
+						
+						// echo "IDM: " . $contrato["id_modelo"];
+						
+						
+						if( $contrato["id_modelo_contrato"] ) {
+							$tpl = new MTemplate("var/contrato");
+							
+							$equipamentos = VirtexModelo::factory("equipamentos");
+							
+							for($i=0;$i<count($listaContas);$i++) {
+								if( @$listaContas[$i]["id_pop"]) {
+									$listaContas[$i]["pop"] = $equipamentos->obtemPop($listaContas[$i]["id_pop"]);
+								}
+							}
+							
+							
+							
+							$tpl->atribui("cliente",$this->_view->obtem("cliente"));
+							$tpl->atribui("listaContas",$listaContas);
+							$tpl->atribui("formaPagamento",$formaPagamento);
+							// $tpl->atribui("produto",$produto);
+							$tpl->atribui("contrato",$contrato);
+							$tpl->atribui("listaContas",$listaContas);
+							
+							
+							
+							$prefGerais = $this->preferencias->obtemPreferenciasGerais();
+							$prefProvedor = $this->preferencias->obtemPreferenciasProvedor();
+							$tpl->atribui("prefProvedor",$prefProvedor);
+							$tpl->atribui("prefGerais",$prefGerais);
+							
+							$nomeArquivo = sprintf("%05d",$contrato["id_modelo_contrato"]);
+							
+							$this->_view->atribui("texto_contrato", $tpl->obtemPagina($nomeArquivo));
+							
+							
+							// echo "Na: $nomeArquivo";
+							
+						
+						}
+						
+
+					}
 
 					if( $acao ) {
 						$erro = "";
@@ -673,7 +760,7 @@
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
 						
-						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],$pro_rata,@$_REQUEST["limite_prorata"],$parcelas_instalacao);
+						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],$pro_rata,@$_REQUEST["limite_prorata"],$parcelas_instalacao,$id_cliente_produto);
 						$this->_view->atribui("faturas",$faturas);
 						
 
