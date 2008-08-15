@@ -371,7 +371,7 @@
    <tempo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -415,7 +415,7 @@
    <bytes_in >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -423,7 +423,7 @@
    <bytes_out >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -864,7 +864,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1212,7 +1212,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,9</length>
+    <length >9,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1329,7 +1329,7 @@
    <valor_contrato >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1362,7 +1362,7 @@
    <valor_produto >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1388,7 +1388,7 @@
    <tx_instalacao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1403,7 +1403,7 @@
    <valor_comodato >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1411,7 +1411,7 @@
    <desconto_promo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1444,7 +1444,7 @@
    <hosp_valor_mb_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1468,7 +1468,7 @@
    <disc_valor_hora_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1503,7 +1503,7 @@
    <bl_valor_trafego_adicional_gb >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1667,7 +1667,7 @@
    <vl_email_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -1870,7 +1870,7 @@
    <vl_parcelas_instalacao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,9</length>
+    <length >9,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2163,7 +2163,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,9</length>
+    <length >9,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2239,7 +2239,7 @@
    <valor >
     <notnull >1</notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2271,7 +2271,7 @@
    <pagto_parcial >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2286,7 +2286,7 @@
    <desconto >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2294,7 +2294,7 @@
    <acrescimo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2302,7 +2302,7 @@
    <valor_pago >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -2362,7 +2362,7 @@
    <nosso_numero_banco >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,17</length>
+    <length >17,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -3119,7 +3119,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5610,7 +5610,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5666,7 +5666,7 @@
    <cheque_banco >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,3</length>
+    <length >3,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5674,7 +5674,7 @@
    <cheque_agencia >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,4</length>
+    <length >4,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5682,7 +5682,7 @@
    <cheque_conta >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,8</length>
+    <length >8,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5690,7 +5690,7 @@
    <cheque_serie >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,8</length>
+    <length >8,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -5698,7 +5698,7 @@
    <cheque_numero >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,8</length>
+    <length >8,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6465,7 +6465,7 @@
    <icmp_media >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6473,7 +6473,7 @@
    <icmp_minimo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6488,7 +6488,7 @@
    <ftp_media >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -6496,7 +6496,7 @@
    <ftp_minimo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -8330,7 +8330,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -8722,7 +8722,7 @@
    <valor_recebido >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -8739,7 +8739,7 @@
    <valor_tarifa >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10105,7 +10105,7 @@
    <valor >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10138,7 +10138,7 @@
    <vl_email_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10176,7 +10176,7 @@
    <valor_comodato >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10184,7 +10184,7 @@
    <desconto_promo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10201,7 +10201,7 @@
    <tx_instalacao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10216,7 +10216,7 @@
    <comissao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,5</length>
+    <length >5,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10224,7 +10224,7 @@
    <comissao_migracao >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,5</length>
+    <length >5,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10312,7 +10312,7 @@
    <valor_trafego_adicional_gb >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10345,7 +10345,7 @@
    <valor_hora_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10378,7 +10378,7 @@
    <valor_mb_adicional >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,7</length>
+    <length >7,2</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10524,7 +10524,7 @@
    <tempo >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10568,7 +10568,7 @@
    <bytes_in >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10576,7 +10576,7 @@
    <bytes_out >
     <notnull ></notnull>
     <nativetype >numeric</nativetype>
-    <length >0,30</length>
+    <length >30,0</length>
     <default ></default>
     <type >decimal</type>
     <mdb2type >decimal</mdb2type>
@@ -10997,11 +10997,11 @@
   <increment >1</increment>
  </cbsq__d_retorno_erro>
  <cbsq_id_carne >
-  <start >5780</start>
+  <start >5783</start>
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >5554</start>
+  <start >5555</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -11013,7 +11013,7 @@
   <increment >1</increment>
  </cbsq_id_comissao>
  <cbsq_id_endereco_cobranca >
-  <start >7</start>
+  <start >8</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbsq_id_impressao >
@@ -11037,7 +11037,7 @@
   <increment >1</increment>
  </cbsq_id_retorno_erro>
  <cbtb_faturas_id_cobranca_seq >
-  <start >67693</start>
+  <start >67729</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cbtb_lote_cobranca_id_remessa_seq >
@@ -11097,7 +11097,7 @@
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >163</start>
+  <start >166</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
@@ -11145,7 +11145,7 @@
   <increment >1</increment>
  </lgtb_reagendamento_id_reagendamento_seq>
  <lgtb_renovacao_id_renovacao_seq >
-  <start >14</start>
+  <start >16</start>
   <increment >1</increment>
  </lgtb_renovacao_id_renovacao_seq>
  <lgtb_restore_id_restore_seq >
@@ -11193,7 +11193,7 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >25</start>
+  <start >27</start>
   <increment >1</increment>
  </spsq_id_spool>
  <sptb_spool_id_spool >
