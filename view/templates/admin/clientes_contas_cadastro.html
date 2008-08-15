@@ -100,9 +100,24 @@ label {
 <script type="text/javascript">
 	var tipo_contrato = '{$tipo_contrato}';
 	var endereco_original = '{$endereco}';
-	var condominios = eval({$condominios});
+	var condominios = eval('{$condominios}');
 
 {literal}
+
+	function contaAlteraTipoHospedagem() {
+		var frm = document.frmConta;
+
+		try {
+			if( frm.tipo_hospedagem.value == "U" ) {
+				frm.dominio_hospedagem.disabled = true;
+			} else {
+				frm.dominio_hospedagem.disabled = false;
+			}
+		} catch( e ) {
+
+		}
+
+	}
 
 	function voltar(){
 		{/literal}
@@ -576,18 +591,26 @@ label {
 			<tr>
 				<th colspan='4' align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
 			</tr>
-			<tr>
-				<td align="right" width="110"><label>Tipo:</label></td>
+			{if $id_conta}
+				<td align="right" width="110"><label>Site:</label></td>
 				<td colspan='3' align='left'>
-					<select name="tipo_hospedagem" id="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
-						<option value="D">Domínio do Usuário</option>
-						<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
-					</select>
+					<label>{if $tipo_hospedagem == 'U'}http://www.{$preferenciasGerais.dominio_padrao}/usuario/{$username}{else}http://www.{$dominio_hospedagem}/{/if}</label>
 				</td>
-			<tr>
-				<td align="right" width="110"><label>Criar:</label></td>
-				<td colspan='3' align='left'><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" id="dominio_hospedagem" value="{$dominio}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
-			</tr>
+			{else}
+				<tr>
+					<td align="right" width="110"><label>Tipo:</label></td>
+					<td colspan='3' align='left'>
+						<select name="tipo_hospedagem" id="tipo_hospedagem" onChange="javascript:contaAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
+							<option value="D">Domínio do Usuário</option>
+							<option value="U">www.{$preferenciasGerais.dominio_padrao}/usuario/username</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" width="110"><label>Criar:</label></td>
+					<td colspan='3' align='left'><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" id="dominio_hospedagem" value="{$dominio_hospedagem}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} /></td>
+				</tr>
+			{/if}
 		</table>
 	{/if}
 	{if $tipo == "D" || $tipo == "BL"}
@@ -681,6 +704,8 @@ AlimentarCombo('id_condominio_instalacao', condominios, 'id_condominio', 'nome',
 		document.getElementById('id_bloco_instalacao').disabled = true;
 		document.getElementById('apto_instalacao').disabled = true;
 	{/if}
+{elseif $tipo=="H"}
+	contaAlteraTipoHospedagem();
 {/if}
 </script>
 

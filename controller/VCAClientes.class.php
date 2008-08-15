@@ -1331,6 +1331,10 @@
 
 			if( $id_conta && !$acao ) {
 				$info = $contas->obtemContaPeloId($id_conta);
+				
+				//echo "<pre>"; 
+				//print_r($info);
+				//echo "</pre>"; 
 
 				foreach($info as $vr => $vl) {
 					$this->_view->atribui($vr,$vl);
@@ -1482,7 +1486,8 @@
 							$contas->alteraContaDiscado($id_conta,$senha,$status,$observacoes,$conta_mestre,$foneinfo);
 							$msg = "Conta alterada com sucesso.";
 						} elseif($tipo == "H") {
-							$contas->alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre);
+							// $contas->alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre);
+							$contas->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
 							$msg = "Conta alterada com sucesso.";
 						} else {
 							// die("tipo inválido!");
