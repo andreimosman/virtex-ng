@@ -228,8 +228,14 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$this->_view->atribui("limite_prorata",$limite_prorata);
 			$this->_view->atribui("parcelamento_instalacao",$parcelamento_instalacao);
 			
+			$data_primeiro_vencimento = MData::adicionaMes($dataRenovacao, 1);
+			
 			// Faturas que serão geradas.
-			$faturas = $this->cobranca->gerarListaFaturas($pagamento,$dataRenovacao,$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao);
+			$faturas = $this->cobranca->gerarListaFaturas($pagamento,MData::ISO_to_ptBR($dataRenovacao),$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao);
+			
+			//echo "<pre>"; 
+			//print_r(array($pagamento,$dataRenovacao,$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao));
+			//echo "</pre>";
 			
 			$hoje = date("d/m/Y");
 			for($i=0;$i<count($faturas);$i++) {
