@@ -147,6 +147,12 @@
 		 *   ->
 		 */
 		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao,$id_cliente_produto=0) {
+			//$dia_vencimento = 19;
+			//$data_primeiro_vencimento = '19/08/2008';
+			//echo "<pre>";
+			//print_r(array($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao,$id_cliente_produto));
+			//echo "</pre>";
+		
 			$faturas = array();
 			
  			$descontos_aplicados = 0;
@@ -169,6 +175,8 @@
 			}
 
 			$data = MData::proximoDia($dia_vencimento,$data_contratacao);
+			
+			// echo "DATA: $data<br>\n";
 			
 			$itens_fatura = array();
 			
@@ -320,8 +328,15 @@
 
 			}
 			
-			if( ($meses_cobrados == 1 && $prorata["dias_prorata"] < 30)  || empty($prorata) ) {
+			if( $faz_prorata == 't' && (($meses_cobrados == 1 && $prorata["dias_prorata"] < 30)  || empty($prorata)) ) {
+				//echo "INC FALSE";
+				//echo "<pre>";
+				//print_r($prorata);
+				//echo "</pre>"; 
 				$incrementa = false;
+				
+				// echo "INC FALSE<br>\n";
+				
 			} else {
 				$incrementa = true;
 			}
@@ -337,9 +352,13 @@
 				$composicao = array();
 
 				if( $pagamento == "POS" && (($tx_instalacao > 0 && $meses_cobrados == 1) || (!$tx_instalacao && !$meses_cobrados) ) ) {
+					// echo "AQUI!!!";
 					// Primeiro vencimento de pós-pago. Calcular pró-rata.
 					$prorata = $this->prorata($data_contratacao,$data_primeiro_vencimento,$valor,$valor_comodato);
 					if( ($prorata["dias_prorata"] > 0) && ($faz_prorata == 't') ) {
+					
+						// echo "PRORATA APLIC";
+					
 						// Pró-rata aplicável.
 						$prorata_plano = $prorata["prorata_plano"];
 						$prorata_comodato = $prorata["prorata_comodato"];
@@ -366,6 +385,8 @@
 
 
 						$data = $data_primeiro_vencimento;
+						
+						// echo "DATA: $data<br>\n"; 
 
 						$composicao["prorata_plano"] = $prorata_plano;
 						$composicao["prorata_comodato"] = $prorata_comodato;
@@ -387,22 +408,34 @@
 					list($d,$m,$a) = explode("/", $data);
 					$d = $dia_vencimento;
 
-					// Incrementa 1 mês
-					if( $meses_cobrados == 1 && $data == "$d/$m/$a" ) {
-						$incrementa = 1;
+					// Incrementa 1 mês se aplicável
+					if( $pagamento == "PRE" && $faz_prorata == 'f' && $meses_cobrados == 1 ) {
+						$incrementa = 0;
+					} else {
+						if( !($pagamento == "PRE" && !$incrementa) && $data == "$d/$m/$a" ) {
+							// echo "INCREMENTA MES";
+							$incrementa = 1;
+						}
 					}
 					
+					
+					
 					if( $pagamento == "PRE" && $meses_cobrados == 1 && !$incrementa) {
-						// echo "MESES 01, n/a<br>\n";
+						// echo "MESES 01, n/a<br>\n";						
+						// echo "PAGAMENTO = PRE / MC = 1 / NOT INC<br>\n";
 					} else {
 						// echo "MESES: $meses_cobrados<br>\n"; 
 						
 						$diff_ini=MData::diff($data_primeiro_vencimento,$data);
 						
 						// echo "DATA: $data, $data_primeiro_vencimento: ". $diff_ini ."<br>\n"; 
-						
-						if( $meses_cobrados || $diff_ini < 0) {
-							$data = MData::adicionaMes("$d/$m/$a",1);
+						if( $pagamento == "POS" && $tx_instalacao > 0 && $meses_cobrados == 1 ) {
+							// echo "TX + MES 1<br>\n";
+						} else {
+							// if( $pagamento == "PRE" && !$tx_instalacao & 
+							if( $meses_cobrados || $diff_ini < 0 ) {
+								$data = MData::adicionaMes("$d/$m/$a",1);
+							}
 						}
 					}
 				}
@@ -1555,9 +1588,10 @@
 			return($this->cbtb_carne_impressao->insere($dados));
 			
 		}
-
-
-
+		
+		public function obtemNumeroContratosAtivosPorTipo($id_cliente) {
+			return($this->cbtb_contrato->obtemNumeroContratosAtivosPorTipo($id_cliente));
+		}
 
 
 

@@ -137,9 +137,7 @@
 								$this->_view->atribui($vr,$vl);
 							}
 							
-							if( !$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false) ) {
-								$this->_view->atribui("podeGravar",false);
-							}
+							$this->_view->atribui("podeGravar",$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS",false));
 							
 						} else {
 							// Processar alteração

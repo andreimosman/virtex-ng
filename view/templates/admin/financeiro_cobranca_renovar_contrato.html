@@ -35,7 +35,19 @@
 			<td><span style='font-size: 9px;'>{$c.data_renovacao|date_format:"%d/%m/%Y"}</td>
 			<td align="right"><span style='font-size: 9px;'>{$c.valor_contrato|string_format:"%.2f"}</span></td>
 		</tr>
+		{foreachelse}
+		<tr>
+			<td colspan=5>Não existem contratos para renovação</td>
+		</tr>
 		{/foreach}
+		{if $totalContratos}
+		<tr>
+			<td align="left"><strong>Existem {$totalContratos} contrato{if $totalContratos>1}s{/if} para renovação.</strong></td>
+			<td align="left">&nbsp;</td>
+			<td align="center"><strong>{$totalPendencias}</strong></td>
+			<td colsan=2>&nbsp;</td>
+		</tr>
+		{/if}
 	</table>
 <br /><br />
 

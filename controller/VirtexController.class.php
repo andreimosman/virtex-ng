@@ -200,6 +200,10 @@
 			// Exibe a view
 			if( isset($this->_view) ) {
 				//print_r($this->_view);
+				if( !$this->_view->haveLogin() ) {
+					$this->_view->setLogin($this->_login);
+				}
+				
 				$this->_view->exibe();
 			}
 		}

@@ -245,7 +245,7 @@
 			//$administradores = VirtexModelo::factory("administradores");
 			//$clientes = VirtexModelo::factory("clientes");
 			
-			echo "<pre>";
+			//echo "<pre>";
 			
 			for($i=0;$i<count($eventos);$i++) {
 
@@ -311,9 +311,9 @@
 				
 			}
 			
-			print_r($eventos);
+			//print_r($eventos);
 
-			echo "</pre>";
+			//echo "</pre>";
 			
 			//echo "<pre>"; 
 			//

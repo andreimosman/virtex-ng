@@ -30,6 +30,9 @@
 		protected $_exibirNomeArquivo;
 		
 		protected $noCache;
+		
+		protected $_login;
+		
 
 		protected function __construct() {
 			$this->_tplPath = ".";
@@ -44,6 +47,8 @@
 			$this->atribuiErro();	// Zera o erro
 			
 			$this->atribui("hoje",date("d/m/Y"));
+			
+			$this->_login = null;
 			
 		}
 		
@@ -125,9 +130,7 @@
 		
 		public function unsetNoCache() {
 			$this->noCache = false;
-		}
-		
-		
+		}				
 		
 		/**
 		 * Variável do template
@@ -140,5 +143,24 @@
 		public function obtem($variavel) {
 			return(@$this->_bag[$variavel]);
 		}
-	
+		
+		/**
+		 * LOGIN OBJECT
+		 */
+		public function setLogin($loginObj) {
+			$this->_login = $loginObj;
+		}
+		
+		public function haveLogin() {
+			return(!is_null($this->_login));
+		}
+		
+		public function podeLer($privilegio) {			
+			return( is_null($this->_login) ? false : $this->_login->podeLer($privilegio) );
+		}
+
+		public function podeGravar($privilegio) {			
+			return( is_null($this->_login) ? false : $this->_login->podeGravar($privilegio) );
+		}
+
 	}

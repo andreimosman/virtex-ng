@@ -27,18 +27,46 @@
 		}
 		
 		protected function obtemItensMenu() {
+			$id_cliente = $this->obtem("id_cliente");
+			// echo "ID CLIENTE: ". $id_cliente . "\n"; 
+			//echo "<pre>"; 
+			//print_r($this->_login);
+			//echo "</pre>"; 
+		
 			$itensMenu = array();
 			if( ($this->obtem("op") == "cadastro" && $this->obtem("extra_op") != "ficha") || $this->obtem("op") != "cadastro" ) {
 					$itensMenu[] = array("texto" => "Ficha do Cliente", "url" => "admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente=".$this->obtem("id_cliente"));
 			} else {
 				$itensMenu[] = array("texto" => "Alterar Cadastro", "url" => "admin-clientes.php?op=cadastro&id_cliente=".$this->obtem("id_cliente"));
 			}
-			$itensMenu[] = array("texto" => "Banda Larga", "url" => "admin-clientes.php?op=conta&tipo=BL&id_cliente=".$this->obtem("id_cliente"));
-			$itensMenu[] = array("texto" => "Discado", "url" => "admin-clientes.php?op=conta&tipo=D&id_cliente=".$this->obtem("id_cliente"));
-			$itensMenu[] = array("texto" => "Hospedagem", "url" => "admin-clientes.php?op=conta&tipo=H&id_cliente=".$this->obtem("id_cliente"));
-			$itensMenu[] = array("texto" => "Contrato/Faturas", "url" => "admin-clientes.php?op=contrato&id_cliente=".$this->obtem("id_cliente"));
-			$itensMenu[] = array("texto" => "Helpdesk", "url" => "admin-clientes.php?op=helpdesk&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
-			$itensMenu[] = array("texto" => "Emails Cancelados", "url" => "admin-clientes.php?op=emails_cancelados&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
+			
+			if( $id_cliente ) {
+						
+				$cobranca = VirtexModelo::factory("cobranca");
+				$contratos = $cobranca->obtemNumeroContratosAtivosPorTipo($id_cliente);
+				
+				if( $this->podeLer("_CLIENTES_BANDALARGA") && @$contratos["bl"] ) {
+					$itensMenu[] = array("texto" => "Banda Larga (".$contratos["bl"].")", "url" => "admin-clientes.php?op=conta&tipo=BL&id_cliente=".$this->obtem("id_cliente"));
+				}
+				if( $this->podeLer("_CLIENTES_DISCADO") && @$contratos["d"] ) {
+					$itensMenu[] = array("texto" => "Discado (".$contratos["d"].")", "url" => "admin-clientes.php?op=conta&tipo=D&id_cliente=".$this->obtem("id_cliente"));
+				}
+				if( $this->podeLer("_CLIENTES_HOSPEDAGEM") && @$contratos["h"] ) {
+					$itensMenu[] = array("texto" => "Hospedagem (".$contratos["h"].")", "url" => "admin-clientes.php?op=conta&tipo=H&id_cliente=".$this->obtem("id_cliente"));
+				}
+
+
+				if( $this->podeLer("_CLIENTES_CONTRATOS") ) {
+					$itensMenu[] = array("texto" => "Contrato/Faturas (".($contratos["bl"]+$contratos["d"]+$contratos["h"]).")", "url" => "admin-clientes.php?op=contrato&id_cliente=".$this->obtem("id_cliente"));
+				}
+				$itensMenu[] = array("texto" => "Helpdesk", "url" => "admin-clientes.php?op=helpdesk&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
+				if( $this->podeLer("_CLIENTES_EMAILS_CANCELADOS") ) {
+					$contas = VirtexModelo::factory("contas");
+					$emails_cancelados = $contas->obtemContasEmailCanceladas($id_cliente);
+				
+					$itensMenu[] = array("texto" => "Emails Cancelados (".count($emails_cancelados).")", "url" => "admin-clientes.php?op=emails_cancelados&tela=listagem&id_cliente=".$this->obtem("id_cliente"));
+				}
+			}
 			
 			return($itensMenu);
 			

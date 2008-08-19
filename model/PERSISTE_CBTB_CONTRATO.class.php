@@ -346,6 +346,34 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	
 	}
 	
+	public function obtemNumeroContratosAtivosPorTipo($id_cliente) {
+		/**
+		$sql  = "SELECT ";
+		$sql .= "   count(ctBL.id_cliente_produto) as BL, count(ctD.id_cliente_produto) as D, count(ctH.id_cliente_produto) as H ";
+		$sql .= "FROM ";
+		$sql .= "   cbtb_cliente_produto cp ";
+		$sql .= "   LEFT OUTER JOIN cbtb_contrato ctBL ON (cp.id_cliente_produto = ctBL.id_cliente_produto AND ctBL.tipo_produto = 'BL' AND ctBL.status = 'A') ";
+		$sql .= "   LEFT OUTER JOIN cbtb_contrato ctD ON (cp.id_cliente_produto = ctD.id_cliente_produto AND ctD.tipo_produto = 'D' AND ctD.status = 'A') ";
+		$sql .= "   LEFT OUTER JOIN cbtb_contrato ctH ON (cp.id_cliente_produto = ctH.id_cliente_produto AND ctH.tipo_produto = 'H' AND ctH.status = 'A') ";
+		$sql .= "WHERE ";
+		$sql .= "   cp.id_cliente = 1031 ";
+		*/
+
+		$sql  = "SELECT ";
+		$sql .= "   sum(CASE WHEN ctt.tipo_produto = 'BL' THEN 1 ELSE 0 END) as BL, ";
+		$sql .= "   sum(CASE WHEN ctt.tipo_produto = 'D' THEN 1 ELSE 0 END) as D, ";
+		$sql .= "   sum(CASE WHEN ctt.tipo_produto = 'H' THEN 1 ELSE 0 END) as H ";
+		$sql .= "FROM ";
+		$sql .= "   cbtb_cliente_produto cp INNER JOIN cbtb_contrato ctt ON (cp.id_cliente_produto = ctt.id_cliente_produto and ctt.status = 'A') ";
+		$sql .= "WHERE ";
+		$sql .= "   cp.id_cliente = '".$this->bd->escape($id_cliente)."' ";
+
+		return($this->bd->obtemUnicoRegistro($sql));
+
+
+	}
+
+
 
 }
 

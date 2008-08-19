@@ -124,6 +124,19 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		
 		if( $tela == "listagem" ) {
 			$contratos = $this->cobranca->obtemContratosParaRenovacao();
+			
+			$totalPendencias = 0;
+			$totalContratos = count($contratos);
+			
+			for($i=0;$i<count($contratos);$i++) {
+				$totalPendencias += $contratos[$i]["faturas_pendentes"];
+			}
+			
+			$this->_view->atribui("totalPendencias",$totalPendencias);
+			$this->_view->atribui("totalContratos",$totalContratos);
+			
+			
+			//$contratos = array();
 			$this->_view->atribui("contratos",$contratos);
 		} else {
 			$this->requirePrivGravacao("_FINANCEIRO_COBRANCA_RENOVACAO");
@@ -209,7 +222,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$tx_instalacao = 0; // Não tem tx de instalação na renovação
 
 			// Não tem pro-rata na renovação.
-			$faz_prorata = 0; 
+			$faz_prorata = 'f'; 
 			$limite_prorata = 0;
 			
 			$parcelamento_instalacao = 0;
@@ -228,7 +241,10 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$this->_view->atribui("limite_prorata",$limite_prorata);
 			$this->_view->atribui("parcelamento_instalacao",$parcelamento_instalacao);
 			
-			$data_primeiro_vencimento = MData::adicionaMes($dataRenovacao, 1);
+			$basePriVenc = MData::adicionaMes($dataRenovacao, 1);
+			list($d,$m,$a) = explode("/",MData::ISO_to_ptBR($basePriVenc));
+			
+			$data_primeiro_vencimento = $diaVencimento . "/$m/$a";
 			
 			// Faturas que serão geradas.
 			$faturas = $this->cobranca->gerarListaFaturas($pagamento,MData::ISO_to_ptBR($dataRenovacao),$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao);

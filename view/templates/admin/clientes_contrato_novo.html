@@ -1134,7 +1134,7 @@ function checkForm(tag) {
 
 	calculaDiaProximaFatura();
 
-  // var frm=document.contratacao;
+  var frm=document.contratacao;
 
 
 
@@ -1145,9 +1145,16 @@ function checkForm(tag) {
   	valor = null;
   }
 
+
+
   if( valor == '' || valor == null ) {
-    window.alert("Você deve escolher a forma de pagamento.");
-  	return false;
+	var produto = contratoObtemPlano(frm.tipo.value,frm.id_produto.value);
+
+	if( produto.valor > 0 ) {
+		window.alert("Você deve escolher a forma de pagamento.");
+		return false;
+	}
+
   }
 
 

@@ -71,12 +71,12 @@
 		{foreach name=registros item=r from=$listaEqpto}
 		{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 		<tr>
-			<td class='{$estilo}'><a href="admin-configuracoes.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.id|string_format:"%03d"}</a></td>
-			<td class='{$estilo}'><a href="admin-configuracoes.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.nome}</a></td>
-			<td class='{$estilo}'><a href="admin-configuracoes.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{if $tipo == "nas"}{$tiposNas[$r.tipo_nas]}{else}{$tiposPop[$r.tipo]}{/if}</a></td>
-			<td class='{$estilo}' align="right"><a href="admin-configuracoes.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.contas_ativas}</a></td>
-			<td class='{$estilo}' align="right"><a href="admin-configuracoes.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.soma_upload}</a></td>
-			<td class='{$estilo}' align="right"><a href="admin-configuracoes.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.soma_download}</a></td>
+			<td class='{$estilo}'><a href="admin-cadastro.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.id|string_format:"%03d"}</a></td>
+			<td class='{$estilo}'><a href="admin-cadastro.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.nome}</a></td>
+			<td class='{$estilo}'><a href="admin-cadastro.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{if $tipo == "nas"}{$tiposNas[$r.tipo_nas]}{else}{$tiposPop[$r.tipo]}{/if}</a></td>
+			<td class='{$estilo}' align="right"><a href="admin-cadastro.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.contas_ativas}</a></td>
+			<td class='{$estilo}' align="right"><a href="admin-cadastro.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.soma_upload}</a></td>
+			<td class='{$estilo}' align="right"><a href="admin-cadastro.php?op=relatorios&relatorio=carga&tipo={$tipo}&id={$r.id}">{$r.soma_download}</a></td>
 		</tr>
 		{/foreach}
 		{if count($listaEqpto)}
