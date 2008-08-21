@@ -245,7 +245,16 @@ label {
 		document.getElementById('endereco_redeip').value = r.endereco;
 	}
 
-	function checkFrm(){
+	var enviando = false;
+
+	function checkFrm() {
+
+		if( enviando ) {
+			return( false );
+		}
+
+		var frm = document.frmConta;
+
 		var senha = document.getElementById('senha');
 		var confsenha = document.getElementById('confsenha');
 		var nas = document.getElementById('id_nas');
@@ -335,6 +344,10 @@ label {
 			}
 		}
 {/literal}{/if}{literal}
+
+
+		frm.submit.disabled = true;
+		enviando = true;
 
 		return true;
 	}
@@ -445,11 +458,17 @@ label {
 		<tr>
 			<td align="right" width="110"><label>Status:</label></td>
 			<td colspan='3' align='left'>
+				{if $status == "A" || $status == "B"}
 				<select name="status" id="status" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $formDisabled}disabled='disabled'{/if} >
 					{if $status == 'I' }<option value="I" selected='selected'>Não Ativo</option>{/if}
 					<option value="A" {if $status == 'A'}selected='selected'{/if}>Ativo</option>
 					<option value="B" {if $status == 'B'}selected='selected'{/if}>Bloqueado</option>
 				</select>
+				{else}<strong>
+				{if $status == 'C'}<label style='color:red;'>Cancelado</label>{/if}
+				{if $status == 'S'}<label style='color:orange;'>Suspenso</label>{/if}&nbsp;
+				</strong>
+				{/if}
 			</td>
 		</tr>
 		{/if}
@@ -684,7 +703,7 @@ label {
 	<br />
 	<input type="button" name="Voltar" id="Voltar" value="Voltar" onClick="javascript:voltar();" class="botao">
 	{if !$formDisabled}
-	<input type="submit" name="Submit" id="Submit" value="{if $id_conta}Alterar{else}Cadastrar{/if}" class="botao">
+	<input type="submit" name="submit" id="Submit" value="{if $id_conta}Alterar{else}Cadastrar{/if}" class="botao">
 	{/if}
 </form>
 </div>

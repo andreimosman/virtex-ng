@@ -15,7 +15,7 @@ label {
 {/literal}
 </style>
 <br>
-<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" border='0' >
+<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center" border='0' >
 	{foreach item=r from=$listaContratos}
 	<tr>
 		<th align="right" width="50px"><strong>{$r.id_cliente_produto|string_format:"%05d"}</strong></th>
@@ -54,6 +54,12 @@ label {
 						{if $c.tipo_conta == 'E'}EMAIL{/if}
 						{if $c.tipo_conta == 'H'}HOSPEDAGEM{/if}
 					</a>
+					</td>
+					<td width='80' class='{$estilo}'>
+						{if $c.status == 'A'}Ativo{/if}
+						{if $c.status == 'B'}Bloqueado{/if}
+						{if $c.status == 'C'}Cancelado{/if}
+						{if $c.status == 'S'}Suspenso{/if}
 					</td>
 					<td class='{$estilo}'>
 						{if $c.tipo_conta == 'BL'}

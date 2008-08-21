@@ -222,6 +222,30 @@ function abreEstatisticas(user,id) {
 		<td align="right" width="110"><strong><label>DOWNLOAD:</label></strong></td>
 		<td width="200"><label>{if $download_kbps}{$download_kbps} kbps{else}Ilimitado{/if}</label></td>
 	</tr>
+
+
+
+	<tr>
+		<th colspan="4" align="center">Diagrama da Conexão</th>
+	</tr>
+	<tr>
+		<td colspan=4 align="center"><br>
+			<span style="border: solid 1px #000000;">&nbsp;{$username}&nbsp;</span>
+			<br><img src="view/templates/imagens/icone_setabaixo.gif" style="margin-bottom: 5px"><br>
+			{foreach item=p from=$arvorePop}
+			<span style="border: solid 1px #000000;">&nbsp;{$p.nome}&nbsp;</span>
+			<br><img src="view/templates/imagens/icone_setabaixo.gif" style="margin-bottom: 5px"><br>
+			{/foreach}
+			<span style="border: solid 1px #000000;">&nbsp;NAS:{$nas.nome}&nbsp;</span>
+			<br>&nbsp;<br>
+
+
+
+
+		</td>
+	</tr>
+
+
 {elseif $tipo_conta == "D"}
 	<tr>
 		<td align="right" width="110"><strong><label>Fone:</label></strong></td>

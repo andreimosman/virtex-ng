@@ -1378,7 +1378,20 @@
 					$this->_view->atribui("nas",$nas);
 					$pop = $equipamentos->obtemPOP($info["id_pop"]);
 					$this->_view->atribui("pop",$pop);
+					
+					// echo "POP: $pop<br>\n";
+					
+					
+					$arvorePop = array();
+					if( @$pop["id_pop"] ) {
+						$arvorePop = $equipamentos->obtemArvorePop($pop["id_pop"]);
+					}
 
+					//echo "<pre>"; 
+					//print_r($arvorePop);
+					//echo "</pre>";
+					
+					$this->_view->atribui("arvorePop",$arvorePop);
 
 					$infoConta == array();
 					if( $nas["tipo_nas"] == "I" ) {

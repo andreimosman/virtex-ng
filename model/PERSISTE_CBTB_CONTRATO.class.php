@@ -219,7 +219,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 	}
 
-	public function obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco=2,$id_cliente_produto="",$contasAtivas = true, $inadimplentes = false) {
+	public function obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco=2,$id_cliente_produto="",$contasAtivas = true, $inadimplentes = false,$cnt = false) {
 
 	$sql .= "SELECT  ";
 	$sql .= "	cl.id_cliente, cl.nome_razao, cl.id_cidade, cid.cidade, f.id_cliente_produto, p.nome as produto, count(f.id_cobranca) as faturas,  ";
@@ -275,6 +275,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 	
 	$sql .= "ORDER BY faturas DESC ";
 	
+	
 	// echo "SQL: $sql\n";
 	
 
@@ -313,6 +314,13 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql .= "	, produto.nome ";
 		$sql .= "	, contrato.id_cliente_produto ";*/
 
+
+		if( $cnt ) {
+			$sql = "SELECT count(*) as num_contratos FROM ($sql) xxx";
+			$t = $this->bd->obtemUnicoRegistro($sql);
+			return(@$t["num_contratos"]);
+		}
+
 		return $this->bd->obtemRegistros($sql);
 
 	}
@@ -326,7 +334,7 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		return $this->bd->obtemUnicoRegistro($sql);
 	}
 	
-	public function obtemContratosRenovacao() {
+	public function obtemContratosRenovacao($cnt=false) {
 		
 		$sql  = "SELECT ";
 		$sql .= "   cl.id_cliente, cl.nome_razao, ";
@@ -340,6 +348,12 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 		$sql .= "	ctt.status = 'A' ";
 		$sql .= "	AND ctt.data_renovacao <= now() + interval '30 day' ";
 		$sql .= "ORDER BY ctt.data_renovacao ASC ";
+		
+		if( $cnt ) {
+			$sql = "SELECT count(*) as num_contratos FROM ($sql) xxx";
+			$t = $this->bd->obtemUnicoRegistro($sql);
+			return(@$t["num_contratos"]);
+		}
 		
 				
 		return($this->bd->obtemRegistros($sql));

@@ -41,7 +41,7 @@
 		 
 		// INSERT INTO cbtb_carne_impressao VALUES(nextval('cbsq_id_impressao'),5778,1,now(),'');
 		// 5778 5777 5776
-		public function obtemCarnesSemConfirmacao($id_carne="") {
+		public function obtemCarnesSemConfirmacao($id_carne="",$cnt=false) {
 			$q = "
 SELECT
    c.id_carne, c.data_geracao, c.status, c.id_cliente_produto, c.valor, c.vigencia, c.id_cliente,
@@ -76,6 +76,14 @@ WHERE
 			}
 			
 			$q .= " ORDER BY c.data_geracao ";
+			
+			
+			
+			if( $cnt ) {
+				$q = "SELECT count(*) as num_carnes FROM ($q) xxx";
+				$t = $this->bd->obtemUnicoRegistro($q);
+				return(@$t["num_carnes"]);
+			}
 
 			return($this->bd->obtemRegistros($q));
 			   

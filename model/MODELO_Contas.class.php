@@ -17,6 +17,9 @@
 
 		protected $lgtb_bloqueio_automatizado;
 		protected $lgtb_status_conta;
+		
+		// Registro de Alteração de IP
+		protected $lgtb_alteracao_ip;
 
 		protected $preferencias;
 		protected $equipamentos;
@@ -35,6 +38,8 @@
 
 			$this->lgtb_bloqueio_automatizado 	= VirtexPersiste::factory("lgtb_bloqueio_automatizado");
 			$this->lgtb_status_conta 			= VirtexPersiste::factory("lgtb_status_conta");
+			
+			$this->lgtb_alteracao_ip 			= VirtexPersiste::factory("lgtb_alteracao_ip");
 
 			// Classes de preferencias e equipamentos são acessadas internamente p/ minimizar erros de programação.
 			$this->preferencias 				= VirtexModelo::factory("preferencias");
@@ -498,9 +503,12 @@
 				// Tipo NAS PPPoE (pegar o ipaddr)
 				$dados["ipaddr"] 	= $endereco;
 			}
-
+			
 			// Insere a conta de Banda Larga.
 			$id_conta = $this->cntb_conta_bandalarga->insere($dados);
+
+			$id_conta = $this->registraAlteracaoIP($id_conta, $dados["rede"], $dados["ipaddr"], "C");
+
 
 			// Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool
 			if( $status == "A" && ($nas["tipo_nas"] == "I" || ($nas["tipo_nas"] == "P" && $nas["padrao"] == "O")) ) {
@@ -625,6 +633,14 @@
 			if( $status == "C" ) {
 				// Libera os endereços IP e de Rede p/ uso em outro cliente.
 				$dados = array("rede" => null, "ipaddr" => null, "status" => "C");
+			}
+			
+			
+			if( $dados["rede"] != $infoAtual["rede"] || $dados["ipaddr"] != $infoAtual["ipaddr"] ) {
+				// Registra a alteração de IP.
+				
+				$this->registraAlteracaoIP($id_conta, $dados["rede"], $dados["ipaddr"], "A");
+				
 			}
 
 
@@ -909,6 +925,32 @@
 			$this->cntb_conta->altera($dados,$filtro);
 			
 		
+		}
+		
+		
+		public function registraAlteracaoIP($id_conta,$rede,$ipaddr,$tipo) {
+			// $this->registraAlteracaoIP($id_conta, $dados["rede"], $dados["ipaddr"], "A");
+			
+			$dados = array("datahora" => "=now", "id_conta" => $id_conta, "tipo" => $tipo);
+			
+			if( $rede ) {
+				$dados["rede"] = $rede;
+			}
+			
+			if( $ipaddr ) {
+				$dados["ipaddr"] = $ipaddr;
+			}
+			
+			//echo "<pre>"; 
+			//print_r($dados);
+			//echo "</pre>"; 
+			
+			return($this->lgtb_alteracao_ip->insere($dados));
+		
+		}
+		
+		public function obtemHistoricoAlteracaoIP($id_conta) {
+			return($this->lgtb_alteracao_ip->obtem(array("id_conta" => $id_conta)));
 		}
 
 	}

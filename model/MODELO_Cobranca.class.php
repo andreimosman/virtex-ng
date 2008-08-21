@@ -1360,7 +1360,19 @@
 			}
 			
 			return($this->cbtb_contrato->obtem($filtro));
-		}		
+		}
+		
+		public function countContratosFaturasAtrasadasBloqueios() {
+			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
+			$carencia = $preferenciasCobranca["carencia"];
+			$tempo_banco=2;
+			$id_cliente_produto="";
+			$contasAtivas=true;
+			$inadimplentes=false;
+			
+			return ($this->cbtb_contrato->obtemContratosFaturasAtrasadasBloqueios($carencia,$tempo_banco,$id_cliente_produto,$contasAtivas,$inadimplentes,true));
+			
+		}
 		
 		public function obtemContratosFaturasAtrasadasBloqueios($carencia="",$tempo_banco=2,$id_cliente_produto="",$contasAtivas=true,$inadimplentes=false) {	
 			$preferenciasCobranca = $this->preferencias->obtemPreferenciasCobranca();
@@ -1390,8 +1402,12 @@
 		
 
 		// TODO LIST
-		public function obtemContratosParaRenovacao() {
-			$retorno = $this->cbtb_contrato->obtemContratosRenovacao();
+		public function obtemContratosParaRenovacao($cnt=false) {
+			$retorno = $this->cbtb_contrato->obtemContratosRenovacao($cnt);
+			
+			if( $cnt ) {
+				return($retorno);
+			}
 			
 			
 			// TODO: LISTAR AS FATURAS PENDENTES.
@@ -1575,8 +1591,8 @@
 		}
 
 
-		public function obtemCarnesSemConfirmacao($id_carne="") {
-			return($this->cbtb_carne->obtemCarnesSemConfirmacao($id_carne));
+		public function obtemCarnesSemConfirmacao($id_carne="",$cnt=false) {
+			return($this->cbtb_carne->obtemCarnesSemConfirmacao($id_carne,$cnt));
 		}
 
 		public function confirmaImpressaoCarne($id_carne, $id_admin, $codigo_verificacao ) {

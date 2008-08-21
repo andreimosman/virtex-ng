@@ -1063,6 +1063,14 @@
    </excluido>
   </fields>
   <indexes >
+   <cbix_cliente_produto_id_cliente >
+    <fields >
+     <id_cliente >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_cliente>
+    </fields>
+   </cbix_cliente_produto_id_cliente>
    <cbix_cliente_produto_idcp_idc_idp >
     <fields >
      <id_cliente_produto >
@@ -7277,6 +7285,100 @@
    </lgtb_administradores_id_admin_fkey>
   </constraints>
  </lgtb_administradores>
+ <lgtb_alteracao_ip >
+  <inherits ></inherits>
+  <fields >
+   <id_alteracao_ip >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_alteracao_ip>
+   <datahora >
+    <notnull ></notnull>
+    <nativetype >timestamp</nativetype>
+    <default ></default>
+    <type >timestamp</type>
+    <mdb2type >timestamp</mdb2type>
+   </datahora>
+   <id_conta >
+    <notnull >1</notnull>
+    <nativetype >int4</nativetype>
+    <length >4</length>
+    <unsigned ></unsigned>
+    <default ></default>
+    <type >integer</type>
+    <mdb2type >integer</mdb2type>
+   </id_conta>
+   <rede >
+    <notnull ></notnull>
+    <nativetype >cidr</nativetype>
+    <default ></default>
+    <type >cidr</type>
+    <mdb2type >cidr</mdb2type>
+   </rede>
+   <ipaddr >
+    <notnull ></notnull>
+    <nativetype >inet</nativetype>
+    <default ></default>
+    <type >inet</type>
+    <mdb2type >inet</mdb2type>
+   </ipaddr>
+   <tipo >
+    <notnull ></notnull>
+    <nativetype >bpchar</nativetype>
+    <length >1</length>
+    <fixed >1</fixed>
+    <default ></default>
+    <type >text</type>
+    <mdb2type >text</mdb2type>
+   </tipo>
+  </fields>
+  <indexes >
+   <lgix_alteracao_ip_endereco >
+    <fields >
+     <rede >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </rede>
+     <ipaddr >
+      <position >2</position>
+      <sorting >ascending</sorting>
+     </ipaddr>
+    </fields>
+   </lgix_alteracao_ip_endereco>
+   <lgix_alteracao_ip_id_conta >
+    <fields >
+     <id_conta >
+      <position >1</position>
+      <sorting >ascending</sorting>
+     </id_conta>
+    </fields>
+   </lgix_alteracao_ip_id_conta>
+  </indexes>
+  <constraints >
+   <lgtb_alteracao_ip_pkey >
+    <type >p</type>
+    <table_oid >56675</table_oid>
+    <table >lgtb_alteracao_ip</table>
+    <foreign_oid >0</foreign_oid>
+    <foreign_table ></foreign_table>
+    <conkey >{1}</conkey>
+    <confkey ></confkey>
+    <update_action > </update_action>
+    <delete_action > </delete_action>
+    <match > </match>
+    <fields >
+     <int i="0">id_alteracao_ip</int>
+    </fields>
+    <foreign_fields >
+    </foreign_fields>
+   </lgtb_alteracao_ip_pkey>
+  </constraints>
+ </lgtb_alteracao_ip>
  <lgtb_backup >
   <inherits ></inherits>
   <fields >
@@ -10997,11 +11099,11 @@
   <increment >1</increment>
  </cbsq__d_retorno_erro>
  <cbsq_id_carne >
-  <start >5783</start>
+  <start >5786</start>
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >5555</start>
+  <start >5556</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -11013,7 +11115,7 @@
   <increment >1</increment>
  </cbsq_id_comissao>
  <cbsq_id_endereco_cobranca >
-  <start >8</start>
+  <start >9</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbsq_id_impressao >
@@ -11037,7 +11139,7 @@
   <increment >1</increment>
  </cbsq_id_retorno_erro>
  <cbtb_faturas_id_cobranca_seq >
-  <start >67729</start>
+  <start >67765</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cbtb_lote_cobranca_id_remessa_seq >
@@ -11081,11 +11183,11 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >6082</start>
+  <start >6084</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >12</start>
+  <start >16</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <cxsq_autenticacao >
@@ -11097,7 +11199,7 @@
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >166</start>
+  <start >189</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
@@ -11145,7 +11247,7 @@
   <increment >1</increment>
  </lgtb_reagendamento_id_reagendamento_seq>
  <lgtb_renovacao_id_renovacao_seq >
-  <start >16</start>
+  <start >19</start>
   <increment >1</increment>
  </lgtb_renovacao_id_renovacao_seq>
  <lgtb_restore_id_restore_seq >
@@ -11193,7 +11295,7 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >27</start>
+  <start >57</start>
   <increment >1</increment>
  </spsq_id_spool>
  <sptb_spool_id_spool >
@@ -11204,6 +11306,10 @@
   <start >2</start>
   <increment >1</increment>
  </sptb_spool_id_spool_seq>
+ <lgsq_id_alteracao_ip >
+  <start >16</start>
+  <increment >1</increment>
+ </lgsq_id_alteracao_ip>
 </sequences>
 <languages >
  <int i="0">plpgsql</int>

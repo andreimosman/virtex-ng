@@ -16,9 +16,29 @@
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="cobranca_header.html"}
 
+<script language="JavaScript">
+{literal}
+
+var enviando=false;
+
+function verificaFormRenovacao() {
+	if( enviando ) {
+		return false;
+	}
+
+	var frm = document.frmRenovacao;
+
+	frm.submit.disabled = true;
+
+	return(true);
+}
+
+{/literal}
+
+</script>
 <br />
 
-<form method="post" action="admin-financeiro.php">
+<form method="post" action="admin-financeiro.php" name="frmRenovacao" onSubmit="return verificaFormRenovacao();">
 <input type="hidden" name="op" value="{$op}">
 <input type="hidden" name="tela" value="{$tela}">
 <input type="hidden" name="id_cliente_produto" value="{$id_cliente_produto}">
