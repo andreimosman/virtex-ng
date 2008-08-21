@@ -945,7 +945,11 @@
 			//print_r($dados);
 			//echo "</pre>"; 
 			
-			return($this->lgtb_alteracao_ip->insere($dados));
+			if( $rede || $ipaddr ) {
+				return($this->lgtb_alteracao_ip->insere($dados));
+			}
+			
+			return 0;
 		
 		}
 		
