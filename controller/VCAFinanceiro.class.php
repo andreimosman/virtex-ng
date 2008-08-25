@@ -752,15 +752,21 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		for($i=count($retornos)-1;$i>=0;--$i) {
 			
 			$id_retorno = $retornos[$i]["id_retorno"];
+			$this->cobranca->estornaErrosRetorno($id_retorno);
 			
 			$faturas = $this->cobranca->obtemFaturasPorRetorno($id_retorno);
 			
 			$admin = $adm->obtemAdminPeloId($retornos[$i]["id_admin"]);
 
 			// Se não tiver o que fazer libera o registro.			
-			if( !count($faturas) || $retornos[$i]["formato"] != 'PAGCONTAS' || !file_exists($retornos[$i]["arquivo"])  ){ 
+			if(  $retornos[$i]["formato"] != 'PAGCONTAS' || !file_exists($retornos[$i]["arquivo"])  ){ 
+				echo "CONTINUE: <br>";
+				echo "FMT: " . $retornos[$i]["formato"] . "<br>\n";
+				echo "FE: " . file_exists($retornos[$i]["arquivo"]) . "<br>\n";
+				echo "<hr>"; 
 				continue;
 			}
+			// !count($faturas)
 			
 			
 			// Estorna as faturas (incluindo acrescimo);
@@ -775,6 +781,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 			// print_r($registros);
 			
+			$numeroTotalRegistros = count($registros);
+			$numeroRegistrosSemCorrespondencia = 0;
+			$numeroRegistrosComErro = 0;
+			$numeroRegistrosProcessados =  0;
+			
+			
+			
 			for($x=0;$x<count($registros);$x++) {
 				$reg = $registros[$x];
 				$codigo_barras = $reg['codigo_barras'];
@@ -782,8 +795,18 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);	
 
 				if (empty($fatura)) {
+					echo "SEM CORRESPONDENCIA!!!!<BR>\n";
+					$numeroRegistrosSemCorrespondencia++;
+					$this->cobranca->registraErroRetorno($id_retorno,0,$codigo_barras,"Registro sem correspondencia.",$reg["data_pagamento"],$reg["valor_recebido"],$reg["data_credito"]);
 					continue;
 				}
+				
+				//if( $fatura["status"] == PERSISTE_CBTB_FATURAS::$pago ) {
+				//	// Estorna:
+				//	
+				//	
+				//}
+				
 				
 				$fatura['valor_pago'] = 0;
 				$fatura['acrescimo'] = 0;
@@ -828,18 +851,14 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 					$numeroRegistrosProcessados++;
 				} catch(Exception $e) {
 					$numeroRegistrosComErro++;
-					$this->cobranca->registraErroRetorno($id_retorno,$id_cobranca,$codigo_barras,$e->getMessage());
+					$this->cobranca->registraErroRetorno($id_retorno,$id_cobranca,$codigo_barras,$e->getMessage(),$reg["data_pagamento"],$reg["valor_recebido"],$reg["data_credito"]);
 				}
 
 
-
-
-
-
-
-
-
 			}
+			
+			// Atualizar as infomações do retorno.			
+			$this->cobranca->atualizaLogRetorno($id_retorno, $numeroTotalRegistros, $numeroRegistrosProcessados, $numeroRegistrosComErro, $numeroRegistrosSemCorrespondencia, $retornos[$i]["data_geracao"]);
 			
 
 			
@@ -868,20 +887,33 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 			$retorno = $this->cobranca->obtemRetornoPeloId($id_retorno);
 			$faturas = $this->cobranca->obtemFaturasPorRetorno($id_retorno);
+			$erros   = $this->cobranca->obtemErrosRetorno($id_retorno);
+			
+			//echo "<pre>";
+			//print_r($erros);
+			//echo "</pre>"; 
 			
 			$totais = array("valor"=>0,"valor_pago"=> 0);
 			
 			for($i=0;$i<count($faturas);$i++) {
 				$totais["valor"] += $faturas[$i]["valor"];
-				$totais["valor_pago"] += $faturas[$i]["valor_pago"];
-				
+				$totais["valor_pago"] += $faturas[$i]["valor_pago"];				
 			}
+			
+			$totalErros = 0;
+			
+			for($i=0;$i<count($erros);$i++ ) {
+				$totalErros += $erros[$i]["valor_recebido"];
+			}
+
 			
 			$this->_view->atribui("id_retorno",$id_retorno);
 			$this->_view->atribui("retorno",$retorno);
 			$this->_view->atribui("faturas",$faturas);
 			$this->_view->atribui("totais",$totais);
-			
+
+			$this->_view->atribui("erros",$erros);
+			$this->_view->atribui("totalErros", $totalErros);
 		
 			return;
 		
@@ -996,7 +1028,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							$fatura = $this->cobranca->obtemFaturaPeloCodigoBarras($codigo_barras);	
 							
 							if (empty($fatura)) {
-								$this->cobranca->registraErroRetorno($id_retorno,0,$codigo_barras,"Registro sem correspondência.");
+								$this->cobranca->registraErroRetorno($id_retorno,0,$codigo_barras,"Registro sem correspondencia.");
 								continue;								
 							}
 														

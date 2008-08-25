@@ -796,6 +796,10 @@
 			
 			$fluxo->estornaPagamentoFatura($id_cobranca);
 			
+			// echo "<pre>"; 
+			// print_r(dados);
+			// echo "</pre>";
+			
 			
 			return($this->cbtb_fatura->altera($dados,$filtro));
 		}
@@ -1081,8 +1085,14 @@
 			$data['numero_registros_sem_correspondencia'] = $numero_registros_sem_correspondencia;
 			
 			$data['data_geracao'] = $data_geracao ? $data_geracao : '=now';
+			
+			//echo "<pre>ATLR: \n"; 
+			//print_r($data);
+			//echo "</pre>"; 
 		    return($this->cbtb_retorno->altera($data,array("id_retorno" => $id_retorno)));
 		}
+		
+		
 		
 		
 		
@@ -1102,12 +1112,23 @@
 			$data = array();
 
 			if(	$fatura["status"] == PERSISTE_CBTB_FATURAS::$CANCELADA or
-				$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA or
-				$fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {
-				
-				throw new ExcecaoModeloValidacao (1, "Fatura já foi paga/processada.");
-				
-				// return false;
+				$fatura["status"] == PERSISTE_CBTB_FATURAS::$ESTORNADA ) {
+				if( $id_retorno > 0 ) {
+					// Coloca o status como pendente
+					//$data["status"] = PERSISTE_CBTB_FATURAS::$ABERTA;
+				} else {
+					throw new ExcecaoModeloValidacao(ExcecaoModeloValidacao::$EXC_FAT_CANCELADA,"Fatura cancelada/estornada");
+				}
+			} elseif( $fatura["status"] == PERSISTE_CBTB_FATURAS::$PAGA ) {				
+			
+				// echo "FATURA PAGA: $id_cobranca / $id_retorno <br>\n";
+			
+				//if( $id_retorno > 0 ) {
+				//	// Estorna a fatura (e o fluxo).
+				//	$this->estornaPagamentoFatura($id_cobranca,true);
+				//} else {
+					throw new ExcecaoModeloValidacao (ExcecaoModeloValidacao::$EXC_FAT_JA_PAGA, "Fatura ja foi paga.");
+				//}
 			}
 
 			$totalDevido = $fatura["valor"] - $desconto + $acrescimo;
@@ -1132,7 +1153,7 @@
 					 	$acrescimo += $amortizar - $totalDevido;
 					 	$data["status"] = PERSISTE_CBTB_FATURAS::$PAGA;
 					 } else {
-					 	throw new ExcecaoModeloValidacao (1,"Valor a receber excede o valor pendente!");
+					 	throw new ExcecaoModeloValidacao (ExcecaoModeloValidacao::$EXC_FAT_VALOR_EXCEDE_PENDENTE,"Valor a receber excede o valor pendente!");
 					 }	 
 				}
 
@@ -1143,7 +1164,7 @@
 					$data["status"] = $fatura["status"];
 				}
 			} else {
-				throw new ExcecaoModeloValidacao (2,"Valor a receber não pode ser negativo!");
+				throw new ExcecaoModeloValidacao (ExcecaoModeloValidacao::$EXC_FAT_VALOR_NEGATIVO,"Valor a receber nao pode ser negativo!");
 			}
 
 			$data["desconto"] = $desconto;
@@ -1524,14 +1545,34 @@
 			
 		}
 		
-		public function registraErroRetorno($id_retorno,$id_cobranca,$codigo_barra,$mensagem) {
+		public function registraErroRetorno($id_retorno,$id_cobranca,$codigo_barra,$mensagem,$data_pagamento=null,$valor_recebido=null,$data_credito=null) {
 			$dados = array("id_retorno" => $id_retorno, "codigo_barra" => $codigo_barra, "mensagem" => $mensagem);
 			
 			if( $id_cobranca ) {
 				$dados["id_cobranca"] = $id_cobranca;
 			}
 			
+			if( $data_pagamento ) {
+				$dados["data_pagamento"] = $data_pagamento;
+			}
+			
+			if( $valor_recebido ) {
+				$dados["valor_recebido"] = $valor_recebido;
+			}
+			
+			if( $data_credito ) {
+				$dados["data_credito"] = $data_credito;
+			}
+			
 			return($this->cbtb_retorno_erro->insere($dados));
+		}
+		
+		public function estornaErrosRetorno($id_retorno) {
+			return($this->cbtb_retorno_erro->exclui(array("id_retorno" => $id_retorno)));
+		}
+
+		public function obtemErrosRetorno($id_retorno) {
+			return($this->cbtb_retorno_erro->obtem(array("id_retorno" => $id_retorno)));
 		}
 		
 		public function obtemCarnePeloId($id_carne) {
@@ -1608,6 +1649,8 @@
 		public function obtemNumeroContratosAtivosPorTipo($id_cliente) {
 			return($this->cbtb_contrato->obtemNumeroContratosAtivosPorTipo($id_cliente));
 		}
+		
+		
 
 
 

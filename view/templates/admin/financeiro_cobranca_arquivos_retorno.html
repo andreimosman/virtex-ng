@@ -69,7 +69,7 @@
 	</tr>
 	<tr>
 		<td width='220' align='right'><strong>Registros Sem Correspondência: </strong></td>
-		<td>{$retorno.numero_registros_processados|string_format:"%03d"}</td>
+		<td>{$retorno.numero_registros_sem_correspondencia|string_format:"%03d"}</td>
 	</tr>
 	<tr>
 		<td width='220' align='right'><strong>Total de Registros: </strong></td>
@@ -128,6 +128,35 @@
 </table>
 <br>
 
+{if $totalErros}
+<table class='lista' width='840' cellspacing=0 cellpadding=0 align=center>
+	<tr>
+		<th colspan=7>REGISTROS NÃO PROCESSADOS (ERROS)</th>
+	</tr>
+	<tr>
+		<th width='300'>Codigo Barras</th>
+		<th width='200'>Erro</th>
+		<th width='100'>Pagamento</th>
+		<th width='100'>Dt. Crédito</th>
+		<th _width='100'>Valor</th>
+	</tr>
+
+	{foreach item=e from=$erros}
+	<tr class='{cycle values="impar,par"}'>
+		<td width='300'>{$e.codigo_barra}</td>
+		<td width='200'>{$e.mensagem}</td>
+		<td width='100' align="center">{$e.data_pagamento|date_format:"%d/%m/%Y"}</td>
+		<td width='100'>{$e.data_credito|date_format:"%d/%m/%Y"}</td>
+		<td _width='100' align="right">{$e.valor_recebido|string_format:"%.2f"}</td>
+	</tr>
+	{/foreach}
+	<tr>
+		<td colspan=4><strong>TOTAL</td>
+		<td align='right'><strong>{$totalErros|string_format:"%.2f"}</strong></td>
+	</tr>
+
+</table>
+{/if}
 
 </body>
 </html>
