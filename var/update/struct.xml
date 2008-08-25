@@ -3044,6 +3044,28 @@
     <type >text</type>
     <mdb2type >text</mdb2type>
    </mensagem>
+   <data_pagamento >
+    <notnull ></notnull>
+    <nativetype >date</nativetype>
+    <default ></default>
+    <type >date</type>
+    <mdb2type >date</mdb2type>
+   </data_pagamento>
+   <valor_recebido >
+    <notnull ></notnull>
+    <nativetype >numeric</nativetype>
+    <length >11,2</length>
+    <default ></default>
+    <type >decimal</type>
+    <mdb2type >decimal</mdb2type>
+   </valor_recebido>
+   <data_credito >
+    <notnull ></notnull>
+    <nativetype >date</nativetype>
+    <default ></default>
+    <type >date</type>
+    <mdb2type >date</mdb2type>
+   </data_credito>
   </fields>
   <indexes >
   </indexes>
@@ -11095,7 +11117,7 @@
   <increment >1</increment>
  </cbsq__d_retorno>
  <cbsq__d_retorno_erro >
-  <start >327</start>
+  <start >3350</start>
   <increment >1</increment>
  </cbsq__d_retorno_erro>
  <cbsq_id_carne >
@@ -11191,15 +11213,15 @@
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <cxsq_autenticacao >
-  <start >335</start>
+  <start >3255</start>
   <increment >1</increment>
  </cxsq_autenticacao>
  <cxsq_id_fluxo >
-  <start >335</start>
+  <start >3255</start>
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >189</start>
+  <start >191</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
@@ -11223,7 +11245,7 @@
   <increment >1</increment>
  </lgsq_id_exclusao>
  <lgsq_id_processo >
-  <start >270</start>
+  <start >1794</start>
   <increment >1</increment>
  </lgsq_id_processo>
  <lgsq_id_recuperacao_email >
