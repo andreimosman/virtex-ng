@@ -49,7 +49,7 @@
 			fputs($fd,"####################################\n\n");
 			fputs($fd,"default-lease-time 600;\n");
 			fputs($fd,"max-lease-time 7200;\n");
-			//fputs($fd,"ddns-update-style ad-hoc;\n");
+			fputs($fd,"ddns-update-style ad-hoc;\n");
 			//fputs($fd,"ddns-updates on;\n");
 			fputs($fd,'option domain-name "' . $dominioPadrao . '"' . ";\n");
 			
