@@ -95,14 +95,11 @@
 			}
 			
 			$ip = $addr->obtemUltimoIP();
-
-			
-			
-			
-			// $mac = 
 			
 			if( $op == MODELO_Spool::$ADICIONAR ) {
 
+				$this->SO->removeARP($ip);
+				
 				if( $this->infoNAS[$id_nas]["tipo_nas"] == "I" ) {
 					$conta = $this->contas->obtemContaPeloId($id);
 					if( @$conta["id_pop"] ) {
@@ -119,6 +116,7 @@
 				$this->SO->adicionaRegraBW($id,$baserule,$basepipe_in,$basepipe_out,$interface,$this->ext_iface,$ip,$mac,$upload*$fator,$download*$fator,$username);
 				
 			} else {
+				$this->SO->removeARP($ip);
 				$this->SO->ifUnConfig($interface,$addr->obtemPrimeiroIP());
 				$this->SO->deletaRegraBW($id,$baserule,$basepipe_in,$basepipe_out);
 			}

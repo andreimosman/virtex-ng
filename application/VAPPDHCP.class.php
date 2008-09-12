@@ -4,7 +4,7 @@
 	/**
 	 * Classe para gerenciar configurações DHCP.
 	 */
-	class VAPPDHCP extends VirtexApplication {
+	class VAPPdhcp extends VirtexApplication {
 		
 		protected static $_DHCP_SERVICE = "/usr/local/etc/rc.d/isc-dhcpd";
 		
@@ -126,9 +126,11 @@
 					
 					$interface = $this->tcpip[$id_nas];
 					
-					$listaContas = $contas->obtemContasBandaLarga($id_nas,"A");	
+					$listaContas = $contas->obtemContasBandaLarga($id_nas,"A",false);	
 					
-					// print_r($listaContas);
+					//echo "<pre>"; 
+					//print_r($listaContas);
+					//echo "</pre>"; 
 					
 					
 					
@@ -144,8 +146,6 @@
 							if( !isset($dhcpTemp[$interface]) ) {
 								$dhcpTemp[$interface] = array();
 							}
-							
-							
 
 							$dhcpTemp[$interface][] = array("rede" => $listaContas[$i]["rede"], "mac" => $listaContas[$i]["mac"], "username" => $listaContas[$i]["username"]);
 						}
@@ -154,7 +154,7 @@
 					}
 					
 					unset($listaContas);
-					// print_r($macs);
+					//print_r($macs);
 					
 				}
 				

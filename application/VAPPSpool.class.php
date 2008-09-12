@@ -99,7 +99,7 @@
 			
 				if( $dados_nas["tipo_nas"] == "I" || (($dados_nas["tipo_nas"] == "P" || $dados_nas["tipo_nas"] == "T" ) && $dados_nas["padrao"] == "O") ) {
 				
-					$listaContas = $contas->obtemContasBandaLarga($id_nas,"A");	
+					$listaContas = $contas->obtemContasBandaLarga($id_nas,"A",false);	
 					// $interface = $dados_nas["tipo_nas"] == "I" ?
 					
 					if( $dados_nas["tipo_nas"] == "I" ) $interface = $this->tcpip[$id_nas];

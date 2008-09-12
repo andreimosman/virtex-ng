@@ -150,7 +150,7 @@
 		}
 		
 
-		public function obtemContasBandaLarga($id_nas,$status="") {
+		public function obtemContasBandaLarga($id_nas,$status="",$queryContrato=true) {
 			$filtro = array("id_nas" => $id_nas);
 			if( $status ) {
 				$filtro["status"] = $status;
@@ -160,8 +160,11 @@
 			
 			$contas = $this->cntb_conta_bandalarga->obtem($filtro);
 			
-			for($i=0;$i<count($contas);$i++) {
-				$contas[$i]["contrato"] = $cobranca->obtemContratoPeloId($contas[$i]["id_cliente_produto"]);
+			
+			if( $queryContrato ) {
+				for($i=0;$i<count($contas);$i++) {
+					$contas[$i]["contrato"] = $cobranca->obtemContratoPeloId($contas[$i]["id_cliente_produto"]);
+				}
 			}
 
 			return($contas);
