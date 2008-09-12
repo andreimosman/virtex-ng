@@ -103,13 +103,14 @@
 				if( $this->infoNAS[$id_nas]["tipo_nas"] == "I" ) {
 					$conta = $this->contas->obtemContaPeloId($id);
 					if( @$conta["id_pop"] ) {
-						$macPOP = $this->equipamentos->macPOP($id_pop);
-
+						$macPOP = $this->equipamentos->macPOP($conta["id_pop"]);
 						if( $macPOP ) {
 							$mac = $macPOP;
 						}
 					}
 				}
+				
+				
 
 
 				$this->SO->ifConfig($interface,$addr->obtemPrimeiroIP(),$addr->obtemMascara());
