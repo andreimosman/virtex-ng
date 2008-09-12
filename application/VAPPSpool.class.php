@@ -94,6 +94,7 @@
 			echo "Configurando acesso dos clientes... ";
 
 			$contas = VirtexModelo::factory('contas');
+			$equipamentos = VirtexModelo::factory('equipamentos');
 			
 			foreach($this->infoNAS as $id_nas => $dados_nas) {
 			
@@ -107,8 +108,16 @@
 					if( $dados_nas["tipo_nas"] == "T" ) $interface = $this->pptp[$id_nas];
 					
 					for($i=0;$i<count($listaContas);$i++) {
+						$mac = @$listaContas[$i]["mac"];
+						$id_pop = @$listaContas[$i]["id_pop"];
+						$macPOP = $equipamentos->macPOP($listaContas[$i]["id_pop"]);
+						
+						if( $macPOP ) {
+							$mac = $macPOP;
+						}
+					
 						$endereco = ($listaContas[$i]["tipo_bandalarga"] == "I" ? @$listaContas[$i]["rede"] : @$listaContas[$i]["ipaddr"]);
-						$this->atuador->processaInstrucaoBandaLarga($id_nas,$interface,@$listaContas[$i]["id_conta"],MODELO_Spool::$ADICIONAR,@$listaContas[$i]["username"],$endereco,@$listaContas[$i]["mac"],@$dados_nas["padrao"],@$listaContas[$i]["upload_kbps"],@$listaContas[$i]["download_kbps"],$this->fator[$id_nas]);
+						$this->atuador->processaInstrucaoBandaLarga($id_nas,$interface,@$listaContas[$i]["id_conta"],MODELO_Spool::$ADICIONAR,@$listaContas[$i]["username"],$endereco,$mac,@$dados_nas["padrao"],@$listaContas[$i]["upload_kbps"],@$listaContas[$i]["download_kbps"],$this->fator[$id_nas]);
 					}
 				
 				}
