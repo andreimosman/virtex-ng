@@ -1,24 +1,15 @@
-<!-- CLIENTES_CADASTRO.HTML -->
 <html>
 <head>
-<title>::.. Virtex Admin - Área de Gerenciamento ..::</title>
-{*
-<script type="text/javascript" src="view/templates/jslib/form/cpf_cnpj.js"></script>
-<script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
-<script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
-*}
-
-<script type="text/javascript" src="admin-js.php?tp=form&js=validacao.js"></script>
-<script type="text/javascript" src="admin-js.php?tp=form&js=condominio"></script>
-<script type="text/javascript" src="admin-js.php?tp=form&js=ajax"></script>
-
+	<title></title>
 </head>
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="clientes_header.html"}
-
+<script type="text/javascript" src="admin-js.php?tp=form&js=cpf_cnpj"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=validacao"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=condominio"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=ajax"></script>
 <style>
 {literal}
-
 table.mensagemErro {
 	border: dotted 1px #FF0000;
 	margin-bottom: 5px;
@@ -92,7 +83,7 @@ function cadastroVoltar() {
 
 function checkForm() {
 	frm = document.cadastro;
-	nascimento = document.getElementById('nascimento');
+	// nascimento = document.getElementById('nascimento');
 
 	if( frm.nome_razao.value.length == 0 ) {
 		window.alert("O campo 'nome/razão social' não pode ser deixado em branco.");
@@ -110,14 +101,15 @@ function checkForm() {
 		 * Validação de Pessoa Jurídica
 		 */
 		 validacaoDoctos = isCnpj(frm.cpf_cnpj.value);
+		 window.alert("C");
 		 msgErro = "CNPJ Inválido";
 	}
 
-	if( nascimento.value ) {
-		if(!validaData( nascimento.value) ) {
+	if( frm.nascimento.value.length > 0 ) {
+		if(!validaData( frm.nascimento.value) ) {
 			alert("Data de nascimento inválida");
-			nascimento.value="";
-			nascimento.focus();
+			frm.nascimento.value="";
+			frm.nascimento.focus();
 			return false;
 		}
 	}

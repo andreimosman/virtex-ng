@@ -157,7 +157,12 @@
 			switch($this->obtem("relatorio")) {
 				case 'eventos':
 					$this->atribui("titulo","Log de Eventos do Sistema");
-					$this->_file = "administracao_relatorios_eventos.html";
+					
+					if( $this->obtem("tela") == "detalhes" ) {
+						$this->_file = "administracao_relatorios_eventos_detalhes.html";
+					} else {
+						$this->_file = "administracao_relatorios_eventos.html";
+					}
 					break;
 
 				default:
@@ -276,6 +281,26 @@
 							
 							$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela")), false, true);
 							break;
+							
+						case "cadastro_classe":
+							$this->_file = "administracao_preferencias_helpdesk_cadastro_classe.html";
+							
+							if($this->obtem("id_grupo")) {
+							
+								if($this->obtem("modo_visualizacao")) {
+									$titulo .= " :: Helpdesk :: Visualizar classe \"" . $this->obtem("nome") . "\"";
+								} else {
+									$titulo .= " :: Helpdesk :: Alterar classe " . $this->obtem("nome");
+								}
+								
+							} else {
+							
+								$titulo .= " :: Helpdesk :: Cadastrar classe";
+								
+							}
+							
+							$this->configureMenu($this->obtemItensMenuPreferencias($this->obtem("tela")), false, true);
+							break;
 
 						case "altera_usuario":
 						case "cadastro_usuarios":
@@ -320,6 +345,7 @@
 					$itensMenu[] = array("texto" => "Novo Modelo", "url" => "admin-administracao.php?op=preferencias&tela=modelos&subtela=cadastro");
 					break;
 				case 'helpdesk':
+					$itensMenu[] = array("texto" => "Novo: Classe", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_classe");
 					$itensMenu[] = array("texto" => "Novo: Grupo", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_grupo");
 					$itensMenu[] = array("texto" => "Configurações", "url" => "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=config");
 					break;

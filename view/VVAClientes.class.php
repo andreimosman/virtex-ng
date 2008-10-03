@@ -317,7 +317,11 @@
 					$titulo .= " ::  Clientes por Cidade";
 					if( $this->obtem("id_cidade") && $this->obtem("cidade") && $this->obtem("uf")) {
 						$titulo .= " :: " . $this->obtem("cidade") . "-" . $this->obtem("uf");
+					} else if( $this->obtem("id_cidade") == ':NULL:' ) {
+						$titulo .= " :: Sem Cidade Definida";
 					}
+					
+					
 					$this->_file = "clientes_relatorios_cidade.html";
 					
 					break;

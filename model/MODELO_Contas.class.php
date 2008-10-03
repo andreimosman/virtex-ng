@@ -806,10 +806,9 @@
 
 		}
 
-		public function alteraHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre) {
+		public function alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre) {
 			// Altera os dados comuns a todas as contas.
-			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
-
+			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);			
 			// Não se altera nada além dos dados comuns na hospedagem.
 		}
 

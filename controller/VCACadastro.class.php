@@ -1220,6 +1220,8 @@
 			$this->_view->atribui("subtela", $subtela);
 			$this->_view->atribui("dadosLogin", $dadosLogin);
 			
+			$classes = $this->helpdesk->obtemListaClasses();
+			$this->_view->atribui("classes",$classes);
 			
 			switch($tela) {
 				case 'cadastro':
@@ -1267,7 +1269,9 @@
 						$id_condominio = $id_condominio ? $id_condominio: 0;
 						$id_bloco = $id_bloco ? $id_bloco : 0;
 
-						$responsavel = $responsavel ? $responsavel : null;					
+						$responsavel = $responsavel ? $responsavel : null;
+						
+						$id_classe = @$_REQUEST["id_classe"];
 						
 						//if($id_conta) {
 						//	$contas = VirtexModelo::factory("contas");
@@ -1275,7 +1279,7 @@
 						//	$id_cliente_produto = $conta["id_cliente_produto"];
 						//}
 
-						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,0,0,0,0,0,0,0,$id_condominio,$id_bloco);						
+						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_classe,0,0,0,0,0,0,0,$id_condominio,$id_bloco);						
 						$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 						
 						$mensagem = "";
@@ -1509,10 +1513,12 @@
 							$id_bloco_os = @$_REQUEST["id_bloco"];
 							$apto = @$_REQUEST["apto"];
 							
+							$id_classe = @$_REQUEST["id_classe"];
+							
 							
 							//Entra procedimento aqui para adquirir o nome do condominio e as informações necessárias para o seu funcionamento;
 							
-							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,0,0,0,0,0,0,0,$id_condominio,$id_bloco, $id_chamado_pai);						
+							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_classe,0,0,0,0,0,0,0,$id_condominio,$id_bloco, $id_chamado_pai);
 							$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 							
 							
@@ -1523,7 +1529,7 @@
 									$data_agendamento = $data_tmp[2] . "-" . $data_tmp[1] . "-" . $data_tmp[0];
 								}
 								
-								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo);							
+								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo, $id_classe);
 							
 								$url_redir = "admin-cadastro.php?op=helpdesk&tela=alteracao&id_condominio=$id_condominio&id_chamado=$id_chamado_pai";
 								$mensagem = "Ordem de serviço criada com sucesso";

@@ -16,6 +16,12 @@
 		public static $FW_PPPoE_BASERULE		= 34000;
 		public static $FW_PPPoE_BASEPIPE_IN		= 42000;
 		public static $FW_PPPoE_BASEPIPE_OUT	= 50000;
+		
+		
+		public static $FW_TAB_DESCONHECIDOS		= "desconhecidos";
+		public static $FW_TAB_BLOQUEADOS		= "bloqueados";
+		public static $FW_TAB_SUSPENSOS			= "suspensos";
+		
 
 		
 		protected $SO;
@@ -170,11 +176,7 @@
 		}
 		
 		public function processaInstrucaoBandaLarga($id_nas,$interface,$id,$op,$username,$endereco,$mac,$padrao,$upload,$download,$fator=1) {
-		
-			//echo "ID NAS: $id_nas\n";
-			//echo "IFACE: $interface\n";
-			//echo "OP: $op\n";
-		
+
 			$addr = new MInet($endereco);
 			
 			if( !$fator ) $fator = 1;
@@ -202,15 +204,10 @@
 			
 			$ip = $addr->obtemUltimoIP();
 			
-			//echo "PA\n";
-			
 			if( $op == MODELO_Spool::$ADICIONAR ) {
-				//echo "PB\n"; 
 
 				$this->SO->removeARP($ip);
-				
-				//print_r($this->infoNAS);
-				
+
 				if( $this->infoNAS[$id_nas]["tipo_nas"] == "I" ) {
 					$conta = $this->contas->obtemContaPeloId($id);
 					$id_pop = trim(@$conta["id_pop"]);
@@ -221,14 +218,8 @@
 						}
 					}
 					
-					//print_r($conta);
-					//echo "MACPOP: $macPOP\n";
-					//echo "------------------\n";
 				}
 				
-				
-
-
 				$this->SO->ifConfig($interface,$addr->obtemPrimeiroIP(),$addr->obtemMascara());
 				$this->SO->adicionaRegraBW($id,$baserule,$basepipe_in,$basepipe_out,$interface,$this->ext_iface,$ip,$mac,$upload*$fator,$download*$fator,$username);
 				
@@ -236,6 +227,17 @@
 				$this->SO->removeARP($ip);
 				$this->SO->ifUnConfig($interface,$addr->obtemPrimeiroIP());
 				$this->SO->deletaRegraBW($id,$baserule,$basepipe_in,$basepipe_out);
+			}
+		}
+		
+		/**
+		 * Processa Instrução de Tabela.
+		 */
+		public function processaInstrucaoTabela($op,$tabela,$ip) {
+			if( $op == "a" ) {
+				$this->SO->adicionaEnderecoTabela($tabela,ip);
+			} else {
+				$this->SO->removeEnderecoTabela($tabela,$ip);
 			}
 		}
 	

@@ -10,7 +10,7 @@
 		public function __construct($bd=null) {
 			parent::__construct($bd);
 			$this->_campos	 	= array( "id_chamado", "datainicio", "datafim", "endereco_os", "complemento_os", 
-										 "bairro_os", "cidade_os", "agendamento", "periodo"
+										 "bairro_os", "cidade_os", "agendamento", "periodo", "id_classe"
 										);
 										
 			$this->_chave 		= "id_chamado";

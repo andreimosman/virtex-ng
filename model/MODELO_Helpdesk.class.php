@@ -17,6 +17,8 @@
 		
 		protected $hdtb_os;
 		
+		protected $hdtb_classe;
+		
 		public function __construct() {
 			parent::__construct();
 			$this->hdtb_grupo 						= VirtexPersiste::factory("hdtb_grupo");
@@ -27,7 +29,91 @@
 			
 			$this->hdtb_os 							= VirtexPersiste::factory("hdtb_os");
 			
+			$this->hdtb_classe						= VirtexPersiste::factory("hdtb_classe");
+			
 		}
+		
+		/****************
+		 ****	CLASSES
+		 *******************************************/
+		
+		public function cadastraClasse($nome,$descricao,$usar_em_chamado='t',$usar_em_os='t',$id_classe_pai=null) {
+			$dados = array("nome" => $nome, "descricao" => $descricao,"usar_em_chamado" => $usar_em_chamado, "usar_em_os" => $usar_em_os);
+			$dados["id_classe_pai"] = ($id_classe_pai)?$id_classe_pai:NULL;
+			return($this->hdtb_classe->insere($dados));
+		}
+		
+		public function alteraClasse($nome,$descricao,$usar_em_chamado,$usar_em_os,$id_classe_pai,$id_classe) {
+			$dados = array("nome" => $nome, "descricao" => $descricao,"usar_em_chamado" => $usar_em_chamado, "usar_em_os" => $usar_em_os);
+			$dados["id_classe_pai"] = ($id_classe_pai)?$id_classe_pai:NULL;
+			$filtro = array("id_classe" => $id_classe);
+			return($this->hdtb_classe->altera($dados,$filtro));
+		}
+		
+		public function _obtemClasses($parentId="",$nivel=0,$filtro=array()) {
+			$filtro["id_classe_pai"] = ($parentId?$parentId:"null:");			
+			$retorno = array();
+			
+			print_r($hdtb_classe);
+			
+			$registros = $this->hdtb_classe->obtem($filtro);
+			
+			for($i=0;$i<count($registros);$i++) {
+				$registros[$i]["nivel"] = $nivel;
+				$retorno[] = $registros[$i];
+				$child = $this->_obtemClasses($registros[$i]["id_classe"],$nivel+1,$filtro);
+				for($x=0;$x<count($child);$x++) {
+					$retorno[] = $child[$x];
+				}			
+			}
+			return($retorno);
+		}
+
+		public function obtemListaClasses($usar_em_chamado=true,$usar_em_os=true,$parentId="",$idExcluido="") {
+			$filtro = array();
+			
+			//$filtro["usar_em_os"] = ($usar_em_os ? 't' : 'f');
+			//$filtro["usar_em_chamado"] = ($usar_em_chamado ? 't' : 'f');
+			
+			if( $idExcluido ) {
+				//$filtro["id_classe_pai"] = "!=:$idExcluido";
+				$filtro["id_classe"] = "!=:$idExcluido";
+			}
+			
+			$classes = $this->_obtemClasses($parentId,0,$filtro);
+			
+			$lastNivel = 0;
+			$arvore = array();
+			
+			for($i=0;$i<count($classes);$i++) {
+				if( $classes[$i]["nivel"] <= $lastNivel ) {
+				
+					$retirar = $lastNivel - $classes[$i]["nivel"] + 1;
+				
+					for($x=0;$x<$retirar;$x++) {
+						array_pop($arvore);
+					}
+					
+					
+				} 
+
+				$arvore[] = $classes[$i]["nome"];
+				$lastNivel = $classes[$i]["nivel"];
+				$classes[$i]["str_arvore"] = @implode("::",$arvore);
+				
+
+			}
+			
+			return($classes);
+			
+			
+		}
+		
+		//Faz a pesquisa de uma determinadoa classe pelo ID
+		public function obtemClassePeloId($id_classe) {
+			$filtro = array("id_classe" => $id_classe);
+			return $this->hdtb_classe->obtemUnico($filtro);
+		}		
 
 		/****************
 		 ****	GRUPOS
@@ -37,7 +123,7 @@
 		public function cadastraGrupo($nome, $descricao, $ativo='t', $id_grupo_pai="") {
 			$dados = array("nome" => $nome, "descricao" => $descricao, "ativo" =>$ativo);
 			$dados["id_grupo_pai"] = ($id_grupo_pai)?$id_grupo_pai:NULL;
-			$this->hdtb_grupo->insere($dados);
+			return($this->hdtb_grupo->insere($dados));
 		}
 		
 		
@@ -46,7 +132,7 @@
 			$dados = array("nome" => $nome, "descricao" => $descricao, "ativo" =>$ativo, "id_grupo_pai" =>$id_grupo_pai);
 			$dados["id_grupo_pai"] = ($id_grupo_pai)?$id_grupo_pai:NULL;
 			$filtro = array("id_grupo" => $id_grupo);
-			$this->hdtb_grupo->altera($dados, $filtro);
+			return($this->hdtb_grupo->altera($dados, $filtro));
 		}
 		
 		
@@ -131,7 +217,7 @@
 		/**
 		 * Abertura de chamado ou ocorrência.
 		 */
-		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_servidor=0,$id_nas=0,$id_pop=0,$id_condominio=0,$id_bloco=0,$id_chamado_pai=null) {
+		public function abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao, $prioridade, $responsavel=null,$id_classe=null,$id_cliente=0,$id_cliente_produto=0,$id_conta=0,$id_cobranca=0,$id_servidor=0,$id_nas=0,$id_pop=0,$id_condominio=0,$id_bloco=0,$id_chamado_pai=null) {
 			$dados = array("tipo" => $tipo, "criado_por" => $criado_por, "assunto" => $assunto, "descricao" => $descricao, "origem" => $origem, "classificacao" => $classificacao);
 			
 
@@ -145,7 +231,8 @@
 			if( $id_condominio ) $dados["id_condominio"] = $id_condominio;
 			if( $id_bloco ) $dados["id_bloco"] = $id_bloco;
 			if( $prioridade ) $dados["prioridade"] = $prioridade;
-			if( $id_grupo ) $dados["id_grupo"] = $id_grupo;			
+			if( $id_grupo ) $dados["id_grupo"] = $id_grupo;
+			if( $id_classe ) $dados["id_classe"] = $id_classe;
 			
 			// TODO: Registrar a abertura do chamado filho no chamado pai.
 			if( $id_chamado_pai ) $dados["id_chamado_pai"] = $id_chamado_pai;
@@ -513,7 +600,7 @@
 		/**
 		 * Registra informaçòes da ordem de serviço
 		 */
-		public function registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $agendamento, $periodo) {
+		public function registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $agendamento, $periodo, $id_classe = null ) {
 		
 			$dados = array( 
 				"id_chamado" => $id_chamado, 
@@ -525,6 +612,8 @@
 				"agendamento" => $agendamento,
 				"periodo" => $periodo
 				);
+			
+			if( $id_classe ) $dados["id_classe"] = $id_classe;
 		
 			return($this->hdtb_os->insere($dados));
 		

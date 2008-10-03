@@ -1,3 +1,4 @@
+{if $tela != "mini" && $prtopt != 'sem_header'}
 <link rel="stylesheet" type="text/css" href="view/templates/css/layout/innertop.css" />
 <script language="javascript" type="text/javascript">
 {literal}
@@ -8,16 +9,13 @@ function sessionMenuChanged(obj) {
 	}
 }
 {/literal}
-</script>
-
-{if $tela != "mini" && $prtopt != 'sem_header'}
-<table border=0 width="100%" class="titulo" cellpadding=0 cellspacing=0>
+</script>&nbsp;
+<table border=0 width="100%" class="titulo" cellpadding=0 cellspacing=0 style="padding-top:0px; padding-bottom: 0px; margin-top:0px; margin-bottom: 0px;">
 	<tr>
-		<td><p class="titulo">{$nomeSessao}{if $titulo} :: {$titulo}{/if}</p></td>
-		<td width="150" align="right" valign="bottom">
-			&nbsp;
+		<td valign="bottom" style="padding-top:0px; padding-bottom: 0px; margin-top:0px; margin-bottom: 0px;"><p class="titulo" style="margin-bottom: 0px; padding-bottom: 0px; margin-top: 0px; padding-top: 0px;">{$nomeSessao}{if $titulo} :: {$titulo}{/if}</p></td>
+		<td width="160" align="right" valign="bottom" style="margin-bottom: 0px; padding-bottom: 0px; margin-top: 0px; padding-top: 0px;">&nbsp;
 			{if count($sessionMenu.itens) && $sessionMenu.visible}
-			<select name="userMenu" class="selectMenu" onChange="sessionMenuChanged(this)">
+			<select align="bottom" name="userMenu" class="selectMenu" onChange="sessionMenuChanged(this)" style="margin-bottom: 0px; padding-bottom: 0px; margin-top: 0px; padding-top: 0px;">
 				<option value="">-- MENU --</option>
 				{foreach item=r from=$sessionMenu.itens name="sessionMenu"}
 				<option value="{$r.url}" {if $smarty.foreach.sessionMenu.iteration == $sessionMenuSelected}SELECTED{/if}>{$r.texto}</option>
@@ -28,4 +26,3 @@ function sessionMenuChanged(obj) {
 	</tr>
 </table>
 {/if}
-

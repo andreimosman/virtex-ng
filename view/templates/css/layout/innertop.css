@@ -18,6 +18,8 @@ p.titulo {
 	font-family: verdana;
 	font-size: 10px;
 	width: 140px;
+	margin-top: 0px;
+	padding-top: 0px;
 	margin-right: 10px;
 	margin-bottom: 2px;
 

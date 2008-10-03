@@ -27,7 +27,12 @@ label {
 {/literal}
 </style>
 
-<script language="javascript1.2">
+<script language="JavaScript">
+{literal}
+function voltaListagem() {
+	document.location.href = "admin-administracao.php?op=preferencias&tela=helpdesk";
+}
+{/literal}
 </script>
 
 
@@ -51,7 +56,7 @@ label {
 
 		<tr>
 			<td align="center" colspan="2" width="100%" style="border-top:1px dotted #000">
-					<input type="button" class="botao" name="voltar" value="Voltar" />
+					<input type="button" class="botao" name="voltar" value="Voltar" onClick="voltaListagem();"/>
 					<input type="submit" name="submit" class="botao" value="Alterar" />
 			</td>
 		</tr>

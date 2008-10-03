@@ -256,26 +256,20 @@
 			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 			$limite = @$_REQUEST["limite"];
 
+			$administradores_select= $this->administradores->obtemListaAdmin();
+			$this->_view->atribui("administradores_select",$administradores_select);
 
+			$this->_view->atribui("id_admin",$id_admin);
 
-				$administradores_select= $this->administradores->obtemListaAdmin();
-				$this->_view->atribui("administradores_select",$administradores_select);
+			$natureza_select= $this->eventos->obtemNatureza();
+			$this->_view->atribui("natureza_select",$natureza_select);
 
-				$this->_view->atribui("id_admin",$id_admin);
+			$this->_view->atribui("natureza",$natureza);
 
-				$natureza_select= $this->eventos->obtemNatureza();
-				$this->_view->atribui("natureza_select",$natureza_select);
+			$tipos_select= $this->eventos->obtemTipos();
+			$this->_view->atribui("tipos_select",$tipos_select);
 
-				$this->_view->atribui("natureza",$natureza);
-
-				$tipos_select= $this->eventos->obtemTipos();
-				$this->_view->atribui("tipos_select",$tipos_select);
-
-				$this->_view->atribui("tipo",$tipo);
-
-
-
-
+			$this->_view->atribui("tipo",$tipo);
 
 
 			// TODO: PERÍODO.
@@ -299,16 +293,35 @@
 
 
 			if( !$limite && !count($filtro)) $limite = 20;
-
-
-			$eventos = $this->eventos->obtem($filtro,$limite);
-
-			$this->_view->atribui("eventos",$eventos);
-			$this->_view->atribui("limite",$limite);
-
-			//echo "<pre>";
-			//print_r($eventos);
-			//echo "</pre>";
+			
+			
+			$tela = @$_REQUEST["tela"];
+			$this->_view->atribui("tela",$tela);
+			
+			if( $tela == "detalhes" ) {
+				// obter os detalhes do evento.
+				$id_evento = @$_REQUEST["id_evento"];
+				$filtro = array("id_evento" => $id_evento);
+				$eventos = $this->eventos->obtem($filtro,$limite);
+				
+				$evento = @$eventos[0];
+				
+				if( !$evento ) $evento = array();
+				
+				$this->_view->atribui("evento",$evento);
+				
+				//echo "<pre>";
+				//print_r($eventos);
+				//print_r($natureza_select);
+				//echo "</pre>";
+				
+			} else {
+				$eventos = $this->eventos->obtem($filtro,$limite);
+				$this->_view->atribui("eventos",$eventos);
+				$this->_view->atribui("limite",$limite);
+			}
+			
+			
 
 
 
@@ -1012,7 +1025,7 @@
 		//Funçao de execução do Preferências HELPDESK
 		function executaPreferenciasHelpdesk() { 
 			$helpdesk = VirtexModelo::factory("helpdesk");
-		
+					
 			$tela = @$_REQUEST["tela"];
 			$subtela = @$_REQUEST["subtela"];
 			$modo_visualizacao = @$_REQUEST["visualizacao"];
@@ -1066,6 +1079,54 @@
 						
 					}
 					break;
+					
+				case 'cadastro_classe':
+					
+					$dados = $_REQUEST;
+					
+					if($this->_acao) {
+					
+						if($dados["id_classe"]) {
+						
+							//ALTERAÇÃO DE UMA CLASSE EXISTENTE
+							$helpdesk->alteraClasse($dados["nome"],$dados["descricao"],$dados["usar_em_chamado"],$dados["usar_em_os"],$dados["id_classe_pai"],$dados["id_classe"]);
+							$url_redir = "admin-administracao.php?op=preferencias&tela=helpdesk&subtela=cadastro_classe&visualizacao=1&id_classe=" . $dados["id_classe"];
+							$mensagem = "Classe alterada com sucesso";
+							$this->_view->atribui("url",$url_redir);
+							$this->_view->atribui("mensagem",$mensagem);
+							$this->_view->atribuiVisualizacao("msgredirect");													
+						} else {
+						
+							//GRAVAÇÃO DE UMA NOVA CLASSE
+							$id_classe = $helpdesk->cadastraClasse($dados["nome"],$dados["descricao"],$dados["usar_em_chamado"],$dados["usar_em_os"],$dados["id_classe_pai"]);
+							$url_redir = "admin-administracao.php?op=preferencias&tela=helpdesk";
+							$mensagem = "Classe cadastrada com sucesso";
+							$this->_view->atribui("url",$url_redir);
+							$this->_view->atribui("mensagem",$mensagem);
+							$this->_view->atribuiVisualizacao("msgredirect");
+						}
+						
+					} else {					
+						$classes = $helpdesk->obtemListaClasses("","","",@$dados["id_classe"]);
+						$this->_view->atribui("classes_pai", $classes);
+						
+						
+						if($dados["id_classe"]) { 	
+							//informacoes para a tela de alteracao
+							$infoclasse = $helpdesk->obtemClassePeloId($dados["id_classe"]);
+							
+							//echo "<pre>";
+							//print_r($infoclasse);
+							//print_r($classes);
+							//echo "</pre>";
+							foreach($infoclasse as $chave => $valor) {	//Passa todas a informações adquiridas para o VIEW
+								$this->_view->atribui($chave, $valor);
+							}							
+						}						
+					}
+					
+					break;
+
 				
 				case 'altera_usuario':
 					$acao = "alterar";
@@ -1142,9 +1203,12 @@
 				
 				case 'listagem':
 				default:
-					$registros = $helpdesk->obtemListaGrupos();
+					$grupos = $helpdesk->obtemListaGrupos();
+					$this->_view->atribui("grupos", $grupos);
 
-					$this->_view->atribui("registros", $registros);
+					$classes = $helpdesk->obtemListaClasses();
+					$this->_view->atribui("classes",$classes);
+
 					break;
 			
 			}

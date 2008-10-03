@@ -321,6 +321,20 @@ var enderecos_instalacao = eval({$enderecos_instalacao});
 
 			<td width="100%" valign="top">
 				<table border=0 cellspacing=0 cellpadding=1 width="100%">
+					<!-- CAMPO CLASSE -->
+					<tr>
+						<td align="right" width="110">
+							<label>Classe:</label>
+						</td>
+						<td>
+							<select id="id_classe" name="id_classe" style="width:100%" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+								<option value="">-- SELECIONE --</option>
+								{foreach from=$classes item=c}
+									<option value="{$c.id_classe}" {if $c.id_classe == $id_classe}CHECKED{/if}>{$c.str_arvore}</option>
+								{/foreach}
+							</select>
+						</td>
+					</tr>
 
 					<!-- CAMPO ASSUNTO -->
 					<tr>

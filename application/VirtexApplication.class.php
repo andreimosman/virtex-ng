@@ -54,11 +54,17 @@
 		
 		protected $mailEnabled;
 		
+		
+		// Somente carrega os arquivos ini se essa flag estiver como false. Exceção: virtex.ini (da superclasse)
+		protected $cleanExec;
+		
 		/**
 		 * Construtor.
 		 */
 		public function __construct() {
 			parent::__construct();
+			
+			$this->cleanExec = false;
 			
 			$this->options = array();
 			$this->params = array();
@@ -67,8 +73,15 @@
 			$this->_longopts  = NULL;
 
 			$this->selfConfig();
-
+			
 			$this->getopt();
+			
+			
+			if( $this->cleanExec ) {
+				return;
+			}
+			
+			
 
 			// Configurações dos NAS
 			$this->nasConfig = MConfig::getInstance("etc/nas.ini");

@@ -1,0 +1,109 @@
+#!/bin/sh
+###################################
+# Firewall Inicial
+# VirtexAdmin
+################################
+
+
+# Zera as regras
+ipfw -f flush
+
+# Permite pacotes layer2 (ex: arp e pppoe)
+/sbin/ipfw add 1 allow layer2 not mac-type ip
+
+#
+# WORMS, EXPLOITS E AFINS
+#####################################################
+
+# TFTP
+/sbin/ipfw add 100 deny udp from any to any 69
+/sbin/ipfw add 100 deny udp from any 69 to any
+/sbin/ipfw add 100 deny tcp from any to any 69
+/sbin/ipfw add 100 deny tcp from any 69 to any
+
+# Blaster/Welshia
+/sbin/ipfw add 101 deny udp from any to any 135
+/sbin/ipfw add 101 deny udp from any 135 to any
+/sbin/ipfw add 101 deny tcp from any to any 135
+/sbin/ipfw add 101 deny tcp from any 135 to any
+
+/sbin/ipfw add 101 deny tcp from any to any 4444
+/sbin/ipfw add 101 deny tcp from any 4444 to any
+/sbin/ipfw add 101 deny tcp from any to any 4444
+/sbin/ipfw add 101 deny tcp from any 4444 to any
+
+# Sasser/Korgo
+/sbin/ipfw add 103 deny udp from any to any 445
+/sbin/ipfw add 103 deny udp from any 445 to any
+/sbin/ipfw add 103 deny tcp from any to any 445
+/sbin/ipfw add 103 deny tcp from any 445 to any
+
+#
+# PERMITIR TRAFEGO NESTA MAQUINA (prio/sem qos)
+#####################################################
+
+# ICMP
+/sbin/ipfw add 200 permit icmp from me to any
+/sbin/ipfw add 200 permit icmp from any to me
+
+# DNS
+/sbin/ipfw add 201 permit tcp from me to any 53
+/sbin/ipfw add 201 permit tcp from any to me 53
+/sbin/ipfw add 201 permit tcp from me 53 to any
+/sbin/ipfw add 201 permit tcp from any 53 to me
+/sbin/ipfw add 201 permit udp from me to any 53
+/sbin/ipfw add 201 permit udp from any to me 53
+/sbin/ipfw add 201 permit udp from me 53 to any
+/sbin/ipfw add 201 permit udp from any 53 to me
+
+# SSH
+/sbin/ipfw add 202 permit tcp from me to any 22
+/sbin/ipfw add 202 permit tcp from any to me 22
+/sbin/ipfw add 202 permit tcp from me 22 to any
+/sbin/ipfw add 202 permit tcp from any 22 to me
+
+#
+# PERMITIR TRAFEGO NESTA MAQUINA (not prio/qos)
+#####################################################
+/sbin/ipfw add 65534 permit ip from me to any
+/sbin/ipfw add 65534 permit ip from any to me
+
+
+
+#
+# ninguem se enxergar
+# Solicitações entre as redes de ips falsos são negadas
+######################################################
+
+ipfw add 9000 deny ip from 10.0.0.0/8 to 10.0.0.0/8
+ipfw add 9000 deny ip from 10.0.0.0/8 to 172.16.0.0/12
+ipfw add 9000 deny ip from 10.0.0.0/8 to 192.168.0.0/16
+
+ipfw add 9000 deny ip from 172.16.0.0/12 to 10.0.0.0/8
+ipfw add 9000 deny ip from 172.16.0.0/12 to 172.16.0.0/12
+ipfw add 9000 deny ip from 172.16.0.0/12 to 192.168.0.0/16
+
+ipfw add 9000 deny ip from 192.168.0.0/16 to 10.0.0.0/8
+ipfw add 9000 deny ip from 192.168.0.0/16 to 172.16.0.0/12
+ipfw add 9000 deny ip from 192.168.0.0/16 to 192.168.0.0/16
+
+
+#
+# Tables
+######################################################
+
+ipfw add 301 deny ip from "table(1)" to any # Desconhecidos
+ipfw add 302 deny ip from "table(2)" to any # Bloqueados
+ipfw add 303 deny ip from "table(3)" to any # Suspensos
+
+#
+# RC.FIREWALL.LOCAL (personalizado pelo usuario)
+######################################################
+if [ -f /mosman/virtex/app/etc/rc.firewall.local ] ; then
+	. /mosman/virtex/app/etc/rc.firewall.local
+fi
+
+
+
+
+

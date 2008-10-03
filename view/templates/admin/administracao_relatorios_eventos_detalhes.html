@@ -1,0 +1,69 @@
+<html>
+<head>
+<!--meta http-equiv="refresh" content="60"-->
+	<title></title>
+</head>
+
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"}
+<br />
+
+<table class="lista" width="400" align="center">
+	<tr>
+		<th colspan=2>EVENTO #{$evento.id_evento|string_format:"%06d"}</th>
+	</tr>
+	<tr>
+		<td align="right"><strong>Tipo:</strong></td>
+		<td>{$tipos_select[$evento.tipo]}</td>
+	</tr>
+	<tr>
+		<td align="right"><strong>Natureza:</strong></td>
+		<td>{$natureza_select[$evento.natureza]}</td>
+	</tr>
+	<tr>
+		<td align="right"><strong>Admin:</strong></td>
+		<td>{if $evento.id_admin}{$evento.admin.admin}{else}{if $evento.tipo == 'ERRO' && $evento.natureza == 'LOGIN'}{$evento.descricao}{else}&nbsp;-{/if}{/if}</td>
+	</tr>
+	<tr>
+		<td align="right"><strong>Data/Hora:</strong></td>
+		<td>{$evento.datahora|date_format:"%d/%m/%Y %H:%M:%I"}</td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><strong>Descrição:</strong></td>
+		<td><pre>{$evento.descricao}</pre></td>
+	</tr>
+	{if $evento.id_cliente || $evento.id_cliente_produto || $evento.id_cobranca || $evento.id_conta}
+	<tr>
+		<th colspan=2>Registros Afetados</th>
+	</tr>
+	{if $evento.cliente_nome_razao}
+	<tr>
+		<td align="right" valign="top"><strong>Cliente:</strong></td>
+		<td><a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$evento.id_cliente}">{$evento.cliente_nome_razao}</a></td>
+	</tr>
+	{/if}
+	{if $evento.id_cliente_produto}
+	<tr>
+		<td align="right" valign="top"><strong>Contrato:</strong></td>
+		<td><a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$evento.id_cliente}&id_cliente_produto={$evento.id_cliente_produto}">Contrato #{$evento.id_cliente_produto|string_format:"%05d"}</a></td>
+	</tr>
+	{/if}
+	{if $evento.id_cobranca}
+	<tr>
+		<td align="right" valign="top"><strong>Fatura:</strong></td>
+		<td><a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$evento.id_cliente}&id_cliente_produto={$evento.id_cliente_produto}&data={$evento.fatura_data}&id_cobranca={$evento.id_cobranca}">Fatura #{$evento.id_cobranca|string_format:"%06d"}</a></td>
+	</tr>
+	{/if}
+	{if $evento.id_conta}
+	<tr>
+		<td align="right" valign="top"><strong>Conta:</strong></td>
+		<td><a href="admin-clientes.php?op=conta&tela=ficha&tipo={$evento.conta_tipo_conta}&id_cliente={$evento.id_cliente}&id_conta={$evento.id_conta}">{$evento.conta_username}{if $evento.conta_tipo_conta == 'E'}@{$evento.conta_dominio}{/if}</a></td>
+	</tr>
+	{/if}
+	{/if}
+	<tr>
+		<td colspan=2 style="border-top: solid 1px #000000;" align="center"><input type="button" class="botao" name="Voltar" value="Voltar" onClick="javascript:history.back();"></td>
+	</tr>
+</table>
+</body>
+</html>

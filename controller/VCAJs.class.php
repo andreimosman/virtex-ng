@@ -38,6 +38,8 @@
 			
 			$arq = $this->jsPath . "/" . $dir . "/" . $js . ".js";
 			
+			// echo "// $arq";
+			
 			if( !file_exists($arq) ) return;
 			
 			$fd = @fopen($arq,"r");

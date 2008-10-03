@@ -1,0 +1,54 @@
+#!/bin/sh
+
+#####################################
+# RC                                #
+#       Script de inicialização     #
+#                                   #
+# Este script deverá ser linkado no #
+# /usr/local/etc/rc.d com o nome de #
+# 011.virtexadmin.sh                #
+#                                   #
+# TODO: start/stop                  #
+####################################
+
+VTXHOME=/mosman/virtex
+APPHOME=${VTXHOME}/app
+VTXBIN=${APPHOME}/bin
+ETC=${APPHOME}/etc
+PHP=/usr/local/bin/php
+FIRSTSCRIPT=/mosman/virtex/install/firstboot.sh
+
+${PHP} /mosman/virtex/app/bin/testabd.php
+
+# Se tiver o script executa e renomeia
+####
+if [ ! -z "${FIRSTSCRIPT}" ] ; then
+	if [ -f "${FIRSTSCRIPT}" ] ; then
+		/bin/sh ${FIRSTSCRIPT}
+		mv "${FIRSTSCRIPT}" "${FIRSTSCRIPT}.$$.bak"
+	fi
+fi
+
+if [ -f /mosman/virtex/app/etc/rc.local ] ; then
+	. /mosman/virtex/app/etc/rc.local
+fi
+
+# Starta o PPPoE
+#for iface in $( ${PHP} ${VTXBIN}/vtx-pppoe.php -I ) ; do
+#        /usr/libexec/pppoed -d -P /var/run/pppoe.pid -p '*' -l pppoe-in ${iface}
+#done
+
+
+# Starta o Radiusd
+#${VTXHOME}/radius/sbin/radiusd -y > /dev/null 2>&1
+
+# Carrega configurações de rede e dos usuários
+${PHP} ${VTXBIN}/vtx-spool.php -b
+
+# Carrega servidor do sistema de informações
+${PHP} ${VTXBIN}/vtx-server.php
+
+# Smarty Stuff
+install -d /tmp/template_c
+chown nobody:nobody /tmp/templates_c/
+

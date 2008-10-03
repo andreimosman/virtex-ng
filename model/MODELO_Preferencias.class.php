@@ -190,6 +190,7 @@
 			$nome = preg_replace("/[ÍíÌìÏï]/i","i",$nome);
 			$nome = preg_replace("/[ÓóÕõÒòÖö]/i","o",$nome);
 			$nome = preg_replace("/[ÚúÙùÜü]/i","u",$nome);
+			$nome = preg_replace("/[ ]{2}/i"," ",$nome);
 			
 			$nome = str_replace("*","%",$nome);
 			$uf="";
@@ -580,13 +581,28 @@
 		 * Obtem as configurações do monitoramento.
 		 */
 		public function obtemMonitoramento() {
-			return($this->pftb_preferencia_monitoracao->obtemUnico(array("id_provedor" => 1)));
+			$dados = $this->pftb_preferencia_monitoracao->obtemUnico(array("id_provedor" => 1));
+			//echo "<pre>";
+			//print_r($dados);
+			//echo "</pre>";
+			
+		
+			return($dados);
 		}
 		
 		/**
 		 * Atualiza as configurações de monitoramento.
 		 */
 		public function atualizaMonitoramento($dados) {
+			// Verifica se o registro existe.
+			$monitor = $this->obtemMonitoramento();
+			
+			if( !count($monitor) ) {
+				// $dados = array("id_provedor"=>1,"emails"=>"",a);
+				$dados["id_provedor"] = 1;
+				$this->pftb_preferencia_monitoracao->insere($dados);
+			}
+		
 			return($this->pftb_preferencia_monitoracao->altera($dados,array("id_provedor"=>1)));
 		}
 		

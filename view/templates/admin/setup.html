@@ -9,10 +9,15 @@
 <style>
 {literal}
 label {
-	font-family: verdana;
+	font-family: verdana,arial;
 	font-size: 10px;
 	margin-right: 4px;
 	margin-left: 4px;
+}
+
+span {
+	font-family: verdana,arial;
+	font-size: 12px;
 }
 
 .boxAltSenha {
@@ -67,7 +72,7 @@ body{
 
 </HEAD>
 <BODY topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0>
-
+<form method="post" action="admin-setup.php" enctype="multipart/form-data">
 <table border=0 style="width:100%;height:100%" cellspacing=0 cellpadding=0>
 	<tr>
 		<td height="102">
@@ -85,104 +90,246 @@ body{
 	<tr>
 		<td align="center" colspan=2 valign="top">
 
-			<table width="600" border=0 cellspacing=0 cellpadding=5 style="border: solid 1px #000000;" class="statusConfig">
-				<tr>
-					<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000; font-size: 12pt; color: #000000;">Status das Configurações</th>
-				</tr>
-				<tr>
-					<th align="right" width="210">Cadastro de Cidades: </th>
-					<td>{if $cidadesOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Servidor Local: </th>
-					<td>{if $servidoresOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">NAS: </th>
-					<td>{if $nasOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">POPs: </th>
-					<td>{if $popOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Administrador: </th>
-					<td>{if $adminOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Modelos de Contrato: </th>
-					<td>{if $modelosOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Preferências de Cobrança: </th>
-					<td>{if $prefCobraOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Formas de Pagamento: </th>
-					<td>{if $formaPagtoOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Preferências do Provedor: </th>
-					<td>{if $prefProvOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-				<tr>
-					<th align="right" width="210">Preferências Gerais: </th>
-					<td>{if $prefGeralOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
-				</tr>
-			</table>
 
-			{if !$prefProvOK }
-			&nbsp;<br>
-			&nbsp;<br>
-			<table width="600" border=0 cellspacing=0 cellpadding=5 style="border: solid 1px #000000;">
+			<table cellspacing=5 cellpadding=0 border=0>
 				<tr>
-					<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000;">Configurações Iniciais VirtexAdmin</th>
-				</tr>
-				<tr>
-					<td>
-
-						<table cellspacing=0 cellpadding=0 border=0 align="center">
+					<td valign="top">
+						<table width="400" border=0 cellspacing=0 cellpadding=2 style="border: solid 1px #000000;" class="statusConfig">
 							<tr>
-								<th colspan=4 style="font-family: arial,verdana; font-size: 10pt; background: #dadaff;">Dados do Provedor</th>
+								<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000; font-size: 12pt; color: #000000;">Status das Configurações</th>
 							</tr>
 							<tr>
-								<td width="100" align="right"><label>Razão Social:</label></td>
-								<td colspan=3><input type="text" size="60" maxlength="40" name="nome" value="{$nome}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+								<th align="right" width="210">Network (INI): </th>
+								<td>{if $networkIniOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
 							</tr>
 							<tr>
-								<td width="100" align="right"><label>Domínio:</label></td>
-								<td colspan=3><input type="text" size="45" maxlength="255" name="fone" value="{$dominio}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>(sem o www)</label></td>
+								<th align="right" width="210">NAS (INI): </th>
+								<td>{if $nasIniOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
 							</tr>
 							<tr>
-								<td width="100" align="right"><label>Endereço:</label></td>
-								<td colspan=3><input type="text" size="60" maxlength="255" name="endereco" value="{$endereco}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+								<th align="right" width="210">FTP (INI): </th>
+								<td>{if $ftpIniOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
 							</tr>
 							<tr>
-								<td width="100" align="right"><label>Localidade:</label></td>
-								<td colspan=3><input type="text" size="60" maxlength="255" name="localidade" value="{$localidade}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+								<th align="right" width="210">DNS (INI): </th>
+								<td>{if $dnsIniOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
 							</tr>
 							<tr>
-								<td width="100" align="right"><label>CEP:</label></td>
-								<td><input type="text" size="10" maxlength="10" name="cep" value="{$cep}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
-								<td width="52" align="right"><label>CNPJ:</label></td>
-								<td><input type="text" size="35" maxlength="25" name="cnpj" value="{$cnpj}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+								<th align="right" width="210">Email (INI): </th>
+								<td>{if $emailIniOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
 							</tr>
 							<tr>
-								<td width="100" align="right"><label>Telefone:</label></td>
-								<td colspan=3><input type="text" size="25" maxlength="30" name="fone" value="{$fone}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+								<th align="right" width="210">Links Externos: </th>
+								<td>{if $linksOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Faixas de Banda: </th>
+								<td>{if $bandasOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Plano Cortesia: </th>
+								<td>{if $planosOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Monitoramento: </th>
+								<td>{if $monitorOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Cadastro de Cidades: </th>
+								<td>{if $cidadesOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Helpdesk: </th>
+								<td>{if $helpdeskOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Servidor Local: </th>
+								<td>{if $servidoresOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">NAS: </th>
+								<td>{if $nasOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">POPs: </th>
+								<td>{if $popOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Administrador: </th>
+								<td>{if $adminOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Modelos de Contrato: </th>
+								<td>{if $modelosOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Preferências de Cobrança: </th>
+								<td>{if $prefCobraOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Formas de Pagamento: </th>
+								<td>{if $formaPagtoOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Preferências do Provedor: </th>
+								<td>{if $prefProvOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Preferências Gerais: </th>
+								<td>{if $prefGeralOK}<span style="color: #0000ff">Configurado</span>{else}<span style="color: #ff0000">Sem Configuração</span>{/if}</td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Registro do Software: </th>
+								<td>{if $registroOK}<span style="color: #0000ff">Licenciado</span>{else}<span style="color: #ff0000">Sem Licença</span>{/if}</td>
 							</tr>
 						</table>
-					</td>
-				</tr>
-			</table>
-			{/if}
+						&nbsp;<br>
 
-			{if $faltandoConfiguracao}
-			<form method="post" action="admin-setup.php">
-			<hr size=1>
-			<input type="submit" name="submit" value="Configurar">
-			</form>
-			{/if}
+
+
+					</td>
+					<td valign="top">
+
+						{if !$prefProvOK }
+						<table width="400" border=0 cellspacing=0 cellpadding=2 style="border: solid 1px #000000;">
+							<tr>
+								<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000;">Configurações Iniciais VirtexAdmin</th>
+							</tr>
+							<tr>
+								<td>
+
+									<table cellspacing=0 cellpadding=0 border=0 align="center">
+										<tr>
+											<th colspan=4 style="font-family: arial,verdana; font-size: 10pt; background: #dadaff;">Dados do Provedor</th>
+										</tr>
+										<tr>
+											<td width="100" align="right"><label>Razão Social:</label></td>
+											<td colspan=3><input type="text" size="35" maxlength="40" name="nome" value="{$nome}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+										</tr>
+										<tr>
+											<td width="100" align="right"><label>Domínio:</label></td>
+											<td colspan=3><input type="text" size="35" maxlength="255" name="fone" value="{$dominio}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>(sem o www)</label></td>
+										</tr>
+										<tr>
+											<td width="100" align="right"><label>Endereço:</label></td>
+											<td colspan=3><input type="text" size="35" maxlength="255" name="endereco" value="{$endereco}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+										</tr>
+										<tr>
+											<td width="100" align="right"><label>Localidade:</label></td>
+											<td colspan=3><input type="text" size="35" maxlength="255" name="localidade" value="{$localidade}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+										</tr>
+										<tr>
+											<td width="100" align="right"><label>CEP:</label></td>
+											<td><input type="text" size="6" maxlength="10" name="cep" value="{$cep}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+											<td width="32" align="right"><label>CNPJ:</label></td>
+											<td><input type="text" size="12" maxlength="25" name="cnpj" value="{$cnpj}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+										</tr>
+										<tr>
+											<td width="100" align="right"><label>Telefone:</label></td>
+											<td colspan=3><input type="text" size="25" maxlength="30" name="fone" value="{$fone}" class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						&nbsp;<br>
+						{/if}
+
+						{if !$networkIniOK}
+						<table width="400" border=0 cellspacing=0 cellpadding=2 style="border: solid 1px #000000;" class="statusConfig">
+							<tr>
+								<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000; font-size: 12pt; color: #000000;">Interface Externa</th>
+							</tr>
+							<tr>
+								<th align="right" width="210">Interface: </th>
+								<td><label>{$extIf.interface}</label></td>
+							</tr>
+							<tr>
+								<th align="right" width="210">IP: </th>
+								<td><label>{$extIf.ipaddr}</label></td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Máscara: </th>
+								<td><label>{$extIf.netmask}</label></td>
+							</tr>
+							<tr>
+								<th align="right" width="210">Gateway: </th>
+								<td><label>{$extIf.gateway}</label></td>
+							</tr>
+							<tr>
+								<th align="right" width="210">NAT: </th>
+								<td><label><input type="checkbox" name="nat"></label></td>
+							</tr>
+						</table>
+						&nbsp;<br>
+						{/if}
+
+						{if !$nasIniOK}
+						<table width="400" border=0 cellspacing=0 cellpadding=2 style="border: solid 1px #000000;">
+							<tr>
+								<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000;">Configurações de Acesso à Rede</th>
+							</tr>
+							<tr>
+								<td valign="top">
+								   <input type="checkbox" name="enable_tcpip" CHECKED><span><strong>TCP/IP</strong></span><br>
+								   {foreach item=iface from=$int_ifaces}
+								   <input type="radio" name="tcpip_iface" value="{$iface}" {if $defIface == $iface}CHECKED{/if}><span>{$iface}</span><br>
+								   {/foreach}
+								</td>
+								<td valign="top">
+								   <input type="checkbox" name="enable_pppoe"><span><strong>PPPoE</strong></span><br>
+								   {foreach item=iface from=$int_ifaces}
+								   <input type="radio" name="pppoe_iface" value="{$iface}" {if $defIface == $iface}CHECKED{/if}><span>{$iface}</span><br>
+								   {/foreach}
+								</td>
+							</tr>
+						</table>
+						&nbsp;<br>
+						{/if}
+
+						{if !$registroOK}
+						<table width="400" border=0 cellspacing=0 cellpadding=2 style="border: solid 1px #000000;" class="statusConfig">
+							<tr>
+								<th colspan=2 style="font-family: arial,verdana; background: #aaaaff; border-bottom: solid 1px #000000; font-size: 12pt; color: #000000;">Registro do Software</th>
+							</tr>
+							<tr>
+								<th valign="top" align="right" width="210">Local ID: </th>
+								<td>
+									<table width="100%" border=0 cellspacing=1 cellpadding=0 class="statusConfig">
+										<tr>
+											<th>iface</th>
+											<!--th>mac</th-->
+											<th>ip</th>
+											<th>local id</th>
+										</tr>
+										{foreach item=i from=$infoLocalId}
+										<tr>
+											<td><label>{$i.interface}</label></td>
+											<!--td><label>{$i.mac}</label></td-->
+											<td><label>{$i.ip}</label></td>
+											<td><label>{$i.local_id}</label></td>
+										</tr>
+										{/foreach}
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<th valign="top" align="right" width="210">Upload: </th>
+								<td><input type="file" name="arquivo_licenca"></td>
+							</tr>
+						</table>
+						&nbsp;<br>
+						{/if}
+
+						{if $faltandoConfiguracao}
+						<center>
+						<hr size=1 width="400" style="margin: 0px 0px 0px 0px;">
+ 						<input type="submit" name="submit" value="Configurar">
+ 						</center>
+						{/if}
+					<td>
+				<tr>
+			</table>
 
 
 

@@ -50,6 +50,11 @@
 		
 		public function obtemClientesPorCidade($id_cidade) {
 			$filtro = array("id_cidade" => $id_cidade);
+			
+			if( !$id_cidade ) {
+				$filtro["id_cidade"] = "null:";
+			}
+			
 			return($this->cltb_cliente->obtem($filtro));
 		}
 		

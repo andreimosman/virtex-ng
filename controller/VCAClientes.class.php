@@ -1449,7 +1449,8 @@
 
 					$selecao_redeip		= @$_REQUEST["selecao_redeip"];
 
-					if(!$status) $status = "N";
+					// if(!$status) $status = "N";
+					if(!$status) $status = "A";
 					else if(!$data_instalacao && $status != "I" && !$conta_ativada) $data_ativacao = date("Y-m-d");
 
 					$contrato = $cobranca->obtemContratoPeloId($id_cliente_produto);
@@ -1499,8 +1500,8 @@
 							$contas->alteraContaDiscado($id_conta,$senha,$status,$observacoes,$conta_mestre,$foneinfo);
 							$msg = "Conta alterada com sucesso.";
 						} elseif($tipo == "H") {
-							// $contas->alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre);
-							$contas->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
+							$contas->alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre);
+							// $contas->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
 							$msg = "Conta alterada com sucesso.";
 						} else {
 							// die("tipo inválido!");
@@ -1829,7 +1830,15 @@
 					$registros = array();
 
 					if( $id_cidade ) {
-						$registros = $this->clientes->obtemClientesPorCidade($id_cidade);
+						// echo "ID_CIDADE: $id_cidade<br>\n";
+						
+						//if( $id_cidade == ':NULL:' ) {
+						//	$id_cidade = null;
+						//}
+						
+						// echo "ID_CIDADE: $id_cidade<br>\n";
+						
+						$registros = $this->clientes->obtemClientesPorCidade(($id_cidade == ':NULL:' ? null : $id_cidade));
 
 						$infoCidade = $this->preferencias->obtemCidadePeloID($id_cidade);
 						$this->_view->atribui("cidade",$infoCidade["cidade"]);
@@ -1927,6 +1936,9 @@
 			$this->_view->atribui("id_cliente", $id_cliente);
 			$this->_view->atribui("nome_razao", $info_cliente["nome_razao"]);
 			
+			$classes = $this->helpdesk->obtemListaClasses();
+			$this->_view->atribui("classes",$classes);
+			
 			switch($tela) {
 				case 'cadastro': 		//Cadastro de novos chamados
 					if(!$acao) {
@@ -1969,6 +1981,8 @@
 						$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
 						$prioridade = @$_REQUEST["prioridade"];
 						
+						$id_classe = @$_REQUEST["id_classe"];
+						
 						
 						$id_cliente = $id_cliente ? $id_cliente : 0;
 						$id_conta = $id_conta ? $id_conta : 0;
@@ -1981,7 +1995,7 @@
 							$id_cliente_produto = $conta["id_cliente_produto"];
 						}
 
-						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta);						
+						$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_classe,$id_cliente,$id_cliente_produto,$id_conta);
 						$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 						
 						$mensagem = "";
@@ -2250,7 +2264,7 @@
 						$this->_view->atribui("id_chamado", $id_chamado);
 						$this->_view->atribui("id_cliente", $id_cliente);
 	
-						if ($subtela == "ordemservico") {
+						if ($subtela == "ordemservico") {						
 							
 							$tipo = @$_REQUEST["tipo"];
 							$criado_por = @$_REQUEST["criado_por"];
@@ -2276,12 +2290,14 @@
 							$id_bloco_os = @$_REQUEST["id_bloco"];
 							$apto = @$_REQUEST["apto"];
 							
+							$id_classe = @$_REQUEST["id_classe"];
+							
 							
 							//Entra procedimento aqui para adquirir o nome do condominio e as informações necessárias para o seu funcionamento;
 							
 							
 							
-							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_cliente,$id_cliente_produto,$id_conta,0,0,0,0,0,0,$id_chamado_pai);
+							$id_chamado = $this->helpdesk->abreChamado($tipo,$criado_por,$id_grupo,$assunto,$descricao,$origem,$classificacao,$prioridade,$responsavel,$id_classe,$id_cliente,$id_cliente_produto,$id_conta,0,0,0,0,0,0,$id_chamado_pai);
 							$confirma_chamado = $this->helpdesk->obtemChamadoPeloId($id_chamado);
 							
 							if($confirma_chamado) {
@@ -2291,7 +2307,7 @@
 									$data_agendamento = $data_tmp[2] . "-" . $data_tmp[1] . "-" . $data_tmp[0];
 								}
 								
-								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo);							
+								$this->helpdesk->registrarOrdemServico($id_chamado, $endereco_os, $complemento_os, $bairro_os, $cidade_os, $data_agendamento, $periodo, $id_classe);
 							
 								$url_redir = "admin-clientes.php?op=helpdesk&tela=alteracao&id_cliente=$id_cliente&id_chamado=$id_chamado_pai";
 								$mensagem = "Ordem de serviço criada com sucesso";

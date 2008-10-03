@@ -575,10 +575,17 @@ label {
 			<th colspan=4>Motivo</th>
 		</tr>
 		<tr>
+			<td width="110" align="right"><strong>Classe:</strong></td>
+			<td align="left">
+			{foreach item=c from=$classes}
+				{if $chamado.id_classe == $c.id_classe}{$c.str_arvore}{/if}
+			{/foreach}&nbsp;
+			</td>
+		</tr>
+		<tr>
 			<td width="110" align="right"><strong>Assunto:</strong></td>
 			<td align="left">{$chamado.assunto}</td>
 		</tr>
-
 		<tr>
 			<td width="110" align="right" valign="top"><strong>Descricao:</strong></td>
 			<td align="left">{$chamado.descricao|replace:"\n":'<br>'}</td>

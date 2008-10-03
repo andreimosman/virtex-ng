@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta http-equiv="refresh" content="60">
+<!--meta http-equiv="refresh" content="60"-->
 	<title></title>
 </head>
 <style>
@@ -29,91 +29,113 @@
 
 <body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
 {include file="cobranca_header.html"}
-<br /><br />
-<form method="get" action="">
-<input type="hidden" name="op" value="relatorios" />
-<input type="hidden" name="relatorio" value="eventos" />
-<table class="lista" border="0" width="400px" cellpadding="2" cellspacing="2" align='center'>
-			<tr>
-				<th colspan="3">Buscar nos registros</th>
-			</tr>
+<br />
+
+<table border=0>
 	<tr>
-		<td style="width:400px; height:200px;" align='center'>
-			<table>
+		<td valign="top">
+
+			<form method="get" action="">
+			<input type="hidden" name="op" value="relatorios" />
+			<input type="hidden" name="relatorio" value="eventos" />
+			<table class="lista" border="0" cellpadding="2" cellspacing="2" align='center'>
 				<tr>
-					<td>Administrador:</td>
-					<td>
-						<select name="id_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-								<option value=""></option>
-							{foreach item=r key=valor from=$administradores_select}
-								<option value={$r.id_admin} {if $r.id_admin==$id_admin}selected="selected"{/if}>{$r.nome}</option>
-							{/foreach}
-						</select>
+					<th>Busca/Filtro</th>
+				</tr>
+				<tr>
+					<td align='center'>
+						<table>
+							<tr>
+								<td colspan="2">Administrador:</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<select name="id_admin"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+											<option value=""></option>
+										{foreach item=r key=valor from=$administradores_select}
+											<option value={$r.id_admin} {if $r.id_admin==$id_admin}selected="selected"{/if}>{$r.nome}</option>
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Natureza:</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<select name="natureza"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+											<option value=""></option>
+										{foreach item=texto key=valor from=$natureza_select}
+											<option value="{$valor}" {if $valor==$natureza}selected="selected"{/if}>{$texto}</option>
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Tipo:</td>
+								<td>
+									<select name="tipo"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
+											<option value=""></option>
+										{foreach item=texto key=valor from=$tipos_select}
+											<option value="{$valor}" {if $valor==$tipo}selected="selected"{/if}>{$texto}</option>
+										{/foreach}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Registros:</td>
+								<td><input type="text" size=4 name="limite" value="{$limite}" onClick="this.value='';"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" ></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="right"><input type="submit" value="Buscar/Filtrar &gt;&gt;" class="botao"></td>
+							</tr>
+						</table>
 					</td>
-				</tr>
-				<tr>
-					<td>Tipo:</td>
-					<td>
-						<select name="tipo"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-								<option value=""></option>
-							{foreach item=texto key=valor from=$tipos_select}
-								<option value="{$valor}" {if $valor==$tipo}selected="selected"{/if}>{$texto}</option>
-							{/foreach}
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Natureza:</td>
-					<td>
-						<select name="natureza"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" >
-								<option value=""></option>
-							{foreach item=texto key=valor from=$natureza_select}
-								<option value="{$valor}" {if $valor==$natureza}selected="selected"{/if}>{$texto}</option>
-							{/foreach}
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Registros:</td>
-					<td><input type="text" name="limite" value="{$limite}" onClick="this.value='';"  class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" ></td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td><input type="submit" value="Buscar" class="botao"></td>
 				</tr>
 			</table>
+			</form>
+		</td>
+		<td valign="top">
+			{if $eventos}
+				<table  class="lista" border="0" width="600" cellpadding="0" cellspacing="0">
+					<tr>
+						<th align="left">Data/Hora</th>
+						<th align="left">Admin</th>
+						<th align="left">Tipo</th>
+						<th align="left">Natureza</th>
+						<th align="left">&nbsp;</th>
+					</tr>
+					{foreach item=e from=$eventos}
+					<tr class='{cycle values="impar,par" advance=false}'>
+						<td align="left" width="130"><strong>{$e.datahora|date_format:"%d/%m/%Y %H:%M:%S"}</strong></td>
+						<td align="left"><strong>{if $e.id_admin}{$e.admin.admin}{else}{if $e.tipo == 'ERRO' && $e.natureza == 'LOGIN'}{$e.descricao}{else}&nbsp;-{/if}{/if}</strong></td>
+						<td align="left"><strong>{$e.tipo}</strong></td>
+						<td align="left"><strong>{$e.natureza}</strong></td>
+						<td align="right"><strong>[<a href="admin-administracao.php?op=relatorios&relatorio=eventos&tela=detalhes&id_evento={$e.id_evento}">detalhes</a>]</strong></td>
+					</tr>
+					<tr class='{cycle values="impar,par"}' >
+						<td align="left" colspan=5 style="border-bottom: solid 1px #000000;">
+						{if $e.id_cliente || $e.id_cliente_produto || $e.id_cobranca || $e.id_conta}
+						<span style="font-family: terminal,courier,courier new"><strong>AFETADO:</strong>
+						{if $e.cliente_nome_razao}<a href="admin-clientes.php?op=cadastro&extra_op=ficha&id_cliente={$e.id_cliente}">{$e.cliente_nome_razao}</a>::{/if}
+						{if $e.id_cliente_produto}<a href="admin-clientes.php?op=contrato&tela=contrato&id_cliente={$e.id_cliente}&id_cliente_produto={$e.id_cliente_produto}">Contrato #{$e.id_cliente_produto|string_format:"%05d"}</a>{if $e.id_cobranca || $e.id_conta}::{/if}{/if}
+						{if $e.id_cobranca}<a href="admin-clientes.php?op=contrato&tela=amortizacao&id_cliente={$e.id_cliente}&id_cliente_produto={$e.id_cliente_produto}&data={$e.fatura_data}&id_cobranca={$e.id_cobranca}">Fatura #{$e.id_cobranca|string_format:"%06d"}</a>{/if}
+						{if $e.id_conta}<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$e.conta_tipo_conta}&id_cliente={$e.id_cliente}&id_conta={$e.id_conta}">{$e.conta_username}{if $e.conta_tipo_conta == 'E'}@{$e.conta_dominio}{/if}</a>{/if}
+						{else}
+						<span style="size: 1px;">&nbsp;</span>
+						{/if}
+						</td>
+					</tr>
+					{/foreach}
+
+				</table>
+			{else}
+				<div align='center'>Nenhum registro foi encontrado com os termos da busca.</div>
+			{/if}
 		</td>
 	</tr>
 </table>
-</form>
-{if $eventos}
-<div id="cont" align="center">
-	<table  class="lista" border="0" width="700" cellpadding="0" cellspacing="0">
-		<tr>
-			<th align="left">Data/Hora</th>
-			<th align="left">Admin</th>
-			<th align="left">Tipo</th>
-			<th align="left">Natureza</th>
-			<th align="left">Conta</th>
-		</tr>
-		{foreach item=e from=$eventos}
-		<tr class='{cycle values="impar,par" advance=false}'>
-			<td align="left" width="130"><strong>{$e.datahora|date_format:"%d/%m/%Y %H:%M:%S"}</strong></td>
-			<td align="left"><strong>{if $e.id_admin}{$e.admin.admin}{else}{if $e.tipo == 'ERRO' && $e.natureza == 'LOGIN'}{$e.descricao}{else}&nbsp;-{/if}{/if}</strong></td>
-			<td align="left"><strong>{$e.tipo}</strong></td>
-			<td align="left"><strong>{$e.natureza}</strong></td>
-			<td align="left"><strong>{if $e.id_conta}{$e.id_conta} ({$e.conta.tipo_conta}) - {$e.conta.username}{if $e.conta.tipo_conta == 'E'}@{$e.conta.dominio}{/if}{else}&nbsp;-{/if}</strong></td>
-		</tr>
-		<tr class='{cycle values="impar,par"}'>
-			<td align="left" colspan=5><strong>Descrição:</strong><pre>{$e.descricao}</pre>&nbsp;</td>
-		</tr>
-		{/foreach}
 
-	</table>
-</div>
-{else}
-	<div align='center'>Nenhum registro foi encontrado com os termos da busca.</div>
-{/if}
 
 
 </body>

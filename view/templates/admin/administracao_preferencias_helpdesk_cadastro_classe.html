@@ -1,0 +1,64 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="administracao_header.html"}
+
+
+<script language="JavaScript">
+{literal}
+function voltaListagem() {
+	document.location.href = "admin-administracao.php?op=preferencias&tela=helpdesk";
+}
+{/literal}
+</script>
+
+<form name="classe" id="classe" method="post" action="admin-administracao.php">
+	<input type="hidden" name="op" value="preferencias">
+	<input type="hidden" name="tela" value="{$tela}">
+	<input type="hidden" name="subtela" value="{$subtela}">
+	<input type="hidden" name="acao" value="alterar">
+	<input type="hidden" name="id_classe" value="{$id_classe}">
+
+	<table width="400" align="center" class='lista' border=0 cellpadding=0 cellspacing=0>
+
+		<tr>
+			<th bgcolor="#d5Efd5" colspan=2><label>CLASSE DE CHAMADOS/OCORRENCIA/OS</label></th>
+		</tr>
+
+		<tr>
+			<td align="right" nowrap><label>Título:</label></td>
+			<td nowrap><input type="text" name="nome" maxlength=20 size=30 value="{$nome}" id="nome" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" /></td>
+		</tr>
+		<tr>
+			<td align="right" nowrap><label>Subclasse de:</label></td>
+			<td nowrap>
+			<select name="id_classe_pai" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
+				<option value="">-- ESCOLHA --</option>
+				{foreach item=c from=$classes_pai}
+				{if $c.id_classe != $id_classe}
+				<option value="{$c.id_classe}" {if $c.id_classe == $id_classe_pai}SELECTED{/if}>{$c.str_arvore}</option>
+				{/if}
+				{/foreach}
+			</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" nowrap valign="top"><label>Descrição:</label></td>
+			<td nowrap><textarea name="descricao" rows=8 cols=40 class="fieldWithoutFocus" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">{$descricao}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2" width="100%" style="border-top:1px dotted #000">
+					<input type="button" class="botao" name="voltar" value="Voltar" onClick="voltaListagem();"/>
+					<input type="submit" name="submit" class="botao" value="{if $id_classe}Alterar{else}Cadastrar{/if}" />
+			</td>
+		</tr>
+	</table>
+</form>
+
+
+
+</body>
+</html>

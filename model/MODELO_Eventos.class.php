@@ -15,6 +15,7 @@
 		public static $NATUREZA_ALT_CONTA		= 'ALTERACAO CONTA';
 		public static $NATUREZA_PAG_FATURA  	= 'PAGAMENTO FATURA';
 		public static $NATUREZA_EST_FATURA  	= 'ESTORNO FATURA';
+		public static $NATUREZA_REA_FATURA		= 'REAGENDAMENTO FATURA';
 		public static $NATUREZA_ELI_CONTA		= 'ELIMINACAO CONTA';
 		public static $NATUREZA_RENOVACAO		= 'RENOVACAO CONTRATO';
 		
@@ -59,6 +60,8 @@
 				$retorno[self::$NATUREZA_LOGIN] = "Login";
 				$retorno[self::$NATUREZA_ALT_CONTA] = "Alteração de Conta";
 				$retorno[self::$NATUREZA_PAG_FATURA] = "Pagamento de Faturas";
+				$retorno[self::$NATUREZA_EST_FATURA] = "Estorno de Faturas";
+				$retorno[self::$NATUREZA_REA_FATURA] = "Reagendamento de Faturas";
 				$retorno[self::$NATUREZA_RENOVACAO] = "Renovação de Contrato";
 
 			return($retorno);
@@ -164,7 +167,9 @@
 			if (($amortizar != $valor) && ($parcial) && (!$reagendar) ){
 				$descricao .= "<br><span style='color: red;'>" . self::$DESCRICAO_PAG_FAT_PARCIAL . "</span>";
 			}elseif (($amortizar != $valor) && (!$parcial) && ($reagendar) ){
-				$descricao .= "<br><span style='color: red;'>" . self::$DESCRICAO_PAG_FAT_REAG . "</span>";	
+				// $descricao .= "<br><span style='color: red;'>" . self::$DESCRICAO_PAG_FAT_REAG . "</span>";	
+				$descricao = self::$DESCRICAO_PAG_FAT_REAG;
+				$dados["natureza"] = self::$NATUREZA_REA_FATURA;
 			}
 
 
@@ -235,7 +240,7 @@
 		 */
 		public function obtem($filtro=array(),$limite=20) {
 		
-			$limite = "";
+			// $limite = "";
 			
 			// $eventos = $this->evtb_evento->obtem($filtro,"",$limite);
 			$eventos = $this->evtb_evento->obtemEventos($filtro,$limite);

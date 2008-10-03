@@ -18,6 +18,9 @@
 		public static $DNS_SECUNDARIO 	= "N2";
 		public static $HOSPEDAGEM		= "H";
 		
+		// TABLE
+		public static $TABLE			= "T";
+		
 		/**
 		 * Operações
 		 */
@@ -37,19 +40,30 @@
 		 */
 		public static $SEPARADOR_PARAMETROS	= "::";
 		
-		
-		
-		
-		
-		
 		public function __construct() {
 			parent::__construct();		
 			$this->sptb_spool = VirtexPersiste::factory("sptb_spool");
 		}
+		
+		/**
+		 * Coloca o endereco em uma tabela
+		 */
+		public function adicionaEnderecoTabela($id_nas,$tabela,$endereco) {
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($tabela,$endereco));
+			return($this->insereInstrucaoAdicao($id_nas,self::$TABELA,null,$parametros));
+		}
 
 		/**
+		 * Coloca o endereco em uma tabela
+		 */
+		public function removeEnderecoTabela($id_nas,$tabela,$endereco) {
+			$parametros = implode(self::$SEPARADOR_PARAMETROS,array($tabela,$endereco));
+			return($this->insereInstrucaoRemocao($id_nas,self::$TABELA,null,$parametros));
+		}
+
+		
+		/**
 		 * Adiciona uma instrução de configuração de rede de infraestrutura.
-		 *
 		 */
 		public function adicionaRedeInfraestrutura($id_nas,$id_rede,$rede) {
 			return($this->insereInstrucaoAdicao($id_nas,self::$INFRAESTRUTURA,$id_rede,$rede));
@@ -191,6 +205,7 @@
 		 * Adiciona uma instrução genérica na spool
 		 */
 		protected function insereInstrucao($destino,$tipo,$id,$op,$parametros) {
+			if( !$id ) $id = 0;
 			$dados = array(
 							"destino" => $destino,
 							"tipo" => $tipo,
@@ -308,3 +323,4 @@
 	}
 
 ?>
+

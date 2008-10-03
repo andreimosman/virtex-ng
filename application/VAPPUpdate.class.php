@@ -14,6 +14,7 @@
 			$this->_startdb 	= true;
 			$this->_shortopts 	= "DGCS";
 			$this->_longopts	= array("database");
+			$this->cleanExec 	= true;	// Desabilita os arquivos ini (que podem não ter sido criados ainda)
 		}
 		
 		protected function obtemOpcao($opcao) {

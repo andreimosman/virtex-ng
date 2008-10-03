@@ -121,12 +121,19 @@ p {
 
 
 	{*-- ESPECIFICACAO DA OS --*}
+
 	<table class="lista_impressao" border=0 cellspacing=0 cellpadding=0 align="center" width="730" style="margin-top:5px">
-
 		<tr>
-			<td width="730" >Especifica&ccedil;&atilde;o / Objetivo da OS: {$chamado.assunto}</td>
+			<td width="200" >Classe: </td>
+			<td>&nbsp;&nbsp;
+			{foreach item=c from=$classes}
+				{if $chamado.id_classe == $c.id_classe}{$c.str_arvore}{/if}
+			{/foreach}
+			</td>
 		</tr>
-
+		<tr>
+			<td width="200" >Especifica&ccedil;&atilde;o / Objetivo da OS:</td><td>&nbsp;&nbsp; {$chamado.assunto}</td>
+		</tr>
 	</table>
 	{*//-- ESPECIFICACAO DA OS --*}
 

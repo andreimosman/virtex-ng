@@ -1,3 +1,4 @@
+
 <script type="text/javascript" src="view/templates/jslib/prototype/prototype.js"></script>
 <script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
 <script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
@@ -1276,8 +1277,8 @@ function validarData(campo){
 
 {/literal}
 </style>
-
-<form name="contratacao" id="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{else}onSubmit="return antiRepost();"{/if} >
+<br>
+<form style="margin-top: 0; padding-top: 0" name="contratacao" id="contratacao" action="admin-clientes.php" method="post" {if $acao == ""}onSubmit="return checkForm(this);"{else}onSubmit="return antiRepost();"{/if} >
 <input type="hidden" name="op" id="op" value="{$op}">
 <input type="hidden" name="tela" id="tela" value="{$tela}">
 <input type="hidden" name="id_cliente" id="id_cliente" value="{$id_cliente}">
@@ -1290,7 +1291,7 @@ function validarData(campo){
 
   <table class="lista" border=0 cellspacing=0 cellpadding=0 align="center">
 	<tr>
-		<th colspan=8 width=720 >Contratante </th>
+		<th colspan=8 width=760 >Contratante </th>
 	</tr>
 	<tr>
 		<td align="right"><strong>Nome:</strong></td>
@@ -1352,7 +1353,7 @@ function validarData(campo){
 		<tr>
 {if $tela == "migrar"}
 			<td valign="top">
-				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+				<table width="380" cellspacing=0 cellpadding=0 class="boxContratacao">
 					<tr>
 						<th colspan=4 align="left">&nbsp; &nbsp;<label>MIGRAÇÃO DE CONTRATO:</label></th>
 					</tr>
@@ -1366,7 +1367,7 @@ function validarData(campo){
 					</tr>
 				</table>
 
-				<table width="360" cellspacing=0 cellpadding=0 class="boxContratacao">
+				<table width="380" cellspacing=0 cellpadding=0 class="boxContratacao">
 					<tr>
 						<th colspan=4 align="left">&nbsp; &nbsp;<label>Contas que serão migradas:</label></th>
 					</tr>
@@ -1385,7 +1386,7 @@ function validarData(campo){
 {/if}
 
 			<td valign="top">
-				<table width="360" cellspacing=0 cellpadding=0 class="lista">
+				<table width="380" cellspacing=0 cellpadding=0 class="lista">
 					<tr>
 						<th align="right"><label>Contrato: {$contrato.tipo_produto}</label></th>
 						<th colspan=3 align="left">
@@ -1410,9 +1411,9 @@ function validarData(campo){
 						<td colspan="3"><select style="width: 250px;" name="id_produto" id="id_produto" onChange="javascript: contratoAlteraProduto()" class="fieldWithoutFocus" onFocus="formOnFocus(this);" onBlur="formOnBlur(this); calculaDiaProximaFatura();"></select></td>
 					</tr>
 					<tr>
-						<td align="right" width="110"><label>Dt. Contratação:</label></td>
+						<td align="right" width="120"><label>Dt. Contrato:</label></td>
 						<td><input type="text" size="12" maxlength="10" name="data_contratacao" id="data_contratacao" value="{$data_contratacao}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="formOnBlur(this); validarData(this);"></td>
-						<td align="right" width="70"><label>Vigência:</label></td>
+						<td align="right" width="120"><label>Vigência:</label></td>
 						<td><input type="text" size="4" maxlength="2" name="vigencia" id="vigencia" value="{$vigencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>meses</label></td>
 					</tr>
 					<tr>
@@ -1422,7 +1423,7 @@ function validarData(campo){
 						<td><input type="text" size="4" maxlength="2" name="carencia" id="carencia" value="{$carencia}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>dias</label></td>
 					</tr>
 					<tr>
-						<td align="right"><label>Pr&oacute;xima Fatura:</label></td>
+						<td align="right"><label>Pr&oacute;x. Fatura:</label></td>
 						<td align="left" ><input type="text" size="12" maxlength="10" name="primeiro_vencimento_input" id="primeiro_vencimento_input" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						<input type="hidden" name="primeiro_vencimento" id="primeiro_vencimento" value="" >
 						<td align="right" ><label>Pro Rata:</label></td>
@@ -1459,13 +1460,13 @@ function validarData(campo){
 						<td><input type="text" size="8" maxlength="6" name="valor_comodato" id="valor_comodato" value="{$valor_comodato}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><label>reais</label></td>
 					</tr>
 				</table>
-				<table width="360" cellspacing=0 cellpadding=0 class="lista">
+				<table width="380" cellspacing=0 cellpadding=0 class="lista">
 					<tr>
-						<th align="right" width="110"><label>Cobrança:</label></th>
+						<th align="right" width="120"><label>Cobrança:</label></th>
 						<th align="right" colspan=3>&nbsp;</th>
 					</tr>
 					<tr>
-						<td align="right" width="110"><label>Pagamento:</label></td>
+						<td align="right" width="120"><label>Pagamento:</label></td>
 						<td colspan="3">
 							<select name="pagamento" id="pagamento" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 							{foreach key=k item=v from=$tiposPagamento}
@@ -1559,16 +1560,16 @@ function validarData(campo){
 			</td>
 {if $tela != "migrar"}
 			<td valign="top">
-				<table width="360" cellspacing=0 cellpadding=0 class="lista">
+				<table width="380" cellspacing=0 cellpadding=0 class="lista">
 					<tr>
 						<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Usuário:</label></th>
 					</tr>
 					<tr>
-						<td align="right" width="110"><label>Username:</label></td>
+						<td align="right" width="120"><label>Username:</label></td>
 						<td colspan=3><input type="text" size="30" maxlength="20" name="username" id="username" value="{$username}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this);contratoAlteraUsername();"></td>
 					</tr>
 					<tr>
-						<td align="right" width="110"><label>Senha:</label></td>
+						<td align="right" width="120"><label>Senha:</label></td>
 						<td colspan=3>
 							<label>
 								<input type="password" size="20" maxlength="20" name="senha" id="senha" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"><br>
@@ -1585,12 +1586,12 @@ function validarData(campo){
 				<div id="boxTarget" style="position:relative"></div>
 				<div id="boxTemporaria"  style="position:relative"></div>
 				<div id="boxBL" class="divBoxContratacao">
-					<table width="360" cellspacing=0 cellpadding=0 class="lista">
+					<table width="380" cellspacing=0 cellpadding=0 class="lista">
 						<tr>
 							<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Conexão:</label></th>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>NAS:</label></td>
+							<td align="right" width="120"><label>NAS:</label></td>
 							<td colspan=3>
 								<select onchange="javascript:alteraNas();" id="id_nas" name="id_nas" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="">-- SELECIONE --</option>
@@ -1602,7 +1603,7 @@ function validarData(campo){
 							</td>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>POP:</label></td>
+							<td align="right" width="120"><label>POP:</label></td>
 							<td colspan=3>
 								<select name="id_pop" id="id_pop" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="">-- SELECIONE --</option>
@@ -1613,7 +1614,7 @@ function validarData(campo){
 							</td>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>Rede/IP:</label></td>
+							<td align="right" width="120"><label>Rede/IP:</label></td>
 							<td colspan=3>
 								<select name="selecao_redeip" id="selecao_redeip" onChange="contratoAlteraEndereco()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="A">Automática</option>
@@ -1623,7 +1624,7 @@ function validarData(campo){
 							</td>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>MAC:</label></td>
+							<td align="right" width="120"><label>MAC:</label></td>
 							<td colspan=3>
 								<input type="text" name="mac" id="mac" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 							</td>
@@ -1631,19 +1632,19 @@ function validarData(campo){
 				</div>
 				<!-- DISCADO -->
 				<div id="boxD" class="divBoxContratacao">
-					<table width="360" cellspacing=0 cellpadding=0 class="lista">
+					<table width="380" cellspacing=0 cellpadding=0 class="lista">
 						<tr>
 							<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados do Acesso:</label></th>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>Fone:</label></td>
+							<td align="right" width="120"><label>Fone:</label></td>
 							<td colspan=3><input type="text" size="30" maxlength="20" name="foneinfo" id="foneinfo" value="{$foneinfo}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 					</table>
 				</div>
 				<!-- ENDERECO INSTALACAO -->
 				<div id="boxEI" class="divBoxContratacao">
-					<table width="360" cellspacing=0 cellpadding=0 class="lista">
+					<table width="380" cellspacing=0 cellpadding=0 class="lista">
 
 
 						<tr>
@@ -1657,7 +1658,7 @@ function validarData(campo){
 
 						{if $condominios != "[]"}
 						<tr>
-							<td align="right" width="110"><label>Condominio:</label></td>
+							<td align="right" width="120"><label>Condominio:</label></td>
 							<td colspan=3>
 								<select name="id_condominio_instalacao" class="fieldWithoutFocus" id="id_condominio_instalacao" onchange="javascript:AjustarCamposFormularioContratoInstalacao('contratacao', this.selectedIndex -1 , condominios_instalacao);" DISABLED>
 									<option value="">-- SELECIONE --</option>
@@ -1666,7 +1667,7 @@ function validarData(campo){
 						</tr>
 
 						<tr>
-							<td align="right" width="110"><label>Bloco:</label></td>
+							<td align="right" width="120"><label>Bloco:</label></td>
 							<td colspan=3>
 								<select name="id_bloco_instalacao" id="id_bloco_instalacao" class="fieldWithoutFocus" DISABLED>
 									<option value="">-- SELECIONE --</option>
@@ -1675,7 +1676,7 @@ function validarData(campo){
 						</tr>
 
 						<tr>
-							<td align="right" width="110"><label>Apto:</label></td>
+							<td align="right" width="120"><label>Apto:</label></td>
 							<td colspan=3>
 								<input type="text" value="{$apto}" name="apto_instalacao" id="apto_instalacao" class="disabled" DISABLED>
 							</td>
@@ -1683,17 +1684,17 @@ function validarData(campo){
 						{/if}
 
 						<tr>
-							<td align="right" width="110"><label>Endere&ccedil;o:</label></td>
+							<td align="right" width="120"><label>Endere&ccedil;o:</label></td>
 							<td colspan=3><input type="text" size="46" maxlength="50" disabled name="endereco_instalacao" id="endereco_instalacao" value="{$endereco}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
-							<td align="right" width="110" ><label>Complemento:</label></td>
+							<td align="right" width="120" ><label>Complemento:</label></td>
 							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="complemento_instalacao" id="complemento_instalacao" value="{$complemento}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 							<td align="right" ><label>Bairro:</label></td>
 							<td align="left" ><input type="text" size="16" maxlength="30" disabled name="bairro_instalacao" id="bairro_instalacao" value="{$bairro}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>CEP:</label>
+							<td align="right" width="120"><label>CEP:</label>
 							<td align="left" colspan=3><input type="text" size="16" disabled maxlength="30" name="cep_instalacao" id="cep_instalacao" value="{$cep}" class="disabled" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 						<tr>
@@ -1712,12 +1713,12 @@ function validarData(campo){
 				</div>
 				<!-- HOSPEDAGEM -->
 				<div id="boxH" class="divBoxContratacao">
-					<table width="360" cellspacing=0 cellpadding=0 class="lista">
+					<table width="380" cellspacing=0 cellpadding=0 class="lista">
 						<tr>
 							<th colspan=4 align="left">&nbsp; &nbsp;<label>Dados da Hospedagem:</label></th>
 						</tr>
 						<tr>
-							<td align="right" width="110"><label>Tipo:</label></td>
+							<td align="right" width="120"><label>Tipo:</label></td>
 							<td colspan=3>
 								<select name="tipo_hospedagem" id="tipo_hospedagem" onChange="javascript:contratoAlteraTipoHospedagem()" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)">
 									<option value="D">Domínio do Usuário</option>
@@ -1725,7 +1726,7 @@ function validarData(campo){
 								</select>
 							</td>
 						<tr>
-							<td align="right" width="110"><label>Criar:</label></td>
+							<td align="right" width="120"><label>Criar:</label></td>
 							<td colspan=3><label style="margin-right: 0px">www.</label><input type="text" size="30" maxlength="20" name="dominio_hospedagem" id="dominio_hospedagem" value="{$dominio_hospedagem}" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"></td>
 						</tr>
 					</table>
@@ -1734,16 +1735,13 @@ function validarData(campo){
 {/if}
 		</tr>
 	</table>
-
-	<center><br>
-	<table border=0 width=720>
+	<table border=0 width=720 align="center">
 		<tr valign="top">
 			<td style="border-top: dotted 1px #000000" colspan=2 align="center">
 				<input type="button" name="prosseguir" id="prosseguir" value="Cancelar" class="botao" onClick="return Cancelar()"> <input type="submit" name="submit" id="submit" value="Prosseguir" class="botao">
 			</td>
 		</tr>
 	</table>
-	</center>
 
 
 </form>
@@ -1820,28 +1818,28 @@ contratoAlteraFormaPagamentoDA();
 			<th colspan=4>Contratante - Cobran&ccedil;a</th>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
+			<td width="120" align="right"><strong>{if $cliente.tipo_pessoa == "F"}Nome{else}Razão Social{/if}:</strong></td>
 			<td colspan=4>{$cliente.nome_razao}</td>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
+			<td width="120" align="right"><strong>{if $cliente.tipo_pessoa == "F"}CPF:{else}CNPJ:{/if}</strong></td>
 			<td>{$cliente.cpf_cnpj}&nbsp;</td>
-			<td width="110" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG:{else}Inscrição{/if}</strong></td>
+			<td width="120" align="right"><strong>{if $cliente.tipo_pessoa == "F"}RG:{else}Inscrição{/if}</strong></td>
 			<td>{$cliente.rg_inscr}&nbsp;</td>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Endereço:</strong></td>
+			<td width="120" align="right"><strong>Endereço:</strong></td>
 			<td>{$endereco_cobranca}&nbsp;</td>
 
-			<td width="110" align="right"><strong>Complemento:</strong></td>
+			<td width="120" align="right"><strong>Complemento:</strong></td>
 			<td>{$complemento_cobranca}&nbsp;</td>
 
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Bairro:</strong></td>
+			<td width="120" align="right"><strong>Bairro:</strong></td>
 			<td>{$bairro_cobranca}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_cobranca}</td>
 
-			<td width="110" align="right"><strong>Cidade:</strong></td>
+			<td width="120" align="right"><strong>Cidade:</strong></td>
 			<td>{$cidade_cobranca.cidade}-{$cidade_cobranca.uf}&nbsp;</td>
 
 		</tr>
@@ -1856,18 +1854,18 @@ contratoAlteraFormaPagamentoDA();
 				<th colspan=4>Contratante - Instala&ccedil;&atilde;o</th>
 			</tr>
 			<tr>
-				<td width="110" align="right"><strong>Endereço:</strong></td>
+				<td width="120" align="right"><strong>Endereço:</strong></td>
 				<td>{$endereco_instalacao}&nbsp;</td>
 
-				<td width="110" align="right"><strong>Complemento:</strong></td>
+				<td width="120" align="right"><strong>Complemento:</strong></td>
 				<td>{$complemento_instalacao}&nbsp;</td>
 
 			</tr>
 			<tr>
-				<td width="110" align="right"><strong>Bairro:</strong></td>
+				<td width="120" align="right"><strong>Bairro:</strong></td>
 				<td>{$bairro_instalacao}&nbsp;&nbsp;&nbsp;<strong>CEP:</strong>&nbsp;{$bairro_instalacao}</td>
 
-		  <td width="110" align="right"><strong>Cidade:</strong></td>
+		  <td width="120" align="right"><strong>Cidade:</strong></td>
 				<td>{$cidade_instalacao.cidade}-{$cidade_instalacao.uf}&nbsp;</td>
 
 			</tr>
@@ -1885,52 +1883,52 @@ contratoAlteraFormaPagamentoDA();
 			<th colspan=6>Contrato Atual</th>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td width="120" align="right"><strong>Tipo:</strong></td>
 			<td>{if $contrato.tipo_produto == "BL"}BANDA LARGA{/if}{if $contrato.tipo_produto == "D"}DISCADO{/if}{if $contrato.tipo_produto == "H"}HOSPEDAGEM{/if}</td>
-			<td width="110" align="right"><strong>Produto:</strong></td>
+			<td width="120" align="right"><strong>Produto:</strong></td>
 			<td>{$contrato.nome_produto}&nbsp;</td>
-			<td width="110" align="right"><strong>Valor:</strong></td>
+			<td width="120" align="right"><strong>Valor:</strong></td>
 			<td>{if $contrato.valor_produto > 0}{$contrato.valor_produto|string_format:"%.2f"}{else}cortesia{/if}</td>
 		</tr>
 		{if $contrato.valor_produto}
 		<tr>
-			<td width="110" align="right"><strong>Comodato:</strong></td>
+			<td width="120" align="right"><strong>Comodato:</strong></td>
 			<td>{$contrato.valor_comodato|string_format:"%.2f"}&nbsp;</td>
-			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
+			<td width="120" align="right"><strong>Tx Instalação:</strong></td>
 			<td>{$contrato.tx_instalacao|string_format:"%.2f"}</td>
-			<td width="110" align="right"><strong></strong></td>
+			<td width="120" align="right"><strong></strong></td>
 			<td></td>
 
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Desconto:</strong></td>
+			<td width="120" align="right"><strong>Desconto:</strong></td>
 			<td>{$contrato.desconto_promo|string_format:"%.2f"}&nbsp;</td>
-			<td width="110" align="right"><strong>Período Desconto:</strong></td>
+			<td width="120" align="right"><strong>Período Desconto:</strong></td>
 			<td>{$contrato.periodo_desconto} meses</td>
-			<td width="110" align="right"><strong>Data Contratação:</strong></td>
+			<td width="120" align="right"><strong>Data Contratação:</strong></td>
 			<td>{$contrato.data_contratacao}</td>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
+			<td width="120" align="right"><strong>Dia Vencimento:</strong></td>
 			<td>{$contrato.vencimento}&nbsp;</td>
-			<td width="110" align="right"><strong>Vigência:</strong></td>
+			<td width="120" align="right"><strong>Vigência:</strong></td>
 			<td>{$contrato.vigencia} meses</td>
-			<td width="110" align="right"><strong>Carência:</strong></td>
+			<td width="120" align="right"><strong>Carência:</strong></td>
 			<td>{$contrato.carencia} dias</td>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Pagamento:</strong></td>
+			<td width="120" align="right"><strong>Pagamento:</strong></td>
 			<td>{if $contrato.pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
- 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
+ 			<td width="120" align="right"><strong>Forma Pgto:</strong></td>
 			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento_original == "PC" || $forma_pagamento_original == "DA" || $forma_pagamento_original == "BL"}{$tiposFormaPgto[$forma_pagamento_original]} {$bancos[$fp_original.codigo_banco]} - convênio {$fp_original.convenio}{else}Sistema manual com exportação.{/if}</span></td>
   		</tr>
 		{if $forma_pagamento_original == "DA"}
 		<tr>
-			<td width="110" align="right"><strong>Banco:</strong></td>
+			<td width="120" align="right"><strong>Banco:</strong></td>
 			<td>{$fp_original.codigo_banco|string_format:"%03d"}</td>
-			<td width="110" align="right"><strong>Agencia:</strong></td>
+			<td width="120" align="right"><strong>Agencia:</strong></td>
 			<td>{$contrato.da_agencia}</td>
-			<td width="110" align="right"><strong>Conta:</strong></td>
+			<td width="120" align="right"><strong>Conta:</strong></td>
 			<td>{$contrato.da_num_conta}</td>
 		</tr>
 		{/if}
@@ -1946,66 +1944,66 @@ contratoAlteraFormaPagamentoDA();
 			<th colspan=6>Novo Contrato</th>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td width="120" align="right"><strong>Tipo:</strong></td>
 
 			<td>{if $tipo == "BL"}BANDA LARGA{/if}{if $tipo == "D"}DISCADO{/if}{if $tipo == "H"}HOSPEDAGEM{/if}</td>
-			<td width="110" align="right"><strong>Produto:</strong></td>
+			<td width="120" align="right"><strong>Produto:</strong></td>
 			<td>{$produto.nome}&nbsp;</td>
-			<td width="110" align="right"><strong>Valor:</strong></td>
+			<td width="120" align="right"><strong>Valor:</strong></td>
 			<td>{if $produto.valor > 0}{$produto.valor|string_format:"%.2f"}{else}cortesia{/if}</td>
 		</tr>
 		{if $produto.valor > 0}
 		<tr>
-			<td width="110" align="right"><strong>Comodato:</strong></td>
+			<td width="120" align="right"><strong>Comodato:</strong></td>
 			<td>{$valor_comodato|string_format:"%.2f"}&nbsp;</td>
 
-			<td width="110" align="right"><strong>Tx Instalação:</strong></td>
+			<td width="120" align="right"><strong>Tx Instalação:</strong></td>
 			<td>{$tx_instalacao|string_format:"%.2f"}</td>
 
-			<td width="110" align="right"><strong>Parcelas Inst.:</strong></td>
+			<td width="120" align="right"><strong>Parcelas Inst.:</strong></td>
 			<td>{if $parcelas_instalacao}{$parcelas_instalacao} ({$tx_instalacao/$parcelas_instalacao|string_format:"%.2f"}){else}N/A{/if}</td>
 
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Desconto:</strong></td>
+			<td width="120" align="right"><strong>Desconto:</strong></td>
 			<td>{$desconto_promo|string_format:"%.2f"}&nbsp;</td>
 
-			<td width="110" align="right"><strong>Período Desconto:</strong></td>
+			<td width="120" align="right"><strong>Período Desconto:</strong></td>
 			<td>{$periodo_desconto} meses</td>
 
-			<td width="110" align="right"><strong>Data Contratação:</strong></td>
+			<td width="120" align="right"><strong>Data Contratação:</strong></td>
 			<td>{$data_contratacao}</td>
 
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Dia Vencimento:</strong></td>
+			<td width="120" align="right"><strong>Dia Vencimento:</strong></td>
 			<td>{$dia_vencimento}&nbsp;</td>
 
-			<td width="110" align="right"><strong>Vigência:</strong></td>
+			<td width="120" align="right"><strong>Vigência:</strong></td>
 			<td>{if $vigencia > 0}{$vigencia} meses{else}<span style="font-family: arial; font-size: 9px;">Tempo Indeterminado</span>{/if}</td>
 
-			<td width="110" align="right"><strong>Carência:</strong></td>
+			<td width="120" align="right"><strong>Carência:</strong></td>
 			<td>{$carencia} dias</td>
 
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Pagamento:</strong></td>
+			<td width="120" align="right"><strong>Pagamento:</strong></td>
 			<td>{if $pagamento == "PRE"}Pré Pago{else}Pós Pago{/if}</td>
 
- 			<td width="110" align="right"><strong>Forma Pgto:</strong></td>
+ 			<td width="120" align="right"><strong>Forma Pgto:</strong></td>
 			<td><span style="font-family: arial; font-size: 9px;">{if $forma_pagamento == "PC" || $forma_pagamento == "DA" || $forma_pagamento == "BL"}{$tiposFormaPgto[$forma_pagamento]} {$bancos[$formaPagamento.codigo_banco]} - convênio {$formaPagamento.convenio}{else}{if $forma_pagamento=='NA'}Não Atribuida{else}Sistema manual com exportação.{/if}{/if}</span></td>
-      <td width="110" align="right"><strong>Pr&oacute;xima Fatura:</strong></td>
+      <td width="120" align="right"><strong>Pr&oacute;xima Fatura:</strong></td>
 			<td>{$primeiro_vencimento}</td>
   	</tr>
 		{if $forma_pagamento == "DA"}
 		<tr>
-			<td width="110" align="right"><strong>Banco:</strong></td>
+			<td width="120" align="right"><strong>Banco:</strong></td>
 			<td>{$formaPagamento.codigo_banco|string_format:"%03d"}</td>
 
-			<td width="110" align="right"><strong>Agencia:</strong></td>
+			<td width="120" align="right"><strong>Agencia:</strong></td>
 			<td>{$agencia}</td>
 
-			<td width="110" align="right"><strong>Conta:</strong></td>
+			<td width="120" align="right"><strong>Conta:</strong></td>
 			<td>{$conta}</td>
 		</tr>
 		{/if}
@@ -2037,35 +2035,35 @@ contratoAlteraFormaPagamentoDA();
 			<th colspan=6>Detalhes da Conta</th>
 		</tr>
 		<tr>
-			<!--td width="110" align="right"><strong>Tipo:</strong></td>
+			<!--td width="120" align="right"><strong>Tipo:</strong></td>
 			<td>{if $tipo == "BL"}Banda Larga{/if}{if $tipo == "D"}Discado{/if}{if $tipo == "H"}Hospedagem{/if}</td-->
-			<td width="110" align="right"><strong>Username:</strong></td>
+			<td width="120" align="right"><strong>Username:</strong></td>
 			<td>{$username}</td>
 
-			<td width="110" align="right"><strong>Criar e-mail:</strong></td>
+			<td width="120" align="right"><strong>Criar e-mail:</strong></td>
 			<td>{if $criar_email == "t"}{$username}@{$preferenciasGerais.dominio_padrao}{else}NÃO{/if}</td>
 		</tr>
 		{if $tipo == "BL"}
 		<tr>
-			<td width="110" align="right"><strong>Upload:</strong></td>
+			<td width="120" align="right"><strong>Upload:</strong></td>
 			<td>{$produto.banda_upload_kbps} kbps</td>
 
-			<td width="110" align="right"><strong>Download:</strong></td>
+			<td width="120" align="right"><strong>Download:</strong></td>
 			<td>{$produto.banda_download_kbps} kbps</td>
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>NAS:</strong></td>
+			<td width="120" align="right"><strong>NAS:</strong></td>
 			<td>{$nas.nome} ({$tiposNAS[$nas.tipo_nas]})</td>
 
-			<td width="110" align="right"><strong>POP:</strong></td>
+			<td width="120" align="right"><strong>POP:</strong></td>
 			<td>{$pop.nome}</td>
 
 		</tr>
 		<tr>
-			<td width="110" align="right"><strong>Rede/IP:</strong></td>
+			<td width="120" align="right"><strong>Rede/IP:</strong></td>
 			<td>{if $selecao_redeip=="A"}Automática{else}{$endereco_redeip}{/if}</td>
 
-			<td width="110" align="right"><strong>MAC:</strong></td>
+			<td width="120" align="right"><strong>MAC:</strong></td>
 			<td>{if $mac}{$mac}{else}Não Informado{/if}</td>
 
 		</tr>
@@ -2073,7 +2071,7 @@ contratoAlteraFormaPagamentoDA();
 
     {if $tipo == "D"}
     <tr>
-			<td width="110" align="right"><strong>Fone:</strong></td>
+			<td width="120" align="right"><strong>Fone:</strong></td>
 			<td colspan=4>{$foneinfo}</td>
 
 		</tr>
@@ -2081,10 +2079,10 @@ contratoAlteraFormaPagamentoDA();
 
 		{if $tipo == "H"}
     <tr>
-			<td width="110" align="right"><strong>Tipo:</strong></td>
+			<td width="120" align="right"><strong>Tipo:</strong></td>
 			<td >{if $tipo_hospedagem == "D"}Dom&iacute;nio do Usu&aacute;rio{else}www.{$preferenciasGerais.dominio_padrao}/usuario/username{/if}</td>
 
-      <td width="110" align="right"><strong>Criar Dominio:</strong></td>
+      <td width="120" align="right"><strong>Criar Dominio:</strong></td>
 			<td>www.{$dominio_hospedagem}</td>
 
 		</tr>

@@ -52,7 +52,9 @@
 										
 										 "icmp_ip", "icmp_media", "icmp_minimo", "ftp_ip", "ftp_media", "ftp_minimo",
 										 
-										 "horario_saida", "horario_chegada", "caracterizacao", "data_execucao"
+										 "horario_saida", "horario_chegada", "caracterizacao", "data_execucao",
+										 
+										 "id_classe"
 										
 										);
 			$this->_chave 		= "id_chamado";
