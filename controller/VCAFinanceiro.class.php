@@ -359,7 +359,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		$bloquear    = @$_REQUEST["bloquear"];
 		$acao        = @$_REQUEST["acao"];
 		$url 		 = "admin-financeiro.php?op=bloqueios";
-
+		
 		if( $acao == "bloquear" ) {
 		
 				$this->requirePrivGravacao("_FINANCEIRO_COBRANCA_BLOQUEIOS");
@@ -379,6 +379,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 						$dadosLogin = $this->_login->obtem("dados");
 						$admin = $dadosLogin["admin"];
 						$id_admin = $dadosLogin["id_admin"];
+						
+						// echo "<pre>";
 
 						foreach($contrato_id as $k => $v) {
 
@@ -386,6 +388,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 							
 							// Bloqueia as contas
 							foreach($listacontas as $chave => $campo) {
+														
 								if($v == "BL") {
 									$this->contas->alteraContaBandaLarga($campo["id_conta"], NULL, 'S');
 								} else if($v == "D") {
@@ -393,11 +396,13 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 								} else if($v == "H") {
 									$this->contas->alteraHospedagem($campo["id_conta"], NULL, 'S');
 								}
-								$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, '');
+
+								$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, $dadosLogin["ipaddr"]);
 							}
 
 							$this->contas->gravaLogBloqueioAutomatizado($k, 'S', $admin, 'Suspensão por pendências financeiras');
 						}
+						// echo "</pre>";
 					}
 
 					$this->_view->atribui("url",$url);
@@ -976,7 +981,8 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 				$registros = $retorno->obtemRegistros();
 				
 				$dadosLogin = $this->_login->obtem("dados");
-				$admin['id_admin'] = $dadosLogin["id_admin"];
+				// $admin['id_admin'] = $dadosLogin["id_admin"];
+				$admin = $dadosLogin;
 						
 				// gravar log
 				$id_retorno = $this->cobranca->gravarLogRetorno($clean['formato_retorno'], $_FILES['arquivo_retorno']["name"], $uploaddir . $nome_arquivo_retorno, $admin);

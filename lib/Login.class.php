@@ -1,6 +1,5 @@
 <?
 
-
 	/**
 	 * Classe para objetos de login em sessão (Especializada por LoginAdmin e por LoginUsuario).
 	 */
@@ -70,11 +69,21 @@
 		}
 		
 		public function atribui($variavel,$valor) {
+			
+			if( $variavel == "dados" ) {
+				$valor["ipaddr"] = @$_SERVER["REMOTE_ADDR"];
+			}
+			
 			$this->variaveis[$variavel] = $valor;
 		}
 		
 		public function obtem($variavel) {
-			return(@$this->variaveis[$variavel]);
+			$retorno = @$this->variaveis[$variavel];
+			if( $variavel == "dados" && !@$retorno["ipaddr"]) {
+				$retorno["ipaddr"] = @$_SERVER["REMOTE_ADDR"]; 
+			}
+					
+			return($retorno);
 		}
 		
 		public function atribuiPrivilegios($listaPrivilegios,$chave="cod_priv",$write="pode_gravar") {

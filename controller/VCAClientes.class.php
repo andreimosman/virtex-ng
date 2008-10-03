@@ -1134,6 +1134,10 @@
 
 
 					$dadosLogin = $this->_login->obtem("dados");
+					
+					//echo "<pre>";
+					//print_r($dadosLogin);
+					//echo "</pre>";
 
 					if($acao && ($this->requirePrivGravacao("_CLIENTES_FATURAS",false) || $this->requirePrivGravacao("_FINANCEIRO_COBRANCA_AMORTIZACAO",false) || $this->requirePrivGravacao("_CLIENTES_FATURAS_REAGENDAMENTO",false))) {
 						$desconto		= @$_REQUEST["desconto"];
@@ -1271,12 +1275,23 @@
 			$this->_view->atribuiVisualizacao("conta");
 			$tipo = trim($_REQUEST["tipo"]);
 			$id_conta 	= @$_REQUEST["id_conta"];
-			$contas = VirtexModelo::factory("contas");		
+			$contas = VirtexModelo::factory("contas");
+			
+			if( $id_conta ) {
+				$infoConta = $contas->obtemContaPeloId($id_conta); 
+			} else {
+				$infoConta = array();
+			}
 
 			if( !$tipo && $id_conta ) {
-				$info = $contas->obtemContaPeloId($id_conta);
-				$tipo = @$info["tipo_conta"];
+				$tipo = @$infoConta["tipo_conta"];
 			}
+			
+			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
+			if( !$id_cliente_produto && @$infoConta["id_cliente_produto"] ) {
+				$id_cliente_produto = $infoConta["id_cliente_produto"];
+			}
+
 
 			$this->_view->atribui("tipo",$tipo);
 
@@ -1321,8 +1336,6 @@
 
 
 			$acao 		= @$_REQUEST["acao"];
-			$id_cliente_produto = @$_REQUEST["id_cliente_produto"];
-
 
 			$this->_view->atribui("tela",$tela);
 			$this->_view->atribui("id_conta",$id_conta);
@@ -1331,10 +1344,6 @@
 
 			if( $id_conta && !$acao ) {
 				$info = $contas->obtemContaPeloId($id_conta);
-				
-				//echo "<pre>"; 
-				//print_r($info);
-				//echo "</pre>"; 
 
 				foreach($info as $vr => $vl) {
 					$this->_view->atribui($vr,$vl);
@@ -1351,7 +1360,7 @@
 					$this->_view->atribui("formDisabled",false);
 				}
 
-				if( @$info["id_cliente_produto"] ) {
+				if( @$info["id_cliente_produto"] ) {					
 					$contrato = $cobranca->obtemContratoPeloId($info["id_cliente_produto"]);
 					$tipo_contrato = trim($contrato["tipo_produto"]);
 					$this->_view->atribui("tipo_contrato",$tipo_contrato);
@@ -1361,11 +1370,11 @@
 			}
 
 			if( !$tipo && $id_cliente_produto ) {
-				$infoProduto = $cobranca->obtemContratoPeloId($id_cliente_produto);
+				$infoProduto = $cobranca->obtemContratoPeloId($id_cliente_produto);				
 				$tipo = trim($infoProduto["tipo_produto"]);
 				$this->_view->atribui("tipo",$tipo);
 			}
-
+			
 			$equipamentos = VirtexModelo::factory('equipamentos');
 			$preferenciasGerais = $this->preferencias->obtemPreferenciasGerais();
 			$this->_view->atribui("preferenciasGerais",$preferenciasGerais);
@@ -1374,6 +1383,7 @@
 				// Informações específicas da ficha.
 				
 				if($info["tipo_conta"] == "BL") {
+				
 					$nas = $equipamentos->obtemNAS($info["id_nas"]);
 					$this->_view->atribui("nas",$nas);
 					$pop = $equipamentos->obtemPOP($info["id_pop"]);
@@ -1598,6 +1608,7 @@
 					}
 
 				} else { 
+					
 					$this->_view->atribui("cidades_disponiveis",$this->clientes->listaCidades());
 					$listaNAS = $equipamentos->obtemListaNAS();
 					$this->_view->atribui("listaNAS",$listaNAS);
@@ -1699,7 +1710,7 @@
 				}
 			} else {
 				// Listagem
-
+				
 				$listaContratos = $cobranca->obtemContratos($this->id_cliente,"A",$tipo);
 
 				for($i=0;$i<count($listaContratos);$i++) {
@@ -1710,8 +1721,12 @@
 					$numContasTipo = 0;
 
 					$contasContrato = array();
+					
 					foreach($listaContas as $rowConta){
+					
+					
 						 $conta = $contas->obtemContaPeloId($rowConta["id_conta"]);
+						 
 						 $contasContrato[] = $conta;
 
 						 if( trim($conta["tipo_conta"]) == "E" ) {

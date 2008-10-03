@@ -205,6 +205,7 @@
 				$filtro["status"] = $status;
 			}
 			$contas = $this->cntb_conta->obtem($filtro);
+			
 			for($i=0;$i<count($contas);$i++) {
 				$contas[$i] = $this->obtemContaPeloIdTipo($contas[$i]["id_conta"],$contas[$i]["tipo_conta"]);
 			}
@@ -579,7 +580,7 @@
 			$nasNovo = ($infoAtual["id_nas"] != $id_nas ? $this->equipamentos->obtemNAS($id_nas) : $nasAtual);
 
 
-			if( $status != "C" ) {
+			if( $status != "C") {
 				// Pegar os dados atuais p/ comparação
 				$infoAtual = $this->obtemContaPeloId($id_conta);
 				$nasAtual = $this->equipamentos->obtemNAS($infoAtual["id_nas"]);
@@ -587,30 +588,32 @@
 
 				// Dados p/ básicos.
 				$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);
+				
+				if( $status != 'S' ) {	// Código não executado em caso de suspensão.
+					if( !$mac ) $mac = null;
 
-				if( !$mac ) $mac = null;
+					$dados = array("id_pop" => $id_pop, "upload_kbps" => $upload, "download_kbps" => $download, "mac" => $mac, "id_nas" => $id_nas );
 
-				$dados = array("id_pop" => $id_pop, "upload_kbps" => $upload, "download_kbps" => $download, "mac" => $mac, "id_nas" => $id_nas );
+					if( $infoAtual["id_nas"] != $id_nas || $alterar_endereco) {
+						// Alteração de NAS - Alterar obrigatoriamente o endereço.
+						// ou Alteração de endereço.
 
-				if( $infoAtual["id_nas"] != $id_nas || $alterar_endereco) {
-					// Alteração de NAS - Alterar obrigatoriamente o endereço.
-					// ou Alteração de endereço.
+						// Atribuição automática.
+						if( !$endereco ) {
+							$endereco = $this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
+						}
 
-					// Atribuição automática.
-					if( !$endereco ) {
-						$endereco = $this->equipamentos->obtemEnderecoDisponivelNAS($id_nas);
-					}
+						if( $nasNovo["tipo_nas"] == "I" ) {
+							$dados["rede"] = $endereco;
+							$dados["ipaddr"] = null;
+						} else {
+							$dados["ipaddr"] = $endereco;
+							$dados["rede"] = null;
+						}
 
-					if( $nasNovo["tipo_nas"] == "I" ) {
-						$dados["rede"] = $endereco;
-						$dados["ipaddr"] = null;
 					} else {
-						$dados["ipaddr"] = $endereco;
-						$dados["rede"] = null;
+						$endereco = $nasAtual["tipo_nas"] == "I" ? $infoAtual["rede"] : $infoAtual["ipaddr"];
 					}
-
-				} else {
-					$endereco = $nasAtual["tipo_nas"] == "I" ? $infoAtual["rede"] : $infoAtual["ipaddr"];
 				}
 			}
 
@@ -631,6 +634,12 @@
 				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];				
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
 			}
+			
+			if( $status == "S" ) {
+				// Alterações realizadas até o momento são suficientes para suspensão de cliente.
+				return;
+			}
+			
 			
 			// CANCELAMENTO
 			if( $status == "C" ) {
@@ -806,7 +815,7 @@
 
 		}
 
-		public function alteraContaHospedagem($id_conta,$senha,$status,$observacoes,$conta_mestre) {
+		public function alteraContaHospedagem($id_conta,$senha,$status,$observacoes='',$conta_mestre='') {
 			// Altera os dados comuns a todas as contas.
 			$this->alteraConta($id_conta,$senha,$status,$observacoes,$conta_mestre);			
 			// Não se altera nada além dos dados comuns na hospedagem.
@@ -834,19 +843,22 @@
 		}
 
 
-		public function gravaLogMudancaStatusConta($id_cliente_produto, $username, $dominio, $tipo_conta, $id_admin, $ip_admin, $operacao=NULL, $cod_operacao=NULL) {
+		public function gravaLogMudancaStatusConta($id_cliente_produto, $username, $dominio, $tipo_conta, $id_admin, $ip_admin=NULL, $operacao=NULL, $cod_operacao=NULL) {
 
 			$dados = array(
-							"id_cliente_produto" => $id_cliente_produto ,
+							"id_cliente_produto" => $id_cliente_produto,
 							"username" => $username,
 							"dominio" => $dominio,
 							"tipo_conta" => $tipo_conta,
 							"data_hora" => "=now",
 							"id_admin" => $id_admin,
-							"ip_admin" => $ip_admin,
 							"operacao" => $operacao,
 							"cod_operacao" => $cod_operacao
 						);
+			
+			if( $ip_admin ) {
+				$dados["ip_admin"] = $ip_admin;
+			}
 
 			$this->lgtb_status_conta->insere($dados);
 

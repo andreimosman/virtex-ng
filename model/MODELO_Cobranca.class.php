@@ -1210,9 +1210,16 @@
 			//for ($i=0; $i<count($atrasados); $i++) {
 			//	if($atrasados[$i]["id_cliente_produto"] == $fatura["id_cliente_produto"]) $permitir_desbloqueio = false;
 			//}
+			
+			//echo "Permitir Desbloqueio: $permitir_desbloqueio<br>\n";
+			
 
 			if($permitir_desbloqueio) {
 				$contas_bloqueadas = $contas->obtemContasBloqueadasPeloContrato($fatura["id_cliente_produto"], $tipo_produto);			
+				
+				//echo "<pre>CB: \n";
+				//print_r($contas_bloqueadas);
+				//echo "<pre>";
 				
 				foreach( $contas_bloqueadas as $i => $conta ) {
 					switch(trim($conta["tipo_conta"])) {
@@ -1224,13 +1231,13 @@
 							$contas->alteraContaDiscado($conta["id_conta"], NULL, 'A');
 							break;
 						case "H":
-							$contas->alteraHospedagem($conta["id_conta"], NULL, 'A', '', '');
+							$contas->alteraContaHospedagem($conta["id_conta"], NULL, 'A');
 							break;
 					}
-					$contas->gravaLogMudancaStatusConta($contas_bloqueadas["id_cliente_produto"], $contas_bloqueadas["username"], $contas_bloqueadas["dominio"], $contas_bloqueadas["tipo_conta"], $admin["id_admin"], '');
+					$contas->gravaLogMudancaStatusConta($conta["id_cliente_produto"], $conta["username"], $conta["dominio"], $conta["tipo_conta"], $admin["id_admin"], @$admin["ipaddr"]);
+					$contas->gravaLogBloqueioAutomatizado($conta["id_cliente_produto"], 'A', $admin["admin"], 'Ativacao por motivo de pagamento de fatura');
 				}
-				$contas->gravaLogBloqueioAutomatizado($contas_bloqueadas["id_cliente_produto"], 'A', $admin["admin"], 'Ativacao por motivo de pagamento de fatura');
-					
+									
 			}
 
 			return true;
