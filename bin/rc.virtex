@@ -1,12 +1,23 @@
 #!/bin/sh
 
+#
+# PROVIDE: virtex
+# REQUIRE: postgresql
+# KEYWORD: shutdown
+#
+# Add the following line to /etc/rc.conf to enable VirtexAdmin:
+#
+#  virtex_enable="YES"
+#
+# Mosman Consultoria e Desenvolvimento
+#
 #####################################
 # RC                                #
 #       Script de inicialização     #
 #                                   #
 # Este script deverá ser linkado no #
 # /usr/local/etc/rc.d com o nome de #
-# 011.virtexadmin.sh                #
+# virtex                            #
 #                                   #
 # TODO: start/stop                  #
 ####################################

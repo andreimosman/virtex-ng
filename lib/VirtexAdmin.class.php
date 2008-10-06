@@ -1,6 +1,5 @@
 <?
 
-
 	/**
 	 * Base do sistema VirtexAdmin.
 	 */
@@ -47,6 +46,3 @@
 	
 	}
 
-
-
-?>

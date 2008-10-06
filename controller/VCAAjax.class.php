@@ -26,16 +26,21 @@
 		
 		
 		protected function retorna($valor) {
+		
+			header("Content-Type: text/plain; charset=ISO-8859-1");
+			//header("Content-Type: text/plain; charset=UTF-8");
+		
 			// TODO: output XML
 			switch($this->output) {
 				case 'JSON':
-					echo MJson::encode($valor);
+					echo trim(MJson::encode($valor));
 					break;
 				case 'DEBUG':
 					echo "<pre>";
 					print_r($valor);
 					echo "</pre>";
 					break;
+				// case 'TXT':
 			}
 		}
 		
@@ -154,9 +159,13 @@
 					}
 					
 					if(count($ret)){
-						$retorno = array("codigo" => 1, "mensagem" => "Username indisponivel");
+						// $retorno = array("codigo" => 1, "mensagem" => "Username indisponivel");
+						$retorno = array("codigo"=>1);
 					} else {
-						$retorno = array("codigo" => 0, "mensagem" => "Username disponivel");
+						// $retorno = array("codigo" => 0, "mensagem" => "Username disponivel");
+						$retorno = array("codigo"=>0);
+						
+						
 					}					
 					
 					// Escreve o retorno na tela de acordo com o formato especificado.
@@ -255,7 +264,7 @@
 		}
 		
 		
-		
+		// 
 		protected function executaCondominio($tipo) {
 		
 			$cadastro = VirtexModelo::factory("cadastro");
@@ -279,4 +288,4 @@
 		
 		}
 	}
-?>
+

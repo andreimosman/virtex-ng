@@ -79,6 +79,8 @@ function validaUsername(){
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
 
+	// window.alert("PARS: " + pars);
+
 	var myAjax = new Ajax.Request(
 		url,
 		{
@@ -92,8 +94,9 @@ function validaUsername(){
 	return 	returnStatusUsername;
 }
 
-function showResponseUsername(originalRequest) {
 
+function showResponseUsername(originalRequest) {
+	// window.alert("RT: " + originalRequest.responseText);
 	if ( !getReturn(originalRequest.responseText)){
 		document.getElementById('username').value = "";
 		if( document.getElementById('username').enabled ) {
@@ -122,12 +125,45 @@ function checkEnderecoDisponivel(id_nas, endereco){
 	return returnStatus;
 }
 
+function chopTrim(str) {
+
+	for(var i=0;i<str.length;i++) {
+		window.alert("[" + str.charAt(i) + "]");
+	}
+
+	return(str.replace(/^\s+|\s+$|\n/g,""));
+}
+
+
 function getReturn(response){
-	var r = response.evalJSON();
+	//window.alert("GET RETURN!!!: ["+response+"]");
+
+	response = chopTrim(response);
+
+	window.alert(response);
+
+	try {
+		var r = eval(response);
+		var tmp = "var r = " + response + ";";
+		window.alert("TMP: " + tmp);
+		//eval(tmp);
+		window.alert(r);
+
+
+	} catch(e) {
+		window.alert("ERR: " + e.message);
+	}
+
+	// r = eval(response);
+	// var r = response.evalJSON();
+	window.alert("getReturn: " + r);
+
 	if(r.codigo > 0){
 		alert(r.mensagem)
 		return false;
 	}
+
+
 	return r;
 }
 
@@ -1063,57 +1099,59 @@ function validacao(frm ) {
 
 function checkDadosConexao(){
 
-		var frm = document.contratacao;
+	var frm = document.contratacao;
 
-		//window.alert("FRM: " + frm);
-
-
-		var nas = frm.id_nas;
-		var pop = frm.id_pop;
-		var mac = frm.mac;
-		var id_cliente_produto = frm.id_cliente_produto;
-		var migracao = false;
-		if( id_cliente_produto.value != '' ) {
-			migracao = true;
-		}
-		var altera_rede = frm.altera_rede;
-		var selecao_redeip = frm.selecao_redeip;
-		var endereco_redeip = frm.endereco_redeip;
-
-		if( !nas.value ) {
-			// window.alert('NOT NAS');
-			window.alert("É necessário escolher um NAS.");
-			return false;
-		}
-
-		if( !pop.value ) {
-			window.alert("É necessário escolher um POP.");
-			return false;
-		}
-
-		var nas_text = nas.options[nas.options.selectedIndex].text;
-		var nas_type=nas_text.split(":");
-		if( ("IP" == nas_type[0]) && ("" == mac.value) ){
-			if(!confirm("O Não preenchimento do MAC pode facilitar o acesso de usuários não autorizados no sistema. Deseja proceguir mesmo SEM o mac?")){
-				return false;
-			}
-		}
-
-		if("M" == selecao_redeip.value) {
-			if("" != endereco_redeip.value){
-				if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
-					return false;
-				}
-			} else {
-				alert("Preencher o campo de endereço IP!");
-				if( endereco_redeip.enabled ) {
-					endereco_redeip.focus();
-				}
-				return false;
-			}
-		}
-		return true;
+	var nas = frm.id_nas;
+	var pop = frm.id_pop;
+	var mac = frm.mac;
+	var id_cliente_produto = frm.id_cliente_produto;
+	var migracao = false;
+	if( id_cliente_produto.value != '' ) {
+		migracao = true;
 	}
+	var altera_rede = frm.altera_rede;
+	var selecao_redeip = frm.selecao_redeip;
+	var endereco_redeip = frm.endereco_redeip;
+
+	if( !nas.value ) {
+		// window.alert('NOT NAS');
+		window.alert("É necessário escolher um NAS.");
+		return false;
+	}
+
+	if( !pop.value ) {
+		window.alert("É necessário escolher um POP.");
+		return false;
+	}
+
+	var nas_text = nas.options[nas.options.selectedIndex].text;
+	var nas_type=nas_text.split(":");
+	if( ("IP" == nas_type[0]) && ("" == mac.value) ){
+		if(!confirm("O Não preenchimento do MAC pode facilitar o acesso de usuários não autorizados no sistema. Deseja proceguir mesmo SEM o mac?")){
+
+			return false;
+		}
+	}
+
+	// window.alert("CKPoint 2: " + selecao_redeip.value + "/" + endereco_redeip.value );
+
+
+	if("M" == selecao_redeip.value) {
+		if("" != endereco_redeip.value){
+			if( !checkEnderecoDisponivel(nas.value,endereco_redeip.value) ){
+				return false;
+			}
+		} else {
+			alert("Preencher o campo de endereço IP!");
+			if( endereco_redeip.enabled ) {
+				endereco_redeip.focus();
+			}
+			return false;
+		}
+	}
+
+	return true;
+}
 
 
 function antiRepost() {
@@ -2184,4 +2222,18 @@ contratoAlteraFormaPagamentoDA();
 
 	{/if}
 {/if}
+
+
+
+
+
+
+
+document.getElementById('username').value = 'mosman';
+validaUsername();
+
+
+
+
+
 </script>
