@@ -72,14 +72,13 @@ function showResponseEmail(originalRequest) {
 }
 
 returnStatusUsername = false;
+
 function validaUsername(){
 	username = document.getElementById('username').value;
 	dominio = {/literal}'{$preferenciasGerais.dominio_padrao}'{literal}
 	tipo = document.getElementById('tipo').value;
 	var url = "admin-ajax.php";
 	var pars = "op=contas&output=JSON&query=usuario&username="+username+"&dominio="+dominio+"&tipo_conta="+tipo;
-
-	// window.alert("PARS: " + pars);
 
 	var myAjax = new Ajax.Request(
 		url,
@@ -96,9 +95,8 @@ function validaUsername(){
 
 
 function showResponseUsername(originalRequest) {
-	// window.alert("RT: " + originalRequest.responseText);
 	if ( !getReturn(originalRequest.responseText)){
-		document.getElementById('username').value = "";
+		// document.getElementById('username').value = "";
 		if( document.getElementById('username').enabled ) {
 			document.getElementById('username').focus();
 		}
@@ -127,42 +125,25 @@ function checkEnderecoDisponivel(id_nas, endereco){
 
 function chopTrim(str) {
 
-	for(var i=0;i<str.length;i++) {
-		window.alert("[" + str.charAt(i) + "]");
-	}
+	str = str.replace(/^\s+|\s+$|\x1C|\n/g,"");
 
-	return(str.replace(/^\s+|\s+$|\n/g,""));
+	return(str);
 }
 
 
 function getReturn(response){
-	//window.alert("GET RETURN!!!: ["+response+"]");
-
 	response = chopTrim(response);
-
-	window.alert(response);
-
 	try {
-		var r = eval(response);
 		var tmp = "var r = " + response + ";";
-		window.alert("TMP: " + tmp);
-		//eval(tmp);
-		window.alert(r);
-
-
+		eval(tmp);
 	} catch(e) {
-		window.alert("ERR: " + e.message);
+		window.alert("ERR: " + e.message + " / Contacte o suporte");
 	}
-
-	// r = eval(response);
-	// var r = response.evalJSON();
-	window.alert("getReturn: " + r);
 
 	if(r.codigo > 0){
-		alert(r.mensagem)
+		// alert(r.mensagem)
 		return false;
 	}
-
 
 	return r;
 }
@@ -978,6 +959,7 @@ function validacao(frm ) {
 				}
 
 				if(!validaUsername()){
+					window.alert("O username escolhido já está sendo utilizado no sistema.");
 					return false;
 				}
 			// }
@@ -2229,8 +2211,8 @@ contratoAlteraFormaPagamentoDA();
 
 
 
-document.getElementById('username').value = 'mosman';
-validaUsername();
+//document.getElementById('username').value = 'mosman';
+//validaUsername();
 
 
 
