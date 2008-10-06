@@ -3931,6 +3931,13 @@
     <type >boolean</type>
     <mdb2type >boolean</mdb2type>
    </usa_mac_ap>
+   <excluido >
+    <notnull ></notnull>
+    <nativetype >bool</nativetype>
+    <default >false</default>
+    <type >boolean</type>
+    <mdb2type >boolean</mdb2type>
+   </excluido>
   </fields>
   <indexes >
   </indexes>
@@ -11346,7 +11353,7 @@
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >223</start>
+  <start >228</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >

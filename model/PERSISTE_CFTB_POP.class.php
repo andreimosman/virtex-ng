@@ -6,14 +6,14 @@
 			parent::__construct();
 			
 			$this->_campos		= array("id_pop","nome","info","tipo","id_pop_ap","status","ipaddr","snmp_rw_com","infoserver",
-										"snmp_versao", "snmp_ro_com", "ativar_snmp", "ativar_monitoramento","id_servidor", "bloquearmac", "clientemacpop", "mac");
+										"snmp_versao", "snmp_ro_com", "ativar_snmp", "ativar_monitoramento","id_servidor", "bloquearmac", "clientemacpop", "mac", "excluido");
 			$this->_chave 		= "id_pop";
 			$this->_tabela 		= "cftb_pop";
 			$this->_sequence 	= "cfsq_id_pop";
 			$this->_ordem		= "nome";
 			
 			$this->_filtros		= array("id_pop_ap" => "custom", "status" => "custom", "ativar_snmp" => "bool",
-										"ativar_monitoramento" => "bool", "bloqueramac" => "bool", "clientemacpop" => "bool");
+										"ativar_monitoramento" => "bool", "bloqueramac" => "bool", "clientemacpop" => "bool", "excluido" => "bool");
 			
 		}
 		
@@ -59,6 +59,17 @@
 			return($_LS_STATUS_POP);
 		}
 		
+		public function obtem($condicao=array(),$ordem="",$limite="",$unico = false,$conta = false) {
+			// Por padrão não retorna os registros excluídos.
+			if( !@$condicao["excluido"] ) {
+				$condicao["excluido"] = 'f';
+			}
+			
+			return(parent::obtem($condicao,$ordem,$limite,$unico,$conta));
+
+		}
+
+
 	}
 
 ?>
