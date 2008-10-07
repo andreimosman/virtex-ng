@@ -63,5 +63,3 @@ class PERSISTE_CBTB_LOTE_COBRANCA extends VirtexPersiste {
 
 }
 
-
-?>

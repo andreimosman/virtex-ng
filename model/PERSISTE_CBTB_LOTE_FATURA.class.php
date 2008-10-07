@@ -18,4 +18,3 @@ class PERSISTE_CBTB_LOTE_FATURA extends VirtexPersiste {
 
 }
 
-?>

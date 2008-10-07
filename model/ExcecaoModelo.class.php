@@ -5,4 +5,3 @@
 	class ExcecaoModelo extends VirtexExcecao {
 		
 	}
-?>

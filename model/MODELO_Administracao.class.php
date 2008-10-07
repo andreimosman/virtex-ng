@@ -1,5 +1,5 @@
 <?
-
+	//
 	class MODELO_Administracao extends VirtexModelo {
 
 		protected $adtb_admin;

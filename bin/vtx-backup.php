@@ -14,4 +14,3 @@
 	// print_r($app);
 	exit($app->executa());
 
-?>

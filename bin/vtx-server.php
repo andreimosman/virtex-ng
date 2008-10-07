@@ -12,5 +12,3 @@
 	$app = new VAPPServer();
 	
 	exit($app->daemon());
-
-?>

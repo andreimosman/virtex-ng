@@ -317,6 +317,3 @@ class PERSISTE_CNTB_CONTA extends VirtexPersiste {
 
 }
 
-
-
-?>

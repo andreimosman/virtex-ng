@@ -10,4 +10,3 @@
 			$this->_filtros	= array_merge($this->_filtros,array("uid" => "number", "gid" => "number"));
 		}
 	}
-?>

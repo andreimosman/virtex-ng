@@ -498,4 +498,3 @@ class VCACobranca extends VirtexControllerAdmin {
 		}
 	}
 }
-?>

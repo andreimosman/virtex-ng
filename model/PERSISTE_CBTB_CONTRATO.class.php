@@ -391,4 +391,3 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 }
 
-?>

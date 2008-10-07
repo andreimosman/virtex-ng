@@ -14,4 +14,3 @@
 	exit($app->executa());
 
 
-?>

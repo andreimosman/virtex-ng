@@ -210,4 +210,3 @@ class VCAFaturamento extends VirtexControllerAdmin {
 	}
 
 }
-?>

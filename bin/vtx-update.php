@@ -13,5 +13,3 @@
 	$app = new VAPPUpdate();
 	exit($app->executa());
 
-
-?>

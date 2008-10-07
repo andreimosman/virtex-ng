@@ -52,4 +52,3 @@ VirtexPersiste::init();
 $cli = VirtexModelo::factory("clientes");
 
 
-?>

@@ -15,4 +15,3 @@ class PERSISTE_CBTB_REMESSA extends VirtexPersiste {
 	
 }
 
-?>

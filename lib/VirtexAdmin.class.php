@@ -2,8 +2,8 @@
 
 	/**
 	 * Base do sistema VirtexAdmin.
+	 *
 	 */
-	
 	class VirtexAdmin {
 		protected $_cfg;
 		protected $_config;

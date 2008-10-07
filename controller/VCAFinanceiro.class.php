@@ -1842,4 +1842,3 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 		}
 	}
 }
-?>

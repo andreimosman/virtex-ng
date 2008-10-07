@@ -91,4 +91,3 @@ class PERSISTE_PRTB_PRODUTO extends VirtexPersiste {
 	}
 }
 
-?>

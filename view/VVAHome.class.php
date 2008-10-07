@@ -19,4 +19,3 @@
 			parent::exibe();
 		}
 	}
-?>

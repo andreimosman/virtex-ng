@@ -133,11 +133,17 @@ function chopTrim(str) {
 
 function getReturn(response){
 	response = chopTrim(response);
+	var r;
 	try {
-		var tmp = "var r = " + response + ";";
+		var tmp = "r = " + response + ";";
 		eval(tmp);
 	} catch(e) {
-		window.alert("ERR: " + e.message + " / Contacte o suporte");
+		// window.alert("ERR: " + e.message + " / Contacte o suporte");
+		try {
+			r = response.evalJSon();
+		} catch(e) {
+			window.alert("ERR: " + e.message + " / Contacte o suporte");
+		}
 	}
 
 	if(r.codigo > 0){
@@ -1369,7 +1375,7 @@ function validarData(campo){
   </table>
 
 
-  <table border=0 align="center" cellspacing=0 height="355">
+  <table border=0 align="center" cellspacing=0>
 		<tr>
 {if $tela == "migrar"}
 			<td valign="top">
@@ -2204,18 +2210,5 @@ contratoAlteraFormaPagamentoDA();
 
 	{/if}
 {/if}
-
-
-
-
-
-
-
-//document.getElementById('username').value = 'mosman';
-//validaUsername();
-
-
-
-
 
 </script>
