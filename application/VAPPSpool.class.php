@@ -112,7 +112,8 @@
 						$id_pop = @$listaContas[$i]["id_pop"];
 						$macPOP = $equipamentos->macPOP($listaContas[$i]["id_pop"]);
 						
-						if( $macPOP ) {
+						// Somente usa o MAC do pop se o cliente tiver MAC setado e for cliente de macPOP (qdo ele não tem considera-se SEM BLOQUEIO DE MAC).
+						if( $mac && $macPOP ) {
 							$mac = $macPOP;
 						}
 					

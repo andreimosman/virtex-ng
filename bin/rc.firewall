@@ -62,6 +62,12 @@ ipfw -f flush
 /sbin/ipfw add 202 permit tcp from me 22 to any
 /sbin/ipfw add 202 permit tcp from any 22 to me
 
+# WEB
+/sbin/ipfw add 203 permit tcp from any to me 80
+/sbin/ipfw add 203 permit tcp from me 80 to any
+/sbin/ipfw add 203 permit udp from any to me 80
+/sbin/ipfw add 203 permit udp from me 80 to any
+
 #
 # PERMITIR TRAFEGO NESTA MAQUINA (not prio/qos)
 #####################################################

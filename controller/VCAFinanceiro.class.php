@@ -394,7 +394,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 								} else if($v == "D") {
 									$this->contas->alteraContaDiscado($campo["id_conta"], NULL, 'S');
 								} else if($v == "H") {
-									$this->contas->alteraHospedagem($campo["id_conta"], NULL, 'S');
+									$this->contas->alteraContaHospedagem($campo["id_conta"], NULL, 'S');
 								}
 
 								$this->contas->gravaLogMudancaStatusConta($campo["id_cliente_produto"], $campo["username"], $campo["dominio"], $campo["tipo_conta"], $id_admin, $dadosLogin["ipaddr"]);

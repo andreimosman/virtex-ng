@@ -121,17 +121,6 @@
 				
 			}
 
-
-
-
-
-
-
-
-
-
-
-
 		}
 		
 		public function configuraRede($interface,$ip,$mascara,$gateway="") {
@@ -207,17 +196,24 @@
 			if( $op == MODELO_Spool::$ADICIONAR ) {
 
 				$this->SO->removeARP($ip);
-
-				if( $this->infoNAS[$id_nas]["tipo_nas"] == "I" ) {
-					$conta = $this->contas->obtemContaPeloId($id);
-					$id_pop = trim(@$conta["id_pop"]);
-					if( $id_pop ) {
-						$macPOP = $this->equipamentos->macPOP($id_pop);
-						if( $macPOP ) {
-							$mac = $macPOP;
+				
+				/**
+				 * Código aplicável somente se existir bloqueio de MAC.
+				 *
+				 * Caso o mac do usuário não tenha sido enviado o sistema considera que o cliente está SEM BLOQUEIO DE MAC.
+				 */
+				if( $mac ) {
+					if( $this->infoNAS[$id_nas]["tipo_nas"] == "I" ) {
+						$conta = $this->contas->obtemContaPeloId($id);
+						$id_pop = trim(@$conta["id_pop"]);
+						if( $id_pop ) {
+							$macPOP = $this->equipamentos->macPOP($id_pop);
+							if( $macPOP ) {
+								$mac = $macPOP;
+							}
 						}
+
 					}
-					
 				}
 				
 				$this->SO->ifConfig($interface,$addr->obtemPrimeiroIP(),$addr->obtemMascara());

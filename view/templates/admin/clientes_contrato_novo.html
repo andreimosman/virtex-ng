@@ -1,8 +1,9 @@
 
 <script type="text/javascript" src="view/templates/jslib/prototype/prototype.js"></script>
-<script type="text/javascript" src="view/templates/jslib/form/condominio.js"></script>
-<script type="text/javascript" src="view/templates/jslib/form/ajax.js"></script>
-<script type="text/javascript" src="view/templates/jslib/form/validacao.js"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=condominio"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=validacao"></script>
+<script type="text/javascript" src="admin-js.php?tp=form&js=ajax"></script>
+
 <script language="JavaScript">
 // Lista
 var planosBL=eval('{$listaBL}');
@@ -19,6 +20,8 @@ var LIMITE_PRORATA = {$limite_prorata};
 
 var condominios = eval({$condominios});
 var condominios_instalacao = eval({$condominios_instalacao});
+
+//window.alert(validaUsernameString);
 
 
 var enviando = false;
@@ -72,6 +75,18 @@ function showResponseEmail(originalRequest) {
 }
 
 returnStatusUsername = false;
+
+function validaFormatoUsername() {
+
+
+	window.alert("VALIDA FORMATO USERNAME");
+
+
+
+
+	return(false);
+}
+
 
 function validaUsername(){
 	username = document.getElementById('username').value;
@@ -959,7 +974,8 @@ function validacao(frm ) {
 			}
 
 			// if(username != ""){
-				if(!validaUsernameString(username.value)) {
+
+				if(!validaUsernameString(username)) {
 					alert("Não é permitido a inserção de espaços e caracteres maúsculos e caracteres especiais diferentes de \".\" e \"_\" no username.");
 					return false;
 				}

@@ -1159,6 +1159,7 @@
 
 							if( !$senha_admin ) {
 								$erro = "Operação não autorizada: SENHA NÃO FORNECIDA.";
+								$data_pagamento = MData::ptBR_to_ISO($data_pagamento);
 							} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
 								$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
 							}
