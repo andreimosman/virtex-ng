@@ -1541,10 +1541,8 @@ function validarData(campo){
 													<tr>
 														<td>
 															<select name="id_forma_pagamento_{$tipo}" id="id_forma_pagamento_{$tipo}" class="fieldWithoutFocusFP" onFocus="javascript:formOnFocusSuf(this,'FP')" onBlur="javascript:formOnBlurSuf(this,'FP')" {if $tipo == "DA"} onChange="javascript:contratoAlteraFormaPagamentoDA()"{/if}>
-																<option value="">-- SELECIONE --</option>
+																<!--option value="">-- SELECIONE --</option-->
 																{foreach item=f from=$v}
-
-
 																	{if $tipo == "DA" || $tipo == "BL" && $f.carne == 't'}
 																		<option value="{$f.id_forma_pagamento}" {if $f.id_forma_pagamento == $contrato.id_forma_pagamento}SELECTED{/if}>
 																			{$bancos[$f.codigo_banco]} - convênio {$f.convenio}
