@@ -1162,6 +1162,7 @@
 								$data_pagamento = MData::ptBR_to_ISO($data_pagamento);
 							} elseif (md5(trim($senha_admin)) != $dadosLogin["senha"] ) {
 								$erro = "Operação não autorizada: SENHA NÃO CONFERE.";
+								$data_pagamento = MData::ptBR_to_ISO($data_pagamento);
 							}
 							if($erro) throw new Exception($erro);
 
