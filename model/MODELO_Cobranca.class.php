@@ -149,7 +149,7 @@
 		 
 		 
 		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$faz_prorata,$parcelamento_instalacao,$id_cliente_produto=0) {
-
+			// echo "FAZ PRO-RATA: $faz_prorata<br>\n";
 			// Diferença máxima entre a data da contratação e a próxima fatura.
 			$_MAX_DIFF = 10;
 
@@ -206,7 +206,9 @@
 			$valorResidual = 0;
 			$residualCobrado = false;
 
-			if( ($faz_prorata == true || $faz_prorata == 't' || $faz_prorata == 1) && $id_cliente_produto ) {
+			if( ($faz_prorata == 't' || $faz_prorata == 1) && $id_cliente_produto ) {
+			
+				// echo "FAZ P!<br>\n";
 				// 
 				// Migração - será necessário utilizar informações do contrato antigo para cálculos.
 				// 
@@ -241,7 +243,8 @@
 			$prorata_valor = 0;
 			$prorata_comodato = 0;
 			$prorata_dias = 0;
-			if( $faz_prorata == true || $faz_prorata == 't' || $faz_prorata == 1 ) {
+			if( $faz_prorata == 't' || $faz_prorata == 1 ) {
+				// echo "FAZ_P2!<br>\n";
 				// Proceder com o cálculo de pro-rata.		
 				$diff = MData::diff($data_contratacao,$proxima_fatura);
 
