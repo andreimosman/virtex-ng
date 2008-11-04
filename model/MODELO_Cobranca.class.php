@@ -146,6 +146,223 @@
 		 *   -> comodato
 		 *   ->
 		 */
+		 
+		 
+		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$faz_prorata,$parcelamento_instalacao,$id_cliente_produto=0) {
+
+			// Diferença máxima entre a data da contratação e a próxima fatura.
+			$_MAX_DIFF = 10;
+
+
+			// AJUSTES DA VIGENCIA
+			if( $tx_instalacao && $vigencia < $parcelamento_instalacao ) {
+				$vigencia = $parcelamento_instalacao;
+			}
+
+			if( $vigencia < $desconto_periodo ) {
+				$vigencia = $desconto_periodo;
+			}
+
+
+			$data_contratacao = MData::ptBR_to_ISO($data_contratacao);
+
+			list($ano,$mes,$dia) = explode("-",$data_contratacao);
+			$data_base = $ano."-".$mes."-".str_pad($dia_vencimento,2,"0",STR_PAD_LEFT);
+
+			if( $pagamento == "PRE" ) {
+				// PRE PAGO
+
+				// Diferença de dias entre a data da contratação e a data base.
+				$diff = MData::diff($data_contratacao,$data_base);
+				$proxima_fatura = $data_base;
+
+				if( $diff < 0 ) {
+					// Data da próxima fatura no passado.
+					$proxima_fatura = MData::adicionaMes($data_base,1);
+					$diff = MData::diff($data_contratacao,$proxima_fatura);
+				}
+
+				// O ajuste ainda não foi suficiente (mesmo com o incremento e correção). Incrementar mais um mês.
+				if( $diff < $_MAX_DIFF ) { 
+					$proxima_fatura = MData::adicionaMes($proxima_fatura,1);
+				}
+
+			} else {
+				// POS PAGO
+
+				$proxima_fatura = MData::adicionaMes($data_base,1);
+				$diff = MData::diff($data_contratacao,$proxima_fatura);
+
+				if( $diff < $_MAX_DIFF ) {
+					$proxima_fatura = MData::adicionaMes($proxima_fatura,1);
+				}
+
+			}
+
+
+
+			// Pro-Rata Residual (cobrado somente em caso de migracao para produto de valor diferente).
+			$diasResidual = 0;
+			$valorResidual = 0;
+			$residualCobrado = false;
+
+			if( ($faz_prorata == true || $faz_prorata == 't' || $faz_prorata == 1) && $id_cliente_produto ) {
+				// 
+				// Migração - será necessário utilizar informações do contrato antigo para cálculos.
+				// 
+			
+				$contrato = $this->obtemContratoPeloId($id_cliente_produto);
+				
+				// Cobrança de pro-rata residual
+				$diaVenc = (int)$contrato["vencimento"];
+				$valorResidual = round( (($contrato["valor_produto"] / 30) * $diasResidual), 2);
+
+				$diaBase = date($diaVenc."/m/Y");				
+				$hoje = date("d/m/Y");
+
+				$diasResidual = MData::diff($diaBase,$hoje);
+				$valorResidual = ($contrato["valor_produto"] / 30) * $diasResidual;
+
+				if( $diasResidual < 0 ) {
+					// Calcula a diferença entre o plano velho e o plano novo, podendo caracterizar desconto ou acrescimo.
+					// Trata-se do número de dias que o cliente vai utilizar até a fatura deste mês vencer.
+
+					$valorProrataParcial = ($valor / 30) * $diasResidual;
+					$valorProrataParcial *= -1;
+
+					$valorResidual += $valorProrataParcial;
+
+				}
+			
+			}
+
+			// $faz_prorata = array();
+
+			$prorata_valor = 0;
+			$prorata_comodato = 0;
+			$prorata_dias = 0;
+			if( $faz_prorata == true || $faz_prorata == 't' || $faz_prorata == 1 ) {
+				// Proceder com o cálculo de pro-rata.		
+				$diff = MData::diff($data_contratacao,$proxima_fatura);
+
+				if( $diff >= 31 || $diff <= 28 ) {
+					// Executa os cálculos
+
+					$prorata_dias = $diff-30;
+					// Um valor negativo indica desconto.
+					$prorata_valor = round( $valor / 30 * $prorata_dias, 2);
+					$prorata_comodato = round( $valor_comodato / 30 * $prorata_dias, 2);
+
+				}
+
+			}
+
+			$parcelas_cobradas = 0;
+
+			// GERAR FATURAS
+			$faturas = array();
+
+			$valor_parcela_instalacao = 0;
+			$parcelas_cobradas_instalacao = 0;
+
+			if( $tx_instalacao > 0 ) {
+				if( !$parcelamento_instalacao ) $parcelamento_instalacao = 1;
+
+				$valor_parcela_inst = round( $tx_instalacao / $parcelamento_instalacao, 2);
+
+				if( $pagamento == "POS" ) {
+					// Cobra-se a taxa de instalação ANTECIPADAMENTE, na data da contratação.
+					$parcelas_cobradas_instalacao++;
+
+
+					$valor_fatura = 0;
+
+					$composicao = array();
+					$valor_fatura += $valor_parcela_inst;
+					$composicao["parcela_instalacao"] = ($parcelas_cobradas_instalacao) . "/" . $parcelamento_instalacao;
+					$composicao["instalacao"] = $valor_parcela_inst;
+
+
+					$faturas[] = array("data"=>$data_contratacao,"valor" => $valor_fatura,"composicao"=>$composicao);
+
+				}
+
+
+			}
+
+			$descontos_aplicados = 0;
+
+			for( $i=$parcelas_cobradas; $i<$vigencia; $i++ ) {
+				$composicao = array();
+				$valor_fatura = $valor + $valor_comodato;
+				$composicao["valor"] = $valor;
+				$composicao["comodato"] = $valor_comodato;
+				if( $i == 0 ) {
+					// Primeira fatura. Aplicar pro_rata e afins.
+					if( $prorata_valor ) {
+						$composicao["prorata_plano"] = $prorata_valor;
+						$composicao["prorata_comodato"] = $prorata_comodato;
+						$composicao["dias_prorata"] = $prorata_dias;
+						$valor_fatura += ($prorata_valor + $prorata_comodato);
+
+
+						if( $valorResidual != 0 ) {
+							$valor_fatura += $valorResidual;
+							if( $diasResidual < 0 ) {
+								$diasResidual *= -1;
+								// $valorResidual *= -1;
+							}
+							$composicao["residual"] = array("dias_prorata_residual" => $diasResidual, "prorata_residual" => $valorResidual);
+						}
+
+
+					}
+
+					if( $pagamento == "PRE" && !$id_cliente_produto) {
+						// Pré-pago. Primeira fatura é na data da contratacao.
+						$data_fatura = $data_contratacao;
+					} else {
+						// Pós-pago. Primeira fatura é na $proxima_fatura.
+						$data_fatura = $proxima_fatura;
+					}
+
+				} elseif( $i == 1 ) {
+					if( $pagamento == "PRE" && !$id_cliente_produto ) {
+						// Pré-pago: Segunda fatura é na $proxima_fatura.
+						$data_fatura = $proxima_fatura;
+					}
+				}
+
+				if( $tx_instalacao > 0 && $parcelas_cobradas_instalacao < $parcelamento_instalacao ) {
+					$parcelas_cobradas_instalacao++;
+					$valor_fatura += $valor_parcela_inst;
+					$composicao["parcela_instalacao"] = ($parcelas_cobradas_instalacao) . "/" . $parcelamento_instalacao;
+					$composicao["instalacao"] = $valor_parcela_inst;			
+				}
+
+				// OBS: Não permite desconto maior que o valor da fatura.
+				if( ($valor_fatura - $valorl_desconto > 0) && $desconto_valor && $desconto_periodo > 0 && $descontos_aplicados < $desconto_periodo ) {
+					$valor_fatura -= $desconto_valor;
+					$descontos_aplicados++;
+					$composicao["desconto"] = array("parcela" => $descontos_aplicados . "/" . $desconto_periodo, "valor" => $desconto_valor);
+				}
+
+
+				$faturas[] = array("data" => $data_fatura,"valor" => $valor_fatura,"composicao"=>$composicao);
+
+				$data_fatura = MData::adicionaMes($data_fatura,1);
+
+			}
+			
+			for($i=0;$i<count($faturas);$i++) {
+				$faturas[$i]["data"] = MData::ptBR_to_ISO($faturas[$i]["data"]);
+			}
+
+			return($faturas);
+
+		}
+		 
+		/**
 		public function gerarListaFaturas($pagamento,$data_contratacao,$vigencia,$dia_vencimento,$valor,$desconto_valor,$desconto_periodo,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao,$id_cliente_produto=0) {
 			//$dia_vencimento = 19;
 			//$data_primeiro_vencimento = '19/08/2008';
@@ -222,17 +439,6 @@
 					}
 
 				//}
-				
-				/**
-				echo "<pre>"; 
-				//print_r($contrato);
-				echo "diaHoje: $diaHoje\n"; 
-				echo "diaVenc: $diaVenc\n";
-				echo "diaResi: $diasResidual\n";
-				echo "valResi: $valorResidual\n";
-				
-				echo "</pre>"; 
-				*/
 				
 			
 			}
@@ -464,6 +670,8 @@
 
 		}
 		
+		*/
+		
 		function aceiteContrato($id_cliente_produto) {
 			$dados = array("aceito" => "t", "data_aceite" => "=now");			
 			return($this->cbtb_contrato->altera($dados,array("id_cliente_produto" => $id_cliente_produto)));
@@ -615,7 +823,7 @@
 
 						
 			$this->cbtb_contrato->insere($dados);
-			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $primeira_fatura,      $prorata,   $limite_prorata, $parcelas_instalacao) : array();
+			$todas_faturas = ((float)$dados_produto["valor"] > 0) ? $this->gerarListaFaturas($pagamento, $data_contratacao, $vigencia, $dia_vencimento, $dados_produto["valor"], $desconto_promo, $desconto_periodo, $tx_instalacao, $valor_comodato, $prorata,   $parcelas_instalacao) : array();
 			
 			$this->cadastraFaturas($todas_faturas,$formaPagto,$dados_produto,$data_contratacao,$id_cliente_produto,$id_cliente);
 			

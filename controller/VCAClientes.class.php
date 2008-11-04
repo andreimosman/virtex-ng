@@ -760,7 +760,7 @@
 						// Lista das faturas que serão geradas
 						// TODO: Verificar se é cortesia
 						
-						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],@$_REQUEST["primeiro_vencimento"],$pro_rata,@$_REQUEST["limite_prorata"],$parcelas_instalacao,$id_cliente_produto);
+						$faturas = $cobranca->gerarListaFaturas(@$_REQUEST["pagamento"],@$_REQUEST["data_contratacao"],@$_REQUEST["vigencia"],@$_REQUEST["dia_vencimento"],$valor,@$_REQUEST["desconto_promo"],@$_REQUEST["periodo_desconto"],@$_REQUEST["tx_instalacao"],@$_REQUEST["valor_comodato"],$pro_rata,$parcelas_instalacao,$id_cliente_produto);
 						$this->_view->atribui("faturas",$faturas);
 						
 

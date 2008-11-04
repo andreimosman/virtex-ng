@@ -247,7 +247,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$data_primeiro_vencimento = $diaVencimento . "/$m/$a";
 			
 			// Faturas que serão geradas.
-			$faturas = $this->cobranca->gerarListaFaturas($pagamento,MData::ISO_to_ptBR($dataRenovacao),$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao);
+			$faturas = $this->cobranca->gerarListaFaturas($pagamento,MData::ISO_to_ptBR($dataRenovacao),$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$faz_prorata,$parcelamento_instalacao);
 			
 			//echo "<pre>"; 
 			//print_r(array($pagamento,$dataRenovacao,$vigencia,$diaVencimento,$contrato["valor_produto"],$valor_desconto,$periodo_desconto,$tx_instalacao,$valor_comodato,$data_primeiro_vencimento,$faz_prorata,$limite_prorata,$parcelamento_instalacao));

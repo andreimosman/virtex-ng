@@ -1803,7 +1803,7 @@ contratoAlteraFormaPagamentoDA();
 {if $acao == "gravar_novo_contrato"}
 
 
-<table border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+<table border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 		<tr>
 			<td align="center">Produto Cadastrado com Sucesso</td>
 		</tr>
@@ -1821,7 +1821,7 @@ contratoAlteraFormaPagamentoDA();
 
 
 {if $acao == "novo_contrato"}
-<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="630" style="border: solid 1px #FF0000;">
+<table class="lista" border=0 cellspacing=0 cellpadding=0 align="center" width="680" style="border: solid 1px #FF0000;">
 {if $erro}
 <tr>
 	<td align="center" style="border-bottom: solid 1px #FF0000;"><span style="font-size: 14px"><strong>{$erro}</strong></span></td>
@@ -1855,7 +1855,7 @@ contratoAlteraFormaPagamentoDA();
 	<input type="hidden" name="id_bloco_instalacao" value="{$id_bloco_instalacao}">
 
 
-	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 		<tr>
 			<th colspan=4>Contratante - Cobran&ccedil;a</th>
 		</tr>
@@ -1891,7 +1891,7 @@ contratoAlteraFormaPagamentoDA();
 
 		{if $tipo!= "H" }
 		   <br>
-		<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+		<table class="lista" border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 			<tr>
 				<th colspan=4>Contratante - Instala&ccedil;&atilde;o</th>
 			</tr>
@@ -1920,7 +1920,7 @@ contratoAlteraFormaPagamentoDA();
 
 
 	<br>
-	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 		<tr>
 			<th colspan=6>Contrato Atual</th>
 		</tr>
@@ -1981,7 +1981,7 @@ contratoAlteraFormaPagamentoDA();
 	{/if}
 
 	<br>
-	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 		<tr>
 			<th colspan=6>Novo Contrato</th>
 		</tr>
@@ -2054,7 +2054,7 @@ contratoAlteraFormaPagamentoDA();
 
 {if $id_cliente_produto}
 	<br>
-	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 		<tr>
 			<th colspan=6>Contas que serão migradas</th>
 		</tr>
@@ -2072,7 +2072,7 @@ contratoAlteraFormaPagamentoDA();
 {else}
 
 	<br>
-	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="600" align="center">
+	<table class="lista" border=0 cellspacing=0 cellpadding=0 width="650" align="center">
 		<tr>
 			<th colspan=6>Detalhes da Conta</th>
 		</tr>
@@ -2134,7 +2134,7 @@ contratoAlteraFormaPagamentoDA();
 	</table>
 {/if}
 	<br />
-	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
+	<table class='lista' width='650' cellpadding=0 cellspacing=0 align="center" style="border: solid 1px #000000;">
 		<tr>
 			<th colspan=2 style="border-right: solid 2px #000000;">faturas</th>
 			<th colspan={if $id_cliente_produto}6{else}5{/if}>composição dos valores</th>
@@ -2144,10 +2144,10 @@ contratoAlteraFormaPagamentoDA();
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 2px #000000; border-bottom: solid 1px #000000;">Valor(=)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Plano(+)</td>
 			{if $id_cliente_produto}
-			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Residual</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Residual *</td>
 			{/if}
-			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Comodato(+)</td>
-			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pró-Rata (dias)</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Comodato(+) **</td>
+			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Pró-Rata ***</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-right: solid 1px #000000; border-bottom: solid 1px #000000;">Desconto(-)</td>
 			<td bgcolor="#f0f0f0" align="center" style="border-bottom: solid 1px #000000;">Tx. Instalação(+)</td>
 		</tr>
@@ -2158,19 +2158,45 @@ contratoAlteraFormaPagamentoDA();
 			{foreach name=registros item=f from=$faturas}
 			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
 			<tr>
-				<td class='{$estilo}' aling="center" style="border-right: solid 1px #000000;">{$f.data}</td>
+				<td class='{$estilo}' aling="center" style="border-right: solid 1px #000000;">{$f.data|date_format:"%d/%m/%Y"}</td>
 				<td class='{$estilo}' align="right" style="border-right: solid 2px #000000;">{$f.valor|string_format:"%.2f"}</td>
 				<!-- COMPOSICAO DE VALORES -->
-				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_plano}{$f.composicao.prorata_plano|string_format:"%.2f"}{else}{if $f.composicao.valor}{$f.composicao.valor|string_format:"%.2f"}{else}-{/if}{/if}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">
+				   {if $f.composicao.valor}
+				      {$f.composicao.valor|string_format:"%.2f"}
+				   {else}
+				      -
+				   {/if}
+				</td>
 				{if $id_cliente_produto}
-				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.residual.prorata_residual}{$f.composicao.residual.prorata_residual|string_format:"%.2f"}{else}-{/if}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">
+				   {if $f.composicao.residual.prorata_residual}
+				      {$f.composicao.residual.prorata_residual|string_format:"%.2f"}{else}-{/if}</td>
 				{/if}
-				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.prorata_comodato}{$f.composicao.prorata_comodato|string_format:"%.2f"}{else}{if $f.composicao.comodato}{$f.composicao.comodato|string_format:"%.2f"}{else}-{/if}{/if}</td>
-				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}{$f.composicao.dias_prorata}{else}-{/if}</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">
+				{if $f.composicao.prorata_comodato}
+				   {$f.composicao.prorata_comodato|string_format:"%.2f"}
+				{else}
+				   {if $f.composicao.comodato}
+				      {$f.composicao.comodato|string_format:"%.2f"}
+				   {else}
+				      -
+				   {/if}
+				{/if}
+				</td>
+				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.dias_prorata}R$ {$f.composicao.prorata_plano|string_format:"%.2f"} ({$f.composicao.dias_prorata} dias){else}-{/if}</td>
 				<td class='{$estilo}' align="right" style="border-right: solid 1px #000000;">{if $f.composicao.desconto.valor}{$f.composicao.desconto.parcela}: {$f.composicao.desconto.valor|string_format:"%.2f"}{else}-{/if}</td>
 				<td class='{$estilo}' align="right">{if $f.composicao.instalacao}{$f.composicao.parcela_instalacao}: {$f.composicao.instalacao|string_format:"%.2f"}{else}-{/if}</td>
 			</tr>
 			{/foreach}
+			<tr>
+				<td colspan="{if $id_cliente_produto}8{else}7{/if}">
+				{if $id_cliente_produto}
+				* Valor residual calculado com base na pro-rata do contrato antigo.<br>
+				{/if}
+				** Cálculos de pro-rata aplicados ao valor do comodato.<br>
+				*** Valores negativos indicam desconto.<br>
+				</td>
 
 	{else}
 		<tr>
