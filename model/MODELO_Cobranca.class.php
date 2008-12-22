@@ -1868,6 +1868,48 @@
 			return($this->cbtb_contrato->obtemNumeroContratosAtivosPorTipo($id_cliente));
 		}
 		
+		public function obtemNovosContratosPeriodo($periodo=12) {		
+			$dados = $this->cbtb_contrato->obtemNovosContratosPeriodo($periodo);
+			
+			$retorno = array();
+			
+			$sumVal = 0;
+			$sumCount = 0;
+			$lastDay = "";
+			
+			for($i=0;$i<count($dados);$i++) {
+				if( $lastDay != $dados[$i]["ano_mes"] ) {
+				
+					if( $lastDay ) {
+						$retorno[$lastDay]["sumario"]["valor_mensal"]  = $sumVal;
+						$retorno[$lastDay]["sumario"]["num_contratos"] = $sumCount;
+						$retorno[$lastDay]["sumario"]["num_cidades"]   = count($retorno[$lastDay]["dados"]);
+					}
+				
+					$lastDay = $dados[$i]["ano_mes"];
+					$sumVal = 0;
+					$sumCount = 0;
+				}
+				
+				$sumVal += $dados[$i]["sum"];
+				$sumCount += $dados[$i]["count"];
+			
+				$retorno[$dados[$i]["ano_mes"]]["dados"][$dados[$i]["cidade"]."-".$dados[$i]["uf"]]["num_contratos"] = $dados[$i]["count"];
+				$retorno[$dados[$i]["ano_mes"]]["dados"][$dados[$i]["cidade"]."-".$dados[$i]["uf"]]["valor_mensal"] = $dados[$i]["sum"];
+				$retorno[$dados[$i]["ano_mes"]]["dados"][$dados[$i]["cidade"]."-".$dados[$i]["uf"]]["id_cidade"] = $dados[$i]["id_cidade"];
+								
+			}
+			
+			// Último registro
+			if( $lastDay ) {
+				$retorno[$lastDay]["sumario"]["valor_mensal"]  = $sumVal;
+				$retorno[$lastDay]["sumario"]["num_contratos"] = $sumCount;
+				$retorno[$lastDay]["sumario"]["num_cidades"]   = count($retorno[$lastDay]["dados"]);
+			}
+			
+			return($retorno);
+		}
+		
 		
 
 

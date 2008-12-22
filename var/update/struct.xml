@@ -11245,19 +11245,19 @@
   <increment >1</increment>
  </casq_id_condominio>
  <cbsq__d_retorno >
-  <start >17</start>
+  <start >19</start>
   <increment >1</increment>
  </cbsq__d_retorno>
  <cbsq__d_retorno_erro >
-  <start >3350</start>
+  <start >3355</start>
   <increment >1</increment>
  </cbsq__d_retorno_erro>
  <cbsq_id_carne >
-  <start >5787</start>
+  <start >5788</start>
   <increment >1</increment>
  </cbsq_id_carne>
  <cbsq_id_cliente_produto >
-  <start >5556</start>
+  <start >5559</start>
   <increment >1</increment>
  </cbsq_id_cliente_produto>
  <cbsq_id_cobranca >
@@ -11269,7 +11269,7 @@
   <increment >1</increment>
  </cbsq_id_comissao>
  <cbsq_id_endereco_cobranca >
-  <start >9</start>
+  <start >12</start>
   <increment >1</increment>
  </cbsq_id_endereco_cobranca>
  <cbsq_id_impressao >
@@ -11293,7 +11293,7 @@
   <increment >1</increment>
  </cbsq_id_retorno_erro>
  <cbtb_faturas_id_cobranca_seq >
-  <start >67777</start>
+  <start >67813</start>
   <increment >1</increment>
  </cbtb_faturas_id_cobranca_seq>
  <cbtb_lote_cobranca_id_remessa_seq >
@@ -11337,23 +11337,23 @@
   <increment >1</increment>
  </clsq_id_conta>
  <cnsq_id_conta >
-  <start >6084</start>
+  <start >6087</start>
   <increment >1</increment>
  </cnsq_id_conta>
  <cnsq_id_endereco_instalacao >
-  <start >23</start>
+  <start >26</start>
   <increment >1</increment>
  </cnsq_id_endereco_instalacao>
  <cxsq_autenticacao >
-  <start >3263</start>
+  <start >3295</start>
   <increment >1</increment>
  </cxsq_autenticacao>
  <cxsq_id_fluxo >
-  <start >3263</start>
+  <start >3295</start>
   <increment >1</increment>
  </cxsq_id_fluxo>
  <evsq_id_evento >
-  <start >228</start>
+  <start >242</start>
   <increment >1</increment>
  </evsq_id_evento>
  <hdsq_id_chamado >
@@ -11449,7 +11449,7 @@
   <increment >1</increment>
  </rdtb_log_id_log>
  <spsq_id_spool >
-  <start >93</start>
+  <start >96</start>
   <increment >1</increment>
  </spsq_id_spool>
  <sptb_spool_id_spool >
@@ -11465,7 +11465,7 @@
   <increment >1</increment>
  </hdsq_id_classe>
  <lgsq_id_alteracao_ip >
-  <start >16</start>
+  <start >18</start>
   <increment >1</increment>
  </lgsq_id_alteracao_ip>
 </sequences>

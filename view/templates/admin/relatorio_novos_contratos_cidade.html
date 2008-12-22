@@ -1,0 +1,74 @@
+<html>
+<head>
+	<title></title>
+
+<script language="javascript">
+{literal}
+function alteraPeriodo() {
+	document.formulario.submit();
+}
+{/literal}
+</script>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="cobranca_header.html"} <br /><br />
+<form method="get" action="{$SELF}" name="formulario">
+<input type="hidden" name="op" value="relatorios_cobranca">
+<input type="hidden" name="relatorio" value="novos_contratos_cidade">
+<div align="center">
+	<table width="600" border="0" cellpadding=0 cellspacing=0>
+		<tr>
+			<td width="50%" align="left">			<span style="font-family: arial,verdana; font-size: 9pt;">
+			Exibir últimos
+			<select name="periodo" class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" onchange="javascript:alteraPeriodo();">
+				<option value="3" {if $periodo == 3}SELECTED{/if}>3</option>
+				<option value="6" {if $periodo == 6}SELECTED{/if}>6</option>
+				<option value="12" {if $periodo == 12}SELECTED{/if}>12</option>
+				<option value="24" {if $periodo == 24}SELECTED{/if}>24</option>
+			</select> meses
+			</span>
+			</td>
+			<td width="50%" align="right"><span style='font-family: arial,verdana; font-size: 9px; color: #0000FF;'>[<a href="javascript:window.print();">imprimir</a>]</td>
+		</tr>
+	</table>
+	</table>
+	<table class="lista" width="600" border="0" cellpadding=0 cellspacing=0>
+		<tr>
+			<th width='80'>Ano/Mes</th>
+			<th width='220' align="left">Cidade</th>
+			<th width='100' align='right'>Contratos</th>
+			<th width='100' align='right'>Valor Mensal*</th>
+		</tr>
+		{foreach name="registros" item=r key=ano_mes from=$dados}
+			{if ($smarty.foreach.registros.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+			<tr>
+				<td class="{$estilo}" style="border-bottom: solid 2px #000000;" rowspan='{$r.sumario.num_cidades+1}' valign="top" align="center"><b>{$ano_mes}</b></td>
+				{foreach name=dados item=d key=cidade from=$r.dados}
+				{if !$smarty.foreach.dados.first}
+				<tr>
+				{/if}
+				<td class="{$estilo}" style="border-bottom: solid 1px #a0a0a0;">{$cidade}</td>
+				<td class="{$estilo}" style="border-bottom: solid 1px #a0a0a0;" align="right">{$d.num_contratos}</td>
+				<td class="{$estilo}" style="border-bottom: solid 1px #a0a0a0;" align="right">{$d.valor_mensal}</td>
+			</tr>
+				{/foreach}
+			<tr>
+				<td class="{$estilo}" style="border-bottom: solid 2px #000000;"><b>SUMARIO:</b></td>
+				<td class="{$estilo}" style="border-bottom: solid 2px #000000;" align="right"><b>{$r.sumario.num_contratos}<b></td>
+				<td class="{$estilo}" style="border-bottom: solid 2px #000000;" align="right"><b>{$r.sumario.valor_mensal|string_format:"%.2f"}</b></td>
+			</td>
+
+
+			</tr>
+		{/foreach}
+		<tr>
+			<td colspan="4" align="right">* Valores mensais não consideram descontos ou acrescimos.</td>
+		</tr>
+	</table>
+	<br><br>
+
+
+</div>
+</form>
+</body>
+</html>

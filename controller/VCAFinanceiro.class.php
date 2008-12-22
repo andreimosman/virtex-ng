@@ -1290,7 +1290,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			$bloqueados_desbloqueados = $contas->obtemBloqueiosDesbloqueiosDetalhes($periodoAnoMes);
 			$this->_view->atribui("bloqueados_desbloqueados", $bloqueados_desbloqueados);
 
-		}elseif($relatorio == "recebimentos_periodo") {
+		} elseif($relatorio == "recebimentos_periodo") {
 			$cobranca = VirtexModelo::factory("cobranca");
 		
 			// $lista = $cobranca->obtemRecebimentos('mensal','01/07/2008');
@@ -1461,6 +1461,19 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 			$countBloqueados = count($atrasados);
 			$this->_view->atribui("countBloqueados", $countBloqueados);
+
+
+		} elseif($relatorio == "novos_contratos_cidade") {
+			
+			$periodo = @$_REQUEST["periodo"];
+			
+			if( !$periodo ) $periodo = 12; // 12 últimos meses
+			
+			$this->_view->atribui("periodo",$periodo);
+			
+			
+			$dados = $this->cobranca->obtemNovosContratosPeriodo($periodo);
+			$this->_view->atribui("dados",$dados);
 			
 		}
 	}
@@ -1566,7 +1579,7 @@ class VCAFinanceiro extends VirtexControllerAdmin {
 			
 			
 
-		}elseif ("por_produto" == $relatorio){
+		} elseif ("por_produto" == $relatorio){
 
 			$ano_select = @$_REQUEST["ano_select"];
 			

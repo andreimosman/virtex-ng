@@ -195,6 +195,8 @@
 			$menuFinanceiroRelatoriosCobranca->addSeparator();
 			$menuFinanceiroRelatoriosCobranca->addItem("Inadimplencia", "admin-financeiro.php?op=relatorios_cobranca&relatorio=inadimplencia", $target);
 			$menuFinanceiroRelatoriosCobranca->addItem("Recebimentos por Periodo", "admin-financeiro.php?op=relatorios_cobranca&relatorio=recebimentos_periodo", $target);
+			$menuFinanceiroRelatoriosCobranca->addSeparator();
+			$menuFinanceiroRelatoriosCobranca->addItem("Novos Contratos/Cidade", "admin-financeiro.php?op=relatorios_cobranca&relatorio=novos_contratos_cidade", $target);
 			// $menuFinanceiroCobranca->addSubmenu("Relatórios",$menuFinanceiroCobrancaRelatorios);
 
 			$menuFinanceiro->addSubmenu("Cobrança",$menuFinanceiroCobranca);

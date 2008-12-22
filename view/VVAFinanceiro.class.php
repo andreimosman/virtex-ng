@@ -194,10 +194,10 @@
 					$this->atribui("titulo", $this->titulo);
 					break;
 				case "atrasos_detalhes":
-				$this->_file = "relatorio_atraso_detalhes.html";
-				$this->titulo .= "Detalhes de Atrasos";
-				$this->atribui("titulo", $this->titulo);
-				break;
+					$this->_file = "relatorio_atraso_detalhes.html";
+					$this->titulo .= "Detalhes de Atrasos";
+					$this->atribui("titulo", $this->titulo);
+					break;
 				case "cliente_produto":
 					$this->_file = "relatorio_cliente_produto.html";
 					$this->titulo .= "Contratos por produto";
@@ -267,6 +267,11 @@
 				case 'inadimplencia':
 					$this->_file = "relatorio_inadimplencia.html";
 					$this->titulo .= "Inadimplencia";
+					$this->atribui("titulo",$this->titulo);
+					break;
+				case 'novos_contratos_cidade';
+					$this->_file = "relatorio_novos_contratos_cidade.html";
+					$this->titulo .= "Novos Contratos Por Cidade";
 					$this->atribui("titulo",$this->titulo);
 					break;
 				default:

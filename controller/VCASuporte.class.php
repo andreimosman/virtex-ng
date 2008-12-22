@@ -303,6 +303,7 @@
 					
 					$banda = isset($_REQUEST["banda"]) ? $_REQUEST["banda"] : null;
 					$this->_view->atribui("banda",$banda);
+					
 					if( is_null($banda) ) {
 						// Lista Geral
 						$lista = $this->preferencias->obtemListaBandas();
@@ -315,7 +316,7 @@
 						$infoBanda = $this->preferencias->obtemBanda($banda);
 						$this->_view->atribui("infoBanda",$infoBanda);
 						
-						$listaContas = $contas->obtemContasPorBanda($banda);
+						$listaContas = $contas->obtemContasPorBanda($banda);						
 						$this->_view->atribui("listaContas",$listaContas);
 					}
 										

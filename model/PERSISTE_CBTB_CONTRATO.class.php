@@ -386,6 +386,43 @@ class PERSISTE_CBTB_CONTRATO extends VirtexPersiste {
 
 
 	}
+	
+	public function obtemNovosContratosPeriodo($periodo=12) {
+	
+		if( !$periodo ) $periodo = 12;
+		
+		$periodo -= 1;
+	
+		$sql .= "SELECT ";
+		$sql .= "   ano_mes, count(*), sum(valor_produto), id_cidade, cidade, uf ";
+		$sql .= "FROM ( ";
+		$sql .= "   SELECT ";
+		$sql .= "      to_char(date_trunc('month',ctt.data_contratacao),'YYYY/MM') as ano_mes, ctt.valor_produto, ";
+		$sql .= "      CASE WHEN endereco.id_cidade IS NULL THEN cl.id_cidade ELSE endereco.id_cidade END as id_cidade, ";
+		$sql .= "      CASE WHEN endcid.cidade IS NULL THEN clcid.cidade ELSE endcid.cidade END as cidade, ";
+		$sql .= "      CASE WHEN endcid.uf IS NULL THEN clcid.uf ELSE endcid.uf END as uf ";
+		$sql .= "   FROM ";
+		$sql .= "      cbtb_contrato ctt ";
+		$sql .= "      LEFT OUTER JOIN cbtb_contrato ctt_parent ON ctt_parent.migrado_para = ctt.id_cliente_produto ";
+		$sql .= "      LEFT OUTER JOIN cbtb_endereco_cobranca endereco ON ctt.id_cliente_produto = endereco.id_cliente_produto ";
+		$sql .= "      INNER JOIN cbtb_cliente_produto cp ON cp.id_cliente_produto = ctt.id_cliente_produto ";
+		$sql .= "      INNER JOIN cltb_cliente cl ON cp.id_cliente = cl.id_cliente ";
+		$sql .= "      INNER JOIN cftb_cidade clcid ON cl.id_cidade = clcid.id_cidade ";
+		$sql .= "      LEFT OUTER JOIN cftb_cidade endcid ON endereco.id_cidade = endcid.id_cidade ";
+		$sql .= "   WHERE ";
+		$sql .= "      (ctt_parent.migrado_para is null OR ctt_parent.valor_produto = 0) ";
+		$sql .= "      AND ctt.valor_produto > 0 ";
+		$sql .= "      AND ctt.data_contratacao >= date_trunc('month',now()) - Interval '$periodo months' ";
+		$sql .= "      AND ctt.data_contratacao < now() ";
+		$sql .= ") dados ";
+		$sql .= "GROUP BY ";
+		$sql .= "   ano_mes, id_cidade, cidade, uf ";
+		$sql .= "ORDER BY ";
+		$sql .= "   ano_mes, cidade ";
+		
+		return($this->bd->obtemRegistros($sql));
+	
+	}
 
 
 
