@@ -282,7 +282,7 @@
 			return($this->cftb_pop->enumTipoPop());
 		}
 		
-		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
+		public function atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop, $ativar_snmp='f', $snmp_ro_com='', $snmp_rw_com='', $snmp_versao='') {
 			$filtro = array("id_pop"=>$id_pop);
 			
 			if( !$mac ) $mac = NULL;
@@ -295,11 +295,15 @@
 			$dados["ipaddr"] = $ipaddr ? $ipaddr : null; 			
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
 			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : null; 	
-			$dados["clientemacpop"] = $clientemacpop ? $clientemacpop : 'f';			
+			$dados["clientemacpop"] = $clientemacpop ? $clientemacpop : 'f';
+			$dados["ativar_snmp"] = $ativar_snmp ? $ativar_snmp : null; 	
+			$dados["snmp_ro_com"] = $snmp_ro_com;
+			$dados["snmp_rw_com"] = $snmp_rw_com;
+			$dados["snmp_versao"] = $snmp_versao;
 			return($this->cftb_pop->altera($dados,$filtro));
 		}
 		
-		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop) {
+		public function cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop, $ativar_snmp='f', $snmp_ro_com='', $snmp_rw_com='', $snmp_versao='') {
 			$dados = array("nome"=>strtoupper($nome), "info"=>$info, "tipo" => $tipo, "id_pop_ap" => $id_pop_ap, "status" => $status);
 			$dados["mac"] = $mac ? $mac : null; 
 			$dados["id_pop_ap"] = $id_pop_ap ? $id_pop_ap : null; 			
@@ -307,6 +311,10 @@
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 						
 			$dados["ativar_monitoramento"] = $ativar_monitoramento ? $ativar_monitoramento : 'f';
 			$dados["clientemacpop"] = $clientemacpop ? $clientemacpop : 'f';
+			$dados["ativar_snmp"] = $ativar_snmp ? $ativar_snmp : null; 	
+			$dados["snmp_ro_com"] = $snmp_ro_com;
+			$dados["snmp_rw_com"] = $snmp_rw_com;
+			$dados["snmp_versao"] = $snmp_versao;
 			return($this->cftb_pop->insere($dados));			
 		}
 		

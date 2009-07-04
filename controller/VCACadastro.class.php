@@ -187,6 +187,11 @@
 			$id_servidor = @$_REQUEST["id_servidor"];
 			$ativar_monitoramento = @$_REQUEST["ativar_monitoramento"];
 			
+			$ativar_snmp = @$_REQUEST["ativar_snmp"];
+			$snmp_ro_com = @$_REQUEST["snmp_ro_com"];
+			$snmp_rw_com = @$_REQUEST["snmp_rw_com"];
+			$snmp_versao = @$_REQUEST["snmp_versao"];
+			
 			$this->_view->atribui("id_pop",$id_pop);
 			switch($subtela) {
 				case 'listagem':
@@ -240,7 +245,7 @@
 							}
 						} else {
 							// Processar alteração								
-							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop);
+							$equipamentos->atualizaPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop, $ativar_snmp, $snmp_ro_com, $snmp_rw_com, $snmp_versao);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Pop atualizado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");
@@ -251,7 +256,7 @@
 
 						if( $acao ) {
 							// Cadastrar							
-							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop);
+							$equipamentos->cadastraPop($id_pop, $nome, $info, $tipo, $id_pop_ap, $status, $ipaddr, $id_servidor, $ativar_monitoramento, $mac, $clientemacpop, $ativar_snmp, $snmp_ro_com, $snmp_rw_com, $snmp_versao);
 							$this->_view->atribui("url",$url);
 							$this->_view->atribui("mensagem","Pop cadastrado com sucesso.");
 							$this->_view->atribuiVisualizacao("msgredirect");

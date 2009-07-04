@@ -37,6 +37,12 @@ label {
 		tB.className =  ativar_monitor.checked ?  "box_aberta" :  "box_fechada";
 	}
 
+	function habilita_snmp(){
+		tB = document.getElementById("tabela_snmp");
+		ativar_snmp = document.getElementById("ativar_snmp");
+		tB.className =  ativar_snmp.checked ?  "box_aberta" :  "box_fechada";
+	}
+
 	function preenchePopAp(){
 		var pType = document.getElementById("tipo");
 
@@ -302,38 +308,40 @@ label {
 					</select>
 				</td>
 			</tr>
+		</table>
+	</div>
+
+	<br>
+
+	<span>
+		<label><input type="checkbox" value="t" id="ativar_snmp" name="ativar_snmp" class="checkbox" {if $ativar_snmp=='t'}CHECKED{/if} onClick="habilita_snmp();">
+				  Ativar SNMP</label>
+	</span>
+	<div id="tabela_snmp" class="{if $snmp=='f' || $snmp == ""}box_fechada{/if}{if $snmp=='t'}box_aberta{/if}">
+		<table  width='100%' border="0" style="border:1px solid #CCCCCC;">
 			<tr>
 			  <td height="2px" colspan="4">&nbsp;</td>
 			</tr>
-			{*<tr>
+			<tr>
 			  <td colspan="4" valign="top">
-				<label>
-				  <input type="checkbox" value="t" name="snmp" class="checkbox" {if $snmp=='t'}CHECKED{/if} onClick="habilita();">
-				  Ativar SNMP
-				<div id="tabela" class="{if $snmp=='f' || $snmp == ""}box_fechada{/if}{if $snmp=='t'}box_aberta{/if} ">
-				  <table width="100%" border="0" align="center">
-					<tr>
-					  <td width="101"><label>Versão </p></td>
-					  <td width="156"><label>RO Community </p></td>
-					  <td width="149"><label>RW Community </label></td>
+				<tr>
+				  <td width="101"><label>Versão </p></td>
+				  <td width="156"><label>RO Community </p></td>
+				  <td width="149"><label>RW Community </label></td>
+				</tr>
+				  <tr>
+					<td>
+					  <select name="snmp_versao">
+						<option value="#"></option>
+						<option value="v1" {if $snmp_versao=='v1'}SELECTED{/if}>V1</option>
+						<option value="v2c" {if $snmp_versao=='v2c'}SELECTED{/if}>V2C</option>
+						<option value="v3" {if $snmp_versao=='v3'}SELECTED{/if}>V3</option>
+						</select>							                    </td>
+
+					<td><input type="text" name="snmp_ro_com" value="{$snmp_ro_com}"></td>
+
+					<td><input type="text" name="snmp_rw_com" value="{$snmp_rw_com}"></td>
 				  </tr>
-					  <tr>
-						<td>
-						  <select name="snmp_versao">
-							<option value="#"></option>
-							<option value="v1" {if $snmp_versao=='v1'}SELECTED{/if}>V1</option>
-							<option value="v2c" {if $snmp_versao=='v2c'}SELECTED{/if}>V2C</option>
-							<option value="v3" {if $snmp_versao=='v3'}SELECTED{/if}>V3</option>
-							</select>							                    </td>
-
-						<td><input type="text" name="snmp_ro_com" value="{$snmp_ro_com}"></td>
-
-						<td><input type="text" name="snmp_rw_com" value="{$snmp_rw_com}"></td>
-					  </tr>
-				  </table>
-				</div>
-			  </p></td>
-			</tr>*}
 		</table>
 	</div>
 	<br />
@@ -344,6 +352,7 @@ label {
 </center>
 <script language="JavaScript">
 	habilita_monitor();
+	habilita_snmp();
 	preenchePopAp();
 	confereCampoMAC();
 	{if $clientemacpop == 't'}document.getElementById("clientemacpop").checked = true;{/if}
