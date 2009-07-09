@@ -71,6 +71,7 @@ function openLinkPOP(id_pop) {
 			<th align="center">min</th>
 			<th align="center">max</th>
 			<th align="center">med</th>
+			<th align="center">&nbsp;</th>
 		</th>
 		{/if}
 		{foreach name=registros item=r from=$registros}
@@ -102,6 +103,7 @@ function openLinkPOP(id_pop) {
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$minimo}</label></td>
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$maximo}</label></td>
 			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{$media}</label></td>
+			<td align="center" class='{$estilo}'><label class="{$estilo_fonte}">{if $r.ativar_snmp && $r.snmp_ro_com}<a href='admin-suporte.php?op=snmp&id_pop={$r.id_pop}'>INFO</a>{else}&nbsp;{/if}</label></td>
 		</tr>
 
 		{foreachelse}

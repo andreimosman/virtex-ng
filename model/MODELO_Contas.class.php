@@ -317,7 +317,7 @@
 		 * pesquisaPorConta().
 		 * Pesquisa de clientes por conta. Retorna informações do cliente com um array de contas que fizeram,
 		 */
-		public function pesquisaClientesPorContas($textoPesquisa) {
+		public function pesquisaClientesPorContas($textoPesquisa,$excluirCancelados="") {
 			// Identificação do Tipo de Pesquisa por Conta
 			array($erros);
 			$tp = "USER";
@@ -363,7 +363,7 @@
 						break;
 
 					case 'MAC':
-						$contas = $this->cntb_conta_bandalarga->obtemPeloMAC($textoPesquisa);
+						$contas = $this->cntb_conta_bandalarga->obtemPeloMAC($textoPesquisa,$excluirCancelados);
 						break;
 
 					case 'IP':

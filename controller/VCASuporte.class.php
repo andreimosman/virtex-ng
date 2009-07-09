@@ -21,6 +21,9 @@
 				case 'monitoramento':
 					$this->executaMonitoramento();
 					break;
+				case 'snmp':
+					$this->executaSNMP();
+					break;
 				case 'graficos':
 					$this->executaGraficos();
 					break;
@@ -162,6 +165,76 @@
 			
 			}
 		
+		}
+		
+		protected function executaSNMP() {
+			$id_pop = @$_REQUEST["id_pop"];			
+			$this->_view->atribuiVisualizacao("snmp");			
+			$equipamentos = VirtexModelo::factory('equipamentos');
+			$pop = $equipamentos->obtemPop($id_pop);
+			
+			$contas = VirtexModelo::factory("contas");
+			
+			echo "<pre>";
+			
+			if( $pop["ativar_snmp"] == 't' && $pop["snmp_ro_com"] ) {
+				$snmp = new MSNMP($pop["ipaddr"], $pop["snmp_ro_com"] );
+				
+				$detalhesSNMP = $snmp->parse();
+				
+				$ifaces = $detalhesSNMP["interfaces"];
+				
+				
+				while( list($ifaceId, $ifaceInfo) = each($ifaces) ) {
+					//echo "$ifaceId<br>\n";
+					
+					for($i=0;$i<count($ifaceInfo["associacoes"]);$i++) {
+						//echo $ifaceInfo["associacoes"][$i]["mac"] . "<br>\n";
+						
+						$p = $equipamentos->obtemPopCLPeloMAC($ifaceInfo["associacoes"][$i]["mac"]);
+						
+						if ( count($p) ) {
+							// É um AP cliente
+							//echo "É AP!!!\n";
+							
+							print_r($p);
+							
+						} else {
+							// Pesquisar na conta.
+							//echo "É CLIENTE\n";
+							$conta = $contas->pesquisaClientesPorContas($ifaceInfo["associacoes"][$i]["mac"],1);
+							
+							if(count($conta)) {
+								$detalhesSNMP["interfaces"][$ifaceId]["associacoes"][$i]["conta"] = $conta[0];
+								
+								// print_r($detalhesSNMP["interfaces"][$ifaceId]["associacoes"][$i]);
+							}
+							//print_r($conta);
+							
+						}
+					
+					}
+					
+					
+				}
+				
+				
+				$this->_view->atribui("snmp", $detalhesSNMP);
+				
+				
+				//print_r($detalhesSNMP);
+				
+			} else {
+				// EQUIPAMENTO SEM SNMP ATIVADO.
+			
+			}
+			
+			
+			
+			
+			//print_r($pop);
+			echo "</pre>";
+			
 		}
 		
 		

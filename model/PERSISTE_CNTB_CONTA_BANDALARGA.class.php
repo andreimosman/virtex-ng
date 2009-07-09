@@ -31,9 +31,10 @@
 			return($retorno);
 		}
 		
-		public function obtemPeloMAC($mac) {
+		public function obtemPeloMAC($mac,$excluirBloqueados) {
 			$where = "WHERE mac = '".$this->bd->escape($mac)."' ";
 			$sql = "SELECT " . implode(",",$this->_campos) . " FROM ". $this->_tabela . " " . $where;
+			if($excluirBloqueados) $sql .= " AND status not in ('C','B') ";
 			return $this->bd->obtemRegistros($sql);
 		}
 		

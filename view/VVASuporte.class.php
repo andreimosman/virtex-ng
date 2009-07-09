@@ -20,6 +20,9 @@
 				case 'monitoramento':
 					$this->exibeMonitoramento();
 					break;
+				case 'snmp':
+					$this->exibeSNMP();
+					break;
 				case 'graficos':
 					$this->exibeGraficos();
 					break;
@@ -74,6 +77,11 @@
 			$this->atribui("titulo","Monitoramento");
 		}
 		
+		protected function exibeSnmp() {
+			$this->_file = "suporte_snmp.html";
+			$this->atribui("titulo","SNMP");
+		}
+
 		protected function exibeGraficos() {
 			$this->_file = "suporte_graficos.html";
 			$this->atribui("titulo","Gráficos");

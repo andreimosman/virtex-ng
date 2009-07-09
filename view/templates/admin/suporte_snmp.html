@@ -1,0 +1,88 @@
+<html>
+<head>
+	<title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="view/templates/css/layout/lista.css" />
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+
+<table class="lista" width="600">
+<tr>
+  <th colspan="2" align="left">Informações</th>
+</tr>
+
+<tr>
+	<td align="right" width="90">Nome: </td>
+	<td>{$snmp.sysinfo.Name}</td>
+</tr>
+
+<tr>
+	<td align="right" width="90">Descrição: </td>
+	<td>{$snmp.sysinfo.Descr}</td>
+</tr>
+
+<tr>
+	<td align="right" width="90">Contato: </td>
+	<td>{$snmp.sysinfo.Contact}</td>
+</tr>
+
+
+<tr>
+	<td align="right" width="90">Local: </td>
+	<td>{$snmp.sysinfo.Location}</td>
+</tr>
+</table>
+
+{foreach item=iface from=$snmp.interfaces}
+<table class="lista" width="600">
+<tr>
+  <th colspan="4" align="left">Interface: {$iface.Descr}</th>
+</tr>
+<tr>
+  <td width="90" align="right">Index: </td>
+  <td>{$iface.Index}</td>
+  <td width="90" align="right">Type: </td>
+  <td>{$iface.Type}</td>
+</tr>
+<tr>
+  <td width="90" align="right">MTU: </td>
+  <td>{$iface.Mtu}</td>
+  <td width="90" align="right">Speed: </td>
+  <td>{$iface.Speed}</td>
+</tr>
+<tr>
+  <td width="90" align="right">Admin Status: </td>
+  <td>{$iface.AdminStatus}</td>
+  <td width="90" align="right">Oper Status: </td>
+  <td>{$iface.OperStatus}</td>
+</tr>
+{if $iface.associacoes.0.mac}
+<tr>
+  <td valign="top" width="90" align="right">Associações: </td>
+  <td colspan=3>
+  	<table class="lista" width="100%" cellspacing=0 cellpadding=2>
+  	   <tr>
+  	      <td width="50%"><strong>MAC</strong></td>
+  	      <td width="50%"><strong>Sinal</strong></td>
+  	   </tr>
+    {foreach name=associacoes item=assoc from=$iface.associacoes}
+    	{if ($smarty.foreach.associacoes.iteration%2) }{assign var=estilo value='par'}{else}{assign var=estilo value='impar'}{/if}
+    	<tr>
+			<td class='{$estilo}'>{$assoc.mac}</td>
+			<td class='{$estilo}'>{if $assoc.sinal}{$assoc.sinal}{else}N/A{/if}</td>
+		</tr>
+		<tr>
+			<td colspan=2 class='{$estilo}' style="border-bottom: solid 1px #000000;">
+			   {if !$assoc.conta.nome_razao}
+			      NÃO RECONHECIDO
+			   {else}
+			      {$assoc.conta.nome_razao} - {$assoc.conta.contas.0.username}
+			   {/if}
+			</td>
+		</tr>
+    {/foreach}
+    </table>
+  </td>
+</tr>
+{/if}
+</table>
+{/foreach}

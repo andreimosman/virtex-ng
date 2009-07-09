@@ -381,6 +381,10 @@
 			return($retorno);
 		}
 		
+		public function obtemPopCLPeloMAC($mac) {
+			return($this->cftb_pop->obtemUnico(array("tipo"=>"CL", "usa_mac_ap" => 't', "mac" => "=:".$mac)));
+		}
+		
 		public function obtemPOPsPeloServidor($id_servidor) {
 			return($this->cftb_pop->obtem(array("id_servidor" => $id_servidor, "status" => "A")));
 		}
