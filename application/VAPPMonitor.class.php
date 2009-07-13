@@ -78,6 +78,91 @@
 
 			$pops = $equipamentos->obtemListaPOPs();
 			
+			
+			$listaMonitor = array();
+			$cachePorIp = array();
+			
+			foreach($pops as $pop) {
+				if( $pop["ativar_monitoramento"] == 't' && $pop["ipaddr"] ) {
+					// POP SERA MONITORADO
+					$cachePorIp[ $pop["ipaddr"] ] = $pop;
+					$listaMonitor[ $pop["id_servidor"] ][] = $pop["ipaddr"];
+					
+				}
+			}
+			
+			while( list($id_servidor,$listaIPs) = each($listaMonitor) ) {
+				$conn = $this->getCachedServerConnection($id_servidor);
+				$resposta = $conn->getFPINGLIST($listaIPs,$numPings,$tamanho);
+				
+				//echo "RESP: \n";
+				//print_r($resposta);
+				
+				while( list($ip,$reply) = each($resposta) ) {
+					//echo "RESPOSTA\n";
+					$perdas = 0;
+					$minimo = 9999999999999999999;
+					$maximo = 0;
+					$soma 	= 0;
+					
+					$num_erros = 0;
+
+					for($i=0;$i<count($reply);$i++) {
+						if(trim($reply[$i]) === "-") {
+							$perdas++;
+						} else {
+							$reply[$i]*=1000;
+							$soma+=$reply[$i];
+							if( $reply[$i] < $minimo ) {
+								$minimo = $reply[$i];
+							}
+							if( $reply[$i] > $maximo ) {
+								$maximo = $reply[$i];
+							}
+						}
+										
+					}
+
+
+					$status='OK';
+					$media = @(int)(count($reply)?$soma/(count($reply)-$perdas):0);
+					
+					if( $perdas == count($reply) ) {
+						$status = !count($reply) ? "IER" : "ERR";
+						$minimo = 0;
+						$maximo = 0;
+						$media = 0;
+					}
+					
+					if($perdas > 0 && $perdas < count($reply)) $status = 'WRN';
+					
+					if( $status != 'OK' ) {
+						$num_erros=1;
+					}
+					
+					
+					$pop = $cachePorIp[ $ip ];
+					
+					$equipamentos->excluiMonitoramentoPop($pop["id_pop"]);
+					$equipamentos->registraMonitoramentoPop($pop["id_pop"],$minimo,$maximo,$media,$perdas,$num_erros,count($reply),$status);
+
+				
+				}
+				
+				
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/**
+			
 			foreach($pops as $pop) {
 				if( $pop["ativar_monitoramento"] == 't' && $pop["ipaddr"] ) {
 				
@@ -129,6 +214,8 @@
 
 				}
 			}
+			
+			*/
 			
 			$this->flushCachedServerConnections();
 			
