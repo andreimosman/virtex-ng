@@ -123,6 +123,28 @@
 								@socket_write($client,"\n.\n");
 
 								break;
+							
+							/**
+							 * Envia um FPINGLIST
+							 */
+							case 'VAFL':
+								// Primeiro envia um "VALL" (iniciando FPINGLIST SEND)
+								@socket_write($client,$this->talk("VAFS","",$this->sessions[$idx]["challenge"]));
+								list($num_pacotes,$tamanho,$lista) = explode(":",trim($proc["parametros"]));
+								$lista_hosts = explode(",",$lista);
+								
+								$fpinglist = (!count($lista) ? array() : SOFreeBSD::fpinglist($lista_hosts,$num_pacotes,"") );
+								
+								$resposta = "";
+								
+								while( list($ip,$valores) = each($fpinglist) ) {
+									$resposta .= $ip . ":" . implode(" ",$valores) . "\n";
+								}
+								
+								@socket_write($client,base64_encode($this->criptografa($resposta,$this->sessions[$idx]["challenge"])));
+								@socket_write($client,"\n.\n");
+
+								break;
 
 							/**
 							 * Envia a lista de estatXsticas para o cliente.

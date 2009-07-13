@@ -86,6 +86,8 @@
 							// STATS INIT
 						case 'VATI':
 							// TABLE INIT
+						case 'VALL':
+							// FPINGLIST SEND
 
 							$recebendo = true;
 							break;
@@ -201,6 +203,26 @@
 		public function getFPING($ip,$num_pacotes=2,$tamanho="") {
 			$dados = $this->getData("VAFP",$ip.":".$num_pacotes.":".$tamanho);
 			return(explode(":",$dados));
+		}
+		
+		/**
+		 * Obtem o resultado de um fpinglist.
+		 */
+		public function getFPINGLIST($lista = array(), $num_pacotes=2, $tamanho = "" ) {
+			$dados = $this->getData("VAFL", $num_pacotes . ":" . $tamanho . ":" . implode(",",$lista));
+
+			$linhas = explode("\n",$dados);
+			
+			$retorno = array();			
+			for($i=0;$i<count($linhas);$i++) {
+				if( trim($linhas[$i]) ) {
+					list($host,$reply) = explode(":",$linhas[$i],2);
+					$retorno[trim($host)] = explode(" ",$reply);
+				}
+			}
+			
+			return($retorno);
+			
 		}
 
 		
