@@ -86,6 +86,7 @@ function gerarChave(id_cliente,id_conta, mac) {
 					</td>
 					<td class='{$estilo}' align="right">
 						{if $c.tipo_conta == 'BL'}
+						{if $c.psk}<img src="view/templates/imagens/icone_cadeado.gif">{/if}
 						[<a href="javascript:gerarChave({$id_cliente},{$c.id_conta},'{$c.mac}');">Gerar Chave WPA</a>]
 						{/if}
 						[<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">Ficha Técnica</a>]

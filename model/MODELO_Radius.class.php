@@ -111,6 +111,12 @@
 		
 		}
 		
+		public function obtemPSK($mac) {
+			$mac = strtoupper($mac);			
+			$filtro = array("username"=>$mac,"attribute" => "Mikrotik-Wireless-PSK");			
+			$info = $this->rdtb_reply->obtemUnico($filtro);			
+			return(@$info["value"]);
+		}
 		
 	
 	}

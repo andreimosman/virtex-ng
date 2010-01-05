@@ -124,7 +124,15 @@
 			if( !$tbl ) return array();
 
 			$filtro = array("id_conta" => $id_conta, "tipo_conta" => $tipo_conta);
-			return($tbl->obtemUnico($filtro));
+			$conta = $tbl->obtemUnico($filtro);
+
+			if( $tipo_conta == "BL" ) {
+				$radius = VirtexModelo::factory("radius");
+				
+				$conta["psk"] = $conta["mac"]?$radius->obtemPSK($conta["mac"]):"";
+			
+			}
+			return($conta);
 		}
 
 		/**
@@ -165,6 +173,12 @@
 				for($i=0;$i<count($contas);$i++) {
 					$contas[$i]["contrato"] = $cobranca->obtemContratoPeloId($contas[$i]["id_cliente_produto"]);
 				}
+			}
+			
+			$radius = VirtexModelo::factory("radius");
+			
+			for( $i=0;$i<count($contas);$i++ ) {
+				$contas[$i]["psk"] = $contas[$i]["mac"]?$radius->obtemPSK($contas[$i]["mac"]):"";
 			}
 
 			return($contas);
