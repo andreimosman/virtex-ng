@@ -94,12 +94,15 @@
 		 **********************************************************************/
 		
 		public function cadastraChaveWPA2($mac,$chave) {
+			// Padrão com MAC em uppercase;
+			$mac = strtoupper($mac);
+		
 			// Excluir registros anteriores
 			$this->rdtb_check->exclui(array("UserName"=>$mac));
 			$this->rdtb_reply->exclui(array("UserName"=>$mac));
 		
 			// Usuario = MAC / Senha = MAC
-			$dados = array("UserName" => $mac, "Attribute" => "Password", "op" => "==", "Value" => $mac);
+			$dados = array("UserName" => $mac, "Attribute" => "User-Password", "op" => "==", "Value" => $mac);
 			$this->rdtb_check->insere($dados);
 			
 			// Resposta
