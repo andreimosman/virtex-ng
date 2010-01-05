@@ -128,7 +128,7 @@
 
 			if( $tipo_conta == "BL" ) {
 				$radius = VirtexModelo::factory("radius");
-				
+				$conta["pop"] = $conta["id_pop"]?$this->equipamentos->obtemPOP($conta["id_pop"]):array();				
 				$conta["psk"] = $conta["mac"]?$radius->obtemPSK($conta["mac"]):"";
 			
 			}
@@ -171,6 +171,7 @@
 			
 			if( $queryContrato ) {
 				for($i=0;$i<count($contas);$i++) {
+					$pop = $contas[$i]["id_pop"]?$this->equipamentos->obtemPOP($contas[$i]["id_pop"]):array();
 					$contas[$i]["contrato"] = $cobranca->obtemContratoPeloId($contas[$i]["id_cliente_produto"]);
 				}
 			}

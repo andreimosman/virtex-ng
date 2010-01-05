@@ -9,10 +9,28 @@
 function openLinkPOP(id_pop) {
 	window.open("admin-cadastro.php?op=equipamentos&tela=pops&subtela=cadastro&id_pop=" + id_pop,"conteudo");
 }
+
+function gerarChave(id_pop, mac) {
+	var u = "admin-cadastro.php?op=equipamentos&tela=pops&subtela=gerarChave&id_pop=" + id_pop;
+
+	if( mac == '' ) {
+		if( window.confirm("A conta selecionada não possui mac configurado, deseja alterar a conta?") ) {
+			u = "admin-cadastro.php?op=equipamentos&tela=pops&subtela=cadastro&id_pop=" + id_pop;
+			document.location = u;
+		}
+		return;
+	}
+	if( window.confirm("Gerar uma nova chave WPA irá CANCELAR a chave atual e o cliente ficará sem acesso até configurar a nova chave.\n\nDeseja continuar?") ) {
+		document.location = u;
+	}
+}
+
 {/literal}
 </script>
+
+
 <br>
-	<table class='lista' width='600' cellpadding=0 cellspacing=0 align="center">
+	<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center">
 		{if count($registros)}
 		<tr>
 			<th align="left">COD</th>
@@ -29,6 +47,15 @@ function openLinkPOP(id_pop) {
 			<td class='{$estilo}'><p class="nivel_{$r.nivel}">{if $r.nivel > 0}<img class="imagem" src="view/templates/imagens/hier-connector.gif" border=0>{/if}<a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.nome|upper}</a></p></td>
 			<td width="80" class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.ipaddr|upper}</a></td>
 			<td class='{$estilo}'><a href="javascript:openLinkPOP('{$r.id_pop}')">{$r.tipo|upper}</a></td>
+			<td width="130" class='{$estilo}' align="right">
+				{if $r.tipo=="CL"}
+				{if $r.psk}<img src="view/templates/imagens/icone_cadeado.gif">{/if}
+				[<a href="javascript:gerarChave({$r.id_pop},'{$r.mac}');">Gerar Chave WPA</a>]
+				{else}
+				&nbsp;
+				{/if}
+
+			</td>
 		</tr>
 		{foreachelse}
 		{if $texto_pesquisa && $tipo_pesquisa}

@@ -18,6 +18,8 @@
 		protected $cacheArvore;
 		protected $cacheArvoreMAC;
 		
+		protected $radius;
+		
 	
 		public function __construct() {
 			parent::__construct();
@@ -30,6 +32,8 @@
 			$this->cftb_ip			= VirtexPersiste::factory("cftb_ip");
 			
 			$this->sttb_pop_status 	= VirtexPersiste::factory("sttb_pop_status");
+			
+			$this->radius = VirtexModelo::factory("radius");
 			
 			$this->spool = null;
 			
@@ -223,8 +227,14 @@
 			$retorno = array();
 
 			$registros = $this->cftb_pop->obtem($filtro);
+			
 			for($i=0;$i<count($registros);$i++) {
 				$registros[$i]["nivel"] = $nivel;
+				
+				if( $registros[$i]["tipo"] == "CL" ) {
+					$registros[$i]["psk"] = $registros[$i]["mac"]?$this->radius->obtemPSK($registros[$i]["mac"]):"";
+				}
+				
 				$retorno[] = $registros[$i];
 				$child = $this->_obtemPops($registros[$i]["id_pop"],$nivel+1);
 				for($x=0;$x<count($child);$x++) {

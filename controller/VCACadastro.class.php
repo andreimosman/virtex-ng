@@ -91,11 +91,48 @@
 				case 'nas':
 					$this->executaEquipamentosNAS();
 					break;
+				case 'mikrotik':
+					$this->executaEquipamentosMikrotik();
+					break;
 				
 				default:
 					// Do something
 			
 			}
+		}
+		
+		protected function executaEquipamentosMikrotik() {
+			$equipamentos = VirtexModelo::factory("equipamentos");
+			$subtela = @$_REQUEST["subtela"] ? $_REQUEST["subtela"] : "listagem";
+			$this->_view->atribui("subtela",$subtela);
+
+			$id_mikrotik = @$_REQUEST["id_mikrotik"];
+			$ip = @$_REQUEST["ip"];
+			$usuario = @$_REQUEST["username"]; 
+			$senha = @$_REQUEST["pass"]; 
+
+			
+			$acao = @$_REQUEST["acao"];
+
+			switch($subtela) {
+				case 'listagem':
+					//$registros = $equipamentos->obtemListaMikrotiks();
+					$this->_view->atribui("registros",$registros);
+					break;
+				case 'cadastro':
+					if($id_mikrotik) {
+						if( !$acao ) {
+						
+						} else {
+						
+						}
+					} else {
+					
+					}
+					break;
+			}
+
+
 		}
 		
 		protected function executaEquipamentosServidores() {
@@ -198,6 +235,46 @@
 					$registros = $equipamentos->obtemListaPOPs();
 					$this->_view->atribui("registros",$registros);				
 				
+					break;
+				case 'gerarChave':
+					// Gerar chave WPA
+
+					$info = $equipamentos->obtemPop($id_pop);
+					while(list($vr,$vl)=each($info)) {
+						// echo "$vr = $vl<br>\n";
+						$this->_view->atribui($vr,$vl);
+					}
+					
+					$prefGeral 	= $this->preferencias->obtemPreferenciasGerais();
+
+					$prefixo = "";
+					if( trim($prefGeral["nome"]) ) {
+						$tmp = explode(" ", $prefGeral["nome"]);
+						$prefixo = $tmp[0] . "-";
+					}
+
+					$chaveLen=10;	// Tamanho da chave
+
+
+					$chave = $prefixo."infra-";
+					for($i=0;$i<$chaveLen;$i++) {
+						$base = rand(0,2);
+						$maxR = $base == 2 ? 9:25;
+						$c = rand(0,$maxR);
+
+						$iniC = $base==0?ord('A'):($base==1?ord('a'):ord('0'));
+
+						$chave .= chr($iniC+$c);
+
+					}
+
+					$rad = VirtexModelo::factory("radius");
+
+					$rad->cadastraChaveWPA2($info["mac"],$chave);
+
+					$this->_view->atribui("chave",$chave);
+
+					
 					break;
 
 				case 'cadastro':

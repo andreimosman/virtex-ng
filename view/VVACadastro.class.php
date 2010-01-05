@@ -27,6 +27,9 @@
 				case 'nas':
 					$itensMenu[] = array("texto" => "Novo NAS", "url" => "admin-cadastro.php?op=equipamentos&tela=nas&subtela=cadastro");
 					break;					
+				case 'mikrotik':
+					$itensMenu[] = array("texto" => "Novo Mikrotik", "url" => "admin-cadastro.php?op=equipamentos&tela=mikrotik&subtela=cadastro");
+					break;					
 			}
 			return($itensMenu);
 		}
@@ -131,7 +134,8 @@
 								"cadastro" => "Cadastro",
 								"alteracao" => "Alteração",
 								"listagem" => "Listagem",
-								"redes" => "Endereços"
+								"redes" => "Endereços",
+								"mikrotik" => "Mikrotik"
 							);
 			
 			
@@ -211,6 +215,15 @@
 							}
 							$this->_file = "cadastro_eqpto_pops_cadastro.html";
 							break;
+						
+						case 'gerarChave':
+							$selecionavel = true;
+							$this->_file = "cadastro_eqpto_gerar_chave.html";
+
+							$elementosTit[] = " NOVA CHAVE :: " . $this->obtem("nome") . " (" . $this->obtem("tipo") . ")";
+
+							break;
+				
 
 						default:
 							// echo "LISTAGEM";
@@ -223,6 +236,31 @@
 
 
 					break;
+				case 'mikrotik':
+					switch($this->obtem("subtela")) {
+						case 'cadastro':
+							if( !$this->obtem("id_nas") ) {
+								$elementosTit[] = @$titulos["cadastro"];
+							} else {
+								$this->configureMenu($this->obtemItensMenu("pops"),false,true);
+								$elementosTit[] = @$titulos["alteracao"];
+								if( $this->obtem("nome") ) {
+									$elementosTit[] = strtoupper($this->obtem("nome"));
+								}
+							}
+							$this->_file = "cadastro_eqpto_mikrotik_cadastro.html";
+							break;
+
+						default:
+							// echo "LISTAGEM";
+							$this->_file = "cadastro_eqpto_mikrotik_listagem.html";
+							$this->configureMenu($this->obtemItensMenu("mikrotik"),true,true);
+							$elementosTit[] = @$titulos["listagem"];
+							break;
+					
+					}
+					break;
+					
 			}
 			
 			$titulo = implode(" :: ",$elementosTit);
