@@ -14,8 +14,26 @@ label {
 }
 {/literal}
 </style>
+<script language="JavaScript">
+{literal}
+function gerarChave(id_cliente,id_conta, mac) {
+	var u = "admin-clientes.php?op=conta&tela=gerarChave&tipo=BL&id_cliente="+id_cliente+"&id_conta="+id_conta;
+
+	if( mac == '' ) {
+		if( window.confirm("A conta selecionada não possui mac configurado, deseja alterar a conta?") ) {
+			u = "admin-clientes.php?op=conta&tela=cadastro&tipo=BL&id_cliente="+id_cliente+"&id_conta="+id_conta;
+			document.location = u;
+		}
+		return;
+	}
+	if( window.confirm("Gerar uma nova chave WPA irá CANCELAR a chave atual e o cliente ficará sem acesso até configurar a nova chave.\n\nDeseja continuar?") ) {
+		document.location = u;
+	}
+}
+{/literal}
+</script>
 <br>
-<table class='lista' width='700' cellpadding=0 cellspacing=0 align="center" border='0' >
+<table class='lista' width='800' cellpadding=0 cellspacing=0 align="center" border='0' >
 	{foreach item=r from=$listaContratos}
 	<tr>
 		<th align="right" width="50px"><strong>{$r.id_cliente_produto|string_format:"%05d"}</strong></th>
@@ -67,6 +85,9 @@ label {
 						{/if}
 					</td>
 					<td class='{$estilo}' align="right">
+						{if $c.tipo_conta == 'BL'}
+						[<a href="javascript:gerarChave({$id_cliente},{$c.id_conta},'{$c.mac}');">Gerar Chave WPA</a>]
+						{/if}
 						[<a href="admin-clientes.php?op=conta&tela=ficha&tipo={$c.tipo_conta}&id_cliente={$id_cliente}&id_conta={$c.id_conta}">Ficha Técnica</a>]
 					</td>
 				</tr>

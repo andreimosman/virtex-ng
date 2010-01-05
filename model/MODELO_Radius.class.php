@@ -18,12 +18,19 @@
 		
 		protected $rdtb_log;
 		protected $rdtb_accounting;
+		
+		// FreeRadius
+		protected $rdtb_check;
+		protected $rdtb_reply;
 	
 		public function __construct() {
 			parent::__construct();
 			
 			$this->rdtb_log = VirtexPersiste::factory("rdtb_log");
 			$this->rdtb_accounting = VirtexPersiste::factory("rdtb_accounting");
+			
+			$this->rdtb_check = VirtexPersiste::factory("rdtb_check");
+			$this->rdtb_reply = VirtexPersiste::factory("rdtb_reply");
 		
 		}
 		
@@ -74,6 +81,31 @@
 			$dados = array("tempo" => $tempo, "terminate_cause" => $terminate_cause, "bytes_in" => $bytes_in, "bytes_out" => $bytes_out, "logout" => "=now");
 			$filtro = array("session_id" => $session);
 			return($this->rdtb_accounting->altera($dados,$filtro));
+		}
+		
+		
+		
+		
+		
+		/**********************************************************************
+		 *                                                                    *
+		 * FUNÇÕES DO FREERADIUS (PARA USO COM WPA)                           *
+		 *                                                                    *
+		 **********************************************************************/
+		
+		public function cadastraChaveWPA2($mac,$chave) {
+			// Excluir registros anteriores
+			$this->rdtb_check->exclui(array("UserName"=>$mac));
+			$this->rdtb_reply->exclui(array("UserName"=>$mac));
+		
+			// Usuario = MAC / Senha = MAC
+			$dados = array("UserName" => $mac, "Attribute" => "Password", "op" => "==", "Value" => $mac);
+			$this->rdtb_check->insere($dados);
+			
+			// Resposta
+			$dados = array("UserName" => $mac, "Attribute" => "Mikrotik-Wireless-PSK", "op" => "=", "Value" => $chave);
+			$this->rdtb_reply->insere($dados);
+		
 		}
 		
 		

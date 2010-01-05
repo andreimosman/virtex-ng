@@ -270,6 +270,12 @@
 				
 				$titulo .= " :: " . $this->obtem("username") . " (" . $this->obtem("tipo_conta") . ")";
 				
+			} else if( $this->obtem("tela") == "gerarChave" ) {
+				$selecionavel = true;
+				$this->_file = "clientes_contas_gerar_chave.html";
+				
+				$titulo .= " :: NOVA CHAVE :: " . $this->obtem("username") . " (" . $this->obtem("tipo_conta") . ")";
+				
 			} else {
 				switch( $this->obtem("tipo") ) {
 					case 'BL':

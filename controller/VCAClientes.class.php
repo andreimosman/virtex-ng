@@ -1710,6 +1710,46 @@
 						}
 					}
 				}
+			} elseif($tela == "gerarChave") {
+				// Gerar chave WPA
+				
+				$prefGeral 		= $this->preferencias->obtemPreferenciasGerais();
+				
+				$prefixo = "";
+				if( trim($prefGeral["nome"]) ) {
+					$tmp = explode(" ", $prefGeral["nome"]);
+					$prefixo = $tmp[0] . "-";
+				}
+				
+				$chaveLen=10;	// Tamanho da chave
+
+
+				$chave = $prefixo."";
+				for($i=0;$i<$chaveLen;$i++) {
+					$base = rand(0,2);
+					$maxR = $base == 2 ? 9:25;
+					$c = rand(0,$maxR);
+					
+					$iniC = $base==0?ord('A'):($base==1?ord('a'):ord('0'));
+					
+					$chave .= chr($iniC+$c);
+					
+				}
+				
+				$rad = VirtexModelo::factory("radius");
+				
+				$rad->cadastraChaveWPA2($info["mac"],$chave);
+				
+				//echo "<pre>";
+				//print_r($rad);
+				//echo "</pre>";
+				
+				// TODO: Gravar chave no BD
+				
+				$this->_view->atribui("chave",$chave);
+				
+				
+				
 			} else {
 				// Listagem
 				

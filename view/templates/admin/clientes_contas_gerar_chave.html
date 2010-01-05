@@ -1,0 +1,63 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body topmargin=2 leftmargin=2 bottommargin=2 rightmargin=2>
+{include file="clientes_header.html"}
+<style>
+{literal}
+label {
+	font-family: verdana;
+	font-size: 10px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+.infoChave {
+	font-family: verdana;
+	font-size: 12px;
+	font-weight: bold;
+	border: solid 1px #000000;
+}
+
+.infoChave A {
+	font-family: verdana;
+	font-size: 10px;
+	border: 0px;
+	text-decoration: none;
+	color: #0000FF;
+}
+
+.infoChave A:hover {
+	text-decoration: underline;
+}
+
+{/literal}
+
+
+</style>
+<br>
+
+<table border=0 cellpadding=0 cellspacing=0 width="100%" height="90%">
+	<tr>
+		<td width="100%" height="90%">
+			<table class="infoChave" align="center">
+				<tr>
+					<th style="border-bottom: solid 1px #000000;">CHAVE GERADA COM SUCESSO</th>
+				</tr>
+				<tr>
+					<td width="320" height="100" align="center">
+						{$chave}
+					</td>
+				</tr>
+				<tr>
+					<td height="12" align="right" target="{if $target}{$target}{else}_self{/if}"><a href="admin-clientes.php?op=conta&tipo=BL&id_cliente=1031">OK</a></td>
+				</tr>
+			</table>
+			<br><br><br><br>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
