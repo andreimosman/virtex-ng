@@ -25,6 +25,8 @@
 		protected $equipamentos;
 		protected $spool;
 		protected $evento;
+		
+		protected $radius;
 
 
 		public function __construct() {
@@ -46,6 +48,8 @@
 			$this->equipamentos 				= VirtexModelo::factory("equipamentos");
 			$this->spool						= VirtexModelo::factory("spool");
 			$this->eventos						= VirtexModelo::factory("eventos");
+			
+			$this->radius 						= VirtexModelo::factory("radius");
 
 		}
 
@@ -527,10 +531,21 @@
 			$id_conta = $this->cntb_conta_bandalarga->insere($dados);
 
 			$id_conta = $this->registraAlteracaoIP($id_conta, $dados["rede"], $dados["ipaddr"], "C");
-
-
+			
+			// Caso tenha alguma sujeira.
+			$this->radius->removeUsuario($username);
+			
 			// Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool
 			if( $status == "A" && ($nas["tipo_nas"] == "I" || ($nas["tipo_nas"] == "P" && $nas["padrao"] == "O")) ) {
+				// As rates serão enviadas ao radius, portanto serão zeradas para a spool
+				if( $nas["tipo_nas"] == "P" ) {
+					if( $nas["enviar_rates_radius"] && $upload && $download ) {
+						$rate = $upload . "k/" . $download . "k";
+						$upload = 0;
+						$download = 0;
+					}
+					$this->radius->cadastraUsuario($username,$senhaCript,$mac,$endereco,$rate);
+				}
 				$this->spool->adicionaContaBandaLarga($id_nas,$id_conta,$username,$endereco,$mac,$upload,$download,$padrao);
 			}
 
@@ -648,6 +663,7 @@
 
 				$remEnd = $infoAtual["rede"] ? $infoAtual["rede"] : $infoAtual["ipaddr"];				
 				$this->spool->removeContaBandaLarga($infoAtual["id_nas"],$id_conta,$infoAtual["username"],$remEnd,$infoAtual["mac"],$nasAtual["padrao"]);
+
 			}
 			
 			if( $status == "S" ) {
@@ -669,8 +685,7 @@
 				$this->registraAlteracaoIP($id_conta, $dados["rede"], $dados["ipaddr"], "A");
 				
 			}
-
-
+			
 
 			/**
 			 * Altera os dados da conta
@@ -682,8 +697,27 @@
 			 * Se o tipo do NAS for tcp/ip ou um nas PPPoE com outro padrão gera instrução p/ spool.
 			 * Somente se a conta tiver ativa, claro!
 			 */
+			 
+			$username = $infoAtual["username"];
+			
+			// Caso tenha alguma sujeira.
+			$this->radius->removeUsuario($username);
 			
 			if( $status == "A" && ($nasNovo["tipo_nas"] == "I" || ($nasNovo["tipo_nas"] == "P" && $nasNovo["padrao"] == "O")) ) {
+				if( $nasNovo["tipo_nas"] == "P" ) {
+					$rate="";
+					if( $nasNovo["enviar_rates_radius"] && $upload && $download ) {
+						$rate = $upload . "k/" . $download . "k";
+						$upload = 0;
+						$download = 0;
+					}
+					$iA = $this->obtemContaPeloId($id_conta);
+					$senhaCript = $iA["senha_cript"];
+					if( !$endereco ) {
+						$endereco = $iA["ipaddr"];
+					}
+					$this->radius->cadastraUsuario($username,$senhaCript,$mac,$endereco,$rate);
+				}
 				// echo "ADD SPOOL<br>\n";
 				$this->spool->adicionaContaBandaLarga($nasNovo["id_nas"],$id_conta,$infoAtual["username"],$endereco,$mac,$upload,$download,$nasNovo["padrao"]);
 			}

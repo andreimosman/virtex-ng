@@ -89,7 +89,7 @@
 		
 		/**********************************************************************
 		 *                                                                    *
-		 * FUNÇÕES DO FREERADIUS (PARA USO COM WPA)                           *
+		 * FUNÇÕES DO FREERADIUS PARA USO COM WPA                             *
 		 *                                                                    *
 		 **********************************************************************/
 		
@@ -116,6 +116,61 @@
 			$filtro = array("username"=>$mac,"attribute" => "Mikrotik-Wireless-PSK");			
 			$info = $this->rdtb_reply->obtemUnico($filtro);			
 			return(@$info["value"]);
+		}
+
+		/**********************************************************************
+		 *                                                                    *
+		 * FUNÇÕES DO FREERADIUS PARA USO COM PPPoE                           *
+		 *                                                                    *
+		 **********************************************************************/
+		public function cadastraUsuario($username,$senha_cript,$mac,$ipaddr,$rate) {
+			$this->removeUsuario($username);
+		
+			//
+			// CHECK
+			//
+			
+			// User e Senha
+			$dados = array("UserName" => $username, "Attribute" => "Crypt-Password", "op" => "==", "Value" => $senha_cript);
+			$this->rdtb_check->insere($dados);
+			
+			// MAC
+			$mac = trim(strtoupper($mac));	
+			if( $mac ) {
+				$dados = array("UserName" => $username, "Attribute" => "Calling-Station-Id", "op" => "==", "Value" => $mac);
+				$this->rdtb_check->insere($dados);
+			}
+			
+			//
+			// REPLY
+			//
+			
+			// Framed-Protocol
+			$dados = array("UserName" => $username, "Attribute" => "Framed-Protocol", "op" => "=", "Value" => "PPP");
+			$this->rdtb_reply->insere($dados);
+			
+			// Framed-Compression
+			$dados = array("UserName" => $username, "Attribute" => "Framed-Compression", "op" => "=", "Value" => "Van-Jacobson-TCP-IP");
+			$this->rdtb_reply->insere($dados);
+			
+			// IP
+			if( $ipaddr ) {
+				$dados = array("UserName" => $username, "Attribute" => "Framed-IP-Address", "op" => "=", "Value" => $ipaddr);
+				$this->rdtb_reply->insere($dados);
+			}
+			
+			// Rate
+			if( $rate ) {
+				$dados = array("UserName" => $username, "Attribute" => "Mikrotik-Rate-Limit", "op" => "=", "Value" => $rate);
+				$this->rdtb_reply->insere($dados);
+			}
+		
+		}
+		
+		function removeUsuario($username) {
+			// Excluir registros anteriores
+			$this->rdtb_check->exclui(array("UserName"=>$username));
+			$this->rdtb_reply->exclui(array("UserName"=>$username));
 		}
 		
 	

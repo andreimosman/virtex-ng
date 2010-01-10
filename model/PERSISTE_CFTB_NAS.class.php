@@ -8,7 +8,7 @@
 		public function __construct() {
 			parent::__construct();
 			
-			$this->_campos 		= array("id_nas", "nome","ip","secret","tipo_nas","infoserver","padrao", "id_servidor");
+			$this->_campos 		= array("id_nas", "nome","ip","secret","tipo_nas","infoserver","padrao", "id_servidor", "enviar_rates_radius");
 			$this->_chave		= "id_nas";
 			$this->_tabela		= "cftb_nas";
 			$this->_ordem		= "nome";

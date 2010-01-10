@@ -21,7 +21,9 @@ var podeGravar={if $podeGravar}true{else}false{/if};
 function getStatusPadrao(){
 	var tipo_nas = document.getElementById('tipo_nas');
 	var padrao = document.getElementById('padrao');
+	var enviar_rates_radius = document.getElementById('enviar_rates_radius');
 	padrao.disabled = (tipo_nas.value == 'P'? false : true);
+	enviar_rates_radius.disabled = (tipo_nas.value == 'P'? false : true);
 }
 
 function nasValidaForm() {
@@ -78,19 +80,19 @@ function voltar() {
 
 <table cellspacing=0 cellpadding=0 border=0 align="center">
 	<tr>
-		<td width="100" align="right"><label>Nome:</label></td>
+		<td width="150" align="right"><label>Nome:</label></td>
 		<td><input type="text" size="30" maxlength="20" name="nome" id="nome" value="{$nome}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
-		<td width="100" align="right"><label>IP:</label></td>
+		<td width="150" align="right"><label>IP:</label></td>
 		<td><input type="text" size="30" maxlength="15" name="ip" id="ip" value="{$ip}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
-		<td width="100" align="right"><label>Secret:</label></td>
+		<td width="150" align="right"><label>Secret:</label></td>
 		<td><input type="text" size="30" maxlength="64" name="secret" id="secret" value="{$secret}" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus"  onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}></td>
 	</tr>
 	<tr>
-		<td width="100" align="right"><label>Tipo:</label></td>
+		<td width="150" align="right"><label>Tipo:</label></td>
 		<td>
 			<select name="tipo_nas" id="tipo_nas" class="fieldWithoutFocus" {if !$podeGravar}disabled="true" class="disabled"{else}onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)" {if $id_nas}disabled="true"{/if} onChange="javascript:getStatusPadrao()"{/if}>
 				{foreach key=k item=v from=$tipos}
@@ -100,7 +102,7 @@ function voltar() {
 		</td>
 	</tr>
 	<tr>
-		<td width="100" align="right"><label>Servidor:</label></td>
+		<td width="150" align="right"><label>Servidor:</label></td>
 		<td>
 			<select name="id_servidor" id="id_servidor" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 				<option value="">-- selecione --</option>
@@ -111,12 +113,21 @@ function voltar() {
 		</td>
 	</tr>
 	<tr>
-		<td width="100" align="right"><label>Padrão:</label></td>
+		<td width="150" align="right"><label>Padrão:</label></td>
 		<td>
 			<select name="padrao" id="padrao" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
 			{foreach key=k item=v from=$padroes}
 				<option value="{$k}" {if $k == $padrao}selected='selected'{/if}>{$v}</option>
 			{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td width="150" align="right"><label>Limitação de Banda:</label></td>
+		<td>
+			<select name="enviar_rates_radius" id="enviar_rates_radius" {if !$podeGravar}disabled="true" class="disabled"{else}class="fieldWithoutFocus" onFocus="javascript:formOnFocus(this)" onBlur="javascript:formOnBlur(this)"{/if}>
+			<option value=1 {if $enviar_rates_radius}selected{/if}>Enviar Limitação de Banda ao Radius</option>
+			<option value=0 {if !$enviar_rates_radius}selected{/if}>Não Enviar Limitação de Banda ao Radius</option>
 			</select>
 		</td>
 	</tr>

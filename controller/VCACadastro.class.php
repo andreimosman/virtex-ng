@@ -371,6 +371,7 @@
 					$tipo_nas = @$_REQUEST["tipo_nas"];
 					$id_servidor = @$_REQUEST["id_servidor"];
 					$padrao = @$_REQUEST["padrao"];
+					$enviar_rates_radius = @$_REQUEST["enviar_rates_radius"];
 					
 					$this->_view->atribui("id_nas", $id_nas);
 
@@ -393,7 +394,7 @@
 						} else {
 							//ALTERAR
 							$this->requirePrivGravacao("_CADASTRO_EQUIPAMENTOS");
-							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao);
+							$equipamentos->atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao, $enviar_rates_radius);
 							
 							$url = "admin-cadastro.php?op=equipamentos&tela=nas";
 							$this->_view->atribui("url",$url);
@@ -408,7 +409,7 @@
 						
 						if( $acao ) {
 							//CADASTRAR							
-							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao);
+							$equipamentos->cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao, $enviar_rates_radius);
 							
 							$url = "admin-cadastro.php?op=equipamentos&tela=nas&subtela=cadastro";
 							$this->_view->atribui("url",$url);

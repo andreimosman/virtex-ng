@@ -88,15 +88,15 @@
 			
 		}
 		
-		public function atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao) {
+		public function atualizaNAS($id_nas, $nome, $ip, $secret, $id_servidor, $padrao, $enviar_rates_radius) {
 			$filtro = array("id_nas"=>$id_nas);
-			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "padrao" => $padrao);			
+			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "padrao" => $padrao, "enviar_rates_radius" => $enviar_rates_radius);
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
 			return($this->cftb_nas->altera($dados,$filtro));
 		}
 		
-		public function cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao) {
-			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "tipo_nas"=>$tipo_nas, "padrao" => $padrao);
+		public function cadastraNAS($nome, $ip, $secret, $tipo_nas, $id_servidor, $padrao, $enviar_rates_radius) {
+			$dados = array("nome"=>$nome, "ip"=>$ip, "secret"=>$secret, "tipo_nas"=>$tipo_nas, "padrao" => $padrao, "enviar_rates_radius" => $enviar_rates_radius);
 			$dados["id_servidor"] = $id_servidor ? $id_servidor : null; 			
 			return($this->cftb_nas->insere($dados));			
 		}
